@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Upload Resource - Admin</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="navbar glassmorphic">
+    <div class="container nav-content">
+      <div class="nav-logo">
+        <img src="attached_assets/image_1750584670920.png" alt="Logo">
+        <span>Sunrise Education Centre</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/admin">Admin Panel</a></li>
+        <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main class="container main-content">
+    <section class="card-section" style="max-width:500px; margin:0 auto;">
+      <h2>Upload New Resource</h2>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="login-error" style="margin-bottom:1rem; background: #fc5c7d; color: #fff;">{{ message }}</div>
+          {% endfor %}
+      {% endif %}
+      {% endwith %}
+      <form method="POST" action="/upload-resource" enctype="multipart/form-data" class="login-form">
+        <input type="text" name="title" placeholder="Resource Title (e.g., Algebra Worksheet)" required />
+        <textarea name="description" placeholder="Short Description" rows="2" style="border-radius:14px; padding:0.7rem 1.1rem;"></textarea>
+        <select name="class_id" required style="border-radius:20px; padding:0.7rem 1.1rem;">
+            <option value="" disabled selected>Select Target Class</option>
+          {% for id, name in all_classes %}
+            <option value="{{ id }}">{{ name|title }}</option>
+          {% endfor %}
+        </select>
+        <select name="category" required style="border-radius:20px; padding:0.7rem 1.1rem;">
+            <option value="" disabled selected>Select Resource Category</option>
+            <option value="worksheet">Worksheet</option>
+            <option value="pyq">PYQ</option>
+            <option value="case-base">Case Base Question</option>
+            <option value="assertion-reasoning">Assertion and Reasoning</option>
+        </select>
+        <input type="file" name="file" required />
+        <button type="submit" class="btn btn-primary" style="margin-top:1rem;">Upload Resource</button>
+      </form>
+      <div class="back-link">
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-social">
+        <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">Instagram</a>
+        <a href="https://www.youtube.com/@MohitNariyani" target="_blank">YouTube</a>
+      </div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Contact Us</a>
+      </div>
+      <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html> 

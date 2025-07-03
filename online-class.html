@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Live Class - Sunrise Education Centre</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar glassmorphic">
+      <div class="container nav-content">
+        <div class="nav-logo">
+          <img src="attached_assets/image_1750584670920.png" alt="Logo">
+          <span>Sunrise Education Centre</span>
+        </div>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/study-resources">Study Resources</a></li>
+          <li><a href="/forum">Forum</a></li>
+          {% if username %}
+            <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+          {% else %}
+          <li><a href="/auth" class="btn btn-primary">Login</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+    <header class="hero-section">
+      <div class="container hero-content">
+        <h1>Join a Live Class</h1>
+        <p>Experience interactive, real-time mathematics coaching from anywhere!</p>
+      </div>
+    </header>
+    <main class="container main-content" style="max-width: 100vw;">
+      <section class="card-section" style="max-width: 700px; margin: 2rem auto;">
+        <div style="display:flex; gap:1.2rem; justify-content:center; margin-bottom:2.2rem;">
+          <button class="live-tab-btn tab-btn" onclick="showLiveTab('live')" style="background:#e3f7fc; color:#232946; font-weight:600; border:none; border-radius:12px; padding:0.8rem 2.2rem; font-size:1.1rem; cursor:pointer;">Live</button>
+          <button class="upcoming-tab-btn tab-btn" onclick="showLiveTab('upcoming')" style="background:#ffe082; color:#232946; font-weight:600; border:none; border-radius:12px; padding:0.8rem 2.2rem; font-size:1.1rem; cursor:pointer;">Upcoming</button>
+          <button class="schedule-tab-btn tab-btn" onclick="showLiveTab('schedule')" style="background:#d1c4e9; color:#232946; font-weight:600; border:none; border-radius:12px; padding:0.8rem 2.2rem; font-size:1.1rem; cursor:pointer;">Schedule</button>
+        </div>
+        <div id="live-tab-content" class="tab-content" style="display:block;">
+          <h2 style="text-align:center;">Live Classes</h2>
+          <p style="text-align:center;">Join ongoing live classes here.</p>
+          {% if role in ['admin', 'teacher'] %}
+          <section id="start-live" class="card-section" style="max-width: 500px; margin: 2rem auto;">
+            <h2>Start Live Class</h2>
+            <form method="POST" action="/start-live-class" class="login-form">
+              <label for="class_id">Select Class:</label>
+              <select name="class_id" id="class_id" required>
+                {% for c in all_classes %}
+                  {% if c[1] not in ['admin', 'teacher'] %}
+                    <option value="{{ c[0] }}">{{ c[1] }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+              <input type="text" name="topic" placeholder="Topic (optional)" />
+              <input type="text" name="description" placeholder="Description (optional)" />
+              <button type="submit" class="btn btn-primary">Start Live Class</button>
+            </form>
+          </section>
+          <section id="active-classes" class="card-section" style="max-width: 600px; margin: 2rem auto;">
+            <h2>Active Live Classes</h2>
+            {% if active_classes and active_classes|length > 0 %}
+              <ul style="list-style:none; padding:0;">
+                {% for c in active_classes %}
+                  <li style="margin-bottom:1rem; padding:1rem; background:#f4f4f4; border-radius:12px;">
+                    <strong>Class:</strong> {{ c[5] }} | <strong>Topic:</strong> {{ c[3] }}<br>
+                    <a href="{{ c[2] }}" target="_blank" class="btn btn-primary" style="margin-top:0.5rem;">Join as Host</a>
+                    <form method="POST" action="/end-live-class" style="display:inline; margin-left:1rem;">
+                      <input type="hidden" name="class_id" value="{{ c[5] }}" />
+                      <button type="submit" class="btn btn-primary" style="background:#fc5c7d;">End Class</button>
+                    </form>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p>No live classes are currently active.</p>
+            {% endif %}
+          </section>
+          {% elif role and meeting_url %}
+          <section id="join-now" class="card-section" style="max-width: 500px; margin: 2rem auto; text-align:center;">
+            <h2>Live Class is Active!</h2>
+            <a href="{{ meeting_url }}" target="_blank" class="btn btn-primary" style="font-size:1.2rem;">Join Now</a>
+          </section>
+          {% elif role %}
+          <section id="no-class" class="card-section" style="max-width: 500px; margin: 2rem auto; text-align:center;">
+            <h2>No Live Class</h2>
+            <p>Your teacher has not started a live class yet. Please check back later.</p>
+          </section>
+          {% endif %}
+        </div>
+        <div id="upcoming-tab-content" class="tab-content" style="display:none;">
+          <h2 style="text-align:center;">Upcoming Classes</h2>
+          <p style="text-align:center;">See which classes are scheduled to go live soon.</p>
+          <!-- Upcoming class content goes here -->
+        </div>
+        <div id="schedule-tab-content" class="tab-content" style="display:none;">
+          <h2 style="text-align:center;">Class Schedule</h2>
+          <p style="text-align:center;">View the full schedule of all classes.</p>
+          <!-- Schedule content goes here -->
+        </div>
+      </section>
+      <script>
+        function showLiveTab(tab) {
+          document.getElementById('live-tab-content').style.display = (tab === 'live') ? 'block' : 'none';
+          document.getElementById('upcoming-tab-content').style.display = (tab === 'upcoming') ? 'block' : 'none';
+          document.getElementById('schedule-tab-content').style.display = (tab === 'schedule') ? 'block' : 'none';
+          document.querySelector('.live-tab-btn').style.background = (tab === 'live') ? '#e3f7fc' : '#f1f3f5';
+          document.querySelector('.upcoming-tab-btn').style.background = (tab === 'upcoming') ? '#ffe082' : '#f1f3f5';
+          document.querySelector('.schedule-tab-btn').style.background = (tab === 'schedule') ? '#d1c4e9' : '#f1f3f5';
+        }
+      </script>
+    </main>
+    <footer class="footer">
+      <div class="container footer-content">
+        <div class="footer-social">
+          <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">Instagram</a>
+          <a href="https://youtube.com/@sunriseeducationcentre" target="_blank">YouTube</a>
+        </div>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Contact Us</a>
+        </div>
+        <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+    <script>
+      const toggleBtn = document.getElementById('darkModeToggle');
+      function setDarkMode(on) {
+        if (on) {
+          document.body.classList.add('dark-mode');
+          localStorage.setItem('darkMode', 'on');
+        } else {
+          document.body.classList.remove('dark-mode');
+          localStorage.setItem('darkMode', 'off');
+        }
+      }
+      toggleBtn.addEventListener('click', () => {
+        setDarkMode(!document.body.classList.contains('dark-mode'));
+      });
+      if (localStorage.getItem('darkMode') === 'on') {
+        document.body.classList.add('dark-mode');
+      }
+    </script>
+  </body>
+</html>

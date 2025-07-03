@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Send Notification - Admin</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="navbar glassmorphic">
+    <div class="container nav-content">
+      <div class="nav-logo">
+        <img src="attached_assets/image_1750584670920.png" alt="Logo">
+        <span>Sunrise Education Centre</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/admin">Admin Panel</a></li>
+        <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main class="container main-content">
+    <section class="user-info-section" style="max-width:500px; margin:2rem auto;">
+      <h2>Send Notification</h2>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="login-error" style="margin-bottom:1rem; background: #fc5c7d; color: #fff;">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <form method="POST" class="login-form">
+        <textarea name="message" placeholder="Notification message" required rows="3" style="margin-bottom:1rem; border-radius:14px; padding:0.7rem 1.1rem;"></textarea>
+        <textarea name="description" placeholder="Description (optional)" rows="2" style="margin-bottom:1rem; border-radius:14px; padding:0.7rem 1.1rem;"></textarea>
+        <select name="class_id" required style="border-radius:20px; padding:0.7rem 1.1rem; margin-bottom:1rem;">
+          <option value="">All Classes</option>
+          {% for id, name in all_classes %}
+            <option value="{{ id }}">{{ name|title }}</option>
+          {% endfor %}
+        </select>
+        <select name="target_paid_status" required style="border-radius:20px; padding:0.7rem 1.1rem; margin-bottom:1rem;">
+          <option value="all">All Users</option>
+          <option value="paid">Paid Users Only</option>
+          <option value="unpaid">Unpaid Users Only</option>
+        </select>
+        <button type="submit" class="btn btn-primary" style="margin-top:1rem;">Send Notification</button>
+      </form>
+      <div class="back-link" style="margin-top:1.5rem;">
+        <a href="/admin#notifications">&larr; Back to Admin Panel</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html> 

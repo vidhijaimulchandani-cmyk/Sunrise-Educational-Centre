@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sunrise Education Centre</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar glassmorphic">
+      <div class="container nav-content">
+        <div class="nav-logo">
+          <img src="attached_assets/image_1750584670920.png" alt="Logo">
+          <span>Sunrise Education Centre</span>
+        </div>
+        <ul class="nav-links">
+          <li><a href="#programs">Programs</a></li>
+          <li><a href="#about-us">About</a></li>
+          <li><a href="/online-class">Live Class</a></li>
+          <li><a href="/study-resources">Study Resources</a></li>
+          <li><a href="/forum">Forum</a></li>
+          {% if user_notifications and user_notifications|length > 0 %}
+          <li style="position:relative;">
+            <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
+              <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
+            </button>
+            <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:#fff; min-width:260px; box-shadow:0 4px 24px rgba(100,100,255,0.13); border-radius:12px; z-index:100; padding:1rem;">
+              <strong style="color:#6a82fb;">Notifications</strong>
+              <ul style="list-style:none; padding:0; margin:0;">
+                {% for id, message, created_at in user_notifications %}
+                <li style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946;">
+                  {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ created_at[:19].replace('T', ' ') }}</span>
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </li>
+          {% endif %}
+          {% if username %}
+            <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+          {% else %}
+            <li><a href="/auth" class="btn btn-primary">Login</a></li>
+          {% endif %}
+      </ul>
+      <button class="hamburger">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+      </div>
+    </nav>
+    <header class="hero-section" style="background: url('attached_assets/image_1750584670920.png') center/contain no-repeat; position: relative;">
+      <div style="position: absolute; inset: 0; background: rgba(106,130,251,0.55); z-index: 1;"></div>
+      <div class="container hero-content" style="position: relative; z-index: 2;">
+        <h1><span id="typing-hero"></span></h1>
+        <p>Your trusted guide for Class 9-12. Personalized coaching, real results.</p>
+        <div style="text-align:center; margin:2rem 0;">
+          <a href="#programs" class="btn btn-cta">Explore Programs</a>
+        </div>
+      </div>
+    </header>
+    <!-- Stats Section -->
+    <section class="stats-section" style="display:flex; justify-content:center; gap:2rem; margin:2.5rem 0 2.5rem 0; flex-wrap:wrap;">
+      <div style="background:#fff8e1; border-radius:20px; padding:2.2rem 2.5rem; min-width:220px; text-align:center; box-shadow:0 2px 12px rgba(100,100,100,0.07);">
+        <div style="font-size:2rem; font-weight:700; color:#232946;">7+ Years</div>
+        <div style="font-size:1.1rem; color:#232946; margin-top:0.5rem;">of Experience</div>
+      </div>
+      <div style="background:#ffe6e6; border-radius:20px; padding:2.2rem 2.5rem; min-width:220px; text-align:center; box-shadow:0 2px 12px rgba(100,100,100,0.07);">
+        <div style="font-size:2rem; font-weight:700; color:#232946;">500+</div>
+        <div style="font-size:1.1rem; color:#232946; margin-top:0.5rem;">Students Taught</div>
+      </div>
+      <div style="background:#e3f7fc; border-radius:20px; padding:2.2rem 2.5rem; min-width:220px; text-align:center; box-shadow:0 2px 12px rgba(100,100,100,0.07);">
+        <div style="font-size:2rem; font-weight:700; color:#232946;">1000+</div>
+        <div style="font-size:1.1rem; color:#232946; margin-top:0.5rem;">Hours of Classes</div>
+      </div>
+      <div style="background:#ede6ff; border-radius:20px; padding:2.2rem 2.5rem; min-width:220px; text-align:center; box-shadow:0 2px 12px rgba(100,100,100,0.07);">
+        <div style="font-size:2rem; font-weight:700; color:#232946;">95%</div>
+        <div style="font-size:1.1rem; color:#232946; margin-top:0.5rem;">Success Rate</div>
+      </div>
+    </section>
+    <main class="container main-content">
+      <!-- Topper Student Review Card -->
+      <!-- (Moved below into Wall of Fame section) -->
+      <!-- Enroll Now Card -->
+      <div class="card-section" style="display:flex; justify-content:center;">
+        <div class="card animated-card enroll-card" style="max-width:420px; width:100%; margin:0 auto;">
+          <h2>Ready to Join Sunrise?</h2>
+          <p>Start your learning journey with us. Fill out our quick admission form and get started today!</p>
+          <a href="admission.html" class="btn btn-primary">Enroll Now</a>
+        </div>
+      </div>
+      <!-- Combined Subjects & Class Timings Card -->
+      <section class="card-section" style="display:flex; justify-content:center;">
+        <div class="card animated-card" style="max-width:700px; width:100%; margin:0 auto; padding:2.5rem;">
+          <h2 style="text-align:center; margin-bottom:2rem;">Subjects We Offer</h2>
+          <div style="display: flex; flex-wrap: wrap; gap: 2.5rem; justify-content:center;">
+            <div style="flex:1 1 260px; min-width:220px; background:#e6f9f3; border-radius:18px; padding:1.5rem;">
+              <h3 style="color:#14213d; margin-bottom:1.2rem; text-align:center;">Foundation</h3>
+              <div style="display:flex; flex-direction:column; gap:1rem; align-items:center;">
+                <a href="/class/9" class="subject-btn btn" style="background:#ffe082; color:#232946; width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #ffe082;">
+                  Class 9: Core Mathematics
+                  <div style='font-size:0.98rem; font-weight:400; color:#232946;'>4:00 PM – 5:00 PM</div>
+                </a>
+                <a href="/class/10-standard" class="subject-btn btn" style="background:#b2f0e6; color:#232946; width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #b2f0e6;">
+                  Class 10: Standard Mathematics
+                  <div style='font-size:0.98rem; font-weight:400; color:#232946;'>5:00 PM – 6:00 PM</div>
+                </a>
+                <a href="/class/10-basic" class="subject-btn btn" style="background:#ffd6e0; color:#232946; width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #ffd6e0;">
+                  Class 10: Basic Mathematics
+                  <div style='font-size:0.98rem; font-weight:400; color:#232946;'>7:00 PM – 8:00 PM</div>
+                </a>
+            </div>
+            </div>
+            <div style="flex:1 1 260px; min-width:220px; background:#e3f7fc; border-radius:18px; padding:1.5rem;">
+              <h3 style="color:#14213d; margin-bottom:1.2rem; text-align:center;">JEE Level</h3>
+              <div style="display:flex; flex-direction:column; gap:1rem; align-items:center;">
+                <a href="/class/11" class="subject-btn btn" style="background:#d1c4e9; color:#232946; width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #d1c4e9;">
+                  Class 11: Applied Mathematics
+                  <div style='font-size:0.98rem; font-weight:400; color:#232946;'>6:00 PM – 7:00 PM</div>
+                </a>
+                <a href="/class/12" class="subject-btn btn" style="background:#ffcdd2; color:#232946; width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #ffcdd2;">
+                  Class 12: Core Mathematics
+                  <div style='font-size:0.98rem; font-weight:400; color:#232946;'>8:00 PM – 9:00 PM</div>
+                </a>
+            </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <style>
+        .subject-btn:active, .subject-btn.active {
+          background: #fff !important;
+          color: inherit !important;
+          border: 2px solid currentColor !important;
+        }
+        .subject-btn div { pointer-events: none; }
+      </style>
+      <section id="about-teacher" class="card-section" style="text-align:center;">
+        <div style="background:#fff8e1; border-radius:32px; box-shadow:0 4px 32px rgba(100,200,100,0.10); padding:3.5rem 2.5rem 3rem 2.5rem; max-width:800px; margin:0 auto; min-height:350px; color:#14213d; position:relative; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:2.5rem;">
+          <div style="flex:1 1 320px; min-width:260px;">
+            <h2 style="text-align:left; margin-bottom:2rem;">About Mohit Sir</h2>
+            <div style="text-align:left; font-size:1.1rem; font-weight:600; margin-bottom:1.5rem;">Hlo bhaiyo aur bhehno</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.1rem;">
+              <div style="background:#fff8e1; border-radius:20px; padding:1.3rem 1.1rem; min-width:120px; text-align:center; box-shadow:0 2px 12px rgba(100,100,100,0.07);">
+                <div style="font-size:1.3rem; font-weight:700; color:#232946;">7+ Years</div>
+                <div style="font-size:1rem; color:#232946; margin-top:0.3rem;">of Experience</div>
+              </div>
+              <div style="background:#ffe6e6; border-radius:20px; padding:1.3rem 1.1rem; min-width:120px; text-align:center; box-shadow:0 2px 12px rgba(100,100,100,0.07);">
+                <div style="font-size:1.3rem; font-weight:700; color:#232946;">500+</div>
+                <div style="font-size:1rem; color:#232946; margin-top:0.3rem;">Students Taught</div>
+              </div>
+              <div style="background:#e3f7fc; border-radius:20px; padding:1.3rem 1.1rem; min-width:120px; text-align:center; box-shadow:0 2px 12px rgba(100,100,100,0.07);">
+                <div style="font-size:1.3rem; font-weight:700; color:#232946;">1000+</div>
+                <div style="font-size:1rem; color:#232946; margin-top:0.3rem;">Hours of Classes</div>
+              </div>
+              <div style="background:#ede6ff; border-radius:20px; padding:1.3rem 1.1rem; min-width:120px; text-align:center; box-shadow:0 2px 12px rgba(100,100,100,0.07);">
+                <div style="font-size:1.3rem; font-weight:700; color:#232946;">95%</div>
+                <div style="font-size:1rem; color:#232946; margin-top:0.3rem;">Success Rate</div>
+              </div>
+            </div>
+          </div>
+          <div style="flex:0 0 220px; display:flex; justify-content:center; align-items:center;">
+            <!-- Photo placeholder: left blank as requested -->
+          </div>
+          <div style="position:absolute; left:0; right:0; bottom:1.5rem; text-align:center;">
+            <div style="font-weight:700; font-size:1.15rem; color:#14213d;">Teaching Experience</div>
+            <div style="font-size:1.05rem; color:#14213d; margin-top:0.2rem;">7+ years of experience</div>
+          </div>
+        </div>
+      </section>
+      <section id="live" class="card-section">
+        <h2>Live Classroom Sessions</h2>
+        <div class="card-grid">
+          <div class="card animated-card">
+            <h3>Interactive Classes</h3>
+            <p>Real-time coaching with concept clarity and doubt resolution.</p>
+              </div>
+          <div class="card animated-card">
+            <h3>Modern Setup</h3>
+            <p>Comfortable, distraction-free environment for focused learning.</p>
+              </div>
+            </div>
+      </section>
+      <section id="community" class="card-section">
+        <h2>Wall of Fame</h2>
+        <div class="card-grid">
+          <div class="card animated-card" style="background:#fff8e1; max-width:420px; width:100%; margin:0 auto; text-align:center;">
+            <img src="attached_assets/image_1750584670920.png" alt="Topper Student Photo" style="width:90px; height:90px; object-fit:cover; border-radius:50%; margin-bottom:1rem; box-shadow:0 2px 12px rgba(100,100,255,0.13);">
+            <h3 style="margin-bottom:0.3rem; color:#6a82fb;">Jiya Meghani</h3>
+            <div style="color:#888; font-size:1rem; margin-bottom:0.7rem;">Class 12 Science Topper</div>
+            <blockquote style="font-size:1.08rem; color:#232946; font-style:italic; margin:0 0 1rem 0;">"Sunrise Education Centre helped me build strong concepts and gave me the confidence to excel in my board exams. The teachers are amazing!"</blockquote>
+          </div>
+          <div class="card animated-card">
+            <h3>Top Achievers</h3>
+            <p>Celebrating our students' outstanding results and milestones.</p>
+          </div>
+          <div class="card animated-card">
+            <h3>Success Stories</h3>
+            <p>Inspiring journeys of students who excelled with Sunrise Education Centre.</p>
+          </div>
+      </div>
+    </section>
+      <section id="contact" class="contact-section">
+        <h2>Get in Touch</h2>
+        <div class="contact-grid">
+          <div class="contact-card">
+            <h4>Instagram</h4>
+            <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank" class="btn btn-instagram">Follow Us</a>
+          </div>
+          <div class="contact-card">
+            <h4>YouTube</h4>
+            <a href="https://www.youtube.com/@MohitNariyani" target="_blank" class="btn btn-youtube">Subscribe</a>
+          </div>
+          <div class="contact-card">
+            <h4>Phone</h4>
+            <a href="tel:+917224860881" class="btn btn-primary">+91 72248 60881</a>
+          </div>
+        </div>
+      </section>
+      <section class="subscribe-section">
+        <h2>Stay Informed</h2>
+        <form class="subscribe-form">
+          <input type="text" placeholder="Your name" required />
+          <input type="email" placeholder="Your email" required />
+          <button type="submit" class="btn btn-primary">Subscribe</button>
+        </form>
+      </section>
+      <div style="text-align:center; margin: 1.5rem 0 2rem 0;">
+        <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
+      </div>
+      <section id="about-us" class="card-section" style="text-align:center; margin-top:2rem;">
+        <div class="card animated-card" style="max-width:600px; margin:0 auto; padding:2rem;">
+          <h2>About Us</h2>
+          <p>Sunrise Education Centre is dedicated to empowering students in mathematics and science for classes 9 to 12. Our mission is to provide personalized coaching, concept clarity, and real results through interactive sessions and a supportive community. Led by experienced educators, we focus on holistic development and academic excellence.</p>
+          <p>We believe in nurturing curiosity, building strong foundations, and celebrating every achievement. Join us to experience a new way of learning!</p>
+        </div>
+      </section>
+      <section class="card-section" style="text-align:center; margin:2rem 0 2.5rem 0;">
+        <div class="card animated-card" style="max-width:400px; margin:0 auto; padding:2rem;">
+          <h2 style="margin-bottom:1.2rem;">Who Made This?</h2>
+          <div style="font-size:1.15rem; font-weight:600; color:#6a82fb;">Er. Mohit Nariyani</div>
+          <div style="font-size:1.05rem; font-weight:600; color:#6a82fb; margin-top:0.7rem;">Yash K Moolchandani</div>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <div class="container footer-content">
+        <div class="footer-social">
+          <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">Instagram</a>
+          <a href="https://www.youtube.com/@MohitNariyani" target="_blank">YouTube</a>
+        </div>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Contact Us</a>
+        </div>
+        <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+    <script>
+      const toggleBtn = document.getElementById('darkModeToggle');
+      function setDarkMode(on) {
+        if (on) {
+          document.body.classList.add('dark-mode');
+          localStorage.setItem('darkMode', 'on');
+        } else {
+          document.body.classList.remove('dark-mode');
+          localStorage.setItem('darkMode', 'off');
+        }
+      }
+      toggleBtn.addEventListener('click', () => {
+        setDarkMode(!document.body.classList.contains('dark-mode'));
+      });
+      // On page load, check preference
+      if (localStorage.getItem('darkMode') === 'on') {
+        document.body.classList.add('dark-mode');
+      }
+      // Teacher photo toggle
+      const showTeacherPhotoBtn = document.getElementById('showTeacherPhoto');
+      const teacherPhotoContainer = document.getElementById('teacherPhotoContainer');
+      let photoVisible = false;
+      showTeacherPhotoBtn.addEventListener('click', () => {
+        photoVisible = !photoVisible;
+        teacherPhotoContainer.style.display = photoVisible ? 'block' : 'none';
+        showTeacherPhotoBtn.textContent = photoVisible ? 'Hide Photo of Er. Mohit Nariyani' : 'Show Photo of Er. Mohit Nariyani';
+      });
+      // Typing animation for hero section
+      const typingText = "Empowering Students in Mathematics";
+      const typingHero = document.getElementById('typing-hero');
+      let typingIdx = 0;
+      let typingForward = true;
+      function typeHero() {
+        if (!typingHero) return;
+        if (typingForward) {
+          typingHero.textContent = typingText.slice(0, typingIdx);
+          typingIdx++;
+          if (typingIdx > typingText.length) {
+            typingForward = false;
+            setTimeout(typeHero, 1000); // Pause at end
+            return;
+          }
+        } else {
+          typingHero.textContent = typingText.slice(0, typingIdx);
+          typingIdx--;
+          if (typingIdx < 0) {
+            typingForward = true;
+            setTimeout(typeHero, 500); // Pause before restart
+            return;
+          }
+        }
+        setTimeout(typeHero, 60);
+      }
+      typeHero();
+      // Notification bell dropdown
+      const notifBell = document.getElementById('notifBell');
+      const notifDropdown = document.getElementById('notifDropdown');
+      if (notifBell && notifDropdown) {
+        notifBell.addEventListener('click', function(e) {
+          notifDropdown.style.display = notifDropdown.style.display === 'block' ? 'none' : 'block';
+          e.stopPropagation();
+        });
+        document.addEventListener('click', function() {
+          notifDropdown.style.display = 'none';
+        });
+        notifDropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+      }
+    </script>
+  </body>
+</html>

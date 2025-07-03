@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admission Form - Sunrise Education Centre</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
+      font-family: 'Inter', Arial, sans-serif;
+      margin: 0;
+      color: #232946;
+    }
+    .admission-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 0;
+    }
+    .admission-card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(100,100,255,0.10);
+      padding: 2.5rem 2rem 2rem 2rem;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      margin: 2rem 0;
+      animation: fadeIn 0.7s;
+    }
+    .admission-card h2 {
+      color: #6a82fb;
+      margin-bottom: 1.2rem;
+      font-size: 2rem;
+    }
+    .admission-card form {
+      margin-top: 1rem;
+      text-align: left;
+    }
+    .admission-card label {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      display: block;
+      color: #232946;
+    }
+    .admission-card input,
+    .admission-card select,
+    .admission-card textarea {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid #e0e7ff;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      margin-bottom: 1.1rem;
+      background: #f8fafc;
+      transition: border 0.2s;
+    }
+    .admission-card input:focus,
+    .admission-card select:focus,
+    .admission-card textarea:focus {
+      border: 1.5px solid #6a82fb;
+      outline: none;
+    }
+    .admission-card textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .admission-card button[type="submit"] {
+      width: 100%;
+      font-size: 1.1rem;
+      background: linear-gradient(90deg, #6a82fb 0%, #fc5c7d 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 1rem 0;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      box-shadow: 0 2px 12px rgba(106,130,251,0.13);
+      transition: background 0.18s, transform 0.18s, box-shadow 0.18s;
+      cursor: pointer;
+    }
+    .admission-card button[type="submit"]:hover {
+      background: linear-gradient(90deg, #fc5c7d 0%, #6a82fb 100%);
+      box-shadow: 0 6px 24px rgba(252,92,125,0.18);
+      transform: scale(1.04);
+    }
+    .admission-card .success-message {
+      display: none;
+      margin-top: 1.2rem;
+      color: #10b981;
+      font-weight: 600;
+      text-align: center;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: #6a82fb;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.18s;
+    }
+    .back-link:hover {
+      color: #fc5c7d;
+      text-decoration: underline;
+    }
+    @media (max-width: 600px) {
+      .admission-card {
+        padding: 1.2rem 0.5rem;
+        max-width: 98vw;
+      }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: none; }
+    }
+    .photo-upload-container {
+      width: 110px;
+      height: 110px;
+      border: 2px dashed #6a82fb;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: #f8fafc;
+      margin-left: 1.2rem;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+    .photo-upload-container:hover {
+      border-color: #fc5c7d;
+    }
+    .photo-label {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .photo-icon {
+      font-size: 2.2rem;
+      margin-bottom: 0.3rem;
+      color: #6a82fb;
+    }
+    .photo-text {
+      font-size: 0.95rem;
+      color: #232946;
+      font-weight: 500;
+      text-align: center;
+    }
+    @media (max-width: 600px) {
+      .admission-card > div:first-child {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .photo-upload-container {
+        margin-left: 0;
+        margin-top: 1rem;
+        align-self: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="admission-container">
+    <div class="admission-card">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <h2 style="margin-bottom:0.5rem;">Admission Form</h2>
+        <div class="photo-upload-container">
+          <label for="passport_photo" class="photo-label">
+            <span class="photo-icon">📷</span>
+            <span class="photo-text">Upload Photo</span>
+            <input type="file" id="passport_photo" name="passport_photo" accept="image/*" style="display:none;" required>
+          </label>
+        </div>
+      </div>
+      <form method="POST" action="/admission" id="admissionForm">
+        <label for="student_name">Student Name</label>
+        <input type="text" id="student_name" name="student_name" required>
+        <label for="dob">Date of Birth</label>
+        <input type="date" id="dob" name="dob" required>
+        <label for="student_phone">Student Phone Number</label>
+        <input type="tel" id="student_phone" name="student_phone" required pattern="[0-9]{10}" maxlength="10">
+        <label for="student_email">Student Email</label>
+        <input type="email" id="student_email" name="student_email" required>
+        <label for="admission_class">Class</label>
+        <select id="admission_class" name="class" required>
+          <option value="">Select Class</option>
+          <option value="9">9</option>
+          <option value="10 Standard">10 Standard</option>
+          <option value="10 Basic">10 Basic</option>
+          <option value="11 Applied">11 Applied</option>
+          <option value="11 Core">11 Core</option>
+          <option value="12 Applied">12 Applied</option>
+          <option value="12 Core">12 Core</option>
+        </select>
+        <label for="parent_name">Parent/Guardian Name</label>
+        <input type="text" id="parent_name" name="parent_name" required>
+        <label for="parent_phone">Parent/Guardian Mobile Number</label>
+        <input type="tel" id="parent_phone" name="parent_phone" required pattern="[0-9]{10}" maxlength="10">
+        <button type="submit">Submit Admission</button>
+      </form>
+      <div style="color:#232946; font-weight:600; margin-top:1.2rem; font-size:1.05rem;">Note: Passport size photo should be submitted along with the form.</div>
+      <div class="success-message" id="admissionSuccessMsg">Your admission form has been submitted!</div>
+      <a href="/" class="back-link">← Back to Home</a>
+    </div>
+  </div>
+  <script>
+    // Example: Show success message after form submit (simulate for demo)
+    document.getElementById('admissionForm').onsubmit = function(e) {
+      e.preventDefault();
+      document.getElementById('admissionSuccessMsg').style.display = 'block';
+      setTimeout(function() {
+        document.getElementById('admissionSuccessMsg').style.display = 'none';
+        document.getElementById('admissionForm').reset();
+      }, 3000);
+    };
+  </script>
+</body>
+</html> 

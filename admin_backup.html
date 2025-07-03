@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard - Sunrise Education Centre</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="forum.css" />
+  <style>
+    body { margin: 0; font-family: 'Inter', sans-serif; }
+    .admin-layout { display: flex; min-height: 100vh; background: var(--pico-primary-background, #f4f6fb); }
+    .admin-sidebar {
+      width: 240px;
+      background: #232946;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem 1rem 1rem 1rem;
+      gap: 1.5rem;
+      min-height: 100vh;
+    }
+    .admin-sidebar .logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #6a82fb;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .admin-sidebar nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+    .admin-sidebar nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.08rem;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .admin-sidebar nav a.active, .admin-sidebar nav a:hover {
+      background: #6a82fb;
+      color: #fff;
+    }
+    .admin-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #f4f6fb;
+      min-height: 100vh;
+    }
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2.5rem 1.2rem 2rem;
+      background: #fff;
+      border-bottom: 1px solid #e0e7ff;
+      min-height: 64px;
+    }
+    .admin-header .admin-user {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .admin-header .admin-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #6a82fb;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+    .admin-header .dark-toggle {
+      margin-left: 1.5rem;
+      cursor: pointer;
+      font-size: 1.3rem;
+      color: #6a82fb;
+      background: none;
+      border: none;
+      border-radius: 50%;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .admin-header .dark-toggle:hover {
+      background: #eaf0ff;
+    }
+    .admin-dashboard-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin: 2.5rem 2rem 1.5rem 2rem;
+    }
+    .admin-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(100,100,255,0.07);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.7rem;
+      min-height: 120px;
+    }
+    .admin-card .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #6a82fb;
+    }
+    .admin-card .card-value {
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: #232946;
+    }
+    .admin-section {
+      margin: 2rem 2rem 2.5rem 2rem;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(100,100,255,0.07);
+      padding: 2rem 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    @media (max-width: 900px) {
+      .admin-layout { flex-direction: column; }
+      .admin-sidebar { width: 100%; flex-direction: row; gap: 0.5rem; min-height: unset; padding: 1rem; }
+      .admin-sidebar nav { flex-direction: row; gap: 0.5rem; }
+      .admin-main { padding: 0; }
+      .admin-header { padding: 1rem; }
+      .admin-dashboard-cards, .admin-section { margin: 1rem; }
+    }
+    @media (max-width: 600px) {
+      .admin-dashboard-cards { grid-template-columns: 1fr; }
+      .admin-section { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar" aria-label="Admin navigation">
+      <div class="logo"><img src="attached_assets/image_1750584670920.png" alt="Logo" style="width:32px;vertical-align:middle;"> Sunrise Admin</div>
+      <nav>
+        <a href="#dashboard" class="active">Dashboard</a>
+        <a href="#users">Users</a>
+        <a href="#forum">Forum</a>
+        <a href="#classes">Classes</a>
+        <a href="#resources">Resources</a>
+        <a href="#notifications">Notifications</a>
+        <a href="#analytics">Analytics</a>
+        <a href="#settings">Settings</a>
+        <a href="/logout">Logout</a>
+      </nav>
+    </aside>
+    <main class="admin-main">
+      <header class="admin-header">
+        <div style="font-size:1.25rem;font-weight:600;">Admin Dashboard</div>
+        <div class="admin-user">
+          <span class="admin-avatar" aria-label="Admin avatar">A</span>
+          <span>Admin</span>
+          <button class="dark-toggle" id="adminDarkToggle" aria-label="Toggle dark mode">🌙</button>
+        </div>
+      </header>
+      <section id="dashboard" class="admin-dashboard-cards" aria-label="Quick stats">
+        <div class="admin-card"><div class="card-title">Users</div><div class="card-value" id="adminUsersCount">--</div></div>
+        <div class="admin-card"><div class="card-title">Forum Posts</div><div class="card-value" id="adminForumCount">--</div></div>
+        <div class="admin-card"><div class="card-title">Classes</div><div class="card-value" id="adminClassesCount">--</div></div>
+        <div class="admin-card"><div class="card-title">Resources</div><div class="card-value" id="adminResourcesCount">--</div></div>
+        <div class="admin-card"><div class="card-title">Notifications</div><div class="card-value" id="adminNotifCount">--</div></div>
+      </section>
+      <section id="users" class="admin-section" aria-label="User management">
+        <h2>User Management</h2>
+        <a href="/admin/create-user" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">+ Create User</a>
+        <form method="GET" action="/admin" style="margin-bottom:1rem; text-align:right;">
+          <input type="text" name="q" placeholder="Search by username" value="{{ search_query or '' }}" style="padding:0.5rem 1rem; border-radius:8px; border:1px solid #ccc; min-width:200px;" />
+          <button type="submit" class="btn btn-primary" style="margin-left:0.5rem;">Search</button>
+        </form>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse;">
+            <thead>
+              <tr style="background:#f3f6fa;">
+                <th style="padding:0.7rem 1rem; text-align:left;">ID</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Username</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Role</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Paid</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for id, username, role, paid in users %}
+              <tr style="border-bottom:1px solid #eee;">
+                <td style="padding:0.7rem 1rem;">{{ id }}</td>
+                <td style="padding:0.7rem 1rem;">{{ username }}</td>
+                <td style="padding:0.7rem 1rem;">{{ role }}</td>
+                <td style="padding:0.7rem 1rem;">{{ paid }}</td>
+                <td style="padding:0.7rem 1rem;">
+                  <form method="POST" action="/delete-user/{{ id }}" style="display:inline;">
+                    <button type="submit" class="btn btn-primary" style="background:#fc5c7d; color:#fff; padding:0.3rem 0.8rem; font-size:0.95rem; border-radius:8px;">Delete</button>
+                  </form>
+                  <form method="POST" action="/admin/ban-user/{{ id }}" style="display:inline; margin-left:0.5rem;" onsubmit="return confirm('Are you sure you want to ban this user?');">
+                    <button type="submit" class="btn btn-primary" style="background:#232946; color:#fff; padding:0.3rem 0.8rem; font-size:0.95rem; border-radius:8px;">Ban</button>
+                  </form>
+                  <a href="/user-info/{{ id }}" class="btn btn-primary" style="background:#6a82fb; color:#fff; padding:0.3rem 0.8rem; font-size:0.95rem; border-radius:8px; margin-left:0.5rem;">Edit</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section id="forum" class="admin-section" aria-label="Forum moderation">
+        <h2>Forum Moderation</h2>
+        <a href="/admin/create-forum-discussion" class="btn btn-primary" style="margin-bottom:1.5rem;">+ Create New Discussion</a>
+        <form method="GET" action="/admin" style="margin-bottom:1rem; text-align:right;">
+          <input type="text" name="forum_q" placeholder="Search by username or message" value="{{ forum_search_query or '' }}" style="padding:0.5rem 1rem; border-radius:8px; border:1px solid #ccc; min-width:200px;" />
+          <button type="submit" class="btn btn-primary" style="margin-left:0.5rem;">Search</button>
+        </form>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse;">
+            <thead>
+              <tr style="background:#f3f6fa;">
+                <th style="padding:0.7rem 1rem; text-align:left;">ID</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Username</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Message</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Timestamp</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for msg in forum_messages %}
+              <tr style="border-bottom:1px solid #eee;">
+                <td style="padding:0.7rem 1rem;">{{ msg[0] }}</td>
+                <td style="padding:0.7rem 1rem;">{{ msg[2] }}</td>
+                <td style="padding:0.7rem 1rem; max-width:320px; white-space:pre-line;">{{ msg[3] }}</td>
+                <td style="padding:0.7rem 1rem;">{{ msg[7][:19].replace('T', ' ') if msg[7] else '' }}</td>
+                <td style="padding:0.7rem 1rem;">
+                  <form method="POST" action="/admin/delete-forum-message/{{ msg[0] }}" style="display:inline;">
+                    <button type="submit" class="btn btn-primary" style="background:#fc5c7d; color:#fff; padding:0.3rem 0.8rem; font-size:0.95rem; border-radius:8px;">Delete</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section id="classes" class="admin-section" aria-label="Class management">
+        <h2>Class & Content Management</h2>
+        <form method="POST" action="/create-live-class" class="login-form" style="margin-bottom:2rem; max-width:500px;">
+          <input type="text" name="topic" placeholder="Class Topic (e.g., Algebra Basics)" required style="margin-bottom:0.7rem;" />
+          <textarea name="description" placeholder="Short Description (e.g., Covering linear equations and practice problems)" required rows="3" style="border-radius:14px; padding:0.7rem 1.1rem; margin-bottom:0.7rem;"></textarea>
+          <button type="submit" class="btn btn-primary">Create Live Class</button>
+        </form>
+        {% if class_details %}
+        <section class="card-section" style="margin-top:2rem; text-align:center;">
+            <h2>Class Created Successfully!</h2>
+            <p>Share these details with your students.</p>
+            <div class="card animated-card" style="max-width:400px; margin: 1rem auto; text-align:left;">
+                <h3>{{ class_details.topic }}</h3>
+                <p>{{ class_details.description }}</p>
+                <hr style="border:0; border-top: 1px solid #eee; margin: 1rem 0;">
+                <p><strong>Code:</strong> <span style="font-size: 1.2rem; color: #fc5c7d;">{{ class_details.code }}</span></p>
+                <p><strong>PIN:</strong> <span style="font-size: 1.2rem; color: #fc5c7d;">{{ class_details.pin }}</span></p>
+                <p><strong>Join Link:</strong> <a href="{{ class_details.url }}" target="_blank">{{ class_details.url }}</a></p>
+            </div>
+        </section>
+        {% endif %}
+        <div style="margin-top:2.5rem;">
+          <h3>Active & Past Live Classes</h3>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr style="background:#f3f6fa;">
+                  <th style="padding:0.7rem 1rem; text-align:left;">Topic</th>
+                  <th style="padding:0.7rem 1rem; text-align:left;">Code</th>
+                  <th style="padding:0.7rem 1rem; text-align:left;">PIN</th>
+                  <th style="padding:0.7rem 1rem; text-align:left;">Join Link</th>
+                  <th style="padding:0.7rem 1rem; text-align:left;">Status</th>
+                  <th style="padding:0.7rem 1rem; text-align:left;">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for id, class_code, pin, meeting_url, topic, description in active_classes %}
+                <tr style="border-bottom:1px solid #eee;">
+                  <td style="padding:0.7rem 1rem;">{{ topic or 'N/A' }}</td>
+                  <td style="padding:0.7rem 1rem;">{{ class_code }}</td>
+                  <td style="padding:0.7rem 1rem;">{{ pin }}</td>
+                  <td style="padding:0.7rem 1rem;"><a href="{{ meeting_url }}" target="_blank">Join</a></td>
+                  <td style="padding:0.7rem 1rem;"><span style="color:#888;">Unknown</span></td>
+                  <td style="padding:0.7rem 1rem;">
+                    <a href="{{ meeting_url }}" target="_blank" class="btn btn-primary" style="margin-bottom:0.3rem;">Join as Host</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse;">
+            <thead>
+              <tr style="background:#f3f6fa;">
+                <th style="padding:0.7rem 1rem; text-align:left;">ID</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Class Name</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for class_id, class_name in all_classes %}
+              <tr style="border-bottom:1px solid #eee;">
+                <td style="padding:0.7rem 1rem;">{{ class_id }}</td>
+                <td style="padding:0.7rem 1rem;">
+                  <form method="POST" action="/admin/classes/edit/{{ class_id }}" style="display:flex; gap:0.5rem; align-items:center;">
+                    <input type="text" name="name" value="{{ class_name }}" required style="padding:0.3rem 0.7rem; border-radius:8px; border:1px solid #ccc; min-width:120px;" />
+                    <button type="submit" class="btn btn-primary" style="padding:0.3rem 0.8rem; font-size:0.95rem; border-radius:8px;">Save</button>
+                  </form>
+                </td>
+                <td style="padding:0.7rem 1rem;">
+                  <form method="POST" action="/admin/classes/delete/{{ class_id }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this class?');">
+                    <button type="submit" class="btn btn-primary" style="background:#fc5c7d; color:#fff; padding:0.3rem 0.8rem; font-size:0.95rem; border-radius:8px;">Delete</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:2rem; color:#888; font-size:0.98rem;">(Assigning users to classes coming soon.)</div>
+      </section>
+      <section id="resources" class="admin-section" aria-label="Resource management">
+        <h2>Resource Management</h2>
+        <a href="/upload-resource" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">+ Upload Resource</a>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse;">
+            <thead>
+              <tr style="background:#f3f6fa;">
+                <th style="padding:0.7rem 1rem; text-align:left;">File</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Class</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Title</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Description</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Category</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for filename, class_id, filepath, title, description, category in resources %}
+              <tr style="border-bottom:1px solid #eee;">
+                <td style="padding:0.7rem 1rem;">{{ filename }}</td>
+                <td style="padding:0.7rem 1rem;">
+                  {% for cid, cname in all_classes %}{% if cid == class_id %}{{ cname|title }}{% endif %}{% endfor %}
+                </td>
+                <td style="padding:0.7rem 1rem;">{{ title }}</td>
+                <td style="padding:0.7rem 1rem; max-width:220px; white-space:pre-line;">{{ description }}</td>
+                <td style="padding:0.7rem 1rem;">{{ category|title }}</td>
+                <td style="padding:0.7rem 1rem;">
+                  <a href="/uploads/{{ filename }}" target="_blank" class="btn btn-primary" style="margin-bottom:0.3rem;">Download/View</a>
+                  <form method="POST" action="/admin/delete-resource/{{ filename }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this resource?');">
+                    <button type="submit" class="btn btn-primary" style="background:#fc5c7d; color:#fff; padding:0.3rem 0.8rem; font-size:0.95rem; border-radius:8px;">Delete</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section id="notifications" class="admin-section" aria-label="Notifications">
+        <h2>Notifications & Announcements</h2>
+        <a href="/send-notification" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">+ Send Notification</a>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse;">
+            <thead>
+              <tr style="background:#f3f6fa;">
+                <th style="padding:0.7rem 1rem; text-align:left;">Message</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Class</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Date</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for id, message, class_name, created_at in all_notifications %}
+              <tr style="border-bottom:1px solid #eee;">
+                <td style="padding:0.7rem 1rem; max-width:320px; white-space:pre-line;">{{ message }}</td>
+                <td style="padding:0.7rem 1rem;">{{ class_name or 'All' }}</td>
+                <td style="padding:0.7rem 1rem;">{{ created_at[:19].replace('T', ' ') }}</td>
+                <td style="padding:0.7rem 1rem;">
+                  <form method="POST" action="/admin/delete-notification/{{ id }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this notification?');">
+                    <button type="submit" class="btn btn-primary" style="background:#fc5c7d; color:#fff; padding:0.3rem 0.8rem; font-size:0.95rem; border-radius:8px;">Delete</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section id="analytics" class="admin-section" aria-label="Analytics">
+        <h2>Analytics & Reports</h2>
+        <div class="admin-dashboard-cards" style="margin:0 0 2rem 0;">
+          <div class="admin-card"><div class="card-title">Total Users</div><div class="card-value">{{ total_users }}</div></div>
+          <div class="admin-card"><div class="card-title">Forum Posts</div><div class="card-value">{{ total_forum_posts }}</div></div>
+          <div class="admin-card"><div class="card-title">Resources</div><div class="card-value">{{ total_resources }}</div></div>
+          <div class="admin-card"><div class="card-title">Classes</div><div class="card-value">{{ total_classes }}</div></div>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:2rem; margin-bottom:2rem;">
+          <div style="flex:1; min-width:260px;">
+            <h3 style="margin-bottom:0.7rem;">Most Active Users (Forum)</h3>
+            <table style="width:100%; border-collapse:collapse;">
+              <thead><tr style="background:#f3f6fa;"><th style="padding:0.5rem 1rem; text-align:left;">Username</th><th style="padding:0.5rem 1rem; text-align:left;">Posts</th></tr></thead>
+              <tbody>
+                {% for username, count in most_active_users %}
+                <tr><td style="padding:0.5rem 1rem;">{{ username }}</td><td style="padding:0.5rem 1rem;">{{ count }}</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div style="flex:1; min-width:260px;">
+            <h3 style="margin-bottom:0.7rem;">Most Resources by Class</h3>
+            <table style="width:100%; border-collapse:collapse;">
+              <thead><tr style="background:#f3f6fa;"><th style="padding:0.5rem 1rem; text-align:left;">Class</th><th style="padding:0.5rem 1rem; text-align:left;">Resources</th></tr></thead>
+              <tbody>
+                {% for cid, count in most_resource_classes %}
+                <tr><td style="padding:0.5rem 1rem;">{% for id, name in all_classes %}{% if id == cid %}{{ name|title }}{% endif %}{% endfor %}</td><td style="padding:0.5rem 1rem;">{{ count }}</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div style="margin-bottom:1.5rem;">
+          <a href="/admin/download/users" class="btn btn-primary" style="margin-right:0.7rem;">Download Users CSV</a>
+          <a href="/admin/download/forum" class="btn btn-primary" style="margin-right:0.7rem;">Download Forum CSV</a>
+          <a href="/admin/download/resources" class="btn btn-primary">Download Resources CSV</a>
+        </div>
+      </section>
+      <section id="settings" class="admin-section" aria-label="Settings">
+        <h2>Settings & Security</h2>
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse;">
+            <thead>
+              <tr style="background:#f3f6fa;">
+                <th style="padding:0.7rem 1rem; text-align:left;">ID</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Username</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Role</th>
+                <th style="padding:0.7rem 1rem; text-align:left;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for id, username, role, paid in users %}
+                {% if role in ['admin', 'teacher'] %}
+                <tr style="border-bottom:1px solid #eee;">
+                  <td style="padding:0.7rem 1rem;">{{ id }}</td>
+                  <td style="padding:0.7rem 1rem;">{{ username }}</td>
+                  <td style="padding:0.7rem 1rem;">{{ role|title }}</td>
+                  <td style="padding:0.7rem 1rem;">
+                    {% if role != 'admin' %}
+                    <form method="POST" action="/admin/promote/{{ id }}" style="display:inline;">
+                      <button type="submit" class="btn btn-primary" style="background:#6a82fb; color:#fff; padding:0.3rem 0.8rem; font-size:0.95rem; border-radius:8px;">Promote to Admin</button>
+                    </form>
+                    {% endif %}
+                    {% if role in ['admin', 'teacher'] %}
+                    <form method="POST" action="/admin/demote/{{ id }}" style="display:inline; margin-left:0.5rem;">
+                      <button type="submit" class="btn btn-primary" style="background:#fc5c7d; color:#fff; padding:0.3rem 0.8rem; font-size:0.95rem; border-radius:8px;">Demote to Student</button>
+                    </form>
+                    {% endif %}
+                    {% if id != session['user_id'] %}
+                    <form method="POST" action="/admin/delete-admin/{{ id }}" style="display:inline; margin-left:0.5rem;" onsubmit="return confirm('Are you sure you want to delete this admin/teacher?');">
+                      <button type="submit" class="btn btn-primary" style="background:#232946; color:#fff; padding:0.3rem 0.8rem; font-size:0.95rem; border-radius:8px;">Delete</button>
+                    </form>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:2rem; color:#888; font-size:0.98rem;">(Audit logs coming soon.)</div>
+      </section>
+    </main>
+  </div>
+  <script>
+    // Dark mode toggle for admin
+    const adminDarkToggle = document.getElementById('adminDarkToggle');
+    adminDarkToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('adminDarkMode', document.body.classList.contains('dark-mode') ? 'on' : 'off');
+    });
+    if (localStorage.getItem('adminDarkMode') === 'on') {
+      document.body.classList.add('dark-mode');
+    }
+    // Sidebar navigation (scroll to section)
+    document.querySelectorAll('.admin-sidebar nav a').forEach(link => {
+      link.addEventListener('click', function(e) {
+        if (this.hash) {
+          e.preventDefault();
+          document.querySelectorAll('.admin-sidebar nav a').forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+          document.querySelector(this.hash).scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html> 

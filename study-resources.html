@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Study Resources - Sunrise Education Centre</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* Styles for nested tabs */
+      .sub-tabs {
+        display: flex;
+        justify-content: center;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 1rem;
+      }
+      .sub-tab-button {
+        background: #f1f3f5;
+        border: none;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: #555;
+        margin: 0 0.4rem;
+        transition: all 0.3s ease;
+      }
+      .sub-tab-button.active {
+        background: #6a82fb;
+        color: #fff;
+      }
+      .category-content {
+        display: none;
+      }
+      .category-content.active {
+        display: block;
+      }
+      body.dark-mode .sub-tabs {
+        border-bottom-color: #333;
+      }
+      body.dark-mode .sub-tab-button {
+        background: #333;
+        color: #ccc;
+      }
+      body.dark-mode .sub-tab-button.active {
+        background: #6a82fb;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar glassmorphic">
+      <div class="container nav-content">
+        <div class="nav-logo">
+          <img src="attached_assets/image_1750584670920.png" alt="Logo">
+          <span>Sunrise Education Centre</span>
+        </div>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/online-class">Live Class</a></li>
+          <li><a href="/forum">Forum</a></li>
+          {% if username %}
+            <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+          {% else %}
+            <li><a href="/auth" class="btn btn-primary">Login</a></li>
+          {% endif %}
+        </ul>
+        <button class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+      </div>
+    </nav>
+    <header class="hero-section">
+      <div class="container hero-content">
+        <h1>Study Resources</h1>
+        <p>Access notes, worksheets, practice problems, and solutions to boost your learning!</p>
+        <a href="#resources" class="btn btn-cta">Browse Resources</a>
+      </div>
+    </header>
+    <main class="container main-content">
+      <section id="resources" class="card-section">
+        <h2>Available Resources</h2>
+        
+        <!-- Class Tabs -->
+        <div class="tabs">
+          {% for class_id, class_name in all_classes %}
+            {% if class_name not in ['admin', 'teacher'] %}
+              <button class="tab-button" onclick="showClass(event, 'class-{{ class_id }}')">{{ class_name|title }}</button>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <!-- Content for each class -->
+        <div class="tab-content-wrapper">
+          {% set categories = [
+              ('worksheet', 'Worksheets'),
+              ('pyq', 'PYQs'),
+              ('case-base', 'Case-Base'),
+              ('assertion-reasoning', 'Assertion/Reasoning'),
+              ('formula', 'Formula')
+          ] %}
+          {% for class_id, class_name in all_classes %}
+            {% if class_name not in ['admin', 'teacher'] %}
+              <div id="class-{{ class_id }}" class="class-content">
+                <!-- Category Sub-Tabs -->
+                <div class="sub-tabs">
+                  {% for cat_key, cat_name in categories %}
+                    {% if (cat_key in ['worksheet', 'formula'] and paid_status == 'paid') or (cat_key not in ['worksheet', 'formula']) %}
+                      <button class="sub-tab-button" onclick="showCategory(event, 'class-{{ class_id }}-cat-{{ cat_key }}')">{{ cat_name }}</button>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+
+                <!-- Resources for each category -->
+                {% for cat_key, cat_name in categories %}
+                  <div id="class-{{ class_id }}-cat-{{ cat_key }}" class="category-content">
+                    <div class="card-grid">
+                      {% set has_resources = false %}
+                      {% for filename, res_class_id, filepath, title, description, category in resources %}
+                        {% if res_class_id == class_id and category == cat_key %}
+                          {% set has_resources = true %}
+                          <div class="card animated-card" style="text-align:left;">
+                            <strong style="font-size:1.1rem;">{{ title }}</strong><br>
+                            {% if description %}<span style="color:#555; font-size:0.98rem;">{{ description }}</span><br>{% endif %}
+                            <span style="color:#888; font-size:0.95rem;">File: {{ filename }}</span><br>
+                            <a href="/uploads/{{ filename }}" target="_blank" class="btn btn-primary" style="margin-top:0.7rem;">Download/View</a>
+                          </div>
+                        {% endif %}
+                      {% endfor %}
+                      {% if not has_resources %}
+                        <div style="color:#888; text-align:center; grid-column: 1 / -1;">No resources available in this category yet.</div>
+                      {% endif %}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+      <div style="text-align:center; margin: 1.5rem 0 2rem 0;">
+        <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="container footer-content">
+        <div class="footer-social">
+          <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">Instagram</a>
+          <a href="https://www.youtube.com/@MohitNariyani" target="_blank">YouTube</a>
+        </div>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Contact Us</a>
+        </div>
+        <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+    <script src="study-resources.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Show the first tab by default
+        const firstTab = document.querySelector('.tab-button');
+        if (firstTab) {
+          firstTab.click();
+        }
+
+        const toggleBtn = document.getElementById('darkModeToggle');
+        function setDarkMode(on) {
+          if (on) {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('darkMode', 'on');
+          } else {
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('darkMode', 'off');
+          }
+        }
+        toggleBtn.addEventListener('click', () => {
+          setDarkMode(!document.body.classList.contains('dark-mode'));
+        });
+        if (localStorage.getItem('darkMode') === 'on') {
+          document.body.classList.add('dark-mode');
+        }
+      });
+    </script>
+  </body>
+</html>

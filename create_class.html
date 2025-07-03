@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Create Live Class - Admin</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="navbar glassmorphic">
+    <div class="container nav-content">
+      <div class="nav-logo">
+        <img src="attached_assets/image_1750584670920.png" alt="Logo">
+        <span>Sunrise Education Centre</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/admin">Admin Panel</a></li>
+        <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main class="container main-content">
+    <section class="user-info-section">
+      <h2>Create a New Live Class</h2>
+      <form method="POST" action="/create-live-class" class="login-form">
+        <input type="text" name="topic" placeholder="Class Topic (e.g., Algebra Basics)" required />
+        <textarea name="description" placeholder="Short Description (e.g., Covering linear equations and practice problems)" required rows="3" style="border-radius:14px; padding:0.7rem 1.1rem;"></textarea>
+        <button type="submit" class="btn btn-primary">Create Class & Get Details</button>
+      </form>
+    </section>
+
+    {% if class_details %}
+    <section class="card-section" style="margin-top:2rem; text-align:center;">
+        <h2>Class Created Successfully!</h2>
+        <p>Share these details with your students.</p>
+        <div class="card animated-card" style="max-width:400px; margin: 1rem auto; text-align:left;">
+            <h3>{{ class_details.topic }}</h3>
+            <p>{{ class_details.description }}</p>
+            <hr style="border:0; border-top: 1px solid #eee; margin: 1rem 0;">
+            <p><strong>Code:</strong> <span style="font-size: 1.2rem; color: #fc5c7d;">{{ class_details.code }}</span></p>
+            <p><strong>PIN:</strong> <span style="font-size: 1.2rem; color: #fc5c7d;">{{ class_details.pin }}</span></p>
+            <p><strong>Join Link:</strong> <a href="{{ class_details.url }}" target="_blank">{{ class_details.url }}</a></p>
+        </div>
+    </section>
+    {% endif %}
+
+  </main>
+  <footer class="footer">
+    <div class="container footer-content">
+      <p>&copy; 2024 Sunrise Education Centre</p>
+    </div>
+  </footer>
+</body>
+</html> 

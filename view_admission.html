@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>View Admissions - Admin</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    table.admissions-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(100,100,255,0.07);
+    }
+    table.admissions-table th, table.admissions-table td {
+      padding: 0.7rem 1rem;
+      text-align: left;
+    }
+    table.admissions-table thead tr {
+      background: #f3f6fa;
+    }
+    table.admissions-table tbody tr:nth-child(even) {
+      background: #f9fafb;
+    }
+    table.admissions-table tbody tr:hover {
+      background: #e6f9f3;
+      transition: background 0.2s;
+    }
+    table.admissions-table th {
+      color: #6a82fb;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+    table.admissions-table td {
+      color: #232946;
+      font-size: 1rem;
+    }
+    table.admissions-table img {
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(100,100,255,0.10);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar glassmorphic">
+    <div class="container nav-content">
+      <div class="nav-logo">
+        <img src="attached_assets/image_1750584670920.png" alt="Logo">
+        <span>Sunrise Education Centre</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/admin">Admin Panel</a></li>
+        <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main class="container main-content">
+    <section class="card-section" style="max-width:1100px; margin:0 auto;">
+      <h2>All Admissions</h2>
+      <div style="overflow-x:auto;">
+        <table class="admissions-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Student Name</th>
+              <th>Class</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Parent Name</th>
+              <th>Parent Phone</th>
+              <th>Photo</th>
+              <th>Submitted At</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for adm in admissions %}
+            <tr>
+              <td>{{ adm[0] }}</td>
+              <td>{{ adm[1] }}</td>
+              <td>{{ adm[5] }}</td>
+              <td>{{ adm[3] }}</td>
+              <td>{{ adm[4] }}</td>
+              <td>{{ adm[6] }}</td>
+              <td>{{ adm[7] }}</td>
+              <td>
+                {% if adm[8] %}
+                  <img src="/uploads/admission_photos/{{ adm[8] }}" alt="Photo" style="width:48px; height:48px; object-fit:cover; border-radius:8px;">
+                {% else %}-{% endif %}
+              </td>
+              <td>{{ adm[9] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-social">
+        <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">Instagram</a>
+        <a href="https://www.youtube.com/@MohitNariyani" target="_blank">YouTube</a>
+      </div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Contact Us</a>
+      </div>
+      <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
+    </div>
+  </footer>
+</body>
+</html> 
