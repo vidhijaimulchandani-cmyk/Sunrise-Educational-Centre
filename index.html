@@ -244,6 +244,35 @@
           <div style="font-size:1.05rem; font-weight:600; color:#6a82fb; margin-top:0.7rem;">Yash K Moolchandani</div>
         </div>
       </section>
+
+      <!-- FAQ Section -->
+      <section id="faq" class="card-section" style="margin: 2rem 0 3rem 0;">
+        <div class="card animated-card" style="max-width: 700px; margin: 0 auto; padding: 2rem 0;">
+          <h2 style="text-align: center; margin-bottom: 2rem; color: #1e293b; font-size: 2rem; font-weight: 700;">Frequently Asked Questions</h2>
+          <div class="faq-accordion" style="width:90%;margin:0 auto;">
+            <div class="faq-item" style="border-bottom:1px solid #e5e7eb;">
+              <button class="faq-question" style="width:100%;background:none;border:none;text-align:left;padding:1rem 0;font-size:1.05rem;font-weight:600;color:#232946;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">What classes do you offer?<span style='font-size:1.2rem;'>&#x25BC;</span></button>
+              <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease;padding:0 0.5rem;color:#64748b;font-size:0.98rem;">Classes 9-12 Mathematics (Foundation & JEE level).</div>
+            </div>
+            <div class="faq-item" style="border-bottom:1px solid #e5e7eb;">
+              <button class="faq-question" style="width:100%;background:none;border:none;text-align:left;padding:1rem 0;font-size:1.05rem;font-weight:600;color:#232946;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">What are the class timings?<span style='font-size:1.2rem;'>&#x25BC;</span></button>
+              <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease;padding:0 0.5rem;color:#64748b;font-size:0.98rem;">Evenings, 4-9 PM (see schedule above).</div>
+            </div>
+            <div class="faq-item" style="border-bottom:1px solid #e5e7eb;">
+              <button class="faq-question" style="width:100%;background:none;border:none;text-align:left;padding:1rem 0;font-size:1.05rem;font-weight:600;color:#232946;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">How do I enroll?<span style='font-size:1.2rem;'>&#x25BC;</span></button>
+              <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease;padding:0 0.5rem;color:#64748b;font-size:0.98rem;">Fill the admission form or call us.</div>
+            </div>
+            <div class="faq-item" style="border-bottom:1px solid #e5e7eb;">
+              <button class="faq-question" style="width:100%;background:none;border:none;text-align:left;padding:1rem 0;font-size:1.05rem;font-weight:600;color:#232946;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">Do you provide study materials?<span style='font-size:1.2rem;'>&#x25BC;</span></button>
+              <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease;padding:0 0.5rem;color:#64748b;font-size:0.98rem;">Yes, all materials and resources are provided.</div>
+            </div>
+            <div class="faq-item" style="border-bottom:1px solid #e5e7eb;">
+              <button class="faq-question" style="width:100%;background:none;border:none;text-align:left;padding:1rem 0;font-size:1.05rem;font-weight:600;color:#232946;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">What if my child misses a class?<span style='font-size:1.2rem;'>&#x25BC;</span></button>
+              <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease;padding:0 0.5rem;color:#64748b;font-size:0.98rem;">Recorded lectures and extra doubt sessions available.</div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
     <footer class="footer">
       <div class="container footer-content">
@@ -326,6 +355,22 @@
         });
         notifDropdown.addEventListener('click', function(e) { e.stopPropagation(); });
       }
+
+      // Minimal FAQ accordion
+      document.querySelectorAll('.faq-question').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const answer = this.parentElement.querySelector('.faq-answer');
+          const open = answer.style.maxHeight && answer.style.maxHeight !== '0px';
+          // Close all
+          document.querySelectorAll('.faq-answer').forEach(a => a.style.maxHeight = '0');
+          document.querySelectorAll('.faq-question span').forEach(s => s.style.transform = 'rotate(0deg)');
+          // Open this one if not already open
+          if (!open) {
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+            this.querySelector('span').style.transform = 'rotate(180deg)';
+          }
+        });
+      });
     </script>
   </body>
 </html>

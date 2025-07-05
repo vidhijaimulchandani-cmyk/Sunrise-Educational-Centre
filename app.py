@@ -17,6 +17,10 @@ import csv
 from io import StringIO
 from collections import Counter
 from functools import wraps
+import sqlite3
+
+# Import bulk upload routes
+from bulk_upload.routes import bulk_upload_bp
 
 def admin_required(f):
     @wraps(f)
@@ -28,6 +32,9 @@ def admin_required(f):
 
 app = Flask(__name__, static_folder='.', template_folder='.')
 app.secret_key = 'your_secret_key_here'  # Change this to a secure random value in production
+
+# Register blueprints
+app.register_blueprint(bulk_upload_bp)
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'pdf', 'docx', 'png', 'jpg', 'jpeg'}
@@ -315,6 +322,8 @@ def auth():
                 session['user_id'] = user_id
                 session['username'] = username
                 session['role'] = user_role
+                if username == 'yash' and user_role == 'admin':
+                    return redirect(url_for('special_dashboard'))
                 if user_role in ['admin', 'teacher']:
                     return redirect(url_for('admin_panel'))
                 else:
@@ -794,6 +803,23 @@ def delete_topic_route(topic_id):
 @app.route('/uploads/forum_media/<filename>')
 def uploaded_forum_media(filename):
     return send_from_directory(os.path.join(UPLOAD_FOLDER, 'forum_media'), filename)
+
+@app.route('/special-dashboard')
+def special_dashboard():
+    if session.get('username') == 'yash' and session.get('role') == 'admin':
+        return render_template('special_dashboard.html')
+    else:
+        return redirect(url_for('home'))
+
+@app.route('/admin/admissions')
+@admin_required
+def view_admissions():
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    c.execute('''SELECT id, student_name, class, student_phone, student_email, parent_name, parent_phone, passport_photo, submitted_at, school_name, maths_marks, maths_rating, last_percentage, dob FROM admissions ORDER BY submitted_at DESC''')
+    admissions = c.fetchall()
+    conn.close()
+    return render_template('view_admission.html', admissions=admissions)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))

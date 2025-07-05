@@ -202,6 +202,14 @@
           <option value="12 Applied">12 Applied</option>
           <option value="12 Core">12 Core</option>
         </select>
+        <label for="school_name">School Attending/Attended</label>
+        <input type="text" id="school_name" name="school_name" required placeholder="Enter school name">
+        <label for="maths_marks">Marks in Last Class in Maths <span style='font-weight:400;'>(out of 80)</span></label>
+        <input type="number" id="maths_marks" name="maths_marks" min="0" max="80" required placeholder="e.g. 65">
+        <label for="maths_rating">Rate Yourself in Maths <span style='font-weight:400;'>(out of 10)</span></label>
+        <input type="number" id="maths_rating" name="maths_rating" min="0" max="10" step="0.1" required placeholder="e.g. 7.5">
+        <label for="last_percentage">Last Class Percentage <span style='font-weight:400;'>(%)</span></label>
+        <input type="number" id="last_percentage" name="last_percentage" min="0" max="100" step="0.01" required placeholder="e.g. 82.5">
         <label for="parent_name">Parent/Guardian Name</label>
         <input type="text" id="parent_name" name="parent_name" required>
         <label for="parent_phone">Parent/Guardian Mobile Number</label>

@@ -7,6 +7,11 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
   <link rel="stylesheet" href="style.css" />
   <style>
+    body {
+      background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+      color: #1e293b;
+      font-family: 'Inter', sans-serif;
+    }
     table.admissions-table {
       width: 100%;
       border-collapse: separate;
@@ -19,6 +24,7 @@
     table.admissions-table th, table.admissions-table td {
       padding: 0.7rem 1rem;
       text-align: left;
+      color: #1e293b;
     }
     table.admissions-table thead tr {
       background: #f3f6fa;
@@ -31,17 +37,23 @@
       transition: background 0.2s;
     }
     table.admissions-table th {
-      color: #6a82fb;
+      color: #2563eb;
       font-weight: 700;
       font-size: 1.05rem;
     }
     table.admissions-table td {
-      color: #232946;
+      color: #1e293b;
       font-size: 1rem;
     }
     table.admissions-table img {
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(100,100,255,0.10);
+    }
+    h2, .footer, .footer a, .footer-copy {
+      color: #1e293b;
+    }
+    .footer {
+      background: #e0e7ff;
     }
   </style>
 </head>
@@ -67,9 +79,14 @@
             <tr>
               <th>ID</th>
               <th>Student Name</th>
+              <th>DOB</th>
               <th>Class</th>
+              <th>School</th>
               <th>Phone</th>
               <th>Email</th>
+              <th>Maths Marks (/80)</th>
+              <th>Maths Rating (/10)</th>
+              <th>Last %</th>
               <th>Parent Name</th>
               <th>Parent Phone</th>
               <th>Photo</th>
@@ -81,17 +98,22 @@
             <tr>
               <td>{{ adm[0] }}</td>
               <td>{{ adm[1] }}</td>
-              <td>{{ adm[5] }}</td>
+              <td>{{ adm[13] }}</td>
+              <td>{{ adm[2] }}</td>
+              <td>{{ adm[9] }}</td>
               <td>{{ adm[3] }}</td>
               <td>{{ adm[4] }}</td>
+              <td>{{ adm[10] }}</td>
+              <td>{{ adm[11] }}</td>
+              <td>{{ adm[12] }}</td>
+              <td>{{ adm[5] }}</td>
               <td>{{ adm[6] }}</td>
-              <td>{{ adm[7] }}</td>
               <td>
-                {% if adm[8] %}
-                  <img src="/uploads/admission_photos/{{ adm[8] }}" alt="Photo" style="width:48px; height:48px; object-fit:cover; border-radius:8px;">
+                {% if adm[7] %}
+                  <img src="/uploads/admission_photos/{{ adm[7] }}" alt="Photo" style="width:48px; height:48px; object-fit:cover; border-radius:8px;">
                 {% else %}-{% endif %}
               </td>
-              <td>{{ adm[9] }}</td>
+              <td>{{ adm[8] }}</td>
             </tr>
             {% endfor %}
           </tbody>
