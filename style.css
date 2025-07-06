@@ -875,3 +875,18 @@ body.dark-mode .tab-button.active {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+.dark-mode .faq-accordion {
+  background: #232946;
+}
+.dark-mode .faq-item {
+  border-bottom: 1px solid #444;
+}
+.dark-mode .faq-question {
+  color: #f4f4f4 !important;
+  background: none;
+}
+.dark-mode .faq-answer {
+  color: #bfc7d5 !important;
+  background: none;
+}

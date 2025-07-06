@@ -352,6 +352,42 @@ class BulkUploadHandler:
             logger.error(f"Error creating Excel template: {str(e)}")
             return False
 
+    def create_queries_table(self):
+        """Create the queries table for 'Any More Query' submissions if it doesn't exist."""
+        try:
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS queries (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL,
+                    email TEXT NOT NULL,
+                    message TEXT NOT NULL,
+                    submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            ''')
+            conn.commit()
+            conn.close()
+            logger.info("'queries' table ensured in database.")
+        except Exception as e:
+            logger.error(f"Error creating queries table: {str(e)}")
+
+    def save_query(self, name, email, message):
+        """Save a new query to the queries table."""
+        try:
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO queries (name, email, message) VALUES (?, ?, ?)
+            ''', (name, email, message))
+            conn.commit()
+            conn.close()
+            logger.info(f"Saved query from {name} ({email})")
+            return True
+        except Exception as e:
+            logger.error(f"Error saving query: {str(e)}")
+            return False
+
 # Example usage
 if __name__ == "__main__":
     # Initialize handler

@@ -12,32 +12,70 @@
       <div class="container nav-content">
         <div class="nav-logo">
           <img src="attached_assets/image_1750584670920.png" alt="Logo">
-          <span>Sunrise Education Centre</span>
         </div>
         <ul class="nav-links">
-          <li><a href="#programs">Programs</a></li>
+          <li class="mega-dropdown" id="programsDropdown">
+            <a href="#programs" id="programsLink">Programs</a>
+            <div class="mega-menu" id="programsMenu">
+              <div class="mega-menu-content">
+                <div class="mega-menu-left">
+                  <div class="mega-category">
+                    <div class="cat-title">Mathematics (Class 9-12)</div>
+                    <div class="cat-desc">Core, Standard, Applied</div>
+                  </div>
+                  <div class="mega-category">
+                    <div class="cat-title">Physics (Class 11-12)</div>
+                    <div class="cat-desc">Concepts, Numericals, Boards & JEE</div>
+                  </div>
+                  <div class="mega-category">
+                    <div class="cat-title">Chemistry (Class 11-12)</div>
+                    <div class="cat-desc">Physical, Organic, Inorganic</div>
+                  </div>
+                  <div class="mega-category">
+                    <div class="cat-title">Foundation (Class 8-10)</div>
+                    <div class="cat-desc">Olympiad, NTSE, Basics</div>
+                  </div>
+                  <div class="mega-category">
+                    <div class="cat-title">Olympiad/NTSE</div>
+                    <div class="cat-desc">Maths, Science, NTSE</div>
+                  </div>
+                </div>
+                <div class="mega-menu-right">
+                  <div class="mega-featured"><span class="mega-icon">9️⃣</span> Class 9</div>
+                  <div class="mega-featured"><span class="mega-icon">🔟</span> Class 10</div>
+                  <div class="mega-featured"><span class="mega-icon">1️⃣1️⃣</span> Class 11</div>
+                  <div class="mega-featured"><span class="mega-icon">1️⃣2️⃣</span> Class 12</div>
+                  <div class="mega-featured"><span class="mega-icon">🏅</span> Olympiad</div>
+                </div>
+              </div>
+            </div>
+          </li>
           <li><a href="#about-us">About</a></li>
           <li><a href="/online-class">Live Class</a></li>
           <li><a href="/study-resources">Study Resources</a></li>
           <li><a href="/forum">Forum</a></li>
-          {% if user_notifications and user_notifications|length > 0 %}
           <li style="position:relative;">
             <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative;">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
+              {% if user_notifications and user_notifications|length > 0 %}
               <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
+              {% endif %}
             </button>
             <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:#fff; min-width:260px; box-shadow:0 4px 24px rgba(100,100,255,0.13); border-radius:12px; z-index:100; padding:1rem;">
               <strong style="color:#6a82fb;">Notifications</strong>
               <ul style="list-style:none; padding:0; margin:0;">
-                {% for id, message, created_at in user_notifications %}
-                <li style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946;">
-                  {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ created_at[:19].replace('T', ' ') }}</span>
-                </li>
-                {% endfor %}
+                {% if user_notifications and user_notifications|length > 0 %}
+                  {% for id, message, created_at in user_notifications %}
+                  <li style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946;">
+                    {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ created_at[:19].replace('T', ' ') }}</span>
+                  </li>
+                  {% endfor %}
+                {% else %}
+                  <li style="padding:0.7rem 0; color:#888; text-align:center;">No new notifications.</li>
+                {% endif %}
               </ul>
             </div>
           </li>
-          {% endif %}
           {% if username %}
             <li><a href="/logout" class="btn btn-primary">Logout</a></li>
           {% else %}
@@ -61,37 +99,7 @@
         </div>
       </div>
     </header>
-    <!-- Stats Section -->
-    <section class="stats-section" style="display:flex; justify-content:center; gap:2rem; margin:2.5rem 0 2.5rem 0; flex-wrap:wrap;">
-      <div style="background:#fff8e1; border-radius:20px; padding:2.2rem 2.5rem; min-width:220px; text-align:center; box-shadow:0 2px 12px rgba(100,100,100,0.07);">
-        <div style="font-size:2rem; font-weight:700; color:#232946;">7+ Years</div>
-        <div style="font-size:1.1rem; color:#232946; margin-top:0.5rem;">of Experience</div>
-      </div>
-      <div style="background:#ffe6e6; border-radius:20px; padding:2.2rem 2.5rem; min-width:220px; text-align:center; box-shadow:0 2px 12px rgba(100,100,100,0.07);">
-        <div style="font-size:2rem; font-weight:700; color:#232946;">500+</div>
-        <div style="font-size:1.1rem; color:#232946; margin-top:0.5rem;">Students Taught</div>
-      </div>
-      <div style="background:#e3f7fc; border-radius:20px; padding:2.2rem 2.5rem; min-width:220px; text-align:center; box-shadow:0 2px 12px rgba(100,100,100,0.07);">
-        <div style="font-size:2rem; font-weight:700; color:#232946;">1000+</div>
-        <div style="font-size:1.1rem; color:#232946; margin-top:0.5rem;">Hours of Classes</div>
-      </div>
-      <div style="background:#ede6ff; border-radius:20px; padding:2.2rem 2.5rem; min-width:220px; text-align:center; box-shadow:0 2px 12px rgba(100,100,100,0.07);">
-        <div style="font-size:2rem; font-weight:700; color:#232946;">95%</div>
-        <div style="font-size:1.1rem; color:#232946; margin-top:0.5rem;">Success Rate</div>
-      </div>
-    </section>
-    <main class="container main-content">
-      <!-- Topper Student Review Card -->
-      <!-- (Moved below into Wall of Fame section) -->
-      <!-- Enroll Now Card -->
-      <div class="card-section" style="display:flex; justify-content:center;">
-        <div class="card animated-card enroll-card" style="max-width:420px; width:100%; margin:0 auto;">
-          <h2>Ready to Join Sunrise?</h2>
-          <p>Start your learning journey with us. Fill out our quick admission form and get started today!</p>
-          <a href="admission.html" class="btn btn-primary">Enroll Now</a>
-        </div>
-      </div>
-      <!-- Combined Subjects & Class Timings Card -->
+    <!-- Subjects We Offer section (restored to top) -->
       <section class="card-section" style="display:flex; justify-content:center;">
         <div class="card animated-card" style="max-width:700px; width:100%; margin:0 auto; padding:2.5rem;">
           <h2 style="text-align:center; margin-bottom:2rem;">Subjects We Offer</h2>
@@ -129,14 +137,36 @@
           </div>
         </div>
       </section>
-      <style>
-        .subject-btn:active, .subject-btn.active {
-          background: #fff !important;
-          color: inherit !important;
-          border: 2px solid currentColor !important;
-        }
-        .subject-btn div { pointer-events: none; }
-      </style>
+    <!-- Stats Section -->
+    <section class="stats-section" style="display:flex; justify-content:center; gap:2rem; margin:2.5rem 0 2.5rem 0; flex-wrap:wrap;">
+      <div style="background:#fff8e1; border-radius:20px; padding:2.2rem 2.5rem; min-width:220px; text-align:center; box-shadow:0 2px 12px rgba(100,100,100,0.07);">
+        <div style="font-size:2rem; font-weight:700; color:#232946;">7+ Years</div>
+        <div style="font-size:1.1rem; color:#232946; margin-top:0.5rem;">of Experience</div>
+      </div>
+      <div style="background:#ffe6e6; border-radius:20px; padding:2.2rem 2.5rem; min-width:220px; text-align:center; box-shadow:0 2px 12px rgba(100,100,100,0.07);">
+        <div style="font-size:2rem; font-weight:700; color:#232946;">500+</div>
+        <div style="font-size:1.1rem; color:#232946; margin-top:0.5rem;">Students Taught</div>
+      </div>
+      <div style="background:#e3f7fc; border-radius:20px; padding:2.2rem 2.5rem; min-width:220px; text-align:center; box-shadow:0 2px 12px rgba(100,100,100,0.07);">
+        <div style="font-size:2rem; font-weight:700; color:#232946;">1000+</div>
+        <div style="font-size:1.1rem; color:#232946; margin-top:0.5rem;">Hours of Classes</div>
+      </div>
+      <div style="background:#ede6ff; border-radius:20px; padding:2.2rem 2.5rem; min-width:220px; text-align:center; box-shadow:0 2px 12px rgba(100,100,100,0.07);">
+        <div style="font-size:2rem; font-weight:700; color:#232946;">95%</div>
+        <div style="font-size:1.1rem; color:#232946; margin-top:0.5rem;">Success Rate</div>
+      </div>
+    </section>
+    <main class="container main-content">
+      <!-- Topper Student Review Card -->
+      <!-- (Moved below into Wall of Fame section) -->
+      <!-- Enroll Now Card -->
+      <div class="card-section" style="display:flex; justify-content:center;">
+        <div class="card animated-card enroll-card" style="max-width:420px; width:100%; margin:0 auto;">
+          <h2>Ready to Join Sunrise?</h2>
+          <p>Start your learning journey with us. Fill out our quick admission form and get started today!</p>
+          <a href="admission.html" class="btn btn-primary">Enroll Now</a>
+        </div>
+      </div>
       <section id="about-teacher" class="card-section" style="text-align:center;">
         <div style="background:#fff8e1; border-radius:32px; box-shadow:0 4px 32px rgba(100,200,100,0.10); padding:3.5rem 2.5rem 3rem 2.5rem; max-width:800px; margin:0 auto; min-height:350px; color:#14213d; position:relative; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:2.5rem;">
           <div style="flex:1 1 320px; min-width:260px;">
@@ -161,8 +191,8 @@
               </div>
             </div>
           </div>
-          <div style="flex:0 0 220px; display:flex; justify-content:center; align-items:center;">
-            <!-- Photo placeholder: left blank as requested -->
+          <div style="flex:0 0 300px; display:flex; justify-content:center; align-items:center; background:#fff8e1; border-radius:28px; box-shadow:0 6px 32px rgba(100,200,100,0.13); padding:18px;">
+            <img src="img/yash.jpg" alt="About the Teacher" style="width:280px; height:360px; object-fit:cover; border-radius:20px; box-shadow:none; background:#fff8e1;" />
           </div>
           <div style="position:absolute; left:0; right:0; bottom:1.5rem; text-align:center;">
             <div style="font-weight:700; font-size:1.15rem; color:#14213d;">Teaching Experience</div>
@@ -205,38 +235,166 @@
       <section id="contact" class="contact-section">
         <h2>Get in Touch</h2>
         <div class="contact-grid">
-          <div class="contact-card">
+          <div class="contact-card instagram-bg">
             <h4>Instagram</h4>
             <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank" class="btn btn-instagram">Follow Us</a>
           </div>
-          <div class="contact-card">
+          <div class="contact-card youtube-bg">
             <h4>YouTube</h4>
             <a href="https://www.youtube.com/@MohitNariyani" target="_blank" class="btn btn-youtube">Subscribe</a>
           </div>
-          <div class="contact-card">
+          <div class="contact-card phone-bg">
             <h4>Phone</h4>
             <a href="tel:+917224860881" class="btn btn-primary">+91 72248 60881</a>
           </div>
         </div>
       </section>
-      <section class="subscribe-section">
-        <h2>Stay Informed</h2>
-        <form class="subscribe-form">
-          <input type="text" placeholder="Your name" required />
-          <input type="email" placeholder="Your email" required />
-          <button type="submit" class="btn btn-primary">Subscribe</button>
-        </form>
-      </section>
       <div style="text-align:center; margin: 1.5rem 0 2rem 0;">
         <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
       </div>
       <section id="about-us" class="card-section" style="text-align:center; margin-top:2rem;">
-        <div class="card animated-card" style="max-width:600px; margin:0 auto; padding:2rem;">
+        <div class="card animated-card" style="max-width:600px; margin:0 auto; padding:2rem; background:#fff8e1; border-radius:32px; box-shadow:0 4px 32px rgba(100,200,100,0.10); color:#14213d;">
           <h2>About Us</h2>
           <p>Sunrise Education Centre is dedicated to empowering students in mathematics and science for classes 9 to 12. Our mission is to provide personalized coaching, concept clarity, and real results through interactive sessions and a supportive community. Led by experienced educators, we focus on holistic development and academic excellence.</p>
           <p>We believe in nurturing curiosity, building strong foundations, and celebrating every achievement. Join us to experience a new way of learning!</p>
         </div>
       </section>
+      <style>
+        body.dark-mode #about-us,
+        body.dark-mode #about-us h2,
+        body.dark-mode #about-us div,
+        body.dark-mode #about-us span,
+        body.dark-mode #about-us p {
+          color: #f4f4f4 !important;
+        }
+        body.dark-mode #about-us .card,
+        body.dark-mode #about-us > div {
+          background: #232946 !important;
+          box-shadow: 0 4px 32px rgba(35,41,70,0.25) !important;
+        }
+        .mega-dropdown { position: relative; }
+        .mega-menu {
+          display: none;
+          position: absolute;
+          left: 0;
+          top: 2.5rem;
+          width: 600px;
+          background: #fff;
+          box-shadow: 0 4px 24px rgba(100,100,255,0.13);
+          border-radius: 16px;
+          z-index: 1000;
+          padding: 1.5rem 2rem;
+          animation: fadeIn 0.2s;
+        }
+        .mega-menu-content {
+          display: flex;
+          gap: 2.5rem;
+        }
+        .mega-menu-left {
+          flex: 2;
+          display: flex;
+          flex-direction: column;
+          gap: 1.2rem;
+        }
+        .mega-category .cat-title {
+          font-weight: 700;
+          font-size: 1.08rem;
+          color: #232946;
+        }
+        .mega-category .cat-desc {
+          font-size: 0.98rem;
+          color: #888;
+        }
+        .mega-menu-right {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 1.1rem;
+          justify-content: center;
+        }
+        .mega-featured {
+          background: #f8fafc;
+          border-radius: 12px;
+          padding: 1rem 1.2rem;
+          font-size: 1.08rem;
+          font-weight: 600;
+          color: #232946;
+          display: flex;
+          align-items: center;
+          gap: 0.7rem;
+          box-shadow: 0 2px 8px rgba(100,100,255,0.07);
+        }
+        .mega-icon {
+          font-size: 1.4rem;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .contact-grid {
+          display: flex;
+          gap: 2.5rem;
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+        .contact-card {
+          border-radius: 22px;
+          box-shadow: 0 4px 24px rgba(100,100,255,0.13);
+          padding: 2.2rem 2.2rem 2rem 2.2rem;
+          min-width: 240px;
+          max-width: 320px;
+          text-align: center;
+          flex: 1 1 260px;
+          font-size: 1.15rem;
+          margin-bottom: 1.5rem;
+          color: #fff;
+        }
+        .contact-card h4 {
+          font-size: 1.3rem;
+          font-weight: 700;
+          margin-bottom: 1.1rem;
+          color: #fff;
+        }
+        .instagram-bg {
+          background: #ffe6e6;
+          color: #232946;
+        }
+        .youtube-bg {
+          background: #e3f7fc;
+          color: #232946;
+        }
+        .phone-bg {
+          background: #fff8e1;
+          color: #232946;
+        }
+        .contact-card a.btn {
+          margin-top: 1.1rem;
+          font-size: 1.08rem;
+          font-weight: 600;
+          border-radius: 12px;
+          width: 100%;
+          max-width: 220px;
+          color: #232946 !important;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+          background: #fff;
+          border: none;
+        }
+        .contact-card a.btn.btn-primary {
+          background: #fff;
+          color: #232946 !important;
+        }
+        body.dark-mode .contact-card {
+          box-shadow: 0 4px 24px rgba(35,41,70,0.25) !important;
+          color: #fff;
+        }
+        body.dark-mode .contact-card h4 {
+          color: #fff;
+        }
+        body.dark-mode .contact-card a.btn {
+          color: #fff !important;
+          background: rgba(0,0,0,0.18);
+        }
+      </style>
       <section class="card-section" style="text-align:center; margin:2rem 0 2.5rem 0;">
         <div class="card animated-card" style="max-width:400px; margin:0 auto; padding:2rem;">
           <h2 style="margin-bottom:1.2rem;">Who Made This?</h2>
@@ -269,6 +427,23 @@
             <div class="faq-item" style="border-bottom:1px solid #e5e7eb;">
               <button class="faq-question" style="width:100%;background:none;border:none;text-align:left;padding:1rem 0;font-size:1.05rem;font-weight:600;color:#232946;display:flex;justify-content:space-between;align-items:center;cursor:pointer;">What if my child misses a class?<span style='font-size:1.2rem;'>&#x25BC;</span></button>
               <div class="faq-answer" style="max-height:0;overflow:hidden;transition:max-height 0.3s ease;padding:0 0.5rem;color:#64748b;font-size:0.98rem;">Recorded lectures and extra doubt sessions available.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="subscribe-section">
+        <div class="query-card">
+          <h2 style="margin-bottom:1.2rem;">Any More Query?</h2>
+          <form class="subscribe-form" id="queryForm" method="POST" action="/submit-query">
+            <input type="text" name="name" placeholder="Your name" required class="query-input" />
+            <input type="email" name="email" placeholder="Your email" required class="query-input" />
+            <textarea name="message" placeholder="Your message" rows="3" required class="query-input"></textarea>
+            <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.7rem;">Submit</button>
+          </form>
+          <div id="query-list-section" style="margin-top:2.5rem;">
+            <h3 style="text-align:center; color:#6a82fb; margin-bottom:1.2rem;">Recent Queries</h3>
+            <div id="query-list">
+              <!-- Queries will be rendered here by Flask -->
             </div>
           </div>
         </div>
@@ -371,6 +546,79 @@
           }
         });
       });
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const programsLink = document.getElementById('programsLink');
+        const programsMenu = document.getElementById('programsMenu');
+        const programsDropdown = document.getElementById('programsDropdown');
+
+        // Show mega menu on click
+        programsLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          programsMenu.style.display = (programsMenu.style.display === 'block') ? 'none' : 'block';
+        });
+
+        // Show mega menu on hover
+        programsDropdown.addEventListener('mouseenter', function() {
+          programsMenu.style.display = 'block';
+        });
+        programsDropdown.addEventListener('mouseleave', function() {
+          programsMenu.style.display = 'none';
+        });
+
+        // Hide mega menu when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!programsDropdown.contains(e.target)) {
+            programsMenu.style.display = 'none';
+          }
+        });
+      });
     </script>
+    <style>
+      .query-card {
+        max-width: 270px;
+        margin: 2rem auto 2.5rem auto;
+        background: #f8fafc;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px rgba(100,100,255,0.10);
+        padding: 1.2rem 1rem 1rem 1rem;
+        text-align: center;
+      }
+      .query-input {
+        width: 100%;
+        margin-bottom: 1rem;
+        padding: 0.7rem 1.1rem;
+        border-radius: 14px;
+        border: 1px solid #d1d5db;
+        font-size: 1rem;
+        background: #fff;
+        color: #232946;
+        box-sizing: border-box;
+      }
+      .query-input:focus {
+        outline: none;
+        border-color: #6a82fb;
+        background: #f0f4ff;
+      }
+      body.dark-mode .query-card {
+        background: #232946 !important;
+        box-shadow: 0 4px 24px rgba(35,41,70,0.25) !important;
+      }
+      body.dark-mode .query-input {
+        background: #181c2a;
+        color: #f4f4f4;
+        border: 1px solid #444a6d;
+      }
+      body.dark-mode .query-input:focus {
+        background: #232946;
+        border-color: #6a82fb;
+      }
+      .query-card h2, .query-card h3 {
+        color: #6a82fb;
+      }
+      body.dark-mode .query-card h2, body.dark-mode .query-card h3 {
+        color: #aabfff;
+      }
+    </style>
   </body>
 </html>

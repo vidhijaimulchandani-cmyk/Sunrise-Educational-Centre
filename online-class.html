@@ -12,12 +12,35 @@
       <div class="container nav-content">
         <div class="nav-logo">
           <img src="attached_assets/image_1750584670920.png" alt="Logo">
-          <span>Sunrise Education Centre</span>
         </div>
         <ul class="nav-links">
           <li><a href="/">Home</a></li>
           <li><a href="/study-resources">Study Resources</a></li>
           <li><a href="/forum">Forum</a></li>
+          {% if username %}
+          <li style="position:relative;">
+            <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
+              {% if user_notifications and user_notifications|length > 0 %}
+              <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
+              {% endif %}
+            </button>
+            <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:#fff; min-width:260px; box-shadow:0 4px 24px rgba(100,100,255,0.13); border-radius:12px; z-index:100; padding:1rem;">
+              <strong style="color:#6a82fb;">Notifications</strong>
+              <ul style="list-style:none; padding:0; margin:0;">
+                {% if user_notifications and user_notifications|length > 0 %}
+                  {% for id, message, created_at in user_notifications %}
+                  <li style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946;">
+                    {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ created_at[:19].replace('T', ' ') }}</span>
+                  </li>
+                  {% endfor %}
+                {% else %}
+                  <li style="padding:0.7rem 0; color:#888; text-align:center;">No new notifications.</li>
+                {% endif %}
+              </ul>
+            </div>
+          </li>
+          {% endif %}
           {% if username %}
             <li><a href="/logout" class="btn btn-primary">Logout</a></li>
           {% else %}
@@ -142,6 +165,21 @@
       });
       if (localStorage.getItem('darkMode') === 'on') {
         document.body.classList.add('dark-mode');
+      }
+    </script>
+    <script>
+      // Notification bell dropdown
+      const notifBell = document.getElementById('notifBell');
+      const notifDropdown = document.getElementById('notifDropdown');
+      if (notifBell && notifDropdown) {
+        notifBell.addEventListener('click', function(e) {
+          notifDropdown.style.display = notifDropdown.style.display === 'block' ? 'none' : 'block';
+          e.stopPropagation();
+        });
+        document.addEventListener('click', function() {
+          notifDropdown.style.display = 'none';
+        });
+        notifDropdown.addEventListener('click', function(e) { e.stopPropagation(); });
       }
     </script>
   </body>

@@ -11,13 +11,14 @@ from auth_handler import (
     mark_notification_as_seen, delete_notification,
     save_forum_message, get_forum_messages, vote_on_message, delete_forum_message,
     create_topic, delete_topic, get_all_topics, get_topics_for_user, can_user_access_topic,
-    update_user_with_password
+    update_user_with_password, add_personal_notification
 )
 import csv
 from io import StringIO
 from collections import Counter
 from functools import wraps
 import sqlite3
+from datetime import datetime
 
 # Import bulk upload routes
 from bulk_upload.routes import bulk_upload_bp
@@ -43,6 +44,21 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 init_db()
 
+# --- Queries DB Setup ---
+DB_PATH = 'queries.db'
+def init_queries_db():
+    with sqlite3.connect(DB_PATH) as conn:
+        c = conn.cursor()
+        c.execute('''CREATE TABLE IF NOT EXISTS queries (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            message TEXT NOT NULL,
+            submitted_at TEXT NOT NULL
+        )''')
+        conn.commit()
+init_queries_db()
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -61,7 +77,11 @@ def inject_global_variables():
 # Route for the main page
 @app.route('/')
 def home():
-    return render_template('index.html')
+    with sqlite3.connect(DB_PATH) as conn:
+        c = conn.cursor()
+        c.execute('SELECT name, email, message, submitted_at FROM queries ORDER BY id DESC LIMIT 10')
+        queries = c.fetchall()
+    return render_template('index.html', queries=queries)
 
 # Route for study resources
 @app.route('/study-resources')
@@ -283,6 +303,8 @@ def start_live_class():
     meeting_url = f"https://meet.jit.si/{room_name}"
     # Only one live class per class_id
     create_live_class(class_id, meeting_url, topic, description)
+    # Send notification to all users of the class
+    add_notification('A live class has started! Join now.', class_id, 'all')
     flash('Live class started!', 'success')
     return redirect(url_for('online_class'))
 
@@ -440,6 +462,8 @@ def upload_resource():
             filepath = os.path.join(UPLOAD_FOLDER, filename)
             file.save(filepath)
             save_resource(filename, class_id, filepath, title, description, category)
+            # Send notification to all users of the class
+            add_notification('A new resource has been uploaded!', class_id, 'all')
             flash('Resource uploaded successfully!', 'success')
             return redirect(url_for('admin_panel'))
     return render_template('upload_resource.html')
@@ -740,11 +764,15 @@ def admin_ban_user(user_id):
         return redirect(url_for('auth'))
     
     # Get user info and ban them
-    from auth_handler import get_user_by_id, add_notification
+    from auth_handler import get_user_by_id, add_personal_notification
     user = get_user_by_id(user_id)
     if not user:
         flash('User not found.', 'error')
         return redirect(url_for('admin_panel', _anchor='users'))
+    
+    # Send 24-hour ban warning notification to the user only
+    ban_warning = "You will be banned within 24 hours. Call Mohit Sir or admin."
+    add_personal_notification(ban_warning, user_id)
     
     # Set user as banned using direct SQL
     import sqlite3
@@ -754,11 +782,7 @@ def admin_ban_user(user_id):
     conn.commit()
     conn.close()
     
-    # Send notification to the banned user
-    ban_message = "You are banned. Call Mohit Sir or admin to be unbanned."
-    add_notification(ban_message, user[2])  # user[2] is class_id
-    
-    flash(f'User {user[1]} has been banned and notified.', 'success')
+    flash(f'User {user[1]} has been banned and personally notified.', 'success')
     return redirect(url_for('admin_panel', _anchor='users'))
 
 @app.route('/admin/create-topic', methods=['GET'])
@@ -820,6 +844,19 @@ def view_admissions():
     admissions = c.fetchall()
     conn.close()
     return render_template('view_admission.html', admissions=admissions)
+
+@app.route('/submit-query', methods=['POST'])
+def submit_query():
+    name = request.form.get('name')
+    email = request.form.get('email')
+    message = request.form.get('message')
+    submitted_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    with sqlite3.connect(DB_PATH) as conn:
+        c = conn.cursor()
+        c.execute('INSERT INTO queries (name, email, message, submitted_at) VALUES (?, ?, ?, ?)',
+                  (name, email, message, submitted_at))
+        conn.commit()
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))

@@ -421,6 +421,21 @@ def get_all_notifications():
     conn.close()
     return notifications
 
+def add_personal_notification(message, user_id):
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    # Insert notification with class_id as NULL and target_paid_status as 'personal'
+    c.execute(
+        'INSERT INTO notifications (message, class_id, created_at, target_paid_status) VALUES (?, NULL, ?, ?)',
+        (message, datetime.now().isoformat(), 'personal')
+    )
+    notification_id = c.lastrowid
+    # Mark as unread for this user only
+    c.execute('INSERT INTO user_notification_status (user_id, notification_id, seen_at) VALUES (?, ?, ?)',
+              (user_id, notification_id, '1970-01-01T00:00:00'))
+    conn.commit()
+    conn.close()
+
 # ==============================================================================
 # Live Class and Other Functions (Remain Unchanged)
 # ==============================================================================
