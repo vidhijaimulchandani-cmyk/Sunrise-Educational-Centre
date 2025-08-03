@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Forum - Sunrise Education Centre</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="forum.css" />
+    <style>
+      .topic-badge {
+        display: inline-block;
+        padding: 0.2rem 0.6rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+      }
+      .topic-badge.paid {
+        background: #10b981;
+        color: white;
+      }
+      .topic-badge.unpaid {
+        background: #6b7280;
+        color: white;
+      }
+      .topic-name {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+    </style>
+  </head>
+  <body data-user-role="{{ role }}" data-user-paid="{{ user_paid_status or 'unpaid' }}">
+    <nav class="navbar glassmorphic">
+      <div class="container nav-content">
+        <div class="nav-logo">
+          <img src="attached_assets/image_1750584670920.png" alt="Logo">
+        </div>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/online-class">Live Class</a></li>
+          <li><a href="/study-resources">Study Resources</a></li>
+          <li style="position:relative;">
+            <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
+              {% if user_notifications and user_notifications|length > 0 %}
+              <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
+              {% endif %}
+            </button>
+            <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:#fff; min-width:260px; box-shadow:0 4px 24px rgba(100,100,255,0.13); border-radius:12px; z-index:100; padding:1rem;">
+              <strong style="color:#6a82fb;">Notifications</strong>
+              <ul style="list-style:none; padding:0; margin:0;">
+                {% if user_notifications and user_notifications|length > 0 %}
+                {% for id, message, created_at, status, notification_type, scheduled_time in user_notifications %}
+                <li class="notification-item" data-notification-id="{{ id }}" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='transparent'">
+                  {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                </li>
+                {% endfor %}
+                {% else %}
+                  <li style="padding:0.7rem 0; color:#888; text-align:center;">No new notifications.</li>
+                {% endif %}
+              </ul>
+            </div>
+          </li>
+          {% if username %}
+            <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+          {% else %}
+            <li><a href="/auth" class="btn btn-primary">Login</a></li>
+          {% endif %}
+        </ul>
+        <button class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+      </div>
+    </nav>
+    <header class="hero-section">
+      <div class="container hero-content">
+        <h1>Student Forum</h1>
+        <p>Ask questions, share ideas, and connect with your peers!</p>
+        {% if user_paid_status %}
+        <p style="font-size: 0.9rem; color: #6b7280; margin-top: 0.5rem;">
+          Status: <span style="color: {{ '#10b981' if user_paid_status == 'paid' else '#6b7280' }}; font-weight: 600;">{{ user_paid_status|title }}</span>
+        </p>
+        {% endif %}
+      </div>
+    </header>
+    <main class="container main-content">
+      <section class="card-section" style="max-width:800px;margin:0 auto;">
+        <h2>Forum Discussions</h2>
+        
+        <!-- Topic Selection Tabs (like study-resources) -->
+        <div class="tabs">
+          {% for topic in unpaid_topics + paid_topics %}
+            <button class="tab-button" data-topic="{{ topic[0] }}" data-topic-name="{{ topic[1] }}">
+                {{ topic[1] }}
+                {% if topic[4] == 'paid' %}
+                  <span class="topic-badge paid">Premium</span>
+                {% endif %}
+            </button>
+          {% endfor %}
+        </div>
+        
+        <div id="forumMessages" style="min-height:120px; text-align:left; margin-bottom:2.5rem;">
+          <div id="emptyForumMsg" style="color:#888; text-align:center;">No messages yet. Start the conversation!</div>
+        </div>
+        <div class="chat-input-bar" style="display:flex;align-items:flex-end;gap:0.5rem;position:relative;">
+          <button id="forumEmojiBtn" type="button" class="btn btn-secondary" aria-label="Insert emoji" style="padding:0; width:44px; height:44px; border-radius:50%; display:flex;align-items:center;justify-content:center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fc5c7d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 15s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          </button>
+          <textarea id="forumInput" placeholder="Type your message..." rows="1" style="flex:1;resize:none;padding:0.7rem 1rem;border-radius:16px;min-height:44px;"></textarea>
+          <button id="forumUploadBtn" type="button" class="btn btn-secondary" aria-label="Attach media" style="padding:0; width:44px; height:44px; border-radius:50%; display:flex;align-items:center;justify-content:center;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6a82fb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a5.5 5.5 0 0 1-7.78-7.78l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.2 9.19a1.5 1.5 0 0 1-2.12-2.12l8.49-8.49"/></svg>
+          </button>
+          <input type="file" id="forumMediaInput" accept="image/*,video/*" style="display:none;" />
+          <button id="forumSendBtn" class="btn btn-primary" style="padding:0.5rem 1.2rem;display:flex;align-items:center;gap:0.3rem;">
+            <span style="font-size:1.3rem;">&#10148;</span>
+          </button>
+        </div>
+        <div id="forumMediaPreview" style="margin-top:0.5rem;"></div>
+      </section>
+      <div style="text-align:center; margin: 1.5rem 0 2rem 0;">
+        <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="container footer-content">
+        <div class="footer-social">
+          <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">Instagram</a>
+          <a href="https://www.youtube.com/@MohitNariyani" target="_blank">YouTube</a>
+        </div>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Contact Us</a>
+        </div>
+        <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+    <script src="forum.js"></script>
+    <script>
+      // Notification bell dropdown
+      const notifBell = document.getElementById('notifBell');
+      const notifDropdown = document.getElementById('notifDropdown');
+      if (notifBell && notifDropdown) {
+        notifBell.addEventListener('click', function(e) {
+          notifDropdown.style.display = notifDropdown.style.display === 'block' ? 'none' : 'block';
+          e.stopPropagation();
+        });
+        document.addEventListener('click', function() {
+          notifDropdown.style.display = 'none';
+        });
+        notifDropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+        
+        // Handle notification clicks to mark as seen
+        document.addEventListener('click', function(e) {
+          if (e.target.closest('.notification-item')) {
+            const notificationItem = e.target.closest('.notification-item');
+            const notificationId = notificationItem.getAttribute('data-notification-id');
+            
+            // Mark notification as seen
+            fetch('/mark-notification-seen', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                notification_id: notificationId
+              })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.status === 'success') {
+                // Fade out the notification
+                notificationItem.style.opacity = '0.5';
+                notificationItem.style.background = '#e8f0ff';
+                
+                // Remove notification after a short delay
+                setTimeout(() => {
+                  notificationItem.remove();
+                  
+                  // Check if no notifications left
+                  const remainingNotifications = document.querySelectorAll('.notification-item');
+                  if (remainingNotifications.length === 0) {
+                    const noNotificationsLi = document.createElement('li');
+                    noNotificationsLi.style.cssText = 'padding:0.7rem 0; color:#888; text-align:center;';
+                    noNotificationsLi.textContent = 'No new notifications.';
+                    notifDropdown.querySelector('ul').appendChild(noNotificationsLi);
+                  }
+                }, 500);
+              }
+            })
+            .catch(error => {
+              console.error('Error marking notification as seen:', error);
+            });
+          }
+        });
+      }
+    </script>
+
+  </body>
+</html>

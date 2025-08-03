@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Profile - Sunrise Education Centre</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+      color: #1e293b;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .navbar {
+      background: rgba(255,255,255,0.95);
+      box-shadow: 0 2px 12px rgba(100,100,255,0.07);
+      border-radius: 0 0 18px 18px;
+      padding: 0.7rem 0;
+      margin-bottom: 2.2rem;
+    }
+    
+    .nav-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    
+    .nav-logo img {
+      height: 44px;
+      border-radius: 10px;
+      box-shadow: 0 1px 6px rgba(100,100,255,0.10);
+    }
+    
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 1.2rem;
+      margin: 0;
+      padding: 0;
+      align-items: center;
+    }
+    
+    .nav-links a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.05rem;
+      padding: 0.4rem 1.1rem;
+      border-radius: 8px;
+      transition: background 0.18s, color 0.18s;
+    }
+    
+    .nav-links a:hover {
+      background: #e0e7ff;
+      color: #6a82fb;
+    }
+    
+    .nav-links a.btn-primary {
+      background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(106,130,251,0.13);
+    }
+    
+    .nav-links a.btn-primary:hover {
+      background: linear-gradient(135deg, #fc5c7d 0%, #6a82fb 100%);
+      color: #fff;
+    }
+    
+    .profile-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    
+    .profile-card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 18px;
+      padding: 2.5rem;
+      box-shadow: 0 4px 20px rgba(100,100,255,0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .profile-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+      display: flex;
+      align-items: center;
+      
+      /* Dark mode styles */
+      body.dark-mode {
+        background: linear-gradient(135deg, #232946 0%, #16161a 100%);
+        color: #f4f4f4;
+      }
+      
+      body.dark-mode .navbar {
+        background: rgba(35, 41, 70, 0.95);
+        box-shadow: 0 2px 12px rgba(100,100,255,0.15);
+      }
+      
+      body.dark-mode .nav-links a {
+        color: #e0e7ff;
+      }
+      
+      body.dark-mode .nav-links a:hover {
+        background: #44476a;
+        color: #6a82fb;
+      }
+      
+      body.dark-mode .profile-card {
+        background: rgba(35, 41, 70, 0.95);
+        color: #f4f4f4;
+        border: 1px solid rgba(100,100,255,0.2);
+      }
+      
+      body.dark-mode .info-label {
+        color: #cbd5e1;
+      }
+      
+      body.dark-mode .info-value {
+        color: #f4f4f4;
+      }
+      
+      body.dark-mode .edit-form {
+        background: #232946 !important;
+        color: #f4f4f4 !important;
+        border: 1px solid #44476a !important;
+      }
+      
+      body.dark-mode .form-group label {
+        color: #cbd5e1 !important;
+      }
+      
+      body.dark-mode .form-group input {
+        background: #16161a !important;
+        color: #f4f4f4 !important;
+        border: 1px solid #44476a !important;
+      }
+      
+      body.dark-mode .form-group input:focus {
+        border-color: #6a82fb !important;
+        box-shadow: 0 0 0 3px rgba(106,130,251,0.2) !important;
+      }
+      
+      body.dark-mode .alert-error {
+        background: #dc2626 !important;
+        color: #fff !important;
+        border: 1px solid #ef4444 !important;
+      }
+      
+      body.dark-mode .alert-success {
+        background: #059669 !important;
+        color: #fff !important;
+        border: 1px solid #10b981 !important;
+      }
+      
+      /* Mobile Responsive Styles */
+      @media (max-width: 768px) {
+        .profile-container {
+          padding: 0 1rem;
+        }
+        
+        .profile-card {
+          padding: 1.5rem;
+          margin: 1rem 0;
+        }
+        
+        .profile-avatar {
+          width: 100px;
+          height: 100px;
+        }
+        
+        .info-grid {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+        
+        .info-section {
+          padding: 1rem;
+        }
+        
+        .info-item {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.3rem;
+        }
+        
+        .form-group input {
+          font-size: 16px;
+          padding: 0.8rem;
+        }
+        
+        .form-actions {
+          flex-direction: column;
+          gap: 0.8rem;
+        }
+        
+        .btn {
+          width: 100%;
+          padding: 0.8rem;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .profile-card {
+          padding: 1rem;
+        }
+        
+        .profile-avatar {
+          width: 80px;
+          height: 80px;
+        }
+        
+        .profile-header h2 {
+          font-size: 1.5rem;
+        }
+        
+        .profile-header p {
+          font-size: 0.9rem;
+        }
+        
+        .section-title {
+          font-size: 1.1rem;
+        }
+        
+        .info-label {
+          font-size: 0.9rem;
+        }
+        
+        .info-value {
+          font-size: 0.9rem;
+        }
+        
+        .form-group label {
+          font-size: 0.9rem;
+        }
+        
+        .form-group input {
+          font-size: 16px;
+          padding: 0.7rem;
+        }
+      }
+      
+      @media (max-width: 320px) {
+        .profile-card {
+          padding: 0.8rem;
+        }
+        
+        .profile-avatar {
+          width: 70px;
+          height: 70px;
+        }
+        
+        .profile-header h2 {
+          font-size: 1.3rem;
+        }
+        
+        .profile-header p {
+          font-size: 0.8rem;
+        }
+        
+        .section-title {
+          font-size: 1rem;
+        }
+        
+        .info-label {
+          font-size: 0.85rem;
+        }
+        
+        .info-value {
+          font-size: 0.85rem;
+        }
+        
+        .form-group label {
+          font-size: 0.85rem;
+        }
+        
+        .form-group input {
+          font-size: 16px;
+          padding: 0.6rem;
+        }
+      }
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 3rem;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 4px 20px rgba(106,130,251,0.3);
+    }
+    
+    .profile-name {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.5rem;
+    }
+    
+    .profile-role {
+      font-size: 1.1rem;
+      color: #6a82fb;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    
+    .profile-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .info-section {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid #e2e8f0;
+    }
+    
+    .info-section h3 {
+      color: #2563eb;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    
+    .info-item:last-child {
+      border-bottom: none;
+    }
+    
+    .info-label {
+      font-weight: 600;
+      color: #475569;
+      font-size: 0.95rem;
+    }
+    
+    .info-value {
+      font-weight: 500;
+      color: #1e293b;
+      text-align: right;
+    }
+    
+    .status-badge {
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+    
+    .status-paid {
+      background: #d1fae5;
+      color: #059669;
+    }
+    
+    .status-not-paid {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+    
+    .status-banned {
+      background: #fef3c7;
+      color: #d97706;
+    }
+    
+    .profile-actions {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+      color: white;
+      box-shadow: 0 2px 8px rgba(106,130,251,0.13);
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #fc5c7d 0%, #6a82fb 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(106,130,251,0.2);
+    }
+    
+    .btn-secondary {
+      background: #f1f5f9;
+      color: #475569;
+      margin-left: 1rem;
+    }
+    
+    .btn-secondary:hover {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+    
+    .footer {
+      background: linear-gradient(90deg, #e0e7ff 0%, #f8fafc 100%);
+      padding: 2.2rem 0 1.2rem 0;
+      border-radius: 18px 18px 0 0;
+      box-shadow: 0 -2px 12px rgba(100,100,255,0.07);
+      margin-top: 2.5rem;
+    }
+    
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.2rem;
+      padding: 0 1.5rem;
+    }
+    
+    .footer-social, .footer-links {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+    }
+    
+    .footer a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.01rem;
+      border-radius: 7px;
+      padding: 0.2rem 0.7rem;
+      transition: background 0.18s, color 0.18s;
+    }
+    
+    .footer a:hover {
+      background: #dbeafe;
+      color: #fc5c7d;
+    }
+    
+    .footer-copy {
+      color: #6a82fb;
+      font-size: 0.98rem;
+      margin-top: 0.7rem;
+    }
+    
+    /* New styles for edit form */
+    .edit-form {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 2rem;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .edit-form h3 {
+      color: #2563eb;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="password"],
+    .form-group input[type="email"] {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box; /* Include padding and border in element's total width and height */
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .alert {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .alert-error {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+    }
+
+    .alert-success {
+      background: #d1fae5;
+      color: #059669;
+      border: 1px solid #a7f3d0;
+    }
+    
+    @media (max-width: 700px) {
+      .nav-content, .footer-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.7rem;
+      }
+      
+      .nav-links, .footer-social, .footer-links {
+        gap: 0.7rem;
+      }
+      
+      .profile-info {
+        grid-template-columns: 1fr;
+      }
+      
+      .profile-card {
+        padding: 1.5rem;
+      }
+      
+      .profile-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .btn-secondary {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar glassmorphic">
+    <div class="container nav-content">
+      <div class="nav-logo">
+        <img src="attached_assets/image_1750584670920.png" alt="Logo">
+      </div>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/study-resources">Study Resources</a></li>
+        <li><a href="/forum">Forum</a></li>
+        <li><a href="/online-class">Live Classes</a></li>
+        <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+  
+  <main class="profile-container">
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-avatar">
+          {{ user.username[0].upper() }}
+        </div>
+        <h1 class="profile-name">{{ user.username }}</h1>
+        <p class="profile-role">{{ user.role }}</p>
+      </div>
+      
+      <div class="profile-info">
+        <div class="info-section">
+          <h3>📋 Personal Information</h3>
+          <div class="info-item">
+            <span class="info-label">Username</span>
+            <span class="info-value">{{ user.username }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">User ID</span>
+            <span class="info-value">#{{ user.id }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Class</span>
+            <span class="info-value">{{ user.class_name }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Account Status</span>
+            <span class="info-value">
+              <span class="status-badge status-{{ 'paid' if user.paid == 'paid' else 'not-paid' }}">
+                {{ user.paid }}
+              </span>
+            </span>
+          </div>
+          {% if user.banned == 1 %}
+          <div class="info-item">
+            <span class="info-label">Account Status</span>
+            <span class="info-value">
+              <span class="status-badge status-banned">Banned</span>
+            </span>
+          </div>
+          {% endif %}
+        </div>
+        
+        <div class="info-section">
+          <h3>📞 Contact Information</h3>
+          <div class="info-item">
+            <span class="info-label">Mobile Number</span>
+            <span class="info-value">{{ user.mobile_no if user.mobile_no else 'Not provided' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Email Address</span>
+            <span class="info-value">{{ user.email_address if user.email_address else 'Not provided' }}</span>
+          </div>
+        </div>
+        
+        <div class="info-section">
+          <h3>🔐 Account Details</h3>
+          <div class="info-item">
+            <span class="info-label">Registration Date</span>
+            <span class="info-value">{{ user.registration_date if user.registration_date else 'Not available' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Last Login</span>
+            <span class="info-value">{{ user.last_login if user.last_login else 'Not available' }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="profile-actions">
+        <button onclick="showEditForm()" class="btn btn-primary">Edit Profile</button>
+        <a href="/" class="btn btn-secondary">Back to Home</a>
+        <button id="darkModeToggle" class="btn btn-secondary" style="margin-top: 0.5rem;">Toggle Dark Mode</button>
+      </div>
+      
+      <!-- Edit Profile Form (Hidden by default) -->
+      <div id="editForm" class="edit-form" style="display: none; margin-top: 2rem; padding: 2rem; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
+        <h3 style="color: #2563eb; margin-bottom: 1.5rem;">✏️ Edit Profile</h3>
+        
+        {% if error %}
+        <div class="alert alert-error" style="background: #fee2e2; color: #dc2626; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #fecaca;">
+          {{ error }}
+        </div>
+        {% endif %}
+        
+        {% if success %}
+        <div class="alert alert-success" style="background: #d1fae5; color: #059669; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #a7f3d0;">
+          {{ success }}
+        </div>
+        {% endif %}
+        
+        <form method="POST" action="/edit-profile">
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label for="username" style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">Username</label>
+            <input type="text" id="username" name="username" value="{{ user.username }}" required 
+                   style="width: 100%; padding: 0.8rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;">
+          </div>
+          
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label for="password" style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">New Password (leave blank to keep current)</label>
+            <input type="password" id="password" name="password" 
+                   style="width: 100%; padding: 0.8rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;">
+          </div>
+          
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label for="mobile_no" style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">Mobile Number</label>
+            <input type="text" id="mobile_no" name="mobile_no" value="{{ user.mobile_no or '' }}" 
+                   style="width: 100%; padding: 0.8rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;">
+          </div>
+          
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label for="email_address" style="display: block; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">Email Address</label>
+            <input type="email" id="email_address" name="email_address" value="{{ user.email_address or '' }}" 
+                   style="width: 100%; padding: 0.8rem; border: 1px solid #d1d5db; border-radius: 8px; font-size: 1rem;">
+          </div>
+          
+          <div class="form-actions" style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <button type="button" onclick="hideEditForm()" class="btn btn-secondary">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+  
+  <script>
+    function showEditForm() {
+      document.getElementById('editForm').style.display = 'block';
+      document.querySelector('.profile-actions').style.display = 'none';
+    }
+    
+    function hideEditForm() {
+      document.getElementById('editForm').style.display = 'none';
+      document.querySelector('.profile-actions').style.display = 'block';
+    }
+    
+    // Show form if there's an error or success message
+    {% if error or success %}
+    showEditForm();
+    {% endif %}
+    
+
+  </script>
+  <script src="script.js"></script>
+  
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-social">
+        <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">Instagram</a>
+        <a href="https://www.youtube.com/@MohitNariyani" target="_blank">YouTube</a>
+      </div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Contact Us</a>
+      </div>
+      <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
+    </div>
+  </footer>
+</body>
+</html> 

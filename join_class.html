@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Join Live Class</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js"></script>
+  <style>
+    .join-container { display: flex; max-width: 1100px; margin: 3rem auto; background: #fff; border-radius: 18px; box-shadow: 0 4px 24px rgba(100,100,255,0.10); }
+    .video-section { flex: 2; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%); }
+    .info-section { flex: 1; padding: 2.5rem 2rem; border-left: 1.5px solid #eee; display: flex; flex-direction: column; justify-content: flex-start; background: #fff; }
+    .video-player { width: 100%; max-width: 640px; height: 360px; background: #000; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); margin-bottom: 1.5rem; }
+    .class-info { width: 100%; max-width: 640px; text-align: left; }
+    .class-title { font-size: 1.5rem; font-weight: 600; color: #232946; margin-bottom: 0.5rem; }
+    .class-description { color: #666; line-height: 1.5; margin-bottom: 1rem; }
+    .back-link { color: #6a82fb; text-decoration: none; font-weight: 500; }
+    .back-link:hover { text-decoration: underline; }
+    .chat-card { margin-top:1rem; background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%); border-radius:12px; box-shadow: 0 4px 16px rgba(100,100,255,0.08); padding:2rem 1.5rem 1.2rem 1.5rem; max-height:520px; min-height:340px; display:flex; flex-direction:column; border: 1px solid #e0e7ff; }
+    .chat-messages { flex:1; overflow-y:auto; min-height:220px; max-height:340px; margin-bottom:1.2rem; border-bottom:1px solid #e0e7ff; padding-bottom:0.7rem; font-size:1.08rem; }
+    .chat-input { flex:1; border-radius:8px; border:1px solid #e0e7ff; padding:0.5rem 0.8rem; background: #fff; }
+    .chat-input:focus { outline: none; border-color: #6a82fb; box-shadow: 0 0 0 2px rgba(106,130,251,0.1); }
+    .chat-send-btn { border-radius:8px; background: linear-gradient(135deg, #6a82fb 0%, #5a6fd8 100%); border: none; color: #fff; padding: 0.5rem 1rem; cursor: pointer; transition: all 0.2s; }
+    .chat-send-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(106,130,251,0.3); }
+    .chat-message { margin: 0.3rem 0; padding: 0.4rem 0.7rem; background: #fff; border-radius: 7px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 3px solid #6a82fb; }
+    @media (max-width: 900px) {
+      .join-container { flex-direction: column; }
+      .info-section { border-left: none; border-top: 1.5px solid #eee; }
+      .video-section, .info-section { padding: 1.2rem; }
+    }
+    
+    /* Dark Mode Styles */
+    body.dark-mode {
+      background: #1a1a2e;
+      color: #fff;
+    }
+    
+    body.dark-mode .join-container {
+      background: #232946;
+      box-shadow: 0 4px 24px rgba(100,100,255,0.20);
+    }
+    
+    body.dark-mode .video-section {
+      background: linear-gradient(135deg, #232946 0%, #1a1a2e 100%);
+    }
+    
+    body.dark-mode .info-section {
+      background: #232946;
+      border-left-color: #2a2a3a;
+    }
+    
+    body.dark-mode .class-title {
+      color: #fff;
+    }
+    
+    body.dark-mode .class-description {
+      color: #b8c5d6;
+    }
+    
+    body.dark-mode .chat-card {
+      background: linear-gradient(135deg, #2a2a3a 0%, #1a1a2e 100%);
+      border-color: #3a3a4a;
+    }
+    
+    body.dark-mode .chat-input {
+      background: #1a1a2e;
+      border-color: #3a3a4a;
+      color: #fff;
+    }
+    
+    body.dark-mode .chat-input:focus {
+      border-color: #6a82fb;
+    }
+    
+    body.dark-mode .chat-message {
+      background: #1a1a2e;
+      border-left-color: #6a82fb;
+    }
+    
+    body.dark-mode .tab-btn {
+      color: #b8c5d6;
+    }
+    
+    body.dark-mode .tab-btn.active {
+      color: #6a82fb;
+      border-bottom-color: #6a82fb;
+    }
+    
+    body.dark-mode .tab-container {
+      border-bottom-color: #3a3a4a;
+    }
+  </style>
+</head>
+<body>
+  <div class="join-container">
+    <div class="video-section">
+      <h3 style="color:#6a82fb; margin-bottom:1rem;">Live Class (Student View)</h3>
+      <video id="remoteVideo" class="video-player" autoplay playsinline style="margin-bottom:1rem;"></video>
+      <div id="viewerStatus" style="margin-bottom:1rem; color:#6a82fb;"></div>
+      {% set is_youtube = 'youtube.com' in meeting_url or 'youtu.be' in meeting_url %}
+      {% if is_youtube %}
+        {% set youtube_id = None %}
+        {% if 'youtu.be' in meeting_url %}
+          {% set youtube_id = meeting_url.split('/')[-1].split('?')[0] %}
+        {% elif 'youtube.com' in meeting_url and 'v=' in meeting_url %}
+          {% set youtube_id = meeting_url.split('v=')[1].split('&')[0] %}
+        {% endif %}
+        {% if youtube_id %}
+          <iframe class="video-player" width="640" height="360" src="https://www.youtube.com/embed/{{ youtube_id }}" frameborder="0" allowfullscreen></iframe>
+        {% else %}
+          <div class="video-player" style="display:flex;align-items:center;justify-content:center;color:#888;">Invalid YouTube Link</div>
+        {% endif %}
+      {% else %}
+        <video class="video-player" controls>
+          <source src="{{ meeting_url }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      {% endif %}
+      <div class="class-info">
+        <h2 class="class-title">{{ topic or 'Live Class' }}</h2>
+        <p class="class-description">{{ description or '' }}</p>
+        <a href="/online-class" class="back-link">&larr; Back to Online Classes</a>
+      </div>
+    </div>
+    <div class="info-section">
+      <div class="tab-container" style="display:flex; margin-bottom: 1rem; border-bottom: 2px solid #e0e7ff;">
+        <button class="tab-btn active" onclick="showTab('chat')">Chat</button>
+        <button class="tab-btn" onclick="showTab('polls')">Polls</button>
+        <button class="tab-btn" onclick="showTab('doubts')">Doubts</button>
+        <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px; margin-left: auto;">Toggle Dark Mode</button>
+      </div>
+      <!-- Chat Tab -->
+      <div id="chat-tab" class="tab-content active">
+        <div class="chat-card">
+          <div id="chatMessages" class="chat-messages">
+            <!-- Chat messages will appear here -->
+          </div>
+          <form id="chatForm" style="display:flex; gap:0.5rem;">
+            <input type="text" id="chatInput" placeholder="Type a message..." class="chat-input" autocomplete="off" />
+            <button type="submit" class="chat-send-btn">Send</button>
+          </form>
+        </div>
+      </div>
+      <!-- Polls Tab -->
+      <div id="polls-tab" class="tab-content">
+        <div class="poll-section">
+          <h3 style="margin-bottom: 1rem; color: #fc5c7d;">Active Polls</h3>
+          <div id="activePolls">
+            <div class="poll-item" style="background: #fff; border-radius: 8px; padding: 0.8rem; margin-bottom: 0.5rem; border: 1px solid #ffd6d6;">
+              <div class="poll-question" style="font-weight:600;">(Sample) Which topic do you want next?</div>
+              <div class="poll-options">
+                <label><input type="radio" name="poll1"> Algebra</label><br>
+                <label><input type="radio" name="poll1"> Geometry</label><br>
+                <label><input type="radio" name="poll1"> Trigonometry</label>
+              </div>
+              <button class="poll-btn" style="margin-top:0.5rem;">Vote</button>
+            </div>
+          </div>
+          <div style="margin-top:1rem; color:#888; font-size:0.95rem;">Polls created by the host will appear here.</div>
+        </div>
+      </div>
+      <!-- Doubts Tab -->
+      <div id="doubts-tab" class="tab-content">
+        <div class="doubts-section">
+          <h3 style="margin-bottom: 1rem; color: #48bb78;">Ask a Doubt</h3>
+          <form id="doubtForm" style="margin-bottom:1rem;">
+            <input type="text" id="doubtInput" placeholder="Type your doubt..." class="poll-input" required style="width:100%; margin-bottom:0.5rem;" />
+            <button type="submit" class="poll-btn">Submit Doubt</button>
+          </form>
+          <div id="doubtsList">
+            <!-- Doubts will appear here -->
+            <div class="doubt-item" style="background: #fff; border-radius: 8px; padding: 0.8rem; margin-bottom: 0.5rem; border-left: 3px solid #48bb78;">
+              <div class="doubt-user">You</div>
+              <div class="doubt-text">(Sample) How to solve quadratic equations?</div>
+            </div>
+          </div>
+          <div style="margin-top:1rem; color:#888; font-size:0.95rem;">Your doubts will be visible to the host.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script>
+// Get class ID from URL
+const classId = window.location.pathname.split('/').pop();
+const socket = io();
+const room = 'liveclass_' + classId;
+
+// Join the room for real-time updates
+socket.emit('join-room', { room });
+
+// --- Polls ---
+function renderPolls(polls) {
+  const pollsContainer = document.getElementById('activePolls');
+  pollsContainer.innerHTML = '';
+  polls.forEach(poll => {
+    const pollDiv = document.createElement('div');
+    pollDiv.className = 'poll-item';
+    pollDiv.innerHTML = `
+      <div class="poll-question" style="font-weight:600;">${poll.question}</div>
+      <div class="poll-options">
+        ${poll.options.map(opt => `<label><input type="radio" name="poll${poll.id}" value="${opt.id}"> ${opt.option_text} <span class='poll-votes' id='poll-votes-${opt.id}'>0</span></label><br>`).join('')}
+      </div>
+      <button class="poll-btn" style="margin-top:0.5rem;" onclick="votePoll(${poll.id})">Vote</button>
+    `;
+    pollsContainer.appendChild(pollDiv);
+  });
+}
+function votePoll(pollId) {
+  const selected = document.querySelector(`input[name='poll${pollId}']:checked`);
+  if (!selected) return alert('Select an option!');
+  const optionId = selected.value;
+  // Use localStorage to prevent double voting (client-side only, server also checks)
+  if (localStorage.getItem('voted_poll_' + pollId)) return alert('You already voted!');
+  socket.emit('vote_poll', { poll_id: pollId, option_id: optionId, user_id: getUserId(), class_id: classId });
+  localStorage.setItem('voted_poll_' + pollId, '1');
+}
+socket.on('new_poll', poll => {
+  socket.emit('get_polls_and_doubts', { class_id: classId });
+});
+socket.on('poll_results', data => {
+  if (data && data.results) {
+    data.results.forEach(opt => {
+      const el = document.getElementById('poll-votes-' + opt.option_id);
+      if (el) el.textContent = `(${opt.votes} votes)`;
+    });
+  }
+});
+
+// --- Doubts ---
+function renderDoubts(doubts) {
+  const doubtsList = document.getElementById('doubtsList');
+  doubtsList.innerHTML = '';
+  doubts.forEach(doubt => {
+    const div = document.createElement('div');
+    div.className = 'doubt-item';
+    div.style = 'background: #fff; border-radius: 8px; padding: 0.8rem; margin-bottom: 0.5rem; border-left: 3px solid #48bb78;';
+    div.innerHTML = `<div class="doubt-user">${doubt.username}</div><div class="doubt-text">${doubt.doubt_text}</div>` +
+      (doubt.status === 'resolved' ? '<div style="color:#48bb78;font-weight:600;">✓ Resolved</div>' : doubt.status === 'ignored' ? '<div style="color:#a0aec0;">Ignored</div>' : '');
+    doubtsList.appendChild(div);
+  });
+}
+document.getElementById('doubtForm').onsubmit = function(e) {
+  e.preventDefault();
+  var doubtInput = document.getElementById('doubtInput');
+  var text = doubtInput.value.trim();
+  if (!text) return;
+  socket.emit('submit_doubt', { class_id: classId, user_id: getUserId(), username: getUsername(), doubt_text: text });
+  doubtInput.value = '';
+};
+socket.on('update_doubts', data => {
+  renderDoubts(data.doubts);
+});
+
+// Initial fetch of polls and doubts
+socket.emit('get_polls_and_doubts', { class_id: classId });
+socket.on('init_polls_and_doubts', data => {
+  renderPolls(data.polls);
+  renderDoubts(data.doubts);
+});
+
+// --- Helpers ---
+function getUserId() {
+  // Use a cookie, session, or fallback to random for demo
+  if (window.username) return window.username;
+  let id = localStorage.getItem('user_id');
+  if (!id) { id = 'user_' + Math.random().toString(36).substr(2, 8); localStorage.setItem('user_id', id); }
+  return id;
+}
+function getUsername() {
+  // Use a cookie, session, or fallback to 'Student'
+  return window.username || 'Student';
+}
+
+// --- Tab switching logic ---
+function showTab(tabName) {
+  document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.getElementById(tabName + '-tab').classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html> 

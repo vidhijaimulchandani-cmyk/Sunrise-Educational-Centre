@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Host Live Class - {{ topic or 'Live Class' }}</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js"></script>
+  <style>
+    .host-container { display: flex; max-width: 1400px; margin: 2rem auto; background: #fff; border-radius: 18px; box-shadow: 0 4px 24px rgba(100,100,255,0.10); }
+    .video-section { flex: 2; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%); }
+    .control-section { flex: 1; padding: 2rem; border-left: 1.5px solid #eee; display: flex; flex-direction: column; background: #fff; max-height: 90vh; overflow-y: auto; }
+    .video-player { width: 100%; max-width: 640px; height: 360px; background: #000; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); margin-bottom: 1.5rem; }
+    .class-info { width: 100%; max-width: 640px; text-align: left; }
+    .class-title { font-size: 1.5rem; font-weight: 600; color: #232946; margin-bottom: 0.5rem; }
+    .class-description { color: #666; line-height: 1.5; margin-bottom: 1rem; }
+    .back-link { color: #6a82fb; text-decoration: none; font-weight: 500; }
+    .back-link:hover { text-decoration: underline; }
+    
+    .tab-container { display: flex; margin-bottom: 1rem; border-bottom: 2px solid #e0e7ff; }
+    .tab-btn { flex: 1; padding: 0.8rem; background: none; border: none; cursor: pointer; font-weight: 500; color: #666; transition: all 0.2s; }
+    .tab-btn.active { color: #6a82fb; border-bottom: 2px solid #6a82fb; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    
+    .chat-card { background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%); border-radius:12px; box-shadow: 0 4px 16px rgba(100,100,255,0.08); padding:1.2rem; border: 1px solid #e0e7ff; margin-bottom: 1rem; }
+    .chat-messages { max-height: 200px; overflow-y:auto; margin-bottom:0.7rem; border-bottom:1px solid #e0e7ff; padding-bottom:0.5rem; font-size:0.95rem; }
+    .chat-input { width: 100%; border-radius:8px; border:1px solid #e0e7ff; padding:0.5rem 0.8rem; background: #fff; margin-bottom: 0.5rem; }
+    .chat-input:focus { outline: none; border-color: #6a82fb; box-shadow: 0 0 0 2px rgba(106,130,251,0.1); }
+    .chat-send-btn { border-radius:8px; background: linear-gradient(135deg, #6a82fb 0%, #5a6fd8 100%); border: none; color: #fff; padding: 0.5rem 1rem; cursor: pointer; transition: all 0.2s; }
+    .chat-send-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(106,130,251,0.3); }
+    .chat-message { margin: 0.3rem 0; padding: 0.4rem 0.7rem; background: #fff; border-radius: 7px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 3px solid #6a82fb; }
+    
+    .poll-section { background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%); border-radius:12px; padding:1.2rem; border: 1px solid #e0e7ff; margin-bottom: 1rem; }
+    .poll-input { width: 100%; border-radius:8px; border:1px solid #e0e7ff; padding:0.5rem 0.8rem; background: #fff; margin-bottom: 0.5rem; }
+    .poll-option { display: flex; align-items: center; margin-bottom: 0.5rem; }
+    .poll-option input { margin-right: 0.5rem; }
+    .poll-option label { flex: 1; }
+    .poll-btn { border-radius:8px; background: linear-gradient(135deg, #fc5c7d 0%, #e74c3c 100%); border: none; color: #fff; padding: 0.5rem 1rem; cursor: pointer; transition: all 0.2s; }
+    .poll-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(252,92,125,0.3); }
+    
+    .doubts-section { background: linear-gradient(135deg, #f0fff4 0%, #e8f5e8 100%); border-radius:12px; padding:1.2rem; border: 1px solid #c6f6d5; margin-bottom: 1rem; }
+    .doubt-item { background: #fff; border-radius: 8px; padding: 0.8rem; margin-bottom: 0.5rem; border-left: 3px solid #48bb78; }
+    .doubt-user { font-weight: 600; color: #2d3748; font-size: 0.9rem; }
+    .doubt-text { color: #4a5568; margin-top: 0.3rem; }
+    .doubt-actions { margin-top: 0.5rem; }
+    .doubt-btn { border-radius: 6px; border: none; padding: 0.3rem 0.6rem; font-size: 0.8rem; cursor: pointer; margin-right: 0.3rem; }
+    .resolve-btn { background: #48bb78; color: #fff; }
+    .ignore-btn { background: #e2e8f0; color: #4a5568; }
+    
+    .host-controls { background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%); border-radius:12px; padding:1.2rem; border: 1px solid #81e6d9; margin-bottom: 1rem; }
+    .control-btn { width: 100%; border-radius:8px; border: none; padding: 0.8rem; margin-bottom: 0.5rem; cursor: pointer; font-weight: 500; transition: all 0.2s; }
+    .end-class-btn { background: linear-gradient(135deg, #fc5c7d 0%, #e74c3c 100%); color: #fff; }
+    .end-class-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(252,92,125,0.3); }
+    .mute-all-btn { background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%); color: #fff; }
+    .mute-all-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(246,173,85,0.3); }
+    
+    @media (max-width: 1200px) {
+      .host-container { flex-direction: column; }
+      .control-section { border-left: none; border-top: 1.5px solid #eee; }
+      .video-section, .control-section { padding: 1.2rem; }
+    }
+    
+    /* Dark Mode Styles */
+    body.dark-mode {
+      background: #1a1a2e;
+      color: #fff;
+    }
+    
+    body.dark-mode .host-container {
+      background: #232946;
+      box-shadow: 0 4px 24px rgba(100,100,255,0.20);
+    }
+    
+    body.dark-mode .video-section {
+      background: linear-gradient(135deg, #232946 0%, #1a1a2e 100%);
+    }
+    
+    body.dark-mode .control-section {
+      background: #232946;
+      border-left-color: #2a2a3a;
+    }
+    
+    body.dark-mode .class-title {
+      color: #fff;
+    }
+    
+    body.dark-mode .class-description {
+      color: #b8c5d6;
+    }
+    
+    body.dark-mode .chat-card,
+    body.dark-mode .poll-section,
+    body.dark-mode .doubts-section,
+    body.dark-mode .host-controls {
+      background: #2a2a3a;
+      border-color: #3a3a4a;
+    }
+    
+    body.dark-mode .chat-input,
+    body.dark-mode .poll-input {
+      background: #1a1a2e;
+      border-color: #3a3a4a;
+      color: #fff;
+    }
+    
+    body.dark-mode .chat-input:focus,
+    body.dark-mode .poll-input:focus {
+      border-color: #6a82fb;
+    }
+    
+    body.dark-mode .chat-message {
+      background: #1a1a2e;
+      border-left-color: #6a82fb;
+    }
+    
+    body.dark-mode .doubt-item {
+      background: #1a1a2e;
+      border-left-color: #48bb78;
+    }
+    
+    body.dark-mode .doubt-user {
+      color: #fff;
+    }
+    
+    body.dark-mode .doubt-text {
+      color: #b8c5d6;
+    }
+    
+    body.dark-mode .tab-btn {
+      color: #b8c5d6;
+    }
+    
+    body.dark-mode .tab-btn.active {
+      color: #6a82fb;
+      border-bottom-color: #6a82fb;
+    }
+    
+    body.dark-mode .tab-container {
+      border-bottom-color: #3a3a4a;
+    }
+  </style>
+</head>
+<body>
+  <div class="host-container">
+    <div class="control-section">
+      <div class="tab-container">
+        <button class="tab-btn active" onclick="showTab('chat')">Chat</button>
+        <button class="tab-btn" onclick="showTab('polls')">Polls</button>
+        <button class="tab-btn" onclick="showTab('doubts')">Doubts</button>
+        <button class="tab-btn" onclick="showTab('controls')">Controls</button>
+        <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px; margin-left: auto;">Toggle Dark Mode</button>
+      </div>
+      
+      <!-- Chat Tab -->
+      <div id="chat-tab" class="tab-content active">
+        <div class="chat-card">
+          <h3 style="margin-bottom: 1rem; color: #6a82fb;">Live Chat</h3>
+          <div id="chatMessages" class="chat-messages">
+            <!-- Chat messages will appear here -->
+          </div>
+          <form id="chatForm">
+            <input type="text" id="chatInput" placeholder="Type a message..." class="chat-input" autocomplete="off" />
+            <button type="submit" class="chat-send-btn">Send</button>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Polls Tab -->
+      <div id="polls-tab" class="tab-content">
+        <div class="poll-section">
+          <h3 style="margin-bottom: 1rem; color: #fc5c7d;">Create Poll</h3>
+          <form id="pollForm">
+            <input type="text" id="pollQuestion" placeholder="Enter poll question..." class="poll-input" required />
+            <div id="pollOptions">
+              <div class="poll-option">
+                <input type="text" placeholder="Option 1" class="poll-input" required />
+              </div>
+              <div class="poll-option">
+                <input type="text" placeholder="Option 2" class="poll-input" required />
+              </div>
+            </div>
+            <button type="button" onclick="addPollOption()" style="background: #e2e8f0; color: #4a5568; border: none; padding: 0.3rem 0.6rem; border-radius: 6px; margin-bottom: 0.5rem; cursor: pointer;">+ Add Option</button>
+            <button type="submit" class="poll-btn">Create Poll</button>
+          </form>
+        </div>
+        <div id="activePolls">
+          <!-- Active polls will appear here -->
+        </div>
+      </div>
+      
+      <!-- Doubts Tab -->
+      <div id="doubts-tab" class="tab-content">
+        <div class="doubts-section">
+          <h3 style="margin-bottom: 1rem; color: #48bb78;">Student Doubts</h3>
+          <div id="doubtsList">
+            <!-- Doubts will appear here -->
+            <div class="doubt-item">
+              <div class="doubt-user">Student Name</div>
+              <div class="doubt-text">This is a sample doubt question from a student.</div>
+              <div class="doubt-actions">
+                <button class="doubt-btn resolve-btn">Resolve</button>
+                <button class="doubt-btn ignore-btn">Ignore</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Controls Tab -->
+      <div id="controls-tab" class="tab-content">
+        <div class="host-controls">
+          <h3 style="margin-bottom: 1rem; color: #319795;">Host Controls</h3>
+          <button class="control-btn mute-all-btn">Mute All Students</button>
+          <button class="control-btn" style="background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%); color: #fff;">Screen Share</button>
+          <button class="control-btn" style="background: linear-gradient(135deg, #38b2ac 0%, #319795 100%); color: #fff;">Record Session</button>
+          <button class="control-btn" style="background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%); color: #fff;">Breakout Rooms</button>
+          <button class="control-btn end-class-btn">End Class</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script>
+    // Get class ID from URL
+    const classId = window.location.pathname.split('/').pop();
+    const socket = io();
+    const room = 'liveclass_' + classId;
+
+    // Join the room for real-time updates
+    socket.emit('join-room', { room });
+
+    // --- Polls ---
+    function renderPolls(polls) {
+      const pollsContainer = document.getElementById('activePolls');
+      pollsContainer.innerHTML = '';
+      polls.forEach(poll => {
+        const pollDiv = document.createElement('div');
+        pollDiv.className = 'poll-section';
+        pollDiv.innerHTML = `
+          <h4 style="margin-bottom: 0.5rem;">${poll.question}</h4>
+          <div class="poll-options">
+            ${poll.options.map(opt => `<div style='margin:0.3rem 0; padding:0.5rem; background:#fff; border-radius:6px; border:1px solid #ffd6d6;' data-option-id='${opt.id}'>${opt.option_text} <span class='poll-votes' id='poll-votes-${opt.id}'>0</span></div>`).join('')}
+          </div>
+          <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">Live poll</div>
+        `;
+        pollsContainer.appendChild(pollDiv);
+      });
+    }
+
+    // Create poll
+    function getPollOptions() {
+      return Array.from(document.querySelectorAll('#pollOptions input')).map(input => input.value).filter(val => val.trim());
+    }
+    document.getElementById('pollForm').onsubmit = function(e) {
+      e.preventDefault();
+      var question = document.getElementById('pollQuestion').value;
+      var options = getPollOptions();
+      if (question && options.length >= 2) {
+        socket.emit('create_poll', { class_id: classId, question, options, created_by: 'host' });
+        document.getElementById('pollForm').reset();
+        document.getElementById('pollOptions').innerHTML = `
+          <div class="poll-option">
+            <input type="text" placeholder="Option 1" class="poll-input" required />
+          </div>
+          <div class="poll-option">
+            <input type="text" placeholder="Option 2" class="poll-input" required />
+          </div>
+        `;
+      }
+    };
+    function addPollOption() {
+      var container = document.getElementById('pollOptions');
+      var newOption = document.createElement('div');
+      newOption.className = 'poll-option';
+      newOption.innerHTML = '<input type="text" placeholder="Option ' + (container.children.length + 1) + '" class="poll-input" required />';
+      container.appendChild(newOption);
+    }
+
+    // Listen for new polls
+    socket.on('new_poll', poll => {
+      socket.emit('get_polls_and_doubts', { class_id: classId });
+    });
+    // Listen for poll results
+    socket.on('poll_results', data => {
+      if (data && data.results) {
+        data.results.forEach(opt => {
+          const el = document.getElementById('poll-votes-' + opt.option_id);
+          if (el) el.textContent = `(${opt.votes} votes)`;
+        });
+      }
+    });
+
+    // --- Doubts ---
+    function renderDoubts(doubts) {
+      const doubtsList = document.getElementById('doubtsList');
+      doubtsList.innerHTML = '';
+      doubts.forEach(doubt => {
+        const div = document.createElement('div');
+        div.className = 'doubt-item';
+        div.innerHTML = `
+          <div class="doubt-user">${doubt.username}</div>
+          <div class="doubt-text">${doubt.doubt_text}</div>
+          <div class="doubt-actions">
+            ${doubt.status === 'open' ? `<button class="doubt-btn resolve-btn" onclick="resolveDoubt(${doubt.id})">Resolve</button>
+            <button class="doubt-btn ignore-btn" onclick="ignoreDoubt(${doubt.id})">Ignore</button>` : doubt.status === 'resolved' ? '<span style="color: #48bb78; font-weight: 600;">✓ Resolved</span>' : '<span style="color: #a0aec0;">Ignored</span>'}
+          </div>
+        `;
+        doubtsList.appendChild(div);
+      });
+    }
+    function resolveDoubt(doubtId) {
+      socket.emit('resolve_doubt', { doubt_id: doubtId, class_id: classId });
+    }
+    function ignoreDoubt(doubtId) {
+      socket.emit('ignore_doubt', { doubt_id: doubtId, class_id: classId });
+    }
+    socket.on('update_doubts', data => {
+      renderDoubts(data.doubts);
+    });
+
+    // Initial fetch of polls and doubts
+    socket.emit('get_polls_and_doubts', { class_id: classId });
+    socket.on('init_polls_and_doubts', data => {
+      renderPolls(data.polls);
+      renderDoubts(data.doubts);
+    });
+
+    // --- Tab switching ---
+    function showTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(tabName + '-tab').classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // Load messages on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Auto-refresh messages every 2 seconds for host
+      setInterval(loadMessages, 2000);
+    });
+
+    // Load existing messages
+    function loadMessages() {
+      fetch(`/api/live-class/${classId}/messages`)
+        .then(response => response.json())
+        .then(messages => {
+          const chat = document.getElementById('chatMessages');
+          chat.innerHTML = '';
+          messages.forEach(msg => {
+            const div = document.createElement('div');
+            div.className = 'chat-message';
+            div.innerHTML = `<strong>${msg.username}:</strong> ${msg.message}`;
+            chat.appendChild(div);
+          });
+          chat.scrollTop = chat.scrollHeight;
+        })
+        .catch(error => console.error('Error loading messages:', error));
+    }
+
+    // Send message
+    document.getElementById('chatForm').onsubmit = function(e) {
+      e.preventDefault();
+      const input = document.getElementById('chatInput');
+      const msg = input.value.trim();
+      if (!msg) return;
+      
+      fetch(`/api/live-class/${classId}/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: msg })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          input.value = '';
+          loadMessages(); // Reload messages to show the new one
+        }
+      })
+      .catch(error => console.error('Error sending message:', error));
+    };
+
+    // Clean up when page is unloaded
+    window.addEventListener('beforeunload', () => {
+      // No specific cleanup for WebRTC host as it's not running
+    });
+  </script>
+</body>
+</html> 

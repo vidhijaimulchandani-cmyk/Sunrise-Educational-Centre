@@ -1,0 +1,108 @@
+{
+  "upload_date": "2025-07-28T22:36:23.565290",
+  "total_resources": 20,
+  "successful_uploads": 0,
+  "failed_uploads": 20,
+  "results": [
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Case Study (All Chapters)"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Basic (2024-2025) With Solution"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Standard (2024-2025) With Solution"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Ch 1 - Real Number"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Ch 2 - Polynomials"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Ch 3 - Pair Of Linear Equations In Two Variables"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Ch 4 - Quadratic Equation"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Ch 5 - Arithmetic Progression"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Ch 6 - Triangles"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Ch 7 - Coordinate Geometry"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Ch 8 - Trigonometry"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Ch 9 - Applications Of Trigonometry"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Ch 10 - Circles"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Ch 11 - Areas Related To Circles"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Ch 12 - Surface Areas & Volumes"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Ch 13 - Statistics"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Ch 14 - Probability"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Polynomials - Worksheet (Unlocked)"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Triangles - Worksheet (Unlocked)"
+    },
+    {
+      "status": "error",
+      "message": "Expecting value: line 1 column 1 (char 0)",
+      "resource": "Probability - Worksheet (Unlocked)"
+    }
+  ]
+}

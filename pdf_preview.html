@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Preview - {{ title }}</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f4f6fb;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+        
+        .preview-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .preview-header {
+            background: #fff;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .preview-header h1 {
+            margin: 0;
+            color: #232946;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .preview-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: #6a82fb;
+            color: #fff;
+        }
+        
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+        
+        .btn-secondary {
+            background: #f1f3f5;
+            color: #232946;
+        }
+        
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+        
+        .pdf-viewer {
+            flex: 1;
+            background: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .pdf-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #fff;
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #666;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #6a82fb;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Security features */
+        .pdf-viewer {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        .pdf-iframe {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        /* Watermark overlay */
+        .watermark {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 100px,
+                rgba(106, 130, 251, 0.03) 100px,
+                rgba(106, 130, 251, 0.03) 200px
+            );
+        }
+        
+        .watermark::before {
+            content: 'SUNRISE EDUCATION CENTRE';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 3rem;
+            font-weight: bold;
+            color: rgba(106, 130, 251, 0.1);
+            white-space: nowrap;
+            pointer-events: none;
+        }
+        
+        /* Dark mode support */
+        body.dark-mode {
+            background: #181c2a;
+        }
+        
+        body.dark-mode .preview-header {
+            background: #232946;
+            color: #f4f4f4;
+        }
+        
+        body.dark-mode .preview-header h1 {
+            color: #f4f4f4;
+        }
+        
+        body.dark-mode .btn-secondary {
+            background: #2a2a3a;
+            color: #f4f4f4;
+        }
+        
+        body.dark-mode .btn-secondary:hover {
+            background: #3a3a4a;
+        }
+        
+        body.dark-mode .pdf-viewer {
+            background: #232946;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .preview-header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .preview-header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .preview-controls {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .watermark::before {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Screenshot prevention */
+        .screenshot-prevention {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10000;
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+    <!-- Screenshot prevention overlay -->
+    <div class="screenshot-prevention"></div>
+    
+    <!-- Watermark overlay -->
+    <div class="watermark"></div>
+    
+    <div class="preview-container">
+        <div class="preview-header">
+            <h1>{{ title }}</h1>
+            <div class="preview-controls">
+                <button class="btn btn-secondary" onclick="goBack()">← Back to Resources</button>
+                <button class="btn btn-primary" onclick="toggleFullscreen()">Fullscreen</button>
+            </div>
+        </div>
+        
+        <div class="pdf-viewer">
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading PDF...</p>
+            </div>
+            <iframe 
+                id="pdf-iframe" 
+                class="pdf-iframe" 
+                src="/pdf-content/{{ filename }}"
+                onload="hideLoading()"
+                onerror="showError()"
+                style="display: none;">
+            </iframe>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Enhanced security features
+        document.addEventListener('DOMContentLoaded', function() {
+            // Disable right-click
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // Disable keyboard shortcuts for saving/printing
+            document.addEventListener('keydown', function(e) {
+                // Prevent Ctrl+S, Ctrl+P, F12, etc.
+                if ((e.ctrlKey && (e.key === 's' || e.key === 'p' || e.key === 'u')) || 
+                    e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                    (e.ctrlKey && e.shiftKey && e.key === 'C')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+            
+            // Disable drag and drop
+            document.addEventListener('dragover', function(e) {
+                e.preventDefault();
+            });
+            
+            document.addEventListener('drop', function(e) {
+                e.preventDefault();
+            });
+            
+            // Disable text selection
+            document.addEventListener('selectstart', function(e) {
+                e.preventDefault();
+            });
+            
+            // Disable copy
+            document.addEventListener('copy', function(e) {
+                e.preventDefault();
+            });
+            
+            // Disable cut
+            document.addEventListener('cut', function(e) {
+                e.preventDefault();
+            });
+            
+            // Disable paste
+            document.addEventListener('paste', function(e) {
+                e.preventDefault();
+            });
+            
+            // Prevent iframe from being embedded elsewhere
+            if (window.top !== window.self) {
+                window.top.location = window.self.location;
+            }
+            
+            // Disable print
+            window.addEventListener('beforeprint', function(e) {
+                e.preventDefault();
+                alert('Printing is not allowed for security reasons.');
+            });
+            
+            // Disable save as
+            window.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 's') {
+                    e.preventDefault();
+                    alert('Saving is not allowed for security reasons.');
+                }
+            });
+            
+            // Prevent opening in new tabs/windows
+            window.addEventListener('beforeunload', function(e) {
+                e.preventDefault();
+                e.returnValue = '';
+            });
+            
+            // Screenshot detection (basic)
+            let screenshotAttempts = 0;
+            window.addEventListener('keydown', function(e) {
+                if (e.key === 'PrintScreen' || (e.ctrlKey && e.key === 'p')) {
+                    screenshotAttempts++;
+                    if (screenshotAttempts > 2) {
+                        alert('Screenshot attempts detected. Please respect the document security.');
+                    }
+                    e.preventDefault();
+                }
+            });
+        });
+        
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('pdf-iframe').style.display = 'block';
+        }
+        
+        function showError() {
+            document.getElementById('loading').innerHTML = `
+                <div style="color: #fc5c7d; margin-bottom: 1rem;">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                </div>
+                <p>Error loading PDF</p>
+                <button class="btn btn-primary" onclick="location.reload()">Retry</button>
+            `;
+        }
+        
+        function goBack() {
+            window.history.back();
+        }
+        
+        function toggleFullscreen() {
+            const container = document.querySelector('.preview-container');
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(err => {
+                    console.log('Error attempting to enable fullscreen:', err);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+        
+        // Additional security: Monitor for suspicious activities
+        let suspiciousActivity = 0;
+        setInterval(function() {
+            // Check if user is trying to access developer tools
+            if (window.outerHeight - window.innerHeight > 200 || 
+                window.outerWidth - window.innerWidth > 200) {
+                suspiciousActivity++;
+                if (suspiciousActivity > 3) {
+                    alert('Developer tools detected. Please close them to continue viewing.');
+                }
+            }
+        }, 1000);
+    </script>
+</body>
+</html> 

@@ -1,0 +1,31 @@
+{
+  "upload_date": "2025-07-30T14:18:28.279346",
+  "total_resources": 3,
+  "class": "Class 11 Applied Mathematics",
+  "resources": [
+    {
+      "file_name": "Demo_registration",
+      "category": "other",
+      "description": "Demo registration",
+      "file_path": "https://docs.google.com/forms/d/e/1FAIpQLScrttwnoiBrhYBCwXLOyyELprv0N-G9-CEVMEQwGlOdxPOj7g/viewform?usp=header",
+      "class": "Class 11 Applied Mathematics",
+      "type": "registration"
+    },
+    {
+      "file_name": "Students_Handbook_XI_Applied",
+      "category": "notes",
+      "description": "Student's Handbook XI Applied",
+      "file_path": "https://drive.google.com/uc?export=download&id=1M8S2Vl3i39EMZ_-8O9JB7_YN5yo0q1zj",
+      "class": "Class 11 Applied Mathematics",
+      "type": "handbook"
+    },
+    {
+      "file_name": "Practice_Paper_XI_Applied",
+      "category": "sample_paper",
+      "description": "Practice Paper XI Applied",
+      "file_path": "https://drive.google.com/uc?export=download&id=1k6F6VR8jOC0c4s0JEpaBqqHaVN6pPO0G",
+      "class": "Class 11 Applied Mathematics",
+      "type": "practice_paper"
+    }
+  ]
+}

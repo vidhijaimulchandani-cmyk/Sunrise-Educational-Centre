@@ -1,0 +1,110 @@
+{
+  "extracted_at": "2025-07-29T09:43:11.954170",
+  "total_links": 16,
+  "total_google_drive": 3,
+  "all_links": [
+    {
+      "url": "https://instagram.com/sunrise_education_centre",
+      "text": "InstagramInstagram",
+      "is_google_drive": false
+    },
+    {
+      "url": "https://api.whatsapp.com/send?phone=918827431647",
+      "text": "WhatsAppWhatsApp",
+      "is_google_drive": false
+    },
+    {
+      "url": "https://www.youtube.com/@MohitNariyani/featured",
+      "text": "YouTubeYouTube",
+      "is_google_drive": false
+    },
+    {
+      "url": "https://docs.google.com/forms/d/e/1FAIpQLScrttwnoiBrhYBCwXLOyyELprv0N-G9-CEVMEQwGlOdxPOj7g/viewform?usp=header",
+      "text": "Demo registration",
+      "is_google_drive": false
+    },
+    {
+      "url": "https://drive.google.com/file/d/11Z6piPvWp5Tr0NYs5B4fwEOXFeR7MnWu/view?usp=sharing",
+      "text": "Sample Paper 1",
+      "is_google_drive": true
+    },
+    {
+      "url": "https://drive.google.com/uc?export=download&id=1i_Sl2e0HbqYkfJekOGgCuXY72ofk08D-",
+      "text": "Sample Paper 2",
+      "is_google_drive": false
+    },
+    {
+      "url": "https://drive.google.com/file/d/11lwrzB4y9lfXIMtNpG4OmCch42IWI-qx/view?usp=sharing",
+      "text": "Sample Paper 3",
+      "is_google_drive": true
+    },
+    {
+      "url": "https://docs.google.com/spreadsheets/d/1TwTsWqVsH3MsvuphzNYPrW1ZpT_lZog_R-Yg3U_sx6k/edit?usp=sharing",
+      "text": "CLASS IX I.M.P's (NCERT) -SEC",
+      "is_google_drive": true
+    },
+    {
+      "url": "https://drive.google.com/uc?export=download&id=14WHoqJnBtq-Wz12RYt-9lPhJzTEIXdHo",
+      "text": "Chapter wise Notes",
+      "is_google_drive": false
+    },
+    {
+      "url": "https://jstrieb.github.io/link-lock/#eyJ2IjoiMC4wLjEiLCJlIjoieW5naGhNMGhvdUpjdE43d1BNbEVrZzFHaS9Ka0dKWjFpeDh4RzdQa2pITG1oeTRiL2RyeTRCWWZZMGY5eE5lN2hhZ2tzSWlNbjVFTXFNMzdkaWVRZTZVOHl1MGlQMHE0V2hXWHZHT1EwWGI3OXNicThHUkEvWUpkZkZoaStLYisiLCJoIjoiLUV4Y2x1c2l2ZSBmb3Igb3VyIG9mZmxpbmUgc3R1ZGVudHMiLCJzIjoiblovVC83VEErcXJ5SnF0cEs0bGw5Zz09IiwiaSI6ImF3R0t6TDNFelE0bHBuNkEifQ==",
+      "text": "Number System - Worksheet",
+      "is_google_drive": false
+    },
+    {
+      "url": "https://jstrieb.github.io/link-lock/#eyJ2IjoiMC4wLjEiLCJlIjoiaU1zZGVVejJtYVBaZmJJS3pDL0ZLRTEzOU9RTjRka09tdHpERkZPTStCTjNBL24xdzV0cmdUdHVSMEFtTzcxMDRFRDNoQjRTS2FRVlZHcy9SZWh5NlhXM2ppZ1NacHoycS96VVg0SUVaWFJnY0V1cHZGdUdaazI2aG1qalN4bjUiLCJoIjoiLUV4Y2x1c2l2ZSBmb3Igb3VyIG9mZmxpbmUgc3R1ZGVudHMiLCJzIjoibGpXY1JtVnE1bVNrOUdiYzY1QmI4dz09IiwiaSI6Ik14NkRyZXFGOWhNRnNFcmsifQ==",
+      "text": "Polynomials - Worksheet",
+      "is_google_drive": false
+    },
+    {
+      "url": "https://jstrieb.github.io/link-lock/#eyJ2IjoiMC4wLjEiLCJlIjoiVFRBbkJJcVl6aHZaSmJLcE9nL295SDcxRXUwRWZvQzNBUW9Oa3EwMWh4Zjc5ek05eEhTY3huMzgzK3V6SXcrM3hPYU1nQXhzN3Rkem80Q3hQdEVtRk5kR2FiRTMvakVrcURVS3BDVU5KaW1OTFViblRjdFMrQzVMNUE0bGo1TnYiLCJoIjoiLUV4Y2x1c2l2ZSBmb3Igb3VyIG9mZmxpbmUgc3R1ZGVudHMiLCJzIjoiZWxZZlk2Uk05MVBBOE8wYzE3cUluQT09IiwiaSI6IlZtdlZYUTdJNHNYOEtxWjQifQ==",
+      "text": "Coordinate Geometry + Linear Equation in one variable",
+      "is_google_drive": false
+    },
+    {
+      "url": "https://jstrieb.github.io/link-lock/#eyJ2IjoiMC4wLjEiLCJlIjoiaUUxV2VIRENKdUZBYkxDWDM1SWlTUlRHUHF4Z29yQUEzS0ZDTW9MMlFPZEJDci9CVXZ6SkRrNkYvbDFHaExRT1BUYTFwSUpPb0ErVHk3Y1NJTXBzTXFYMEp3dlowOE1UTWVxVzRkYzYwdzdOZzkvR1dSQWZYK09USTlJVTQvNksiLCJoIjoiLUV4Y2x1c2l2ZSBmb3Igb3VyIG9mZmxpbmUgc3R1ZGVudHMiLCJzIjoia1RJempNYTlsc3V1dmh3U2pxcVYxdz09IiwiaSI6IkRrWGx5anhUVU9sbFlLRUMifQ==",
+      "text": "Euclid Geometry - Worksheet",
+      "is_google_drive": false
+    },
+    {
+      "url": "https://drive.google.com/uc?export=download&id=1YfUyhoKsRRspcA3zrvGRd9JKolJbVsT4",
+      "text": "Lines & Angles - Worksheet (UNLOCKED)",
+      "is_google_drive": false
+    },
+    {
+      "url": "https://drive.google.com/uc?export=download&id=1qXy0QWj6KcJXdAbBMZkOYlCY3_Ue1D_G",
+      "text": "Heron's Formula - Worksheet (UNLOCKED)",
+      "is_google_drive": false
+    },
+    {
+      "url": "https://jstrieb.github.io/link-lock/#eyJ2IjoiMC4wLjEiLCJlIjoiZTQxTHhhMm1HWWJwRUdqTFlsVFpVVkVzZWQ1bnFLUDBZZVZXSm9xb2dRZXc4dDk1YWlZR20vbVhxenhBNGZUZThoanh1dkJUYXJnRDZqSDMybHhLQXlYOUp6bmxFQ20wM05PQm9TaEZTbWF4QS8yZDYyWnUwUkpKdlNHVlZwd25zZjQ9IiwiaCI6Ii1FeGNsdXNpdmUgZm9yIG91ciBvZmZsaW5lIHN0dWRlbnRzIiwicyI6IjdTMCsvK3phaWhkdGhHM3dYN3NCY0E9PSIsImkiOiJIbWJDbGRSS3pVL3NMYWhUIn0=",
+      "text": "FORMULA SHEET - SEC",
+      "is_google_drive": false
+    }
+  ],
+  "google_drive_links": [
+    {
+      "url": "https://drive.google.com/file/d/11Z6piPvWp5Tr0NYs5B4fwEOXFeR7MnWu/view?usp=sharing",
+      "file_id": "11Z6piPvWp5Tr0NYs5B4fwEOXFeR7MnWu",
+      "text": "Sample Paper 1",
+      "type": "file",
+      "direct_download_url": "https://drive.google.com/uc?export=download&id=11Z6piPvWp5Tr0NYs5B4fwEOXFeR7MnWu"
+    },
+    {
+      "url": "https://drive.google.com/file/d/11lwrzB4y9lfXIMtNpG4OmCch42IWI-qx/view?usp=sharing",
+      "file_id": "11lwrzB4y9lfXIMtNpG4OmCch42IWI-qx",
+      "text": "Sample Paper 3",
+      "type": "file",
+      "direct_download_url": "https://drive.google.com/uc?export=download&id=11lwrzB4y9lfXIMtNpG4OmCch42IWI-qx"
+    },
+    {
+      "url": "https://docs.google.com/spreadsheets/d/1TwTsWqVsH3MsvuphzNYPrW1ZpT_lZog_R-Yg3U_sx6k/edit?usp=sharing",
+      "file_id": "1TwTsWqVsH3MsvuphzNYPrW1ZpT_lZog_R-Yg3U_sx6k",
+      "text": "CLASS IX I.M.P's (NCERT) -SEC",
+      "type": "spreadsheet",
+      "direct_download_url": "https://docs.google.com/spreadsheets/d/1TwTsWqVsH3MsvuphzNYPrW1ZpT_lZog_R-Yg3U_sx6k/export?format=xlsx"
+    }
+  ]
+}

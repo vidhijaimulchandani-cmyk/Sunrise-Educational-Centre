@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="forum.css" />
+  <style>
+    /* Admin panel - PERMANENT WHITE THEME */
+    body {
+      background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%) !important;
+      color: #232946 !important;
+    }
+    
+    .navbar,
+    .glassmorphic {
+      background: rgba(255,255,255,0.95) !important;
+      border-bottom: 1px solid rgba(106,130,251,0.2) !important;
+    }
+    
+    .nav-links a {
+      color: #232946 !important;
+    }
+    
+    .nav-links a:hover, 
+    .nav-links .btn-primary {
+      background: linear-gradient(90deg, #6a82fb 0%, #5a6fd8 100%) !important;
+      color: #fff !important;
+    }
+    
+    .card {
+      background: #fff !important;
+      color: #232946 !important;
+      box-shadow: 0 4px 24px rgba(100,100,255,0.07) !important;
+    }
+    
+    .card h3, 
+    .card p {
+      color: #232946 !important;
+    }
+    
+    .btn,
+    .btn-primary,
+    .btn-cta {
+      background: #6a82fb !important;
+      color: #fff !important;
+      border: 1px solid #6a82fb !important;
+    }
+    
+    .btn:hover,
+    .btn-primary:hover,
+    .btn-cta:hover {
+      background: #5a6fd8 !important;
+      color: #fff !important;
+    }
+    
+    input,
+    select,
+    textarea {
+      background: #fff !important;
+      color: #232946 !important;
+      border: 1px solid #d1d5db !important;
+    }
+    
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #6a82fb !important;
+      outline: none !important;
+      box-shadow: 0 0 0 2px rgba(106,130,251,0.2) !important;
+    }
+    
+    input::placeholder,
+    textarea::placeholder {
+      color: #6b7280 !important;
+    }
+    
+    /* Admin panel - PERMANENT WHITE THEME specific styles */
+    .admin-layout {
+      background: #f8fafc !important;
+    }
+    
+    .admin-sidebar {
+      background: #fff !important;
+      color: #232946 !important;
+    }
+    
+    .admin-sidebar .logo {
+      color: #6a82fb !important;
+    }
+    
+    .admin-sidebar nav a {
+      color: #232946 !important;
+    }
+    
+    .admin-sidebar nav a:hover {
+      background: #f3f4f6 !important;
+      color: #6a82fb !important;
+    }
+    
+    .admin-sidebar nav a.active {
+      background: #6a82fb !important;
+      color: #fff !important;
+    }
+    
+    .admin-main {
+      background: #f8fafc !important;
+      color: #232946 !important;
+    }
+    
+    .admin-header {
+      background: #fff !important;
+      color: #232946 !important;
+    }
+    
+    .admin-header h1 {
+      color: #232946 !important;
+    }
+    
+    .admin-content {
+      background: #f8fafc !important;
+      color: #232946 !important;
+    }
+    
+    .stats-grid {
+      background: #fff !important;
+    }
+    
+    .stat-card {
+      background: #fff !important;
+      color: #232946 !important;
+      border-color: #e5e7eb !important;
+    }
+    
+    .stat-card h3 {
+      color: #232946 !important;
+    }
+    
+    .stat-card .stat-value {
+      color: #6a82fb !important;
+    }
+    
+    .stat-card .stat-label {
+      color: #6b7280 !important;
+    }
+    
+    .admin-table {
+      background: #fff !important;
+      color: #232946 !important;
+    }
+    
+    .admin-table th {
+      background: #f9fafb !important;
+      color: #232946 !important;
+      border-color: #e5e7eb !important;
+    }
+    
+    .admin-table td {
+      background: #fff !important;
+      color: #232946 !important;
+      border-color: #e5e7eb !important;
+    }
+    
+    .admin-table tr:hover {
+      background: #f9fafb !important;
+    }
+    
+    .admin-form {
+      background: #fff !important;
+      color: #232946 !important;
+    }
+    
+    .admin-form label {
+      color: #232946 !important;
+    }
+    
+    .admin-form input,
+    .admin-form select,
+    .admin-form textarea {
+      background: #fff !important;
+      color: #232946 !important;
+      border-color: #d1d5db !important;
+    }
+    
+    .admin-form input:focus,
+    .admin-form select:focus,
+    .admin-form textarea:focus {
+      border-color: #6a82fb !important;
+      box-shadow: 0 0 0 2px rgba(106,130,251,0.2) !important;
+    }
+    
+    .admin-form input::placeholder,
+    .admin-form textarea::placeholder {
+      color: #6b7280 !important;
+    }
+    
+    .admin-modal {
+      background: #fff !important;
+      color: #232946 !important;
+    }
+    
+    .admin-modal-header {
+      background: #f9fafb !important;
+      color: #232946 !important;
+    }
+    
+    .admin-modal-title {
+      color: #232946 !important;
+    }
+    
+    .admin-modal-body {
+      background: #fff !important;
+      color: #232946 !important;
+    }
+    
+    .admin-modal-footer {
+      background: #f9fafb !important;
+      border-top-color: #e5e7eb !important;
+    }
+    
+    .admin-alert {
+      color: #232946 !important;
+    }
+    
+    .admin-alert-success {
+      background: #48bb78 !important;
+      color: #fff !important;
+    }
+    
+    .admin-alert-error {
+      background: #fc5c7d !important;
+      color: #fff !important;
+    }
+    
+    .admin-alert-warning {
+      background: #ffa726 !important;
+      color: #fff !important;
+    }
+    
+    .admin-alert-info {
+      background: #6a82fb !important;
+      color: #fff !important;
+    }
+    
+    .admin-badge {
+      color: #232946 !important;
+    }
+    
+    .admin-badge-success {
+      background: #48bb78 !important;
+      color: #fff !important;
+    }
+    
+    .admin-badge-error {
+      background: #fc5c7d !important;
+      color: #fff !important;
+    }
+    
+    .admin-badge-warning {
+      background: #ffa726 !important;
+      color: #fff !important;
+    }
+    
+    .admin-badge-info {
+      background: #6a82fb !important;
+      color: #fff !important;
+    }
+    
+    .admin-dropdown {
+      background: #fff !important;
+      color: #232946 !important;
+      border-color: #e5e7eb !important;
+    }
+    
+    .admin-dropdown-item {
+      color: #232946 !important;
+    }
+    
+    .admin-dropdown-item:hover {
+      background: #f9fafb !important;
+    }
+    
+    .admin-tooltip {
+      background: #fff !important;
+      color: #232946 !important;
+      border-color: #e5e7eb !important;
+    }
+    
+    /* Override any inline styles in admin panel */
+    [style*="color: #232946"] {
+      color: #232946 !important;
+    }
+    
+    [style*="color: #666"] {
+      color: #6b7280 !important;
+    }
+    
+    [style*="color: #999"] {
+      color: #6b7280 !important;
+    }
+    
+    [style*="background: #fff"] {
+      background: #fff !important;
+    }
+    
+    [style*="background: #f8f9ff"] {
+      background: #f9fafb !important;
+    }
+    
+    [style*="background: #f8fafc"] {
+      background: #f8fafc !important;
+    }
+    
+    [style*="border-color: #e0e7ff"] {
+      border-color: #e5e7eb !important;
+    }
+    
+    [style*="border-color: #d1d5db"] {
+      border-color: #d1d5db !important;
+    }
+    
+    /* Additional admin panel permanent white styles */
+    h1, h2, h3, h4, h5, h6 {
+      color: #232946 !important;
+    }
+    
+    p, span, div, label {
+      color: #232946 !important;
+    }
+    
+    a {
+      color: #6a82fb !important;
+    }
+    
+    a:hover {
+      color: #5a6fd8 !important;
+    }
+    
+    /* Table styles */
+    table {
+      background: #fff !important;
+      color: #232946 !important;
+    }
+    
+    th {
+      background: #f9fafb !important;
+      color: #232946 !important;
+      border-color: #e5e7eb !important;
+    }
+    
+    td {
+      background: #fff !important;
+      color: #232946 !important;
+      border-color: #e5e7eb !important;
+    }
+    
+    tr:hover {
+      background: #f9fafb !important;
+    }
+    
+    /* Notification dropdown styles */
+    #notifDropdown {
+      background: #fff !important;
+      color: #232946 !important;
+      border: 1px solid #e5e7eb !important;
+    }
+    
+    .notification-item {
+      background: #f9fafb !important;
+      color: #232946 !important;
+      border-color: #e5e7eb !important;
+    }
+    
+    .notification-item:hover {
+      background: #f3f4f6 !important;
+    }
+    
+    /* Override any dark mode styles from global CSS */
+    body.dark-mode {
+      background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%) !important;
+      color: #232946 !important;
+    }
+    
+    body.dark-mode * {
+      color: inherit !important;
+    }
+    
+    body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, 
+    body.dark-mode h4, body.dark-mode h5, body.dark-mode h6 {
+      color: #232946 !important;
+    }
+    
+    body.dark-mode p, body.dark-mode span, body.dark-mode div, 
+    body.dark-mode label, body.dark-mode td, body.dark-mode th {
+      color: #232946 !important;
+    }
+    
+    body.dark-mode .card, body.dark-mode .admin-card {
+      background: #fff !important;
+      color: #232946 !important;
+    }
+    
+    body.dark-mode input, body.dark-mode select, body.dark-mode textarea {
+      background: #fff !important;
+      color: #232946 !important;
+      border-color: #d1d5db !important;
+    }
+    
+    /* Admin panel specific styles */
+    body { margin: 0; font-family: 'Inter', sans-serif; }
+    .admin-layout { display: flex; min-height: 100vh; background: var(--pico-primary-background, #f4f6fb); }
+    .admin-sidebar {
+      width: 240px;
+      background: #232946;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem 1rem 1rem 1rem;
+      gap: 1.5rem;
+      min-height: 100vh;
+    }
+    .admin-sidebar .logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #6a82fb;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .admin-sidebar nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+    .admin-sidebar nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.08rem;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .admin-sidebar nav a.active, .admin-sidebar nav a:hover {
+      background: #6a82fb;
+      color: #fff;
+    }
+    .admin-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #f4f6fb;
+      min-height: 100vh;
+    }
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2.5rem 1.2rem 2rem;
+      background: #fff;
+      border-bottom: 1px solid #e0e7ff;
+      min-height: 64px;
+    }
+    .admin-header .admin-user {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .admin-header .admin-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #6a82fb;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+    .admin-dashboard-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin: 2.5rem 2rem 1.5rem 2rem;
+    }
+    .admin-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(100,100,255,0.07);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.7rem;
+      min-height: 120px;
+    }
+    .admin-card .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #6a82fb;
+    }
+    .admin-card .card-value {
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: #232946;
+    }
+    .admin-section {
+      margin: 2rem 2rem 2.5rem 2rem;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(100,100,255,0.07);
+      padding: 2rem 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    @media (max-width: 900px) {
+      .admin-layout { flex-direction: column; }
+      .admin-sidebar { width: 100%; flex-direction: row; gap: 0.5rem; min-height: unset; padding: 1rem; }
+      .admin-sidebar nav { flex-direction: row; gap: 0.5rem; }
+      .admin-main { padding: 0; }
+      .admin-header { padding: 1rem; }
+      .admin-dashboard-cards, .admin-section { margin: 1rem; }
+    }
+    @media (max-width: 600px) {
+      .admin-dashboard-cards { grid-template-columns: 1fr; }
+      .admin-section { padding: 1rem; }
+
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar glassmorphic">
+    <div class="container nav-content">
+      <div class="nav-logo">
+        <img src="attached_assets/image_1750584670920.png" alt="Logo">
+        <span>Admin Panel</span>
+      </div>
+      <ul class="nav-links">
+        
+        <li><a href="#about-us">About</a></li>
+        <li><a href="/online-class">Live Class</a></li>
+        <li><a href="/study-resources">Study Resources</a></li>
+        <li><a href="/forum">Forum</a></li>
+        <li><a href="/admin/status-management">Status Management</a></li>
+        <!-- Notification Bell (rebuilt, now before login/logout) -->
+        <li id="notifBellContainer" style="position:relative; z-index:9999;">
+          <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative; z-index:10000; padding:0;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
+            {% if user_notifications and user_notifications|length > 0 %}
+            <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
+            {% endif %}
+          </button>
+          <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:#fff; min-width:320px; box-shadow:0 4px 24px rgba(100,100,255,0.13); border-radius:12px; z-index:10001; padding:1rem;">
+            <strong style="color:#6a82fb; font-size:1.15rem;">Notifications</strong>
+            <ul style="list-style:none; padding:0; margin:0; max-height:320px; overflow-y:auto;">
+              {% if user_notifications and user_notifications|length > 0 %}
+                                  {% for id, message, created_at, status, notification_type, scheduled_time in user_notifications %}
+                  <li class="notification-item" data-notification-id="{{ id }}" style="padding:0.9rem 1.2rem; border-bottom:1px solid #eee; font-size:1.05rem; color:#232946; background:#f8fafc; border-radius:10px; margin-bottom:0.7rem; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='#f8fafc'">
+                    <strong>{{ message }}</strong><br>
+                    <span style="font-size:0.92rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                  </li>
+                  {% endfor %}
+              {% else %}
+                <li style="padding:1.1rem 1.2rem; color:#888; text-align:center; background:#f8fafc; border-radius:10px;">No new notifications.</li>
+              {% endif %}
+            </ul>
+          </div>
+        </li>
+        <li style="font-weight:600; color:#6a82fb; padding:0.4rem 1rem;">{{ username or 'Admin' }}</li>
+        <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+      </ul>
+      <button class="hamburger">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </div>
+  </nav>
+  <main class="container main-content">
+    <section id="analytics" class="admin-section" aria-label="Analytics">
+      <h2>Analytics & Reports</h2>
+      <div class="admin-dashboard-cards" style="margin:0 0 2rem 0;">
+        <div class="admin-card"><div class="card-title">Total Users</div><div class="card-value">{{ total_users }}</div></div>
+        <div class="admin-card"><div class="card-title">Forum Posts</div><div class="card-value">{{ total_forum_posts }}</div></div>
+        <div class="admin-card"><div class="card-title">Resources</div><div class="card-value">{{ total_resources }}</div></div>
+        <div class="admin-card"><div class="card-title">Classes</div><div class="card-value">{{ total_classes }}</div></div>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:2rem; margin-bottom:2rem;">
+        <div style="flex:1; min-width:260px;">
+          <h3 style="margin-bottom:0.7rem;">Most Active Users (Forum)</h3>
+          <table style="width:100%; border-collapse:collapse;">
+            <thead><tr style="background:#f3f6fa;"><th style="padding:0.5rem 1rem; text-align:left;">Username</th><th style="padding:0.5rem 1rem; text-align:left;">Posts</th></tr></thead>
+            <tbody>
+              {% for username, count in most_active_users %}
+              <tr><td style="padding:0.5rem 1rem;">{{ username }}</td><td style="padding:0.5rem 1rem;">{{ count }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div style="flex:1; min-width:260px;">
+          <h3 style="margin-bottom:0.7rem;">Most Resources by Class</h3>
+          <table style="width:100%; border-collapse:collapse;">
+            <thead><tr style="background:#f3f6fa;"><th style="padding:0.5rem 1rem; text-align:left;">Class</th><th style="padding:0.5rem 1rem; text-align:left;">Resources</th></tr></thead>
+            <tbody>
+              {% for cid, count in most_resource_classes %}
+              <tr><td style="padding:0.5rem 1rem;">{% for id, name in all_classes %}{% if id == cid %}{{ name|title }}{% endif %}{% endfor %}</td><td style="padding:0.5rem 1rem;">{{ count }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div style="margin-bottom:1.5rem;">
+        <a href="/admin/download/users" class="btn btn-primary" style="margin-right:0.7rem;">Download Users CSV</a>
+        <a href="/admin/download/forum" class="btn btn-primary" style="margin-right:0.7rem;">Download Forum CSV</a>
+        <a href="/admin/download/resources" class="btn btn-primary">Download Resources CSV</a>
+      </div>
+    </section>
+    <section id="dashboard" class="admin-dashboard-cards" aria-label="Quick stats">
+      <div class="admin-card"><div class="card-title">Users</div><div class="card-value" id="adminUsersCount">--</div></div>
+      <div class="admin-card"><div class="card-title">Forum Posts</div><div class="card-value" id="adminForumCount">--</div></div>
+      <div class="admin-card"><div class="card-title">Classes</div><div class="card-value" id="adminClassesCount">--</div></div>
+      <div class="admin-card"><div class="card-title">Resources</div><div class="card-value" id="adminResourcesCount">--</div></div>
+      <div class="admin-card"><div class="card-title">Notifications</div><div class="card-value" id="adminNotifCount">--</div></div>
+    </section>
+    <section id="users" class="admin-section" aria-label="User management">
+      <h2>User Management</h2>
+      <p style="color: #666; margin-bottom: 1.5rem;">Create and manage user accounts with comprehensive tools and statistics.</p>
+      <a href="/admin/create-user" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">👥 User Management Dashboard</a>
+      <p style="color: #666; margin-bottom: 1rem;">Access the comprehensive user management interface with advanced search, filtering, and user statistics.</p>
+      
+      <!-- Quick User Stats -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Total Users</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ users|length }}</p>
+        </div>
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Paid Users</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ paid_users|default(0) }}</p>
+        </div>
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Admin Users</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ admin_users|default(0) }}</p>
+        </div>
+      </div>
+    </section>
+    <section id="forum" class="admin-section" aria-label="Forum moderation">
+      <h2>Content Management</h2>
+      <p style="color: #666; margin-bottom: 1.5rem;">Comprehensive management of forum topics, discussions, and content moderation.</p>
+      <a href="/content-management" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">📝 Content Management Dashboard</a>
+      <p style="color: #666; margin-bottom: 1rem;">Access the new comprehensive content management interface with advanced filtering, analytics, and moderation tools.</p>
+      
+      <!-- Quick Overview -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Forum Topics</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ all_topics|length }}</p>
+        </div>
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Forum Messages</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ forum_messages|length }}</p>
+        </div>
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Active Classes</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ all_classes|length }}</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="resources" class="admin-section" aria-label="Resource management">
+      <h2>Resource Management</h2>
+      <a href="/upload-resource" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">📁 Resource Management</a>
+      <a href="/bulk-upload" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block; margin-left:1rem;">📁 Bulk Upload</a>
+      <p style="color: #666; margin-bottom: 1rem;">Click "Resource Management" to upload, schedule, and manage all educational resources with our new comprehensive interface.</p>
+    </section>
+    <section id="notifications" class="admin-section" aria-label="Notifications">
+      <h2>Notifications & Announcements</h2>
+      <a href="/send-notification" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">+ Send Notification</a>
+      <!-- Notification history table removed; now on send notification page -->
+    </section>
+    <!-- Query Management Section -->
+    <section id="queries" class="admin-section" aria-label="Query management">
+      <h2>Query Management</h2>
+      <p style="color: #666; margin-bottom: 1.5rem;">View and respond to user queries, support requests, and feedback submissions.</p>
+      <a href="/query-management" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">📋 Query Management Dashboard</a>
+      <p style="color: #666; margin-bottom: 1rem;">Access the comprehensive query management interface to view, filter, and respond to user queries with advanced tools.</p>
+      
+      <!-- Quick Query Stats -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Total Queries</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ total_queries|default(0) }}</p>
+        </div>
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Pending Queries</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ pending_queries|default(0) }}</p>
+        </div>
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Resolved Queries</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ resolved_queries|default(0) }}</p>
+        </div>
+      </div>
+    </section>
+    <!-- Live Class Management Section -->
+    <section id="live-classes" class="admin-section" aria-label="Live class management">
+      <h2>Live Class Management</h2>
+      <a href="/live-class-management" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">🎥 Manage Live Classes</a>
+      
+      <p style="color:#666; margin-bottom:2rem;">Create, schedule, and manage all live classes. Use the dashboard for real-time status monitoring and automatic class transitions.</p>
+      <!-- No table here, only link and description -->
+    </section>
+  </main>
+  <script src="script.js"></script>
+  <script>
+    // Force light mode for admin panel - aggressive prevention
+    function forceLightMode() {
+      // Remove any dark mode class
+      document.body.classList.remove('dark-mode');
+      // Clear any dark mode preference
+      localStorage.removeItem('darkMode');
+      localStorage.removeItem('adminDarkMode');
+      // Ensure light mode is set
+      document.body.classList.add('light-mode');
+    }
+    
+    // Run immediately
+    forceLightMode();
+    
+    // Run on DOM content loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      forceLightMode();
+    });
+    
+    // Run periodically to prevent dark mode from being applied
+    setInterval(forceLightMode, 1000);
+    
+    // Override any dark mode toggle attempts
+    document.addEventListener('click', function(e) {
+      if (e.target.id === 'darkModeToggle' || e.target.closest('#darkModeToggle')) {
+        e.preventDefault();
+        e.stopPropagation();
+        forceLightMode();
+        return false;
+      }
+    });
+    
+    // Mega dropdown functionality (copied from homepage)
+
+    
+    // Notification bell dropdown (copied from homepage)
+    const notifBell = document.getElementById('notifBell');
+    const notifDropdown = document.getElementById('notifDropdown');
+    if (notifBell && notifDropdown) {
+      notifBell.addEventListener('click', function(e) {
+        notifDropdown.style.display = notifDropdown.style.display === 'block' ? 'none' : 'block';
+        e.stopPropagation();
+      });
+      document.addEventListener('click', function() {
+        notifDropdown.style.display = 'none';
+      });
+      notifDropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+    }
+    
+    // Hamburger menu (copied from homepage)
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    if (hamburger && navLinks) {
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('active');
+      });
+    }
+    
+
+  </script>
+</body>
+</html> 

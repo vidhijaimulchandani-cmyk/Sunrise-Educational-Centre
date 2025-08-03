@@ -1,0 +1,213 @@
+
+.class-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 1rem;
+  height: calc(100vh - 80px);
+  padding: 1rem;
+}
+
+.video-section {
+  display: flex;
+  flex-direction: column;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.video-container {
+  flex: 1;
+  display: grid;
+  grid-template-rows: 2fr 1fr;
+  gap: 1rem;
+}
+
+.teacher-video {
+  background: #000;
+  border-radius: 8px;
+  padding: 1rem;
+  color: white;
+  text-align: center;
+  position: relative;
+}
+
+.video-placeholder {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+}
+
+.students-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.5rem;
+}
+
+.student-video {
+  background: #333;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 4px;
+  text-align: center;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  justify-content: center;
+}
+
+.controls button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background: #007bff;
+  color: white;
+}
+
+.controls button:hover {
+  background: #0056b3;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid #dee2e6;
+}
+
+.chat-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-messages {
+  flex: 1;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 0.5rem;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 0.5rem;
+}
+
+.message {
+  margin-bottom: 0.5rem;
+  padding: 0.25rem;
+  border-radius: 4px;
+}
+
+.message.teacher {
+  background: #e3f2fd;
+}
+
+.message.student {
+  background: #f3e5f5;
+}
+
+.chat-input {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.chat-input input {
+  flex: 1;
+  margin: 0;
+}
+
+.participants ul,
+.materials ul {
+  list-style: none;
+  padding: 0;
+}
+
+.participants li,
+.materials li {
+  padding: 0.25rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.materials a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+.materials a:hover {
+  text-decoration: underline;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 5% auto;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 900px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: black;
+}
+
+#whiteboard {
+  border: 1px solid #ccc;
+  cursor: crosshair;
+}
+
+.whiteboard-tools {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.whiteboard-tools button {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+}
+
+@media (max-width: 768px) {
+  .class-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+  
+  .students-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

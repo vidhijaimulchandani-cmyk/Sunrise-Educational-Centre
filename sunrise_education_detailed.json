@@ -1,0 +1,210 @@
+{
+  "extracted_at": "2025-07-28T22:09:21.840117",
+  "total_links": 32,
+  "google_drive_total": 21,
+  "link_locked_count": 8,
+  "social_media_count": 3,
+  "categorized_links": {
+    "google_drive_direct": [
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1mTuOHG3ah_AJ6kfdLciyumFMTOj50b78",
+        "text": "Case Study (All Chapters)",
+        "file_id": "1mTuOHG3ah_AJ6kfdLciyumFMTOj50b78",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1AKPa-z8EfdV6zrV7iLBrlJ_PYlZh1nMX",
+        "text": "Basic (2024-2025) with Solution",
+        "file_id": "1AKPa-z8EfdV6zrV7iLBrlJ_PYlZh1nMX",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=13vras5PqieLebe_nLadoHUr6dlGksPK7",
+        "text": "Standard (2024-2025) with solution",
+        "file_id": "13vras5PqieLebe_nLadoHUr6dlGksPK7",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1KEjd1PtHmhECYmtIVAIMzdCmLCfRS0jT",
+        "text": "CH 1 - Real Number",
+        "file_id": "1KEjd1PtHmhECYmtIVAIMzdCmLCfRS0jT",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1a_AQAjO0fnGB_tASwoy7QbvVqv8ypo2M",
+        "text": "CH 2 - Polynomials",
+        "file_id": "1a_AQAjO0fnGB_tASwoy7QbvVqv8ypo2M",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=13rZw4nDD7LV9hXhYi5J-2uCvsrRWU7ZZ",
+        "text": "CH 3 - Pair of Linear Equations in Two Variables",
+        "file_id": "13rZw4nDD7LV9hXhYi5J-2uCvsrRWU7ZZ",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1vhZG00hT90c2-0FEWU2C57EpQlb4pLSa",
+        "text": "CH 4 - Quadratic Equation",
+        "file_id": "1vhZG00hT90c2-0FEWU2C57EpQlb4pLSa",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=11V7i3_2sJ7RZNstTXbjlFrX0sanN3MZ9",
+        "text": "CH 5 - Arithmetic Progression",
+        "file_id": "11V7i3_2sJ7RZNstTXbjlFrX0sanN3MZ9",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1dP3TFuMNxz9I25O1s2RDbeG0GKQ_Y_Nf",
+        "text": "CH 6 - Triangles",
+        "file_id": "1dP3TFuMNxz9I25O1s2RDbeG0GKQ_Y_Nf",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1e-dNaC2Skk9-dta6SNLvof-kpZC3Aswd",
+        "text": "CH 7 - Coordinate Geometry",
+        "file_id": "1e-dNaC2Skk9-dta6SNLvof-kpZC3Aswd",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1nsH_Go7nxXasSX0HWoYSad9aUCl-vDfO",
+        "text": "CH 8 - Trigonometry",
+        "file_id": "1nsH_Go7nxXasSX0HWoYSad9aUCl-vDfO",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1oTnQH30HPoBKEHOicZ0c7MXrDP4GduGg",
+        "text": "CH 9 - Applications of Trigonometry",
+        "file_id": "1oTnQH30HPoBKEHOicZ0c7MXrDP4GduGg",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1CC5TaIgJTR3ZuB6BHUDmWIXYDmZ2_VAo",
+        "text": "CH 10 - Circles",
+        "file_id": "1CC5TaIgJTR3ZuB6BHUDmWIXYDmZ2_VAo",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1NGuipqjtxnpArlQZtddD88C1rC2dyFzB",
+        "text": "CH 11 - Areas Related to Circles",
+        "file_id": "1NGuipqjtxnpArlQZtddD88C1rC2dyFzB",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1oS693cOTkYhY8PUn5w-NDBf9mL_mCa86",
+        "text": "CH 12 - Surface Areas & Volumes",
+        "file_id": "1oS693cOTkYhY8PUn5w-NDBf9mL_mCa86",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1WblRmjMTLvxwsF-y3_9KECE8Xh51qIpu",
+        "text": "CH 13 - Statistics",
+        "file_id": "1WblRmjMTLvxwsF-y3_9KECE8Xh51qIpu",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1jRVyAa184Jz-FxxuDDguZMJPkxCZymUf",
+        "text": "CH 14 - Probability",
+        "file_id": "1jRVyAa184Jz-FxxuDDguZMJPkxCZymUf",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1ZgUSqxEoH3KnobfrlOKtsQGzCHfoC_cM",
+        "text": "Polynomials - Worksheet (UNLOCKED)",
+        "file_id": "1ZgUSqxEoH3KnobfrlOKtsQGzCHfoC_cM",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=11SIma-Eu2ljYlWAKSFpS04tCyqAjij7z",
+        "text": "Triangles - Worksheet (UNLOCKED)",
+        "file_id": "11SIma-Eu2ljYlWAKSFpS04tCyqAjij7z",
+        "type": "google_drive_direct"
+      },
+      {
+        "url": "https://drive.google.com/uc?export=download&id=1iluMHbcoJX73DZe-oe7-a500yv7OHiAB",
+        "text": "Probability - Worksheet (UNLOCKED)",
+        "file_id": "1iluMHbcoJX73DZe-oe7-a500yv7OHiAB",
+        "type": "google_drive_direct"
+      }
+    ],
+    "google_docs": [
+      {
+        "url": "https://docs.google.com/forms/d/e/1FAIpQLScrttwnoiBrhYBCwXLOyyELprv0N-G9-CEVMEQwGlOdxPOj7g/viewform?usp=header",
+        "text": "Demo registration",
+        "file_id": "e",
+        "type": "google_docs"
+      }
+    ],
+    "link_locked": [
+      {
+        "url": "https://jstrieb.github.io/link-lock/#eyJ2IjoiMC4wLjEiLCJlIjoiS1FDTDhUK21uVEVXZjFNRjBma1k4ZVpSaFNnekZUa2IreXdQWXpQUTdSZ0VWaFlMVmlFM1FDblR2UnpubVNBVzJLMkNvUmJKL283NTc1MTVvRkIrUEhtK2VGK2JTSi9iaGt6NDUwS2ZiUXpDbTN1VUdJb0d6M09iVCtnQnhsTjFPY3hNZ3RVPSIsImgiOiJFeGx1c2l2ZSBmb3Igb3VyIG9mZmxpbmUgc3R1ZGVudHMiLCJzIjoiTUJ5THJNVGE2Wlg3NS8ySTZrZFY2dz09IiwiaSI6IjJ3VDFDU2VVVXJsSlI2M0kifQ==",
+        "text": "Real Numbers - Worksheet",
+        "file_id": null,
+        "type": "link_locked"
+      },
+      {
+        "url": "https://jstrieb.github.io/link-lock/#eyJ2IjoiMC4wLjEiLCJlIjoiRWpoRlhoTmkvUEVCaVdLY3ZydlJ0NkREbGduL3NYMVVWazYrcElGZjgzRDV3WGFyZzFXZVZzL3JvTUErQjFTbDVQblBHSTBhTEVXc0t6MElENHNzTEw4YVhIYU43ZkVJMTQ3dGVId21RNjhva2NZSGZKN1JXVjd0Z2RYZjlzS3lWbU9Mc2hrPSIsImgiOiJFeGNsdXNpdmUgZm9yIG91ciBvZmZsaW5lIHN0dWRlbnRzIiwicyI6ImlTekdRZG1QNkd6WGRPaVI1Umd6QlE9PSIsImkiOiJTSEpMcGdYM05QUTZpWDN2In0=",
+        "text": "Linear Equations - Worksheet",
+        "file_id": null,
+        "type": "link_locked"
+      },
+      {
+        "url": "https://jstrieb.github.io/link-lock/#eyJ2IjoiMC4wLjEiLCJlIjoib2txWHgydVhLUllHL1hLbWVJNEFOc3FmeVc3cWY2aHRSVWVPWU1tMHR5Zmo5c0dMNVJCVjBid1hxSVhKQVExL1ZTb1ZoSnMwUXBwbmhERkRHRW9pNmViVDdJYnM1WHZub3dZbHVtSFlGZ2JzZXZ4WnpMZ3pCbWx1aGhuZFpIK3VyWEFreU1zPSIsImgiOiItRXhjbHVzaXZlIGZvciBvdXIgb2ZmbGluZSBzdHVkZW50cyIsInMiOiJ5dVc3cDFBekhsQ09hclpwV0FXSldRPT0iLCJpIjoiaUxtVlhrNDlUeXpLVkNadSJ9",
+        "text": "Quadratic Equation - Worksheet",
+        "file_id": null,
+        "type": "link_locked"
+      },
+      {
+        "url": "https://jstrieb.github.io/link-lock/#eyJ2IjoiMC4wLjEiLCJlIjoiQTZFOHF3Tjg2OWJjWmZJN3NUd0swUEt0eFNER1MvaVNROVp0Z1I4UjJRbERXU3YwaWhBZEtXYkxZMm0vUXIvbzVlbmRYK1dRQWVkYWhWWVhwM0tZZUhqcTlUcmV6TVI0eTZPR2pHcWNiS0Npc3dMek5YNEdFemd0czJ2aUhEdlFaT0wxR1pJPSIsImgiOiItRXhjbHVzaXZlIGZvciBvdXIgb2ZmbGluZSBzdHVkZW50cyIsInMiOiJZYnBhQzIzUGI0Q2RicUw2c2hiMkZBPT0iLCJpIjoiVXArYnRPSjdRcTNtVnRCZyJ9",
+        "text": "A.P. - Worksheet",
+        "file_id": null,
+        "type": "link_locked"
+      },
+      {
+        "url": "https://jstrieb.github.io/link-lock/#eyJ2IjoiMC4wLjEiLCJlIjoiMjhLTnlWMWh0ZE92WTJiODRwL3JmVG9RYXdIUHpOMEllTzZrMEtpVERPelp3UEZxSStQZGZob0NCYUtHOVF0TnpXQmR2NXMyWDRKRkVIT21wZjFzZlEvK1VXd3Rpc3JWY3BzSUh1U0V3MC9ERjlIeERGeWJXNEFzREF0dmt4MGNKeW5zN0RNPSIsImgiOiItRXhjbHVzaXZlIGZvciBvdXIgb2ZmbGluZSBzdHVkZW50cyIsInMiOiJoYUNZZHBjNHlHbXB0ZVNFc0t6Z2tRPT0iLCJpIjoib25XR3hGOTVZeHBKeUdmciJ9",
+        "text": "Coordinate Geometry - Worksheet",
+        "file_id": null,
+        "type": "link_locked"
+      },
+      {
+        "url": "https://jstrieb.github.io/link-lock/#eyJ2IjoiMC4wLjEiLCJlIjoiUVp0M0JVK3NXVzRMbEp3SkdZUkVGdEsrazZJNGxMTnZFQlJydVJ5a1VEendidjBtMTJYNldBbGQ0dnFLZmRvYk9mbEhSUGl4K2s0UitCWXNsSzkyYlp3emRMdzM5K0kzajF1MnRmb0tNT0RkK1VleXhzeFhlZVN6MDVLVjhiVEd3aGFNYkNvPSIsImgiOiItRXhjbHVzaXZlIGZvciBvdXIgb2ZmbGluZSBzdHVkZW50cyIsInMiOiJhRWpGWnVLck4xa2p4dXdUeHk2b3lnPT0iLCJpIjoiS3EyQmFLN2RtcHZDZ2xWZyJ9",
+        "text": "Trigonometry & Applications - Worksheet",
+        "file_id": null,
+        "type": "link_locked"
+      },
+      {
+        "url": "https://jstrieb.github.io/link-lock/#eyJ2IjoiMC4wLjEiLCJlIjoiZDdRSHZCVHQrTVVrd2NidS9JcUd3VFVFTjRQdUF1UnpybE81SEcxTWxkT3Q4QlBLVlhFNWlZWWlSTHJJZGZ4Y2pLS3V6WTZVK1lTbXJ5dElnUlVXOGVRanNyNnMvSDd1N0pUQUxIWjRrNkxsTXM3VWFTY3d1QThPRkVHSUY3N0xSNG9vb2Y4PSIsImgiOiItRXhjbHVzaXZlIGZvciBvdXIgb2ZmbGluZSBzdHVkZW50cyIsInMiOiJTeVgyYTNPV1J0UVRGNzNqUFJ6S1hnPT0iLCJpIjoiUVY1cEpzM2sxNFdVRzA2TiJ9",
+        "text": "Areas related to circles - Worksheet",
+        "file_id": null,
+        "type": "link_locked"
+      },
+      {
+        "url": "https://jstrieb.github.io/link-lock/#eyJ2IjoiMC4wLjEiLCJlIjoibE1aYkJ2bDNneDhsNVpFbzFIdFk2ZlRlOStvZHZ5S0lCeGtybFJicDRscENyeGxweHRGeUowdGxzVTE0TFlDcDQ2bDlYNFloMHpQMFBJalhXVnh1MFlXK2xKTXhrRzlQWFRSSFJ5Qk5XL29pL3ZzeVRHMWt2eUxXWlZ4U1lGbXh0TEU9IiwiaCI6Ii1FeGNsdXNpdmUgZm9yIG91ciBvZmZsaW5lIHN0dWRlbnRzIiwicyI6ImhPcXBRempmSmVPMFROdGc3c3ptbEE9PSIsImkiOiJzblZ5elRNT0JIdSthaHBhIn0=",
+        "text": "FORMULA SHEET (All Chapters)",
+        "file_id": null,
+        "type": "link_locked"
+      }
+    ],
+    "social_media": [
+      {
+        "url": "https://instagram.com/sunrise_education_centre",
+        "text": "InstagramInstagram",
+        "file_id": null,
+        "type": "social_media"
+      },
+      {
+        "url": "https://api.whatsapp.com/send?phone=918827431647",
+        "text": "WhatsAppWhatsApp",
+        "file_id": null,
+        "type": "social_media"
+      },
+      {
+        "url": "https://www.youtube.com/@MohitNariyani/featured",
+        "text": "YouTubeYouTube",
+        "file_id": null,
+        "type": "social_media"
+      }
+    ],
+    "other": []
+  }
+}

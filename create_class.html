@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Create Live Class - Admin</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .dark-mode-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+  </style>
+</head>
+<body>
+  <!-- Dark Mode Toggle Button -->
+  <div class="dark-mode-toggle">
+    <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
+  </div>
+  <nav class="navbar glassmorphic">
+    <div class="container nav-content">
+      <div class="nav-logo">
+        <img src="attached_assets/image_1750584670920.png" alt="Logo">
+      </div>
+      <ul class="nav-links">
+        <li><a href="/admin">Admin Panel</a></li>
+        <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main class="container main-content">
+    <section class="user-info-section">
+      <h2>Create a New Live Class</h2>
+      <form method="POST" action="/create-live-class" class="login-form" enctype="multipart/form-data">
+        <input type="text" name="topic" placeholder="Class Topic (e.g., Algebra Basics)" required />
+        <textarea name="description" placeholder="Short Description (e.g., Covering linear equations and practice problems)" required rows="3" style="border-radius:14px; padding:0.7rem 1.1rem;"></textarea>
+        
+        <div style="margin-bottom: 1.5rem;">
+          <label style="margin-bottom: 0.7rem; display: block; font-weight: 600; color: #232946;">Video Source:</label>
+          <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1rem;">
+            <label class="checkbox-radio-style">
+              <input type="radio" name="video_source" value="upload" checked onchange="toggleVideoSource()" />
+              <span>Upload Video File</span>
+            </label>
+            <label class="checkbox-radio-style">
+              <input type="radio" name="video_source" value="youtube" onchange="toggleVideoSource()" />
+              <span>YouTube Link</span>
+            </label>
+            <label class="checkbox-radio-style">
+              <input type="radio" name="video_source" value="golive" onchange="toggleVideoSource()" />
+              <span>Go Live (Real-Time)</span>
+            </label>
+          </div>
+          
+          <div id="upload-section">
+            <label style="margin-bottom: 0.7rem; display: block;">Upload Video (MP4/WebM):
+              <input type="file" name="video_file" accept="video/mp4,video/webm" style="margin-top: 0.3rem;" />
+            </label>
+          </div>
+          
+          <div id="youtube-section" style="display: none;">
+            <label style="margin-bottom: 0.7rem; display: block;">YouTube Video URL:
+              <input type="url" name="youtube_url" placeholder="https://www.youtube.com/watch?v=..." style="margin-top: 0.3rem; width: 100%; padding: 0.7rem 1rem; border: 1px solid #e0e7ff; border-radius: 8px;" />
+        </label>
+            <p style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+              <strong>Note:</strong> The video will be automatically downloaded and processed for the live class.
+            </p>
+            <div id="download-progress" style="display: none; margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; border: 1px solid #e0e7ff;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                <div style="width: 20px; height: 20px; border: 2px solid #6a82fb; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                <span style="color: #6a82fb; font-weight: 600;">Downloading YouTube video...</span>
+              </div>
+              <p style="font-size: 0.9rem; color: #666; margin: 0;">
+                This may take a few minutes depending on the video size. Please don't close this page.
+              </p>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Class & Get Details</button>
+      </form>
+    </section>
+
+    {% if class_details %}
+    <section class="card-section" style="margin-top:2rem; text-align:center;">
+        <h2>Class Created Successfully!</h2>
+        <p>Share these details with your students.</p>
+        <div class="card animated-card" style="max-width:400px; margin: 1rem auto; text-align:left;">
+            <h3>{{ class_details.topic }}</h3>
+            <p>{{ class_details.description }}</p>
+            <hr style="border:0; border-top: 1px solid #eee; margin: 1rem 0;">
+            <p><strong>Code:</strong> <span style="font-size: 1.2rem; color: #fc5c7d;">{{ class_details.code }}</span></p>
+            <p><strong>PIN:</strong> <span style="font-size: 1.2rem; color: #fc5c7d;">{{ class_details.pin }}</span></p>
+            <p><strong>Join Link:</strong> <a href="{{ class_details.url }}" target="_blank">{{ class_details.url }}</a></p>
+        </div>
+    </section>
+    {% endif %}
+
+  </main>
+  <footer class="footer">
+    <div class="container footer-content">
+      <p>&copy; 2024 Sunrise Education Centre</p>
+    </div>
+  </footer>
+
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    /* Custom style for radio buttons to look like checkboxes */
+    .checkbox-radio-style {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      position: relative;
+      font-size: 1rem;
+    }
+    .checkbox-radio-style input[type="radio"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #6a82fb;
+      border-radius: 4px;
+      background: #fff;
+      outline: none;
+      cursor: pointer;
+      margin: 0;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+    .checkbox-radio-style input[type="radio"]:checked {
+      background: #6a82fb;
+      border-color: #6a82fb;
+    }
+    .checkbox-radio-style input[type="radio"]:checked::after {
+      content: '';
+      display: block;
+      width: 12px;
+      height: 12px;
+      background: #fff;
+      border-radius: 2px;
+      position: absolute;
+      top: 4px;
+      left: 4px;
+    }
+    .checkbox-radio-style span {
+      user-select: none;
+    }
+  </style>
+  
+  <script>
+    function toggleVideoSource() {
+      const uploadSection = document.getElementById('upload-section');
+      const youtubeSection = document.getElementById('youtube-section');
+      const videoSource = document.querySelector('input[name="video_source"]:checked').value;
+      if (videoSource === 'upload') {
+        uploadSection.style.display = 'block';
+        youtubeSection.style.display = 'none';
+        document.querySelector('input[name="video_file"]').required = true;
+        document.querySelector('input[name="youtube_url"]').required = false;
+      } else if (videoSource === 'youtube') {
+        uploadSection.style.display = 'none';
+        youtubeSection.style.display = 'block';
+        document.querySelector('input[name="video_file"]').required = false;
+        document.querySelector('input[name="youtube_url"]').required = true;
+      } else {
+        uploadSection.style.display = 'none';
+        youtubeSection.style.display = 'none';
+        document.querySelector('input[name="video_file"]').required = false;
+        document.querySelector('input[name="youtube_url"]').required = false;
+      }
+    }
+    
+    // Show download progress when form is submitted with YouTube URL
+    document.querySelector('form').addEventListener('submit', function(e) {
+      const videoSource = document.querySelector('input[name="video_source"]:checked').value;
+      if (videoSource === 'youtube') {
+        const youtubeUrl = document.querySelector('input[name="youtube_url"]').value.trim();
+        if (youtubeUrl) {
+          document.getElementById('download-progress').style.display = 'block';
+          document.querySelector('button[type="submit"]').disabled = true;
+          document.querySelector('button[type="submit"]').textContent = 'Downloading...';
+        }
+      }
+    });
+  </script>
+  <script src="script.js"></script>
+</body>
+</html> 

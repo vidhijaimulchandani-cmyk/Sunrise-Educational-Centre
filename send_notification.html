@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Send Notification - Admin</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #f6f8fa;
+      font-family: 'Inter', sans-serif;
+    }
+    .dark-mode-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+    .notification-container {
+      max-width: 650px;
+      margin: 2.5rem auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 24px rgba(100,100,255,0.08);
+      padding: 2.5rem 2rem 2rem 2rem;
+    }
+    .notification-container h1 {
+      font-size: 2.1rem;
+      color: #232946;
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+    .notification-container h2 {
+      font-size: 1.3rem;
+      color: #6a82fb;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    .login-form {
+      margin-bottom: 2.5rem;
+    }
+    .form-group {
+      margin-bottom: 1.3rem;
+    }
+    .form-group label {
+      font-weight: 600;
+      color: #232946;
+      margin-bottom: 0.4rem;
+      display: block;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border: 1px solid #e0e7ff;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: all 0.2s;
+      background: #f8f9ff;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #6a82fb;
+      box-shadow: 0 0 0 3px rgba(106,130,251,0.1);
+    }
+    .btn-primary, .btn-secondary {
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #6a82fb 0%, #5a6fd8 100%);
+      color: #fff;
+      margin-right: 0.5rem;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #5a6fd8 0%, #6a82fb 100%);
+      box-shadow: 0 4px 12px rgba(106,130,251,0.18);
+    }
+    .btn-secondary {
+      background: linear-gradient(135deg, #fc5c7d 0%, #e74c3c 100%);
+      color: #fff;
+    }
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #e74c3c 0%, #fc5c7d 100%);
+      box-shadow: 0 4px 12px rgba(252,92,125,0.18);
+    }
+    .login-error {
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      font-size: 1.05rem;
+      font-weight: 500;
+      padding: 1rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #f8f9ff;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+    th, td {
+      padding: 0.9rem 1rem;
+      text-align: left;
+      font-size: 1rem;
+    }
+    thead tr {
+      background: #e0e7ff;
+    }
+    tbody tr {
+      border-bottom: 1px solid #e0e7ff;
+      transition: background 0.2s;
+    }
+    tbody tr:hover {
+      background: #f3f6fa;
+    }
+    @media (max-width: 700px) {
+      .notification-container {
+        padding: 1.2rem 0.5rem;
+      }
+      th, td {
+        padding: 0.7rem 0.5rem;
+        font-size: 0.97rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Dark Mode Toggle Button -->
+  <div class="dark-mode-toggle">
+    <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
+  </div>
+
+  <nav class="navbar glassmorphic">
+    <div class="container nav-content">
+      <div class="nav-logo">
+        <img src="attached_assets/image_1750584670920.png" alt="Logo">
+      </div>
+      <ul class="nav-links">
+        <li><a href="/admin">Admin Panel</a></li>
+        <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main class="container main-content">
+    <div class="notification-container">
+      <h1>Send Notification</h1>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="login-error" style="margin-bottom:1rem; background: {% if category == 'error' %}#fc5c7d{% else %}#28a745{% endif %}; color: #fff; padding: 1rem; border-radius: 8px;">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <form method="POST" action="/send-notification" class="login-form">
+        <div class="form-group">
+          <label for="message">Notification Message *</label>
+          <textarea id="message" name="message" required placeholder="Type your notification..." maxlength="500" rows="4"></textarea>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+            <small style="color: #666;">Maximum 500 characters</small>
+            <small id="charCount" style="color: #6a82fb; font-weight: 500;">0/500</small>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="class_id">Target Class *</label>
+          <select id="class_id" name="class_id" required>
+            <option value="">Select Class</option>
+            <optgroup label="Class 9">
+              <option value="1">Class 9</option>
+            </optgroup>
+            <optgroup label="Class 10">
+              <option value="2">Class 10</option>
+            </optgroup>
+            <optgroup label="Class 11">
+              <option value="4">Class 11 Applied</option>
+              <option value="5">Class 11 Core</option>
+            </optgroup>
+            <optgroup label="Class 12">
+              <option value="6">Class 12 Applied</option>
+              <option value="7">Class 12 Core</option>
+            </optgroup>
+            <optgroup label="Staff">
+              <option value="8">Admin</option>
+              <option value="9">Teacher</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="target_paid_status">Target Users *</label>
+          <select id="target_paid_status" name="target_paid_status" required>
+            <option value="all">All Users (Paid & Unpaid)</option>
+            <option value="paid">Paid Users Only</option>
+            <option value="not paid">Unpaid Users Only</option>
+          </select>
+          <small style="color: #666;">Choose which users should receive this notification</small>
+        </div>
+        <div class="form-group">
+          <label for="schedule_date">Schedule Notification (Optional)</label>
+          <input type="datetime-local" id="schedule_date" name="schedule_date">
+          <small style="color: #666;">Leave empty to send immediately</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Send Now</button>
+        <button type="submit" name="schedule" value="1" class="btn btn-secondary" style="margin-left:1rem;">Schedule Notification</button>
+      </form>
+
+      <h2 style="margin-top:2.5rem;">Past Notifications</h2>
+      <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse;">
+          <thead>
+            <tr style="background:#f3f6fa;">
+              <th style="padding:0.7rem 1rem; text-align:left;">Message</th>
+              <th style="padding:0.7rem 1rem; text-align:left;">Class</th>
+              <th style="padding:0.7rem 1rem; text-align:left;">Target Users</th>
+              <th style="padding:0.7rem 1rem; text-align:left;">Created At</th>
+              <th style="padding:0.7rem 1rem; text-align:left;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for n in notifications %}
+            <tr style="border-bottom:1px solid #eee;">
+              <td style="padding:0.7rem 1rem; max-width:300px; word-wrap:break-word;">{{ n[1] }}</td>
+              <td style="padding:0.7rem 1rem;">{{ n[2] or 'All Classes' }}</td>
+              <td style="padding:0.7rem 1rem;">
+                {% if n[4] == 'all' %}
+                  <span style="background:#e3f2fd; color:#1976d2; padding:0.2rem 0.5rem; border-radius:4px; font-size:0.85rem;">All Users</span>
+                {% elif n[4] == 'paid' %}
+                  <span style="background:#e8f5e8; color:#2e7d32; padding:0.2rem 0.5rem; border-radius:4px; font-size:0.85rem;">Paid Only</span>
+                {% elif n[4] == 'not paid' %}
+                  <span style="background:#fff3e0; color:#f57c00; padding:0.2rem 0.5rem; border-radius:4px; font-size:0.85rem;">Unpaid Only</span>
+                {% else %}
+                  <span style="background:#f3e5f5; color:#7b1fa2; padding:0.2rem 0.5rem; border-radius:4px; font-size:0.85rem;">{{ n[4]|title }}</span>
+                {% endif %}
+              </td>
+              <td style="padding:0.7rem 1rem;">{{ n[3][:19].replace('T', ' ') if n[3] else '-' }}</td>
+              <td style="padding:0.7rem 1rem;">
+                <form method="POST" action="/admin/delete-notification/{{ n[0] }}" style="display:inline;" onsubmit="return confirm('Delete this notification?');">
+                  <button type="submit" class="btn btn-secondary" style="padding:0.3rem 0.8rem; font-size:0.9rem;">Delete</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  
+  <script>
+    // Character counter for message
+    const messageTextarea = document.getElementById('message');
+    const charCount = document.getElementById('charCount');
+    
+    if (messageTextarea && charCount) {
+      messageTextarea.addEventListener('input', function() {
+        const currentLength = this.value.length;
+        const maxLength = this.maxLength;
+        charCount.textContent = `${currentLength}/${maxLength}`;
+        
+        // Change color when approaching limit
+        if (currentLength > maxLength * 0.9) {
+          charCount.style.color = '#fc5c7d';
+        } else if (currentLength > maxLength * 0.7) {
+          charCount.style.color = '#f6ad55';
+        } else {
+          charCount.style.color = '#6a82fb';
+        }
+      });
+    }
+    
+    // Form validation
+    const form = document.querySelector('form');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        const message = document.getElementById('message').value.trim();
+        const classId = document.getElementById('class_id').value;
+        const targetPaidStatus = document.getElementById('target_paid_status').value;
+        
+        if (!message) {
+          e.preventDefault();
+          alert('Please enter a notification message.');
+          return false;
+        }
+        
+        if (!classId) {
+          e.preventDefault();
+          alert('Please select a target class.');
+          return false;
+        }
+        
+        if (!targetPaidStatus) {
+          e.preventDefault();
+          alert('Please select target users.');
+          return false;
+        }
+        
+        // Show confirmation for scheduling
+        if (e.submitter && e.submitter.name === 'schedule') {
+          const scheduleDate = document.getElementById('schedule_date').value;
+          if (!scheduleDate) {
+            e.preventDefault();
+            alert('Please select a schedule date and time.');
+            return false;
+          }
+          
+          if (!confirm('Are you sure you want to schedule this notification?')) {
+            e.preventDefault();
+            return false;
+          }
+        }
+      });
+    }
+    
+    // Auto-resize textarea
+    if (messageTextarea) {
+      messageTextarea.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+      });
+    }
+  </script>
+  <script src="script.js"></script>
+</body>
+</html> 

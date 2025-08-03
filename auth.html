@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login - Sunrise Education Centre</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="login-bg">
+    <nav class="navbar glassmorphic">
+      <div class="container nav-content">
+        <div class="nav-logo">
+          <img src="attached_assets/image_1750584670920.png" alt="Logo">
+        </div>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+        </ul>
+        <button class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+      </div>
+    </nav>
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-logo">
+          <img src="attached_assets/image_1750584670920.png" alt="Logo">
+          <h2 id="formTitle">Login</h2>
+        </div>
+        <form id="loginForm" method="POST" action="/auth" class="login-form">
+          <input type="text" name="username" placeholder="Username" required autocomplete="username" />
+          <input type="password" name="password" placeholder="Password" required autocomplete="current-password" />
+          <select name="class_id" id="loginRole" required style="border-radius:20px; padding:0.7rem 1.1rem;">
+            {% for id, name in all_classes %}
+              <option value="{{ id }}">{{ name|title }}</option>
+            {% endfor %}
+          </select>
+          <input type="text" name="admin_code" id="loginAdminCodeInput" placeholder="Admin Code" style="display:none;" />
+          <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+        <form id="signupForm" method="POST" action="/register" class="login-form" style="display:none;">
+          <input type="text" id="signup-username" name="username" placeholder="Username" required autocomplete="username" />
+          <input type="password" id="signup-password" name="password" placeholder="Password" required autocomplete="new-password" />
+          <select name="class_id" id="signupRole" required style="border-radius:20px; padding:0.7rem 1.1rem;">
+            {% for id, name in all_classes %}
+              <option value="{{ id }}">{{ name|title }}</option>
+            {% endfor %}
+                    </select>
+          <input type="text" name="admin_code" id="signupAdminCodeInput" placeholder="Admin Code" style="display:none;" />
+          <button type="submit" class="btn btn-primary">Sign Up</button>
+              </form>
+        <div class="login-links">
+          <a href="/">&larr; Back to Home</a> |
+          <a href="#" id="toggleForm">Don't have an account? Sign Up</a>
+        </div>
+        {% if error %}
+        <div class="login-error">{{ error }}</div>
+        {% endif %}
+      </div>
+    </div>
+    <div style="text-align:center; margin: 1.5rem 0 2rem 0;">
+      <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
+    </div>
+  </body>
+  <script src="script.js"></script>
+  <script>
+    // Toggle between Login and Sign Up forms
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+    const toggleForm = document.getElementById('toggleForm');
+    const formTitle = document.getElementById('formTitle');
+    let isLogin = true;
+    toggleForm.addEventListener('click', function(e) {
+      e.preventDefault();
+      isLogin = !isLogin;
+      loginForm.style.display = isLogin ? '' : 'none';
+      signupForm.style.display = isLogin ? 'none' : '';
+      formTitle.textContent = isLogin ? 'Login' : 'Sign Up';
+      toggleForm.textContent = isLogin ? "Don't have an account? Sign Up" : "Already have an account? Login";
+    });
+    // Show/hide admin code input on role change
+    const signupRole = document.getElementById('signupRole');
+    const signupAdminCodeInput = document.getElementById('signupAdminCodeInput');
+    signupRole.addEventListener('change', function() {
+      if (signupRole.value === 'admin') {
+        signupAdminCodeInput.style.display = '';
+        signupAdminCodeInput.required = true;
+      } else {
+        signupAdminCodeInput.style.display = 'none';
+        signupAdminCodeInput.required = false;
+      }
+    });
+    // Show/hide admin code input on login role change
+    const loginRole = document.getElementById('loginRole');
+    const loginAdminCodeInput = document.getElementById('loginAdminCodeInput');
+    const all_classes_dict = {
+        {% for id, name in all_classes %}'{{ id }}': '{{ name }}',{% endfor %}
+    };
+    loginRole.addEventListener('change', function() {
+      const selectedRoleName = all_classes_dict[loginRole.value];
+      if (selectedRoleName === 'admin') {
+        loginAdminCodeInput.style.display = '';
+        loginAdminCodeInput.required = true;
+      } else {
+        loginAdminCodeInput.style.display = 'none';
+        loginAdminCodeInput.required = false;
+      }
+    });
+  </script>
+</html>

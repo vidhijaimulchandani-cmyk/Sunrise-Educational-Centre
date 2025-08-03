@@ -1,0 +1,64 @@
+<!-- Time Display Component for IST -->
+<div id="time-display" style="
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(106, 130, 251, 0.3);
+    z-index: 1000;
+    font-family: 'Inter', sans-serif;
+">
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 16px;">🕐</span>
+        <div>
+            <div id="current-time">Loading...</div>
+            <div style="font-size: 11px; opacity: 0.9;">IST (UTC+5:30)</div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateTime() {
+    const now = new Date();
+    const istTime = new Date(now.getTime() + (5.5 * 60 * 60 * 1000)); // IST is UTC+5:30
+    
+    const timeString = istTime.toLocaleTimeString('en-IN', {
+        timeZone: 'Asia/Kolkata',
+        hour12: true,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    
+    const dateString = istTime.toLocaleDateString('en-IN', {
+        timeZone: 'Asia/Kolkata',
+        weekday: 'short',
+        day: '2-digit',
+        month: 'short'
+    });
+    
+    document.getElementById('current-time').innerHTML = `
+        <div style="font-size: 13px;">${timeString}</div>
+        <div style="font-size: 10px; opacity: 0.8;">${dateString}</div>
+    `;
+}
+
+// Update time immediately and then every second
+updateTime();
+setInterval(updateTime, 1000);
+
+// Add hover effect
+document.getElementById('time-display').addEventListener('mouseenter', function() {
+    this.style.transform = 'scale(1.05)';
+    this.style.transition = 'transform 0.2s ease';
+});
+
+document.getElementById('time-display').addEventListener('mouseleave', function() {
+    this.style.transform = 'scale(1)';
+});
+</script> 

@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Management - Admin</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .content-container { max-width: 1400px; margin: 2rem auto; padding: 0 1rem; }
+    .header-section { text-align: center; margin-bottom: 3rem; }
+    .header-section h1 { color: #232946; font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .header-section p { color: #666; font-size: 1.1rem; }
+    
+    .tab-container { display: flex; background: #f8f9ff; border-radius: 12px; padding: 0.5rem; margin-bottom: 2rem; }
+    .tab-btn { flex: 1; padding: 1rem; background: none; border: none; cursor: pointer; font-weight: 500; color: #666; border-radius: 8px; transition: all 0.3s; }
+    .tab-btn.active { background: #6a82fb; color: #fff; }
+    .tab-btn:hover:not(.active) { background: rgba(106,130,251,0.1); }
+    
+    .tab-content { display: none; background: #fff; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 24px rgba(100,100,255,0.08); }
+    .tab-content.active { display: block; }
+    
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .section-title { font-size: 1.5rem; font-weight: 600; color: #232946; margin: 0; }
+    .section-actions { display: flex; gap: 1rem; }
+    
+    .btn-primary { background: linear-gradient(135deg, #6a82fb 0%, #5a6fd8 100%); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(106,130,251,0.3); }
+    .btn-secondary { background: linear-gradient(135deg, #fc5c7d 0%, #e74c3c 100%); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-secondary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(252,92,125,0.3); }
+    .btn-success { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-success:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(72,187,120,0.3); }
+    .btn-warning { background: linear-gradient(135deg, #ffa726 0%, #ff9800 100%); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-warning:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,167,38,0.3); }
+    
+    .content-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .content-card { background: #fff; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(100,100,255,0.08); border: 1px solid #e0e7ff; transition: all 0.2s; }
+    .content-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(100,100,255,0.12); }
+    
+    .status-badge { display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 500; margin-bottom: 1rem; }
+    .status-active { background: #d4edda; color: #155724; }
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-deleted { background: #f8d7da; color: #721c24; }
+    .status-pinned { background: #d1ecf1; color: #0c5460; }
+    
+    .search-bar { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center; }
+    .search-input { flex: 1; padding: 0.8rem 1rem; border: 1px solid #e0e7ff; border-radius: 8px; font-size: 1rem; }
+    .search-input:focus { outline: none; border-color: #6a82fb; box-shadow: 0 0 0 3px rgba(106,130,251,0.1); }
+    
+    .table-container { overflow-x: auto; }
+    .content-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    .content-table th { background: #f8f9ff; padding: 1rem; text-align: left; font-weight: 600; color: #232946; border-bottom: 2px solid #e0e7ff; }
+    .content-table td { padding: 1rem; border-bottom: 1px solid #e0e7ff; }
+    .content-table tr:hover { background: #f8f9ff; }
+    
+    .action-buttons { display: flex; gap: 0.5rem; }
+    .btn-small { padding: 0.4rem 0.8rem; font-size: 0.85rem; }
+    
+    .back-link { display: inline-block; margin-bottom: 2rem; color: #6a82fb; text-decoration: none; font-weight: 500; }
+    .back-link:hover { text-decoration: underline; }
+    
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .stat-card { background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%); border-radius: 12px; padding: 1.5rem; text-align: center; border: 1px solid #e0e7ff; }
+    .stat-value { font-size: 2rem; font-weight: 700; color: #6a82fb; margin-bottom: 0.5rem; }
+    .stat-label { color: #666; font-size: 0.9rem; }
+    
+    .filter-controls { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center; flex-wrap: wrap; }
+    .filter-select { padding: 0.8rem 1rem; border: 1px solid #e0e7ff; border-radius: 8px; font-size: 1rem; background: #fff; }
+    
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+    .modal-content { background-color: #fff; margin: 5% auto; padding: 2rem; border-radius: 12px; width: 90%; max-width: 600px; box-shadow: 0 4px 24px rgba(100,100,255,0.15); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .modal-title { font-size: 1.5rem; font-weight: 600; color: #232946; margin: 0; }
+    .close { color: #aaa; font-size: 2rem; font-weight: bold; cursor: pointer; }
+    .close:hover { color: #232946; }
+    
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #232946; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem 1rem; border: 1px solid #e0e7ff; border-radius: 8px; font-size: 1rem; transition: all 0.2s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #6a82fb; box-shadow: 0 0 0 3px rgba(106,130,251,0.1); }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    
+    @media (max-width: 768px) {
+      .tab-container { flex-direction: column; }
+      .section-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+      .search-bar { flex-direction: column; }
+      .filter-controls { flex-direction: column; }
+      .action-buttons { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar glassmorphic">
+    <div class="container nav-content">
+      <div class="nav-logo">
+        <img src="attached_assets/image_1750584670920.png" alt="Logo">
+      </div>
+      <ul class="nav-links">
+        <li><a href="/admin">Admin Panel</a></li>
+        <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container main-content">
+    <div class="content-container">
+      <a href="/admin" class="back-link">&larr; Back to Admin Panel</a>
+      
+      <div class="header-section">
+        <h1>📝 Content Management</h1>
+        <p>Comprehensive management of forum topics, discussions, and content moderation</p>
+      </div>
+      
+      <!-- Statistics Overview -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">{{ all_topics|length }}</div>
+          <div class="stat-label">Total Topics</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ forum_messages|length }}</div>
+          <div class="stat-label">Forum Messages</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ all_classes|length }}</div>
+          <div class="stat-label">Active Classes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ total_users }}</div>
+          <div class="stat-label">Total Users</div>
+        </div>
+      </div>
+      
+      <div class="tab-container">
+        <button class="tab-btn active" onclick="showTab('topics')">Topic Management</button>
+        <button class="tab-btn" onclick="showTab('forum')">Forum Moderation</button>
+        <button class="tab-btn" onclick="showTab('classes')">Class Management</button>
+        <button class="tab-btn" onclick="showTab('analytics')">Content Analytics</button>
+      </div>
+      
+      <!-- Topic Management Tab -->
+      <div id="topics-tab" class="tab-content active">
+        <div class="section-header">
+          <h2 class="section-title">Forum Topic Management</h2>
+          <div class="section-actions">
+            <button class="btn-primary" onclick="openCreateTopicModal()">+ Create New Topic</button>
+            <button class="btn-success" onclick="exportTopics()">Export Topics</button>
+          </div>
+        </div>
+        
+        <div class="search-bar">
+          <input type="text" id="topicSearch" placeholder="Search topics..." class="search-input" onkeyup="filterTopics()">
+          <select id="topicFilter" class="filter-select" onchange="filterTopics()">
+            <option value="">All Topics</option>
+            <option value="paid">Paid Only</option>
+            <option value="unpaid">Free Only</option>
+          </select>
+        </div>
+        
+        <div class="table-container">
+          <table class="content-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Topic Name</th>
+                <th>Description</th>
+                <th>Access Level</th>
+                <th>Messages</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="topicsTableBody">
+              {% for topic in all_topics %}
+              <tr data-topic-id="{{ topic[0] }}" data-topic-name="{{ topic[1] }}" data-topic-paid="{{ topic[5] }}">
+                <td>{{ topic[0] }}</td>
+                <td><strong>{{ topic[1] }}</strong></td>
+                <td>{{ topic[2] }}</td>
+                <td>
+                  <span class="status-badge {% if topic[5] == 'paid' %}status-active{% else %}status-pending{% endif %}">
+                    {{ "Paid Only" if topic[5] == 'paid' else "Free Access" }}
+                  </span>
+                </td>
+                <td>{{ topic_messages_count.get(topic[0], 0) }}</td>
+                <td>{{ topic[4][:19].replace('T', ' ') if topic[4] else 'N/A' }}</td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-primary btn-small" onclick="editTopic({{ topic[0] }})">Edit</button>
+                    <button class="btn-secondary btn-small" onclick="deleteTopic({{ topic[0] }})">Delete</button>
+                    <button class="btn-warning btn-small" onclick="viewTopicMessages({{ topic[0] }})">View Messages</button>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Forum Moderation Tab -->
+      <div id="forum-tab" class="tab-content">
+        <div class="section-header">
+          <h2 class="section-title">Forum Discussion Moderation</h2>
+          <div class="section-actions">
+            <button class="btn-success" onclick="exportForumData()">Export Forum Data</button>
+            <button class="btn-warning" onclick="bulkModerate()">Bulk Actions</button>
+          </div>
+        </div>
+        
+        <div class="search-bar">
+          <input type="text" id="forumSearch" placeholder="Search by username or message..." class="search-input" onkeyup="filterForumMessages()">
+          <select id="forumFilter" class="filter-select" onchange="filterForumMessages()">
+            <option value="">All Messages</option>
+            <option value="recent">Recent (Last 7 days)</option>
+            <option value="flagged">Flagged Messages</option>
+            <option value="media">With Media</option>
+          </select>
+        </div>
+        
+        <div class="table-container">
+          <table class="content-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAll" onchange="toggleSelectAll()"></th>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Topic</th>
+                <th>Message</th>
+                <th>Media</th>
+                <th>Timestamp</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="forumTableBody">
+              {% for msg in forum_messages %}
+              <tr data-message-id="{{ msg[0] }}" data-username="{{ msg[2] }}" data-topic-id="{{ msg[6] }}">
+                <td><input type="checkbox" class="message-checkbox" value="{{ msg[0] }}"></td>
+                <td>{{ msg[0] }}</td>
+                <td><strong>{{ msg[2] }}</strong></td>
+                <td>
+                  {% for topic in all_topics %}
+                    {% if topic[0] == msg[6] %}{{ topic[1] }}{% endif %}
+                  {% endfor %}
+                </td>
+                <td style="max-width: 300px; white-space: pre-line;">{{ msg[3] }}</td>
+                <td>
+                  {% if msg[5] %}
+                    <a href="{{ msg[5] }}" target="_blank" class="btn-primary btn-small">View Media</a>
+                  {% else %}
+                    <span style="color: #999;">No media</span>
+                  {% endif %}
+                </td>
+                <td>{{ msg[7][:19].replace('T', ' ') if msg[7] else '' }}</td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-primary btn-small" onclick="editMessage({{ msg[0] }})">Edit</button>
+                    <button class="btn-secondary btn-small" onclick="deleteMessage({{ msg[0] }})">Delete</button>
+                    <button class="btn-warning btn-small" onclick="flagMessage({{ msg[0] }})">Flag</button>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Class Management Tab -->
+      <div id="classes-tab" class="tab-content">
+        <div class="section-header">
+          <h2 class="section-title">Class Management</h2>
+          <div class="section-actions">
+            <button class="btn-primary" onclick="openCreateClassModal()">+ Create New Class</button>
+            <button class="btn-success" onclick="exportClasses()">Export Classes</button>
+          </div>
+        </div>
+        
+        <div class="search-bar">
+          <input type="text" id="classSearch" placeholder="Search classes..." class="search-input" onkeyup="filterClasses()">
+        </div>
+        
+        <div class="table-container">
+          <table class="content-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Class Name</th>
+                <th>Students</th>
+                <th>Resources</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="classesTableBody">
+              {% for class_id, class_name in all_classes %}
+              <tr data-class-id="{{ class_id }}" data-class-name="{{ class_name }}">
+                <td>{{ class_id }}</td>
+                <td><strong>{{ class_name }}</strong></td>
+                <td>{{ class_students_count.get(class_id, 0) }}</td>
+                <td>{{ class_resources_count.get(class_id, 0) }}</td>
+                <td>
+                  <span class="status-badge status-active">Active</span>
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn-primary btn-small" onclick="editClass({{ class_id }})">Edit</button>
+                    <button class="btn-secondary btn-small" onclick="deleteClass({{ class_id }})">Delete</button>
+                    <button class="btn-warning btn-small" onclick="viewClassDetails({{ class_id }})">View Details</button>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Content Analytics Tab -->
+      <div id="analytics-tab" class="tab-content">
+        <div class="section-header">
+          <h2 class="section-title">Content Analytics</h2>
+          <div class="section-actions">
+            <button class="btn-success" onclick="generateReport()">Generate Report</button>
+            <button class="btn-primary" onclick="exportAnalytics()">Export Analytics</button>
+          </div>
+        </div>
+        
+        <div class="content-grid">
+          <div class="content-card">
+            <h3>Most Active Users</h3>
+            <div style="margin-top: 1rem;">
+              {% for username, count in most_active_users %}
+              <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+                <span>{{ username }}</span>
+                <span style="font-weight: 600; color: #6a82fb;">{{ count }} posts</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          
+          <div class="content-card">
+            <h3>Most Popular Topics</h3>
+            <div style="margin-top: 1rem;">
+              {% for topic in all_topics[:5] %}
+              <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+                <span>{{ topic[1] }}</span>
+                <span style="font-weight: 600; color: #6a82fb;">{{ topic_messages_count.get(topic[0], 0) }} messages</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          
+          <div class="content-card">
+            <h3>Resource Distribution</h3>
+            <div style="margin-top: 1rem;">
+              {% for cid, count in most_resource_classes %}
+              <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+                <span>{% for id, name in all_classes %}{% if id == cid %}{{ name|title }}{% endif %}{% endfor %}</span>
+                <span style="font-weight: 600; color: #6a82fb;">{{ count }} resources</span>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          
+          <div class="content-card">
+            <h3>Recent Activity</h3>
+            <div style="margin-top: 1rem;">
+              <div style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+                <span style="font-weight: 600;">New Topics:</span>
+                <span style="color: #6a82fb;">{{ all_topics|length }}</span>
+              </div>
+              <div style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+                <span style="font-weight: 600;">Forum Messages:</span>
+                <span style="color: #6a82fb;">{{ forum_messages|length }}</span>
+              </div>
+              <div style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+                <span style="font-weight: 600;">Active Classes:</span>
+                <span style="color: #6a82fb;">{{ all_classes|length }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Create Topic Modal -->
+  <div id="createTopicModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Create New Topic</h3>
+        <span class="close" onclick="closeModal('createTopicModal')">&times;</span>
+      </div>
+      <form id="createTopicForm" method="POST" action="/admin/create-topic">
+        <div class="form-group">
+          <label for="topicName">Topic Name</label>
+          <input type="text" id="topicName" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="topicDescription">Description</label>
+          <textarea id="topicDescription" name="description" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="topicPaid">Access Level</label>
+          <select id="topicPaid" name="paid">
+            <option value="unpaid">Free Access</option>
+            <option value="paid">Paid Only</option>
+          </select>
+        </div>
+        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+          <button type="button" class="btn-secondary" onclick="closeModal('createTopicModal')">Cancel</button>
+          <button type="submit" class="btn-primary">Create Topic</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Create Class Modal -->
+  <div id="createClassModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Create New Class</h3>
+        <span class="close" onclick="closeModal('createClassModal')">&times;</span>
+      </div>
+      <form id="createClassForm" method="POST" action="/admin/classes/add">
+        <div class="form-group">
+          <label for="className">Class Name</label>
+          <input type="text" id="className" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="classDescription">Description</label>
+          <textarea id="classDescription" name="description"></textarea>
+        </div>
+        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+          <button type="button" class="btn-secondary" onclick="closeModal('createClassModal')">Cancel</button>
+          <button type="submit" class="btn-primary">Create Class</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function showTab(tabName) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      
+      // Show selected tab
+      document.getElementById(tabName + '-tab').classList.add('active');
+      event.target.classList.add('active');
+    }
+    
+    // Topic Management Functions
+    function filterTopics() {
+      const searchTerm = document.getElementById('topicSearch').value.toLowerCase();
+      const filterValue = document.getElementById('topicFilter').value;
+      const rows = document.querySelectorAll('#topicsTableBody tr');
+      
+      rows.forEach(row => {
+        const topicName = row.dataset.topicName.toLowerCase();
+        const topicPaid = row.dataset.topicPaid;
+        let shouldShow = true;
+        
+        // Search filter
+        if (searchTerm && !topicName.includes(searchTerm)) {
+          shouldShow = false;
+        }
+        
+        // Paid filter
+        if (filterValue === 'paid' && topicPaid !== 'paid') {
+          shouldShow = false;
+        } else if (filterValue === 'unpaid' && topicPaid !== 'unpaid') {
+          shouldShow = false;
+        }
+        
+        row.style.display = shouldShow ? 'table-row' : 'none';
+      });
+    }
+    
+    function openCreateTopicModal() {
+      document.getElementById('createTopicModal').style.display = 'block';
+    }
+    
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+    
+    function editTopic(topicId) {
+      // Implementation for editing topic
+      alert('Edit topic functionality will be implemented soon.');
+    }
+    
+    function deleteTopic(topicId) {
+      if (confirm('Are you sure you want to delete this topic? All messages will be lost.')) {
+        fetch(`/admin/delete-topic/${topicId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error deleting topic: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error deleting topic: ' + error.message);
+        });
+      }
+    }
+    
+    function viewTopicMessages(topicId) {
+      // Implementation for viewing topic messages
+      alert('View topic messages functionality will be implemented soon.');
+    }
+    
+    function exportTopics() {
+      // Implementation for exporting topics
+      alert('Export topics functionality will be implemented soon.');
+    }
+    
+    // Forum Moderation Functions
+    function filterForumMessages() {
+      const searchTerm = document.getElementById('forumSearch').value.toLowerCase();
+      const filterValue = document.getElementById('forumFilter').value;
+      const rows = document.querySelectorAll('#forumTableBody tr');
+      
+      rows.forEach(row => {
+        const username = row.dataset.username.toLowerCase();
+        const message = row.querySelector('td:nth-child(5)').textContent.toLowerCase();
+        let shouldShow = true;
+        
+        // Search filter
+        if (searchTerm && !username.includes(searchTerm) && !message.includes(searchTerm)) {
+          shouldShow = false;
+        }
+        
+        // Additional filters can be implemented here
+        row.style.display = shouldShow ? 'table-row' : 'none';
+      });
+    }
+    
+    function toggleSelectAll() {
+      const selectAll = document.getElementById('selectAll');
+      const checkboxes = document.querySelectorAll('.message-checkbox');
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+      });
+    }
+    
+    function editMessage(messageId) {
+      // Implementation for editing message
+      alert('Edit message functionality will be implemented soon.');
+    }
+    
+    function deleteMessage(messageId) {
+      if (confirm('Are you sure you want to delete this message?')) {
+        fetch(`/admin/delete-forum-message/${messageId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error deleting message: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error deleting message: ' + error.message);
+        });
+      }
+    }
+    
+    function flagMessage(messageId) {
+      // Implementation for flagging message
+      alert('Flag message functionality will be implemented soon.');
+    }
+    
+    function bulkModerate() {
+      const selectedMessages = document.querySelectorAll('.message-checkbox:checked');
+      if (selectedMessages.length === 0) {
+        alert('Please select messages to moderate.');
+        return;
+      }
+      
+      if (confirm(`Are you sure you want to delete ${selectedMessages.length} selected messages?`)) {
+        // Implementation for bulk deletion
+        alert('Bulk moderation functionality will be implemented soon.');
+      }
+    }
+    
+    function exportForumData() {
+      // Implementation for exporting forum data
+      alert('Export forum data functionality will be implemented soon.');
+    }
+    
+    // Class Management Functions
+    function filterClasses() {
+      const searchTerm = document.getElementById('classSearch').value.toLowerCase();
+      const rows = document.querySelectorAll('#classesTableBody tr');
+      
+      rows.forEach(row => {
+        const className = row.dataset.className.toLowerCase();
+        const shouldShow = !searchTerm || className.includes(searchTerm);
+        row.style.display = shouldShow ? 'table-row' : 'none';
+      });
+    }
+    
+    function openCreateClassModal() {
+      document.getElementById('createClassModal').style.display = 'block';
+    }
+    
+    function editClass(classId) {
+      // Implementation for editing class
+      alert('Edit class functionality will be implemented soon.');
+    }
+    
+    function deleteClass(classId) {
+      if (confirm('Are you sure you want to delete this class?')) {
+        fetch(`/admin/classes/delete/${classId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error deleting class: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error deleting class: ' + error.message);
+        });
+      }
+    }
+    
+    function viewClassDetails(classId) {
+      // Implementation for viewing class details
+      alert('View class details functionality will be implemented soon.');
+    }
+    
+    function exportClasses() {
+      // Implementation for exporting classes
+      alert('Export classes functionality will be implemented soon.');
+    }
+    
+    // Analytics Functions
+    function generateReport() {
+      // Implementation for generating report
+      alert('Generate report functionality will be implemented soon.');
+    }
+    
+    function exportAnalytics() {
+      // Implementation for exporting analytics
+      alert('Export analytics functionality will be implemented soon.');
+    }
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modals = document.querySelectorAll('.modal');
+      modals.forEach(modal => {
+        if (event.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html> 

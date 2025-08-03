@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Form - Sunrise Educational Centre</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .admission-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .admission-card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(106,130,251,0.15);
+            padding: 3rem;
+            margin-bottom: 2rem;
+        }
+        
+        .admission-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .admission-header h1 {
+            color: #232946;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .admission-header p {
+            color: #64748b;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .form-section {
+            margin-bottom: 2.5rem;
+        }
+        
+        .section-title {
+            color: #6a82fb;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e0e7ff;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            color: #232946;
+            background: #fff;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #6a82fb;
+            box-shadow: 0 0 0 3px rgba(106,130,251,0.1);
+        }
+        
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #232946 0%, #16161a 100%);
+            color: #f4f4f4;
+        }
+        
+        body.dark-mode .admission-card {
+            background: #232946;
+            color: #f4f4f4;
+            box-shadow: 0 8px 32px rgba(35,41,70,0.25);
+        }
+        
+        body.dark-mode .admission-header h1 {
+            color: #f4f4f4;
+        }
+        
+        body.dark-mode .admission-header p {
+            color: #cbd5e1;
+        }
+        
+        body.dark-mode .section-title {
+            color: #6a82fb;
+            border-bottom-color: #44476a;
+        }
+        
+        body.dark-mode .form-label {
+            color: #cbd5e1;
+        }
+        
+        body.dark-mode .form-input,
+        body.dark-mode .form-select {
+            background: #16161a;
+            color: #f4f4f4;
+            border-color: #44476a;
+        }
+        
+        body.dark-mode .form-input:focus,
+        body.dark-mode .form-select:focus {
+            border-color: #6a82fb;
+            box-shadow: 0 0 0 3px rgba(106,130,251,0.2);
+        }
+        
+        body.dark-mode .form-note {
+            background: #44476a;
+            color: #f4f4f4;
+            border-color: #6a82fb;
+        }
+        
+        body.dark-mode .required {
+            color: #fc5c7d;
+        }
+        
+        body.dark-mode .back-btn {
+            color: #6a82fb;
+        }
+        
+        body.dark-mode .back-btn:hover {
+            color: #fc5c7d;
+        }
+        
+        body.dark-mode .btn-primary {
+            background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+            color: #fff;
+        }
+        
+        body.dark-mode .btn-primary:hover {
+            background: linear-gradient(135deg, #fc5c7d 0%, #6a82fb 100%);
+        }
+        
+        body.dark-mode .btn-secondary {
+            background: #44476a;
+            color: #f4f4f4;
+            border-color: #6a82fb;
+        }
+        
+        body.dark-mode .btn-secondary:hover {
+            background: #6a82fb;
+            color: #fff;
+        }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .admission-container {
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+            
+            .admission-card {
+                padding: 2rem;
+                margin-bottom: 1rem;
+            }
+            
+            .admission-header h1 {
+                font-size: 2rem;
+            }
+            
+            .admission-header p {
+                font-size: 1rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1rem;
+            }
+            
+            .form-input,
+            .form-select {
+                font-size: 16px;
+                padding: 0.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.2rem;
+            }
+            
+            .form-label {
+                font-size: 0.95rem;
+            }
+            
+            .btn {
+                width: 100%;
+                padding: 0.8rem;
+                font-size: 1rem;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .admission-container {
+                padding: 0 0.5rem;
+            }
+            
+            .admission-card {
+                padding: 1.5rem;
+            }
+            
+            .admission-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .admission-header p {
+                font-size: 0.9rem;
+            }
+            
+            .section-title {
+                font-size: 1.1rem;
+            }
+            
+            .form-label {
+                font-size: 0.9rem;
+            }
+            
+            .form-input,
+            .form-select {
+                font-size: 16px;
+                padding: 0.7rem;
+            }
+            
+            .form-note {
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 320px) {
+            .admission-container {
+                padding: 0 0.3rem;
+            }
+            
+            .admission-card {
+                padding: 1rem;
+            }
+            
+            .admission-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .admission-header p {
+                font-size: 0.8rem;
+            }
+            
+            .section-title {
+                font-size: 1rem;
+            }
+            
+            .form-label {
+                font-size: 0.85rem;
+            }
+            
+            .form-input,
+            .form-select {
+                font-size: 16px;
+                padding: 0.6rem;
+            }
+            
+            .form-note {
+                padding: 0.8rem;
+                font-size: 0.85rem;
+            }
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            color: #232946;
+            background: #fff;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .form-select:focus {
+            outline: none;
+            border-color: #6a82fb;
+            box-shadow: 0 0 0 3px rgba(106,130,251,0.1);
+        }
+        
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .file-upload input[type=file] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        
+        .file-upload-label {
+            display: block;
+            padding: 0.75rem 1rem;
+            border: 2px dashed #6a82fb;
+            border-radius: 12px;
+            text-align: center;
+            color: #6a82fb;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f0f4ff;
+        }
+        
+        .file-upload-label:hover {
+            background: #e0e7ff;
+            border-color: #5a6fd8;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+            color: #fff;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(106,130,251,0.3);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .back-btn {
+            background: #f3f4f6;
+            color: #374151;
+            border: 2px solid #d1d5db;
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+        
+        .back-btn:hover {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+        
+        .required {
+            color: #ef4444;
+        }
+        
+        .form-note {
+            background: #f0f4ff;
+            border: 1px solid #6a82fb;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            color: #374151;
+            font-size: 0.95rem;
+        }
+        
+        .form-note strong {
+            color: #6a82fb;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .admission-card {
+                padding: 2rem;
+            }
+            
+            .admission-header h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        /* Dark mode support */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1e2a3a 0%, #181c2a 100%);
+        }
+        
+        body.dark-mode .admission-card {
+            background: #232946;
+            box-shadow: 0 8px 32px rgba(35,41,70,0.25);
+        }
+        
+        body.dark-mode .admission-header h1 {
+            color: #f4f4f4;
+        }
+        
+        body.dark-mode .admission-header p {
+            color: #cbd5e1;
+        }
+        
+        body.dark-mode .section-title {
+            color: #aabfff;
+            border-bottom-color: #444a6d;
+        }
+        
+        body.dark-mode .form-label {
+            color: #e2e8f0;
+        }
+        
+        body.dark-mode .form-input,
+        body.dark-mode .form-select {
+            background: #181c2a;
+            color: #f4f4f4;
+            border-color: #444a6d;
+        }
+        
+        body.dark-mode .form-input:focus,
+        body.dark-mode .form-select:focus {
+            border-color: #6a82fb;
+            box-shadow: 0 0 0 3px rgba(106,130,251,0.2);
+        }
+        
+        body.dark-mode .file-upload-label {
+            background: #2a3a5a;
+            border-color: #6a82fb;
+            color: #aabfff;
+        }
+        
+        body.dark-mode .file-upload-label:hover {
+            background: #1e2a3a;
+        }
+        
+        body.dark-mode .form-note {
+            background: #2a3a5a;
+            border-color: #6a82fb;
+            color: #e2e8f0;
+        }
+        
+        /* Status badge styles */
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+        }
+        
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-disapproved {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        body.dark-mode .status-pending {
+            background: #451a03;
+            color: #fef3c7;
+        }
+        
+        body.dark-mode .status-approved {
+            background: #064e3b;
+            color: #d1fae5;
+        }
+        
+        body.dark-mode .status-disapproved {
+            background: #7f1d1d;
+            color: #fee2e2;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar glassmorphic">
+        <div class="container nav-content">
+            <div class="nav-logo">
+                <img src="attached_assets/image_1750584670920.png" alt="Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/study-resources">Study Resources</a></li>
+                <li><a href="/online-class">Live Class</a></li>
+                <li><a href="/forum">Forum</a></li>
+                {% if username %}
+                    <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+                {% else %}
+                    <li><a href="/auth" class="btn btn-primary">Login</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="admission-container">
+        <a href="/" class="back-btn">← Back to Home</a>
+        
+        <!-- Admission Status Check -->
+        <div id="admissionStatus" style="display: none;" class="admission-card">
+            <div class="admission-header">
+                <h1>Admission Status</h1>
+                <div id="statusContent"></div>
+            </div>
+        </div>
+        
+        <div id="admissionForm" class="admission-card">
+            <div class="admission-header">
+                <h1>Student Admission Form</h1>
+                <p>Join Sunrise Educational Centre and start your journey towards academic excellence. Please fill out all required fields accurately.</p>
+                <button id="darkModeToggle" class="btn btn-secondary" style="margin-top: 1rem;">Toggle Dark Mode</button>
+            </div>
+            
+            <div class="form-note">
+                <strong>Important:</strong> All fields marked with <span class="required">*</span> are required. Please ensure all information is accurate and up-to-date.
+            </div>
+            
+            <form action="/admission" method="POST" enctype="multipart/form-data">
+                <!-- Student Information -->
+                <div class="form-section">
+                    <h3 class="section-title">Student Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Student Name <span class="required">*</span></label>
+                            <input type="text" name="student_name" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date of Birth <span class="required">*</span></label>
+                            <input type="date" name="dob" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number <span class="required">*</span></label>
+                            <input type="tel" name="student_phone" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address <span class="required">*</span></label>
+                            <input type="email" name="student_email" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Class <span class="required">*</span></label>
+                            <select name="class" class="form-select" required>
+                                <option value="">Select Class</option>
+                                <option value="9">Class 9</option>
+                                <option value="10">Class 10</option>
+                                <option value="11">Class 11</option>
+                                <option value="12">Class 12</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">School Name <span class="required">*</span></label>
+                            <input type="text" name="school_name" class="form-input" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Academic Information -->
+                <div class="form-section">
+                    <h3 class="section-title">Academic Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Mathematics Marks (out of 80) <span class="required">*</span></label>
+                            <input type="number" name="maths_marks" class="form-input" min="0" max="80" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mathematics Rating (1-10) <span class="required">*</span></label>
+                            <select name="maths_rating" class="form-select" required>
+                                <option value="">Select Rating</option>
+                                <option value="1">1 - Very Poor</option>
+                                <option value="2">2 - Poor</option>
+                                <option value="3">3 - Below Average</option>
+                                <option value="4">4 - Average</option>
+                                <option value="5">5 - Above Average</option>
+                                <option value="6">6 - Good</option>
+                                <option value="7">7 - Very Good</option>
+                                <option value="8">8 - Excellent</option>
+                                <option value="9">9 - Outstanding</option>
+                                <option value="10">10 - Exceptional</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Last Year Percentage <span class="required">*</span></label>
+                            <input type="number" name="last_percentage" class="form-input" min="0" max="100" step="0.01" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Parent Information -->
+                <div class="form-section">
+                    <h3 class="section-title">Parent/Guardian Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Parent/Guardian Name <span class="required">*</span></label>
+                            <input type="text" name="parent_name" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Parent/Guardian Phone <span class="required">*</span></label>
+                            <input type="tel" name="parent_phone" class="form-input" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Photo Upload -->
+                <div class="form-section">
+                    <h3 class="section-title">Photo Upload</h3>
+                    <div class="form-group full-width">
+                        <label class="form-label">Passport Size Photo <span class="required">*</span></label>
+                        <div class="file-upload">
+                            <input type="file" name="passport_photo" accept="image/png,image/jpg,image/jpeg" required>
+                            <label class="file-upload-label">
+                                📷 Click to upload photo (PNG, JPG, JPEG only)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">Submit Admission Form</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-social">
+                <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">Instagram</a>
+                <a href="https://www.youtube.com/@MohitNariyani" target="_blank">YouTube</a>
+            </div>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Contact Us</a>
+            </div>
+            <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
+        </div>
+    </footer>
+
+    <script>
+        // Check admission status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAdmissionStatus();
+        });
+        
+        // Check admission status
+        function checkAdmissionStatus() {
+            fetch('/check-admission-status')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.hasAdmission) {
+                        showAdmissionStatus(data.admission);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking admission status:', error);
+                });
+        }
+        
+        // Show admission status
+        function showAdmissionStatus(admission) {
+            const statusDiv = document.getElementById('admissionStatus');
+            const formDiv = document.getElementById('admissionForm');
+            const statusContent = document.getElementById('statusContent');
+            
+            let statusClass = '';
+            let statusMessage = '';
+            let statusIcon = '';
+            
+            switch(admission.status) {
+                case 'pending':
+                    statusClass = 'status-pending';
+                    statusIcon = '⏳';
+                    statusMessage = 'Your admission is currently under review. You will be notified once the admin reviews your application.';
+                    break;
+                case 'approved':
+                    statusClass = 'status-approved';
+                    statusIcon = '✅';
+                    statusMessage = 'Congratulations! Your admission has been approved. You can now access all features of the platform.';
+                    break;
+                case 'disapproved':
+                    statusClass = 'status-disapproved';
+                    statusIcon = '❌';
+                    statusMessage = 'Your admission was not approved. Please contact the admin for more information.';
+                    break;
+            }
+            
+            statusContent.innerHTML = `
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">${statusIcon}</div>
+                    <h2 style="color: #232946; margin-bottom: 1rem;">Status: 
+                        <span class="status-badge ${statusClass}">${admission.status.toUpperCase()}</span>
+                    </h2>
+                    <p style="color: #64748b; font-size: 1.1rem; line-height: 1.6;">${statusMessage}</p>
+                </div>
+                
+                <div style="background: #f8f9ff; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                    <h3 style="color: #232946; margin-bottom: 1rem;">Admission Details</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div>
+                            <strong style="color: #374151;">Student Name:</strong>
+                            <p style="color: #64748b; margin: 0.5rem 0;">${admission.student_name}</p>
+                        </div>
+                        <div>
+                            <strong style="color: #374151;">Class:</strong>
+                            <p style="color: #64748b; margin: 0.5rem 0;">${admission.class}</p>
+                        </div>
+                        <div>
+                            <strong style="color: #374151;">School:</strong>
+                            <p style="color: #64748b; margin: 0.5rem 0;">${admission.school_name}</p>
+                        </div>
+                        <div>
+                            <strong style="color: #374151;">Submitted:</strong>
+                            <p style="color: #64748b; margin: 0.5rem 0;">${admission.submitted_at}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center;">
+                    <button onclick="hideAdmissionStatus()" class="btn btn-secondary" style="margin-right: 1rem;">Hide Status</button>
+                    <a href="/" class="btn btn-primary">Go to Home</a>
+                </div>
+            `;
+            
+            statusDiv.style.display = 'block';
+            formDiv.style.display = 'none';
+        }
+        
+        // Hide admission status and show form
+        function hideAdmissionStatus() {
+            document.getElementById('admissionStatus').style.display = 'none';
+            document.getElementById('admissionForm').style.display = 'block';
+        }
+        
+        // File upload preview
+        document.querySelector('input[type="file"]').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const label = document.querySelector('.file-upload-label');
+            
+            if (file) {
+                label.textContent = `📷 ${file.name} selected`;
+                label.style.background = '#e0e7ff';
+                label.style.color = '#6a82fb';
+            } else {
+                label.textContent = '📷 Click to upload photo (PNG, JPG, JPEG only)';
+                label.style.background = '#f0f4ff';
+                label.style.color = '#6a82fb';
+            }
+        });
+        
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const requiredFields = document.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.style.borderColor = '#ef4444';
+                } else {
+                    field.style.borderColor = '#e5e7eb';
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fill in all required fields.');
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html> 

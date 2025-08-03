@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Class Management - Admin</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .management-container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+    .dark-mode-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+    .header-section { text-align: center; margin-bottom: 3rem; }
+    .header-section h1 { color: #232946; font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .header-section p { color: #666; font-size: 1.1rem; }
+    
+    .tab-container { display: flex; background: #f8f9ff; border-radius: 12px; padding: 0.5rem; margin-bottom: 2rem; }
+    .tab-btn { flex: 1; padding: 1rem; background: none; border: none; cursor: pointer; font-weight: 500; color: #666; border-radius: 8px; transition: all 0.3s; }
+    .tab-btn.active { background: #6a82fb; color: #fff; }
+    .tab-btn:hover:not(.active) { background: rgba(106,130,251,0.1); }
+    
+    .tab-content { display: none; background: #fff; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 24px rgba(100,100,255,0.08); }
+    .tab-content.active { display: block; }
+    
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #232946; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem 1rem; border: 1px solid #e0e7ff; border-radius: 8px; font-size: 1rem; transition: all 0.2s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #6a82fb; box-shadow: 0 0 0 3px rgba(106,130,251,0.1); }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    
+    .btn-primary { background: linear-gradient(135deg, #6a82fb 0%, #5a6fd8 100%); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(106,130,251,0.3); }
+    .btn-secondary { background: linear-gradient(135deg, #fc5c7d 0%, #e74c3c 100%); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-secondary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(252,92,125,0.3); }
+    .btn-success { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-success:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(72,187,120,0.3); }
+    .btn-warning { background: linear-gradient(135deg, #ffa726 0%, #ff9800 100%); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-warning:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,167,38,0.3); }
+    
+    .class-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; }
+    .class-card { background: #fff; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(100,100,255,0.08); border: 1px solid #e0e7ff; transition: all 0.2s; }
+    .class-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(100,100,255,0.12); }
+    .class-status { display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 500; margin-bottom: 1rem; }
+    .status-active { background: #d4edda; color: #155724; }
+    .status-scheduled { background: #fff3cd; color: #856404; }
+    .status-completed { background: #d1ecf1; color: #0c5460; }
+    .status-cancelled { background: #f8d7da; color: #721c24; }
+    
+    .device-settings { background: #f8f9ff; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .device-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+    .device-item { background: #fff; border-radius: 8px; padding: 1rem; border: 1px solid #e0e7ff; }
+    .device-item h4 { margin-bottom: 0.5rem; color: #232946; }
+    .device-select { width: 100%; padding: 0.5rem; border: 1px solid #e0e7ff; border-radius: 6px; margin-bottom: 0.5rem; }
+    .device-controls { display: flex; gap: 0.5rem; }
+    .device-btn { padding: 0.4rem 0.8rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; }
+    .test-btn { background: #6a82fb; color: #fff; }
+    .mute-btn { background: #fc5c7d; color: #fff; }
+    
+    .back-link { display: inline-block; margin-bottom: 2rem; color: #6a82fb; text-decoration: none; font-weight: 500; }
+    .back-link:hover { text-decoration: underline; }
+    
+    .loading { text-align: center; padding: 2rem; color: #666; }
+    .error { background: #f8d7da; color: #721c24; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+    .success { background: #d4edda; color: #155724; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+    
+    .video-source-toggle { margin-bottom: 1.5rem; }
+    .video-source-toggle label { margin-right: 1rem; }
+    .youtube-section { display: none; }
+    .download-progress { display: none; background: #e3f2fd; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+    
+    @media (max-width: 768px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .class-grid { grid-template-columns: 1fr; }
+      .tab-container { flex-direction: column; }
+      
+      /* Mobile responsive for filter controls */
+      .filter-controls { grid-template-columns: 1fr !important; }
+      .filter-buttons { flex-direction: column; }
+      .filter-buttons button { margin-bottom: 0.5rem; }
+    }
+    
+    /* Enhanced filter controls styling */
+    .filter-controls { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+      gap: 1rem; 
+      margin-bottom: 1rem; 
+    }
+    
+    .filter-buttons { 
+      display: flex; 
+      gap: 1rem; 
+      flex-wrap: wrap; 
+    }
+    
+    .filter-buttons button { 
+      transition: all 0.2s; 
+    }
+    
+    .filter-buttons button:hover { 
+      transform: translateY(-1px); 
+    }
+    
+    .export-btn { 
+      background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); 
+      color: #fff; 
+      border: none; 
+      padding: 0.8rem 1.5rem; 
+      border-radius: 8px; 
+      font-weight: 500; 
+      cursor: pointer; 
+      transition: all 0.2s; 
+    }
+    
+    .export-btn:hover { 
+      transform: translateY(-1px); 
+      box-shadow: 0 4px 12px rgba(72,187,120,0.3); 
+    }
+    
+    /* Completed class card enhancements */
+    .completed-class-card { 
+      position: relative; 
+      overflow: hidden; 
+    }
+    
+    .completed-class-card::before { 
+      content: '✅'; 
+      position: absolute; 
+      top: 1rem; 
+      right: 1rem; 
+      font-size: 1.5rem; 
+      opacity: 0.7; 
+    }
+    
+    .class-stats { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
+      gap: 0.5rem; 
+      margin-top: 1rem; 
+      padding: 0.8rem; 
+      background: #f8f9ff; 
+      border-radius: 8px; 
+    }
+    
+    .stat-item { 
+      text-align: center; 
+    }
+    
+    .stat-value { 
+      font-weight: 600; 
+      color: #6a82fb; 
+      font-size: 1.1rem; 
+    }
+    
+    .stat-label { 
+      font-size: 0.8rem; 
+      color: #666; 
+      margin-top: 0.2rem; 
+    }
+  </style>
+</head>
+<body>
+  <div class="management-container">
+    <a href="/admin" class="back-link">&larr; Back to Admin Panel</a>
+    
+    <div class="header-section">
+      <h1>🎥 Live Class Management</h1>
+      <p>Create, schedule, and manage all your live classes with real-time status tracking</p>
+    </div>
+    
+    <div class="tab-container">
+      <button class="tab-btn active" onclick="showTab('create')">Create Class</button>
+      <button class="tab-btn" onclick="showTab('dashboard')">Dashboard</button>
+      <button class="tab-btn" onclick="showTab('completed')">Completed Classes</button>
+      <button class="tab-btn" onclick="showTab('devices')">Device Settings</button>
+    </div>
+    
+    <!-- Create Class Tab -->
+    <div id="create-tab" class="tab-content active">
+      <h2>Create New Live Class</h2>
+      <form id="createClassForm" method="POST" action="/create-live-class" enctype="multipart/form-data">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="topic">Class Topic *</label>
+            <input type="text" id="topic" name="topic" placeholder="e.g., Algebra Basics - Chapter 5" required>
+          </div>
+          <div class="form-group">
+            <label for="class_type">Class Type</label>
+            <select id="class_type" name="class_type">
+              <option value="lecture">Lecture</option>
+              <option value="discussion">Discussion</option>
+              <option value="practice">Practice Session</option>
+              <option value="quiz">Quiz/Test</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="target_class">Target Class</label>
+            <select id="target_class" name="target_class">
+              <option value="all">All Classes</option>
+              <option value="9">Class 9</option>
+              <option value="10">Class 10</option>
+              <option value="11">Class 11</option>
+              <option value="12">Class 12</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="paid_status">Paid Status</label>
+            <select id="paid_status" name="paid_status">
+              <option value="paid">Paid</option>
+              <option value="unpaid">Free</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" placeholder="Brief description of what will be covered in this class..."></textarea>
+        </div>
+        
+        <div class="video-source-toggle">
+          <label>
+            <input type="radio" name="video_source" value="upload" checked onchange="toggleVideoSource()"> Upload Video
+          </label>
+          <label>
+            <input type="radio" name="video_source" value="youtube" onchange="toggleVideoSource()"> YouTube Link
+          </label>
+          <label>
+            <input type="radio" name="video_source" value="golive" onchange="toggleVideoSource()"> Go Live (Real-Time)
+          </label>
+        </div>
+        
+        <div id="upload-section" class="form-group">
+          <label for="video_file">Upload Video (MP4/WebM)</label>
+          <input type="file" id="video_file" name="video_file" accept="video/mp4,video/webm" required>
+          <small style="color: #666;">Upload a pre-recorded video for this class</small>
+        </div>
+        
+        <div id="youtube-section" class="form-group youtube-section">
+          <label for="youtube_url">YouTube Video URL</label>
+          <input type="url" id="youtube_url" name="youtube_url" placeholder="https://www.youtube.com/watch?v=...">
+          <small style="color: #666;">Enter a YouTube video URL to download and use in this class</small>
+        </div>
+        
+        <div id="download-progress" class="download-progress">
+          <p>Downloading YouTube video... Please wait.</p>
+        </div>
+        
+        <div class="form-group">
+          <label for="schedule_date">Schedule Date & Time</label>
+          <input type="datetime-local" id="schedule_date" name="schedule_date">
+          <small style="color: #666;">Leave empty to start immediately</small>
+        </div>
+        
+        <button type="submit" class="btn-primary">Create Live Class</button>
+      </form>
+    </div>
+    
+    <!-- Dashboard Tab -->
+    <div id="dashboard-tab" class="tab-content">
+      <h2>Live Class Dashboard</h2>
+      <div id="dashboard-content">
+        <div class="loading">Loading dashboard...</div>
+      </div>
+    </div>
+    
+    <!-- Completed Classes Tab -->
+    <div id="completed-tab" class="tab-content">
+      <h2>Completed Classes</h2>
+      
+      <!-- Sorting and Filtering Controls -->
+      <div style="background: #f8f9ff; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid #e0e7ff;">
+        <h3 style="margin-bottom: 1rem; color: #232946;">Sort & Filter Completed Classes</h3>
+        <div class="filter-controls">
+          <div>
+            <label for="completedSortBy" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #232946;">Sort By:</label>
+            <select id="completedSortBy" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid #e0e7ff; border-radius: 8px; font-size: 1rem;">
+              <option value="date">Completion Date</option>
+              <option value="topic">Class Topic</option>
+              <option value="duration">Duration</option>
+              <option value="participants">Participants</option>
+              <option value="class_type">Class Type</option>
+            </select>
+          </div>
+          <div>
+            <label for="completedFilterClass" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #232946;">Filter by Target Class:</label>
+            <select id="completedFilterClass" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid #e0e7ff; border-radius: 8px; font-size: 1rem;">
+              <option value="">All Classes</option>
+              <option value="all">All Classes</option>
+              <option value="9">Class 9</option>
+              <option value="10">Class 10</option>
+              <option value="11">Class 11</option>
+              <option value="12">Class 12</option>
+            </select>
+          </div>
+          <div>
+            <label for="completedFilterType" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #232946;">Filter by Class Type:</label>
+            <select id="completedFilterType" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid #e0e7ff; border-radius: 8px; font-size: 1rem;">
+              <option value="">All Types</option>
+              <option value="lecture">Lecture</option>
+              <option value="discussion">Discussion</option>
+              <option value="practice">Practice Session</option>
+              <option value="quiz">Quiz/Test</option>
+            </select>
+          </div>
+          <div>
+            <label for="completedSearchText" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #232946;">Search:</label>
+            <input type="text" id="completedSearchText" placeholder="Search by topic, description, or host..." style="width: 100%; padding: 0.8rem 1rem; border: 1px solid #e0e7ff; border-radius: 8px; font-size: 1rem;">
+          </div>
+        </div>
+        <div class="filter-buttons">
+          <button onclick="applyCompletedFilters()" class="btn-primary">Apply Filters</button>
+          <button onclick="clearCompletedFilters()" class="btn-secondary">Clear Filters</button>
+          <button onclick="exportCompletedResults()" class="export-btn">Export Results</button>
+        </div>
+        <div id="completedFilterResults" style="margin-top: 1rem; padding: 0.8rem; background: #e8f5e8; border-radius: 8px; display: none;">
+          <span id="completedResultCount" style="font-weight: 600; color: #155724;"></span>
+        </div>
+      </div>
+      
+      <div class="class-grid" id="completedClassesGrid">
+        <div class="loading">Loading completed classes...</div>
+      </div>
+    </div>
+    
+    <!-- Device Settings Tab -->
+    <div id="devices-tab" class="tab-content">
+      <h2>Device Settings</h2>
+      
+      <div class="device-settings">
+        <h3>Camera Settings</h3>
+        <div class="device-grid">
+          <div class="device-item">
+            <h4>Camera</h4>
+            <select class="device-select" id="cameraSelect">
+              <option value="">Select Camera</option>
+              <option value="default">Default Camera</option>
+              <option value="external">External Webcam</option>
+            </select>
+            <div class="device-controls">
+              <button class="device-btn test-btn" onclick="testCamera()">Test</button>
+              <button class="device-btn mute-btn" onclick="toggleCamera()">Toggle</button>
+            </div>
+          </div>
+          
+          <div class="device-item">
+            <h4>Microphone</h4>
+            <select class="device-select" id="micSelect">
+              <option value="">Select Microphone</option>
+              <option value="default">Default Microphone</option>
+              <option value="external">External Mic</option>
+            </select>
+            <div class="device-controls">
+              <button class="device-btn test-btn" onclick="testMic()">Test</button>
+              <button class="device-btn mute-btn" onclick="toggleMic()">Mute</button>
+            </div>
+          </div>
+          
+          <div class="device-item">
+            <h4>Speaker</h4>
+            <select class="device-select" id="speakerSelect">
+              <option value="">Select Speaker</option>
+              <option value="default">Default Speaker</option>
+              <option value="headphones">Headphones</option>
+            </select>
+            <div class="device-controls">
+              <button class="device-btn test-btn" onclick="testSpeaker()">Test</button>
+              <button class="device-btn mute-btn" onclick="toggleSpeaker()">Mute</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="device-settings">
+        <h3>Quality Settings</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="videoQuality">Video Quality</label>
+            <select id="videoQuality">
+              <option value="720p">720p HD</option>
+              <option value="1080p" selected>1080p Full HD</option>
+              <option value="480p">480p</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="audioQuality">Audio Quality</label>
+            <select id="audioQuality">
+              <option value="low">Low (64kbps)</option>
+              <option value="medium" selected>Medium (128kbps)</option>
+              <option value="high">High (256kbps)</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="saveSettings()">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showTab(tabName) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      
+      // Show selected tab
+      document.getElementById(tabName + '-tab').classList.add('active');
+      event.target.classList.add('active');
+      
+      // Load dashboard data if dashboard tab is selected
+      if (tabName === 'dashboard') {
+        loadDashboard();
+      }
+    }
+    
+    function toggleVideoSource() {
+      const uploadSection = document.getElementById('upload-section');
+      const youtubeSection = document.getElementById('youtube-section');
+      const videoFile = document.getElementById('video_file');
+      const youtubeUrl = document.getElementById('youtube_url');
+      
+      if (document.querySelector('input[name="video_source"]:checked').value === 'youtube') {
+        uploadSection.style.display = 'none';
+        youtubeSection.style.display = 'block';
+        videoFile.required = false;
+        youtubeUrl.required = true;
+      } else if (document.querySelector('input[name="video_source"]:checked').value === 'golive') {
+        uploadSection.style.display = 'none';
+        youtubeSection.style.display = 'none';
+        videoFile.required = false;
+        youtubeUrl.required = false;
+      }
+      else {
+        uploadSection.style.display = 'block';
+        youtubeSection.style.display = 'none';
+        videoFile.required = true;
+        youtubeUrl.required = false;
+      }
+    }
+    
+    function loadDashboard() {
+      const dashboardContent = document.getElementById('dashboard-content');
+      dashboardContent.innerHTML = '<div class="loading">Loading dashboard...</div>';
+      
+      fetch('/api/live-classes/dashboard')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            renderDashboard(data.data);
+          } else {
+            dashboardContent.innerHTML = `<div class="error">Error loading dashboard: ${data.message}</div>`;
+          }
+        })
+        .catch(error => {
+          dashboardContent.innerHTML = `<div class="error">Error loading dashboard: ${error.message}</div>`;
+        });
+    }
+    
+    function renderDashboard(data) {
+      const dashboardContent = document.getElementById('dashboard-content');
+      
+      let html = `
+        <div class="dashboard-grid">
+          <div class="section upcoming">
+            <div class="section-header">
+              <span class="section-icon">⏰</span>
+              <h3 class="section-title">Upcoming Classes</h3>
+              <span class="section-count">${data.upcoming.length}</span>
+            </div>
+            <div class="class-grid">
+              ${renderClassCards(data.upcoming, 'upcoming')}
+            </div>
+          </div>
+          
+          <div class="section active">
+            <div class="section-header">
+              <span class="section-icon">🎥</span>
+              <h3 class="section-title">Active Classes</h3>
+              <span class="section-count">${data.active.length}</span>
+            </div>
+            <div class="class-grid">
+              ${renderClassCards(data.active, 'active')}
+            </div>
+          </div>
+          
+          <div class="section completed">
+            <div class="section-header">
+              <span class="section-icon">✅</span>
+              <h3 class="section-title">Completed Classes</h3>
+              <span class="section-count">${data.completed.length}</span>
+            </div>
+            <div class="class-grid">
+              ${renderClassCards(data.completed, 'completed')}
+            </div>
+          </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+          <button class="btn-primary" onclick="loadDashboard()">🔄 Refresh Dashboard</button>
+        </div>
+      `;
+      
+      dashboardContent.innerHTML = html;
+    }
+    
+    function renderClassCards(classes, status) {
+      if (classes.length === 0) {
+        return '<div style="text-align: center; color: #666; padding: 2rem;">No classes found</div>';
+      }
+      
+      return classes.map(classItem => {
+        const statusClass = `status-${classItem.status}`;
+        const statusText = classItem.status.charAt(0).toUpperCase() + classItem.status.slice(1);
+        
+        let actionButtons = '';
+        
+        if (status === 'upcoming') {
+          actionButtons = `
+            <button class="btn-success" onclick="startClass(${classItem.id})">Start Now</button>
+            <button class="btn-warning" onclick="cancelClass(${classItem.id})">Cancel</button>
+            <button class="btn-secondary" onclick="deleteClass(${classItem.id})">Delete</button>
+          `;
+        } else if (status === 'active') {
+          actionButtons = `
+            <a href="/join-class-host/${classItem.id}" class="btn-primary">Join as Host</a>
+            <button class="btn-secondary" onclick="endClass(${classItem.id})">End Class</button>
+          `;
+        } else if (status === 'completed') {
+          actionButtons = `
+            <button class="btn-primary">View Recording</button>
+            <button class="btn-secondary" onclick="deleteClass(${classItem.id})">Delete</button>
+          `;
+        }
+        
+        return `
+          <div class="class-card">
+            <span class="class-status ${statusClass}">${statusText}</span>
+            <h3>${classItem.topic || 'Untitled Class'}</h3>
+            <p><strong>Code:</strong> ${classItem.class_code}</p>
+            <p><strong>PIN:</strong> ${classItem.pin}</p>
+            ${classItem.scheduled_time ? `<p><strong>Scheduled:</strong> ${formatDateTime(classItem.scheduled_time)}</p>` : ''}
+            ${classItem.created_at ? `<p><strong>Created:</strong> ${formatDateTime(classItem.created_at)}</p>` : ''}
+            <div style="margin-top: 1rem;">
+              ${actionButtons}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    function formatDateTime(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleString('en-IN', {
+        timeZone: 'Asia/Kolkata',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+    
+    function startClass(classId) {
+      if (confirm('Start this live class now?')) {
+        fetch('/api/live-classes/start', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ class_id: classId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Class started successfully!');
+            loadDashboard();
+          } else {
+            alert('Error starting class: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error starting class: ' + error.message);
+        });
+      }
+    }
+    
+    function endClass(classId) {
+      if (confirm('Are you sure you want to end this class?')) {
+        fetch('/api/live-classes/end', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ class_id: classId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+        alert('Class ended successfully!');
+            loadDashboard();
+          } else {
+            alert('Error ending class: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error ending class: ' + error.message);
+        });
+      }
+    }
+    
+    function cancelClass(classId) {
+      if (confirm('Are you sure you want to cancel this class?')) {
+        fetch('/api/live-classes/cancel', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ class_id: classId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Class cancelled successfully!');
+            loadDashboard();
+          } else {
+            alert('Error cancelling class: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error cancelling class: ' + error.message);
+        });
+      }
+    }
+    
+    function deleteClass(classId) {
+      if (confirm('Are you sure you want to delete this class? This action cannot be undone.')) {
+        fetch('/api/live-classes/delete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ class_id: classId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Class deleted successfully!');
+            loadDashboard();
+          } else {
+            alert('Error deleting class: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error deleting class: ' + error.message);
+        });
+      }
+    }
+    
+    // Device testing functions
+    function testCamera() {
+      alert('Camera test started. Check your camera preview.');
+    }
+    
+    function testMic() {
+      alert('Microphone test started. Speak to test audio levels.');
+    }
+    
+    function testSpeaker() {
+      alert('Speaker test started. You should hear a test tone.');
+    }
+    
+    function toggleCamera() {
+      alert('Camera toggled.');
+    }
+    
+    function toggleMic() {
+      alert('Microphone toggled.');
+    }
+    
+    function toggleSpeaker() {
+      alert('Speaker toggled.');
+    }
+    
+    function saveSettings() {
+      alert('Device settings saved successfully!');
+    }
+    
+    // Form submission handling for YouTube downloads
+    document.getElementById('createClassForm').addEventListener('submit', function(e) {
+      const videoSource = document.querySelector('input[name="video_source"]:checked').value;
+      if (videoSource === 'youtube') {
+        const downloadProgress = document.getElementById('download-progress');
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        
+        downloadProgress.style.display = 'block';
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Downloading...';
+      }
+    });
+    
+    // Auto-populate device options
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Live Class Management loaded');
+    });
+    
+    // Completed Classes Functions
+    function loadCompletedClasses() {
+      const completedGrid = document.getElementById('completedClassesGrid');
+      completedGrid.innerHTML = '<div class="loading">Loading completed classes...</div>';
+      
+      fetch('/api/live-classes/completed')
+        .then(response => {
+          if (response.redirected) {
+            // User is not logged in as admin, redirect to login
+            window.location.href = '/auth';
+            return;
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (data && data.success) {
+            renderCompletedClasses(data.data);
+          } else if (data) {
+            completedGrid.innerHTML = `<div class="error">Error loading completed classes: ${data.message}</div>`;
+          } else {
+            completedGrid.innerHTML = `<div class="error">Error loading completed classes: Please log in as admin</div>`;
+          }
+        })
+        .catch(error => {
+          console.error('Error loading completed classes:', error);
+          completedGrid.innerHTML = `<div class="error">Error loading completed classes: ${error.message}</div>`;
+        });
+    }
+    
+    function renderCompletedClasses(classes) {
+      const completedGrid = document.getElementById('completedClassesGrid');
+      
+      if (classes.length === 0) {
+        completedGrid.innerHTML = `
+          <div style="text-align: center; color: #666; padding: 2rem; grid-column: 1 / -1;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">📚</div>
+            <h3>No Completed Classes</h3>
+            <p>Completed classes will appear here once you finish your live sessions.</p>
+          </div>
+        `;
+        return;
+      }
+      
+      let html = '';
+      classes.forEach(classItem => {
+        const duration = classItem.duration || 'N/A';
+        const participants = classItem.participants || 0;
+        const host = classItem.host || 'Unknown';
+        const completionDate = formatDateTime(classItem.completed_at || classItem.updated_at);
+        
+        html += `
+          <div class="class-card completed-class-card" 
+               data-topic="${classItem.topic || ''}" 
+               data-class-type="${classItem.class_type || ''}" 
+               data-target-class="${classItem.target_class || ''}" 
+               data-host="${host}"
+               data-duration="${duration}"
+               data-participants="${participants}"
+               data-completion-date="${classItem.completed_at || classItem.updated_at}">
+            <span class="class-status status-completed">Completed</span>
+            <h3>${classItem.topic || 'Untitled Class'}</h3>
+            <p><strong>Class Code:</strong> ${classItem.class_code || 'N/A'}</p>
+            <p><strong>Host:</strong> ${host}</p>
+            <p><strong>Type:</strong> ${classItem.class_type || 'Lecture'}</p>
+            <p><strong>Target Class:</strong> ${classItem.target_class || 'All Classes'}</p>
+            <p><strong>Completed:</strong> ${completionDate}</p>
+            
+            <div class="class-stats">
+              <div class="stat-item">
+                <div class="stat-value">${duration}</div>
+                <div class="stat-label">Duration</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">${participants}</div>
+                <div class="stat-label">Participants</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">${classItem.recording_available ? 'Yes' : 'No'}</div>
+                <div class="stat-label">Recording</div>
+              </div>
+            </div>
+            
+            <div style="margin-top: 1rem;">
+              <button class="btn-primary" onclick="viewRecording(${classItem.id})">View Recording</button>
+              <button class="btn-secondary" onclick="downloadRecording(${classItem.id})">Download</button>
+              <button class="btn-warning" onclick="deleteCompletedClass(${classItem.id})">Delete</button>
+            </div>
+          </div>
+        `;
+      });
+      
+      completedGrid.innerHTML = html;
+    }
+    
+    function applyCompletedFilters() {
+      const sortBy = document.getElementById('completedSortBy').value;
+      const filterClass = document.getElementById('completedFilterClass').value;
+      const filterType = document.getElementById('completedFilterType').value;
+      const searchText = document.getElementById('completedSearchText').value.toLowerCase();
+      
+      const classCards = document.querySelectorAll('#completedClassesGrid .class-card');
+      let visibleCount = 0;
+      
+      classCards.forEach(card => {
+        const topic = card.dataset.topic.toLowerCase();
+        const classType = card.dataset.classType.toLowerCase();
+        const targetClass = card.dataset.targetClass;
+        const host = card.dataset.host.toLowerCase();
+        const duration = card.dataset.duration.toLowerCase();
+        const participants = parseInt(card.dataset.participants) || 0;
+        const completionDate = card.dataset.completionDate;
+        
+        // Apply filters
+        let shouldShow = true;
+        
+        // Filter by target class
+        if (filterClass && targetClass !== filterClass) {
+          shouldShow = false;
+        }
+        
+        // Filter by class type
+        if (filterType && classType !== filterType) {
+          shouldShow = false;
+        }
+        
+        // Filter by search text
+        if (searchText) {
+          const searchableText = `${topic} ${host} ${classType} ${targetClass}`;
+          if (!searchableText.includes(searchText)) {
+            shouldShow = false;
+          }
+        }
+        
+        // Show/hide card
+        if (shouldShow) {
+          card.style.display = 'block';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      // Sort visible cards
+      const visibleCards = Array.from(classCards).filter(card => card.style.display !== 'none');
+      visibleCards.sort((a, b) => {
+        let aValue, bValue;
+        
+        switch (sortBy) {
+          case 'date':
+            aValue = new Date(a.dataset.completionDate);
+            bValue = new Date(b.dataset.completionDate);
+            return bValue - aValue; // Most recent first
+          case 'topic':
+            aValue = a.dataset.topic.toLowerCase();
+            bValue = b.dataset.topic.toLowerCase();
+            return aValue.localeCompare(bValue);
+          case 'duration':
+            aValue = parseFloat(a.dataset.duration) || 0;
+            bValue = parseFloat(b.dataset.duration) || 0;
+            return bValue - aValue; // Longest first
+          case 'participants':
+            aValue = parseInt(a.dataset.participants) || 0;
+            bValue = parseInt(b.dataset.participants) || 0;
+            return bValue - aValue; // Most participants first
+          case 'class_type':
+            aValue = a.dataset.classType.toLowerCase();
+            bValue = b.dataset.classType.toLowerCase();
+            return aValue.localeCompare(bValue);
+          default:
+            return 0;
+        }
+      });
+      
+      // Reorder cards in DOM
+      const grid = document.getElementById('completedClassesGrid');
+      visibleCards.forEach(card => grid.appendChild(card));
+      
+      // Show result count
+      const resultDiv = document.getElementById('completedFilterResults');
+      const resultCount = document.getElementById('completedResultCount');
+      resultDiv.style.display = 'block';
+      resultCount.textContent = `Showing ${visibleCount} of ${classCards.length} completed classes`;
+      
+      // Add visual feedback
+      if (visibleCount === 0) {
+        resultCount.textContent = 'No completed classes match your filters';
+        resultDiv.style.background = '#fef2f2';
+        resultCount.style.color = '#dc2626';
+      } else {
+        resultDiv.style.background = '#e8f5e8';
+        resultCount.style.color = '#155724';
+      }
+    }
+    
+    function clearCompletedFilters() {
+      // Reset all filter inputs
+      document.getElementById('completedSortBy').value = 'date';
+      document.getElementById('completedFilterClass').value = '';
+      document.getElementById('completedFilterType').value = '';
+      document.getElementById('completedSearchText').value = '';
+      
+      // Show all cards
+      const classCards = document.querySelectorAll('#completedClassesGrid .class-card');
+      classCards.forEach(card => {
+        card.style.display = 'block';
+      });
+      
+      // Hide result count
+      document.getElementById('completedFilterResults').style.display = 'none';
+      
+      // Reset to original order (date sort)
+      applyCompletedFilters();
+    }
+    
+    function exportCompletedResults() {
+      const visibleCards = document.querySelectorAll('#completedClassesGrid .class-card[style*="display: block"], #completedClassesGrid .class-card:not([style*="display: none"])');
+      
+      if (visibleCards.length === 0) {
+        alert('No completed classes to export. Please adjust your filters.');
+        return;
+      }
+      
+      const exportData = Array.from(visibleCards).map(card => ({
+        topic: card.dataset.topic,
+        classCode: card.querySelector('p:nth-child(2)').textContent.replace('Class Code: ', ''),
+        host: card.dataset.host,
+        classType: card.dataset.classType,
+        targetClass: card.dataset.targetClass,
+        completionDate: formatDateTime(card.dataset.completionDate),
+        duration: card.dataset.duration,
+        participants: card.dataset.participants
+      }));
+      
+      // Create CSV content
+      const headers = ['Topic', 'Class Code', 'Host', 'Class Type', 'Target Class', 'Completion Date', 'Duration', 'Participants'];
+      const csvContent = [
+        headers.join(','),
+        ...exportData.map(row => [
+          `"${row.topic}"`,
+          `"${row.classCode}"`,
+          `"${row.host}"`,
+          `"${row.classType}"`,
+          `"${row.targetClass}"`,
+          `"${row.completionDate}"`,
+          `"${row.duration}"`,
+          `"${row.participants}"`
+        ].join(','))
+      ].join('\n');
+      
+      // Create and download file
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `completed_classes_export_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      
+      alert(`Exported ${exportData.length} completed classes successfully!`);
+    }
+    
+    function viewRecording(classId) {
+      // This would open the recording viewer
+      alert(`Viewing recording for class ${classId}. This feature will be implemented soon.`);
+    }
+    
+    function downloadRecording(classId) {
+      // This would download the recording
+      alert(`Downloading recording for class ${classId}. This feature will be implemented soon.`);
+    }
+    
+    function deleteCompletedClass(classId) {
+      if (confirm('Are you sure you want to delete this completed class? This action cannot be undone.')) {
+        fetch('/api/live-classes/delete-completed', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ class_id: classId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Completed class deleted successfully!');
+            loadCompletedClasses();
+          } else {
+            alert('Error deleting completed class: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error deleting completed class: ' + error.message);
+        });
+      }
+    }
+    
+    // Add event listeners for completed classes filtering
+    document.addEventListener('DOMContentLoaded', function() {
+      const completedSearchInput = document.getElementById('completedSearchText');
+      const completedFilterClass = document.getElementById('completedFilterClass');
+      const completedFilterType = document.getElementById('completedFilterType');
+      
+      // Debounce function for search
+      let completedSearchTimeout;
+      if (completedSearchInput) {
+        completedSearchInput.addEventListener('input', function() {
+          clearTimeout(completedSearchTimeout);
+          completedSearchTimeout = setTimeout(applyCompletedFilters, 300);
+        });
+      }
+      
+      // Apply filters when dropdowns change
+      if (completedFilterClass) {
+        completedFilterClass.addEventListener('change', applyCompletedFilters);
+      }
+      if (completedFilterType) {
+        completedFilterType.addEventListener('change', applyCompletedFilters);
+      }
+    });
+    
+    // Update showTab function to load completed classes
+    const originalShowTab = showTab;
+    showTab = function(tabName) {
+      originalShowTab(tabName);
+      
+      // Load completed classes when tab is selected
+      if (tabName === 'completed') {
+        loadCompletedClasses();
+      }
+    };
+  </script>
+</body>
+</html> 

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Study Resources - Sunrise Education Centre</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      /* Styles for nested tabs */
+      .sub-tabs {
+        display: flex;
+        justify-content: center;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 1rem;
+      }
+      .sub-tab-button {
+        background: #f1f3f5;
+        border: none;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: #555;
+        margin: 0 0.4rem;
+        transition: all 0.3s ease;
+      }
+      .sub-tab-button.active {
+        background: #6a82fb;
+        color: #fff;
+      }
+      .category-content {
+        display: none;
+      }
+      .category-content.active {
+        display: block;
+      }
+      body.dark-mode .sub-tabs {
+        border-bottom-color: #333;
+      }
+      body.dark-mode .sub-tab-button {
+        background: #333;
+        color: #ccc;
+      }
+      body.dark-mode .sub-tab-button.active {
+        background: #6a82fb;
+      }
+      
+      /* Mobile Responsive Styles */
+      @media (max-width: 768px) {
+        .sub-tabs {
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin: 1rem 0;
+        }
+        
+        .sub-tab-button {
+          padding: 0.5rem 1rem;
+          font-size: 0.85rem;
+          margin: 0 0.2rem;
+        }
+        
+        .resource-card {
+          padding: 1rem;
+          margin: 0.5rem 0;
+        }
+        
+        .resource-card h3 {
+          font-size: 1.1rem;
+        }
+        
+        .resource-card p {
+          font-size: 0.9rem;
+        }
+        
+        .container {
+          padding: 0 1rem;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .sub-tabs {
+          flex-direction: column;
+          gap: 0.3rem;
+        }
+        
+        .sub-tab-button {
+          padding: 0.4rem 0.8rem;
+          font-size: 0.8rem;
+          margin: 0;
+          width: 100%;
+        }
+        
+        .resource-card {
+          padding: 0.8rem;
+        }
+        
+        .resource-card h3 {
+          font-size: 1rem;
+        }
+        
+        .resource-card p {
+          font-size: 0.85rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar glassmorphic">
+      <div class="container nav-content">
+        <div class="nav-logo">
+          <img src="attached_assets/image_1750584670920.png" alt="Logo">
+        </div>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/online-class">Live Class</a></li>
+          <li><a href="/forum">Forum</a></li>
+          <li style="position:relative;">
+            <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
+              {% if user_notifications and user_notifications|length > 0 %}
+              <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
+              {% endif %}
+            </button>
+            <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:#fff; min-width:260px; box-shadow:0 4px 24px rgba(100,100,255,0.13); border-radius:12px; z-index:100; padding:1rem;">
+              <strong style="color:#6a82fb;">Notifications</strong>
+              <ul style="list-style:none; padding:0; margin:0;">
+                {% if user_notifications and user_notifications|length > 0 %}
+                {% for id, message, created_at, status, notification_type, scheduled_time in user_notifications %}
+                <li class="notification-item" data-notification-id="{{ id }}" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='transparent'">
+                  {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                </li>
+                {% endfor %}
+                {% else %}
+                  <li style="padding:0.7rem 0; color:#888; text-align:center;">No new notifications.</li>
+                {% endif %}
+              </ul>
+            </div>
+          </li>
+          {% if username %}
+            <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+          {% else %}
+            <li><a href="/auth" class="btn btn-primary">Login</a></li>
+          {% endif %}
+        </ul>
+        <button class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+      </div>
+    </nav>
+    <header class="hero-section">
+      <div class="container hero-content">
+        <h1>Study Resources</h1>
+        <p>Access notes, worksheets, practice problems, and solutions for your class!</p>
+        <a href="#resources" class="btn btn-cta">Browse Resources</a>
+      </div>
+    </header>
+    <main class="container main-content">
+      <section id="resources" class="card-section">
+        <h2>Resources for {{ class_name|title }}</h2>
+        
+        <!-- Category Sub-Tabs -->
+        <div class="sub-tabs">
+          {% set template_categories = [
+              ('notes', 'Notes'),
+              ('sample_paper', 'Sample Papers'),
+              ('worksheet', 'Worksheets'),
+              ('pyq', 'PYQs'),
+              ('case-base', 'Case-Base'),
+              ('assertion-reasoning', 'Assertion/Reasoning'),
+              ('formula', 'Formula')
+          ] %}
+          
+          {# Add any categories from database that aren't in the hardcoded list #}
+          {% if categories %}
+            {% for category in categories %}
+              {% set category_exists = false %}
+              {% for cat in template_categories %}
+                {% if cat[0] == category[1] %}
+                  {% set category_exists = true %}
+                {% endif %}
+              {% endfor %}
+              {% if not category_exists %}
+                {% set _ = template_categories.append((category[1], category[1])) %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+          
+          {% for cat_key, cat_name in template_categories %}
+            <button class="sub-tab-button" onclick="showCategory(event, 'cat-{{ cat_key }}')">{{ cat_name }}</button>
+          {% endfor %}
+        </div>
+
+        <!-- Resources for each category -->
+        {% for cat_key, cat_name in template_categories %}
+          {% if (cat_key in ['worksheet', 'formula'] and paid_status == 'paid') or (cat_key not in ['worksheet', 'formula']) %}
+            <div id="cat-{{ cat_key }}" class="category-content">
+              <div class="card-grid">
+                {% set has_resources = false %}
+                {% for filename, res_class_id, filepath, title, description, category in resources %}
+                  {% if res_class_id == class_id and category == cat_key %}
+                    {% set has_resources = true %}
+                    <div class="card animated-card" style="text-align:left;">
+                      <strong style="font-size:1.1rem;">{{ title }}</strong><br>
+                      {% if description %}<span style="color:#555; font-size:0.98rem;">{{ description }}</span><br>{% endif %}
+                      <span style="color:#888; font-size:0.95rem;">File: {{ filename }}</span><br>
+                      <a href="/preview/{{ filename }}" class="btn btn-primary" style="margin-top:0.7rem;">Preview Document</a>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+                {% if not has_resources %}
+                  <div style="color:#888; text-align:center; grid-column: 1 / -1;">No resources available in this category yet.</div>
+                {% endif %}
+              </div>
+            </div>
+          {% else %}
+            <div id="cat-{{ cat_key }}" class="category-content">
+              <div class="card-grid">
+                <div style="color:#888; text-align:center; grid-column: 1 / -1; padding: 2rem;">
+                  <h3 style="color:#555; margin-bottom: 1rem;">🔒 Premium Content</h3>
+                  <p>This category contains premium content that requires a paid subscription.</p>
+                  <p style="font-size: 0.9rem; margin-top: 1rem;">Contact your administrator to upgrade your account.</p>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </section>
+      <div style="text-align:center; margin: 1.5rem 0 2rem 0;">
+        <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="container footer-content">
+        <div class="footer-social">
+          <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">Instagram</a>
+          <a href="https://www.youtube.com/@MohitNariyani" target="_blank">YouTube</a>
+        </div>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Contact Us</a>
+        </div>
+        <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+    <script src="study-resources.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Show the first category tab by default
+        const firstCategoryTab = document.querySelector('.sub-tab-button');
+        if (firstCategoryTab) {
+          firstCategoryTab.click();
+        }
+      });
+
+      document.addEventListener('DOMContentLoaded', function() {
+      const notifBell = document.getElementById('notifBell');
+      const notifDropdown = document.getElementById('notifDropdown');
+      if (notifBell && notifDropdown) {
+        notifBell.addEventListener('click', function(e) {
+          notifDropdown.style.display = notifDropdown.style.display === 'block' ? 'none' : 'block';
+          e.stopPropagation();
+        });
+        document.addEventListener('click', function() {
+          notifDropdown.style.display = 'none';
+        });
+        notifDropdown.addEventListener('click', function(e) { e.stopPropagation(); });
+      }
+      });
+    </script>
+  </body>
+</html>

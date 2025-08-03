@@ -1,0 +1,10 @@
+Flask
+gunicorn
+werkzeug 
+pandas
+openpyxl 
+yt-dlp
+requests
+pytz 
+Flask-SocketIO
+eventlet 

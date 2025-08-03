@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>User Management - Admin</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #f4f6fb;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      min-height: 100vh;
+    }
+    .dark-mode-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+    .dark-mode-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+    .admin-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .page-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .page-header h1 {
+      color: #232946;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .page-header p {
+      color: #666;
+      font-size: 1.1rem;
+    }
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    .create-user-section {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(100,100,255,0.07);
+      padding: 2rem;
+      height: fit-content;
+    }
+    .create-user-section h2 {
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #232946;
+    }
+    .create-user-section label {
+      font-weight: 600;
+      color: #232946;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .create-user-section input[type="text"],
+    .create-user-section input[type="password"],
+    .create-user-section select {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 1.2rem;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      background: #f9faff;
+      color: #232946;
+      box-sizing: border-box;
+    }
+    .create-user-section input:focus,
+    .create-user-section select:focus {
+      outline: none;
+      border-color: #6a82fb;
+      box-shadow: 0 0 0 3px rgba(106,130,251,0.1);
+    }
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #6a82fb 0%, #5a6fd8 100%);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(106,130,251,0.3);
+    }
+    .btn-secondary {
+      background: #eee;
+      color: #232946;
+    }
+    .btn-secondary:hover {
+      background: #e0e7ff;
+    }
+    .btn-danger {
+      background: linear-gradient(135deg, #fc5c7d 0%, #e74c3c 100%);
+      color: #fff;
+    }
+    .btn-danger:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(252,92,125,0.3);
+    }
+    .users-section {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(100,100,255,0.07);
+      padding: 2rem;
+    }
+    .users-section h2 {
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #232946;
+    }
+    .search-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      align-items: center;
+    }
+    .search-input {
+      flex: 1;
+      padding: 0.8rem 1rem;
+      border: 1px solid #e0e7ff;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: #6a82fb;
+      box-shadow: 0 0 0 3px rgba(106,130,251,0.1);
+    }
+    .table-container {
+      overflow-x: auto;
+    }
+    .users-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .users-table th {
+      background: #f8f9ff;
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: #232946;
+      border-bottom: 2px solid #e0e7ff;
+    }
+    .users-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #e0e7ff;
+    }
+    .users-table tr:hover {
+      background: #f8f9ff;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .status-paid {
+      background: #d4edda;
+      color: #155724;
+    }
+    .status-unpaid {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .btn-small {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid #e0e7ff;
+    }
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #6a82fb;
+      margin-bottom: 0.5rem;
+    }
+    .stat-label {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: #6a82fb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    
+    /* Tab Styles */
+    .tab-container {
+      display: flex;
+      background: #f8f9ff;
+      border-radius: 12px;
+      padding: 0.5rem;
+      margin-bottom: 2rem;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 1rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      color: #666;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+    .tab-btn.active {
+      background: #6a82fb;
+      color: #fff;
+    }
+    .tab-btn:hover:not(.active) {
+      background: rgba(106,130,251,0.1);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* Admissions Section */
+    .admissions-section {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(100,100,255,0.07);
+      padding: 2rem;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .section-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #232946;
+    }
+    .section-actions {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    /* Status Badges */
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+    .status-approved {
+      background: #d4edda;
+      color: #155724;
+    }
+    .status-rejected {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    
+    /* Admissions Table Specific Styles */
+    .admissions-table {
+      min-width: 1200px;
+    }
+    .admissions-table th,
+    .admissions-table td {
+      padding: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .admissions-table th {
+      white-space: nowrap;
+    }
+    .admissions-table td {
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .admissions-table td:nth-child(2) { /* ID */
+      width: 50px;
+    }
+    .admissions-table td:nth-child(3) { /* Student Name */
+      min-width: 120px;
+      white-space: normal;
+    }
+    .admissions-table td:nth-child(14) { /* Photo */
+      width: 60px;
+      text-align: center;
+    }
+    .admissions-table td:nth-child(17) { /* Actions */
+      width: 150px;
+      white-space: nowrap;
+    }
+    
+    @media (max-width: 768px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+      .search-bar {
+        flex-direction: column;
+      }
+      .action-buttons {
+        flex-direction: column;
+      }
+      .section-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+      .tab-container {
+        flex-direction: column;
+      }
+      .admissions-table {
+        min-width: 800px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Dark Mode Toggle Button -->
+  <div class="dark-mode-toggle">
+    <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
+  </div>
+
+  <div class="admin-container">
+    <a href="/admin" class="back-link">&larr; Back to Admin Panel</a>
+    
+    <div class="page-header">
+      <h1>👥 User & Admissions Management</h1>
+      <p>Create new users, manage existing accounts, and handle student admissions</p>
+    </div>
+    
+    <!-- Statistics Overview -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value">{{ users|length }}</div>
+        <div class="stat-label">Total Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ paid_users|default(0) }}</div>
+        <div class="stat-label">Paid Users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ admissions|default([])|length }}</div>
+        <div class="stat-label">Admissions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ pending_admissions|default(0) }}</div>
+        <div class="stat-label">Pending</div>
+      </div>
+    </div>
+    
+    <!-- Tab Navigation -->
+    <div class="tab-container">
+      <button class="tab-btn active" onclick="showTab('users')">User Management</button>
+      <button class="tab-btn" onclick="showTab('admissions')">Admissions</button>
+    </div>
+    
+    <!-- Users Tab -->
+    <div id="users-tab" class="tab-content active">
+      <div class="content-grid">
+        <!-- Create User Section -->
+        <div class="create-user-section">
+          <h2>➕ Create New User</h2>
+          <form method="POST" action="/admin/create-user">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter username" required />
+            
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter password" required />
+            
+            <label for="class_id">Class/Role</label>
+            <select id="class_id" name="class_id" required>
+              {% for id, name in all_classes %}
+                <option value="{{ id }}">{{ name|title }}</option>
+              {% endfor %}
+            </select>
+            
+            <label for="paid">Paid Status</label>
+            <select id="paid" name="paid" required>
+              <option value="paid">Paid</option>
+              <option value="not paid">Not Paid</option>
+            </select>
+            
+            <div style="margin-top: 1.5rem;">
+              <button type="submit" class="btn btn-primary">Create User</button>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Current Users Section -->
+        <div class="users-section">
+          <h2>👥 Current Users</h2>
+          
+          <!-- User Statistics -->
+          <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+            <div class="stat-card" style="background: #e3f2fd; padding: 1rem; border-radius: 8px; text-align: center;">
+              <div style="font-size: 2rem; font-weight: bold; color: #1976d2;">{{ users|length }}</div>
+              <div style="color: #666;">Total Users</div>
+            </div>
+            <div class="stat-card" style="background: #e8f5e8; padding: 1rem; border-radius: 8px; text-align: center;">
+              <div style="font-size: 2rem; font-weight: bold; color: #388e3c;">{{ paid_users }}</div>
+              <div style="color: #666;">Paid Users</div>
+            </div>
+            <div class="stat-card" style="background: #fff3e0; padding: 1rem; border-radius: 8px; text-align: center;">
+              <div style="font-size: 2rem; font-weight: bold; color: #f57c00;">{{ unpaid_users }}</div>
+              <div style="color: #666;">Unpaid Users</div>
+            </div>
+            <div class="stat-card" style="background: #fce4ec; padding: 1rem; border-radius: 8px; text-align: center;">
+              <div style="font-size: 2rem; font-weight: bold; color: #c2185b;">{{ admin_users }}</div>
+              <div style="color: #666;">Admin/Teachers</div>
+            </div>
+          </div>
+          
+          <div class="search-bar">
+            <input type="text" id="userSearch" placeholder="Search by username..." class="search-input" onkeyup="filterUsers()">
+            <select id="roleFilter" class="search-input" style="width: auto;" onchange="filterUsers()">
+              <option value="">All Roles</option>
+              {% for id, name in all_classes %}
+                <option value="{{ name|lower }}">{{ name|title }}</option>
+              {% endfor %}
+            </select>
+            <select id="statusFilter" class="search-input" style="width: auto;" onchange="filterUsers()">
+              <option value="">All Status</option>
+              <option value="paid">Paid</option>
+              <option value="unpaid">Unpaid</option>
+            </select>
+          </div>
+          
+          <div class="table-container">
+            <table class="users-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Username</th>
+                  <th>Role</th>
+                  <th>Paid Status</th>
+                  <th>Contact Info</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                {% for id, username, name, paid, mobile_no, email_address in users %}
+                <tr data-username="{{ username }}" data-role="{{ name|lower }}" data-paid="{{ paid }}">
+                  <td>{{ id }}</td>
+                  <td><strong>{{ username }}</strong></td>
+                  <td>{{ name|title }}</td>
+                  <td>
+                    <span class="status-badge {% if paid == 'paid' %}status-paid{% else %}status-unpaid{% endif %}">
+                      {{ "Paid" if paid == 'paid' else "Unpaid" }}
+                    </span>
+                  </td>
+                  <td>
+                    {% if mobile_no %}
+                      <div style="font-size: 0.9rem;">
+                        <div>📱 {{ mobile_no }}</div>
+                        {% if email_address %}
+                          <div>📧 {{ email_address }}</div>
+                        {% endif %}
+                      </div>
+                    {% else %}
+                      <span style="color: #999;">No contact info</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div class="action-buttons">
+                      <a href="/user-info/{{ id }}" class="btn btn-primary btn-small">Edit</a>
+                      <button class="btn btn-danger btn-small" onclick="deleteUser({{ id }})">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Admissions Tab -->
+    <div id="admissions-tab" class="tab-content">
+      <div class="admissions-section">
+        <div class="section-header">
+          <h2>📝 Student Admissions</h2>
+          <div class="section-actions">
+            <button class="btn btn-success" onclick="exportAdmissions()">Export Admissions</button>
+            <button class="btn btn-primary" onclick="bulkApprove()">Bulk Approve</button>
+          </div>
+        </div>
+        
+        <div class="search-bar">
+          <input type="text" id="admissionSearch" placeholder="Search by student name..." class="search-input" onkeyup="filterAdmissions()">
+          <select id="admissionStatusFilter" class="search-input" style="width: auto;" onchange="filterAdmissions()">
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+          </select>
+          <select id="admissionClassFilter" class="search-input" style="width: auto;" onchange="filterAdmissions()">
+            <option value="">All Classes</option>
+            {% for id, name in all_classes %}
+              <option value="{{ name|lower }}">{{ name|title }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        
+        <div class="table-container">
+          <table class="users-table admissions-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAllAdmissions" onchange="toggleSelectAllAdmissions()"></th>
+                <th>ID</th>
+                <th>Student Name</th>
+                <th>DOB</th>
+                <th>Class</th>
+                <th>School</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Maths Marks (/80)</th>
+                <th>Maths Rating (/10)</th>
+                <th>Last %</th>
+                <th>Parent Name</th>
+                <th>Parent Phone</th>
+                <th>Photo</th>
+                <th>Status</th>
+                <th>Applied Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admissionsTableBody">
+              {% for admission in admissions %}
+              <tr data-student-name="{{ admission[1]|lower }}" data-parent-name="{{ admission[10]|lower }}" data-class="{{ admission[3]|lower }}" data-status="{{ admission[13]|lower }}">
+                <td><input type="checkbox" class="admission-checkbox" value="{{ admission[0] }}"></td>
+                <td>{{ admission[0] }}</td>
+                <td><strong>{{ admission[1] }}</strong></td>
+                <td>{{ admission[2] }}</td>
+                <td>{{ admission[3] }}</td>
+                <td>{{ admission[4] }}</td>
+                <td>{{ admission[5] }}</td>
+                <td>{{ admission[6] }}</td>
+                <td>{{ admission[7] }}</td>
+                <td>{{ admission[8] }}</td>
+                <td>{{ admission[9] }}</td>
+                <td>{{ admission[10] }}</td>
+                <td>{{ admission[11] }}</td>
+                <td>
+                  {% if admission[12] %}
+                    <img src="/uploads/admission_photos/{{ admission[12] }}" alt="Photo" style="width:48px; height:48px; object-fit:cover; border-radius:8px;">
+                  {% else %}
+                    <span style="color: #999;">No photo</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <span class="status-badge 
+                    {% if admission[13] == 'pending' %}status-pending
+                    {% elif admission[13] == 'approved' %}status-approved
+                    {% else %}status-rejected{% endif %}">
+                    {{ admission[13]|title }}
+                  </span>
+                </td>
+                <td>{{ admission[14][:19].replace('T', ' ') if admission[14] else 'N/A' }}</td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn btn-success btn-small" onclick="approveAdmission({{ admission[0] }})">Approve</button>
+                    <button class="btn btn-danger btn-small" onclick="rejectAdmission({{ admission[0] }})">Reject</button>
+                    <button class="btn btn-primary btn-small" onclick="viewAdmission({{ admission[0] }})">View</button>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Approved Admissions Section -->
+        <div style="margin-top: 3rem;">
+          <h3 style="color: #232946; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span style="background: #d1fae5; color: #065f46; padding: 0.3rem 0.8rem; border-radius: 6px; font-size: 0.9rem; font-weight: 600;">✅</span>
+            Approved Admissions
+          </h3>
+          <div class="table-container">
+            <table class="users-table admissions-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Student Name</th>
+                  <th>DOB</th>
+                  <th>Class</th>
+                  <th>School</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+                  <th>Maths Marks (/80)</th>
+                  <th>Maths Rating (/10)</th>
+                  <th>Last %</th>
+                  <th>Parent Name</th>
+                  <th>Parent Phone</th>
+                  <th>Photo</th>
+                  <th>Approved By</th>
+                  <th>Actions</th>
+                  <th>Approved At</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for adm in approved_admissions %}
+                <tr>
+                  <td>{{ adm[0] }}</td>
+                  <td><strong>{{ adm[1] }}</strong></td>
+                  <td>{{ adm[2] }}</td>
+                  <td>{{ adm[3] }}</td>
+                  <td>{{ adm[4] }}</td>
+                  <td>{{ adm[5] }}</td>
+                  <td>{{ adm[6] }}</td>
+                  <td>{{ adm[7] }}</td>
+                  <td>{{ adm[8] }}</td>
+                  <td>{{ adm[9] }}</td>
+                  <td>{{ adm[10] }}</td>
+                  <td>{{ adm[11] }}</td>
+                  <td>
+                    {% if adm[12] %}
+                      <img src="/uploads/admission_photos/{{ adm[12] }}" alt="Photo" style="width:48px; height:48px; object-fit:cover; border-radius:8px;">
+                    {% else %}
+                      <span style="color: #999;">No photo</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ adm[13] }}</td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="btn btn-primary btn-small" onclick="restoreApprovedAdmission({{ adm[0] }})">Restore to Pending</button>
+                      <button class="btn btn-danger btn-small" onclick="deleteApprovedAdmission({{ adm[0] }})">Delete</button>
+                    </div>
+                  </td>
+                  <td>{{ adm[14][:19].replace('T', ' ') if adm[14] else 'N/A' }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- Disapproved Admissions Section -->
+        <div style="margin-top: 3rem;">
+          <h3 style="color: #232946; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span style="background: #fee2e2; color: #991b1b; padding: 0.3rem 0.8rem; border-radius: 6px; font-size: 0.9rem; font-weight: 600;">❌</span>
+            Disapproved Admissions
+          </h3>
+          <div class="table-container">
+            <table class="users-table admissions-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Student Name</th>
+                  <th>DOB</th>
+                  <th>Class</th>
+                  <th>School</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+                  <th>Maths Marks (/80)</th>
+                  <th>Maths Rating (/10)</th>
+                  <th>Last %</th>
+                  <th>Parent Name</th>
+                  <th>Parent Phone</th>
+                  <th>Photo</th>
+                  <th>Disapproved By</th>
+                  <th>Actions</th>
+                  <th>Disapproved At</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for adm in disapproved_admissions %}
+                <tr>
+                  <td>{{ adm[0] }}</td>
+                  <td><strong>{{ adm[1] }}</strong></td>
+                  <td>{{ adm[2] }}</td>
+                  <td>{{ adm[3] }}</td>
+                  <td>{{ adm[4] }}</td>
+                  <td>{{ adm[5] }}</td>
+                  <td>{{ adm[6] }}</td>
+                  <td>{{ adm[7] }}</td>
+                  <td>{{ adm[8] }}</td>
+                  <td>{{ adm[9] }}</td>
+                  <td>{{ adm[10] }}</td>
+                  <td>{{ adm[11] }}</td>
+                  <td>
+                    {% if adm[12] %}
+                      <img src="/uploads/admission_photos/{{ adm[12] }}" alt="Photo" style="width:48px; height:48px; object-fit:cover; border-radius:8px;">
+                    {% else %}
+                      <span style="color: #999;">No photo</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ adm[13] }}</td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="btn btn-primary btn-small" onclick="restoreDisapprovedAdmission({{ adm[0] }})">Restore to Pending</button>
+                      <button class="btn btn-danger btn-small" onclick="deleteDisapprovedAdmission({{ adm[0] }})">Delete</button>
+                    </div>
+                  </td>
+                  <td>{{ adm[15][:19].replace('T', ' ') if adm[15] else 'N/A' }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tab switching
+    function showTab(tabName) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      
+      // Show selected tab
+      document.getElementById(tabName + '-tab').classList.add('active');
+      event.target.classList.add('active');
+    }
+    
+    // User Management Functions
+    function filterUsers() {
+      const searchTerm = document.getElementById('userSearch').value.toLowerCase();
+      const roleFilter = document.getElementById('roleFilter').value.toLowerCase();
+      const statusFilter = document.getElementById('statusFilter').value;
+      const rows = document.querySelectorAll('#usersTableBody tr');
+      
+      rows.forEach(row => {
+        const username = row.dataset.username.toLowerCase();
+        const role = row.dataset.role;
+        const paid = row.dataset.paid;
+        let shouldShow = true;
+        
+        // Search filter
+        if (searchTerm && !username.includes(searchTerm)) {
+          shouldShow = false;
+        }
+        
+        // Role filter
+        if (roleFilter && role !== roleFilter) {
+          shouldShow = false;
+        }
+        
+        // Status filter
+        if (statusFilter === 'paid' && paid !== 'paid') {
+          shouldShow = false;
+        } else if (statusFilter === 'unpaid' && paid !== 'not paid') {
+          shouldShow = false;
+        }
+        
+        row.style.display = shouldShow ? 'table-row' : 'none';
+      });
+    }
+    
+    function deleteUser(userId) {
+      if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+        fetch(`/admin/delete-user/${userId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error deleting user: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error deleting user: ' + error.message);
+        });
+      }
+    }
+    
+    // Admissions Management Functions
+    function filterAdmissions() {
+      const searchTerm = document.getElementById('admissionSearch').value.toLowerCase();
+      const statusFilter = document.getElementById('admissionStatusFilter').value.toLowerCase();
+      const classFilter = document.getElementById('admissionClassFilter').value.toLowerCase();
+      const rows = document.querySelectorAll('#admissionsTableBody tr');
+      
+      rows.forEach(row => {
+        const studentName = row.dataset.studentName;
+        const parentName = row.dataset.parentName;
+        const className = row.dataset.class;
+        const status = row.dataset.status;
+        let shouldShow = true;
+        
+        // Search filter
+        if (searchTerm && !studentName.includes(searchTerm) && !parentName.includes(searchTerm)) {
+          shouldShow = false;
+        }
+        
+        // Status filter
+        if (statusFilter && status !== statusFilter) {
+          shouldShow = false;
+        }
+        
+        // Class filter
+        if (classFilter && className !== classFilter) {
+          shouldShow = false;
+        }
+        
+        row.style.display = shouldShow ? 'table-row' : 'none';
+      });
+    }
+    
+    function toggleSelectAllAdmissions() {
+      const selectAll = document.getElementById('selectAllAdmissions');
+      const checkboxes = document.querySelectorAll('.admission-checkbox');
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+      });
+    }
+    
+    function approveAdmission(admissionId) {
+      if (confirm('Are you sure you want to approve this admission?')) {
+        fetch(`/admin/admissions/approve/${admissionId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error approving admission: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error approving admission: ' + error.message);
+        });
+      }
+    }
+    
+    function rejectAdmission(admissionId) {
+      if (confirm('Are you sure you want to reject this admission?')) {
+        fetch(`/admin/admissions/disapprove/${admissionId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error rejecting admission: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error rejecting admission: ' + error.message);
+        });
+      }
+    }
+    
+    function viewAdmission(admissionId) {
+      // Implementation for viewing admission details
+      alert('View admission details functionality will be implemented soon.');
+    }
+    
+    function bulkApprove() {
+      const selectedAdmissions = document.querySelectorAll('.admission-checkbox:checked');
+      if (selectedAdmissions.length === 0) {
+        alert('Please select admissions to approve.');
+        return;
+      }
+      
+      if (confirm(`Are you sure you want to approve ${selectedAdmissions.length} selected admissions?`)) {
+        // Implementation for bulk approval
+        alert('Bulk approval functionality will be implemented soon.');
+      }
+    }
+    
+    function exportAdmissions() {
+      // Implementation for exporting admissions
+      alert('Export admissions functionality will be implemented soon.');
+    }
+    
+    function restoreApprovedAdmission(admissionId) {
+      if (confirm('Are you sure you want to restore this approved admission to pending?')) {
+        fetch(`/admin/admissions/restore-approved/${admissionId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error restoring admission: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error restoring admission: ' + error.message);
+        });
+      }
+    }
+    
+    function restoreDisapprovedAdmission(admissionId) {
+      if (confirm('Are you sure you want to restore this disapproved admission to pending?')) {
+        fetch(`/admin/admissions/restore-disapproved/${admissionId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error restoring admission: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error restoring admission: ' + error.message);
+        });
+      }
+    }
+    
+    function deleteApprovedAdmission(admissionId) {
+      if (confirm('Are you sure you want to delete this approved admission permanently?')) {
+        fetch(`/admin/admissions/delete-approved/${admissionId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error deleting admission: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error deleting admission: ' + error.message);
+        });
+      }
+    }
+    
+    function deleteDisapprovedAdmission(admissionId) {
+      if (confirm('Are you sure you want to delete this disapproved admission permanently?')) {
+        fetch(`/admin/admissions/delete-disapproved/${admissionId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error deleting admission: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error deleting admission: ' + error.message);
+        });
+      }
+    }
+  </script>
+  <script src="script.js"></script>
+</body>
+</html> 
