@@ -3143,7 +3143,7 @@ def pdf_content(filename):
 
 # Route to get categories for a specific class
 @app.route('/api/categories/<int:class_id>')
-def get_categories_for_class(class_id):
+def api_get_categories_for_class(class_id):
     try:
         conn = sqlite3.connect('users.db')
         c = conn.cursor()
