@@ -13,6 +13,7 @@
             background: #f4f6fb;
             font-family: 'Inter', sans-serif;
             overflow: hidden;
+            transition: background-color 0.3s ease;
         }
         
         .preview-container {
@@ -33,6 +34,7 @@
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
+            transition: all 0.3s ease;
         }
         
         .preview-header h1 {
@@ -40,6 +42,7 @@
             color: #232946;
             font-size: 1.5rem;
             font-weight: 600;
+            transition: color 0.3s ease;
         }
         
         .preview-controls {
@@ -77,11 +80,29 @@
             background: #e9ecef;
         }
         
+        .btn-dark-mode {
+            background: #2a2a3a;
+            color: #f4f4f4;
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .btn-dark-mode:hover {
+            background: #3a3a4a;
+        }
+        
         .pdf-viewer {
             flex: 1;
             background: #fff;
             position: relative;
             overflow: hidden;
+            transition: background-color 0.3s ease;
         }
         
         .pdf-iframe {
@@ -89,6 +110,7 @@
             height: 100%;
             border: none;
             background: #fff;
+            transition: background-color 0.3s ease;
         }
         
         .loading {
@@ -98,6 +120,7 @@
             transform: translate(-50%, -50%);
             text-align: center;
             color: #666;
+            transition: color 0.3s ease;
         }
         
         .loading-spinner {
@@ -108,6 +131,7 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 1rem;
+            transition: border-color 0.3s ease;
         }
         
         @keyframes spin {
@@ -146,6 +170,7 @@
                 rgba(106, 130, 251, 0.03) 100px,
                 rgba(106, 130, 251, 0.03) 200px
             );
+            transition: background 0.3s ease;
         }
         
         .watermark::before {
@@ -159,16 +184,18 @@
             color: rgba(106, 130, 251, 0.1);
             white-space: nowrap;
             pointer-events: none;
+            transition: color 0.3s ease;
         }
         
-        /* Dark mode support */
+        /* Enhanced Dark mode support */
         body.dark-mode {
-            background: #181c2a;
+            background: #0f1419;
         }
         
         body.dark-mode .preview-header {
-            background: #232946;
+            background: #1a1f2e;
             color: #f4f4f4;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
         
         body.dark-mode .preview-header h1 {
@@ -184,8 +211,53 @@
             background: #3a3a4a;
         }
         
+        body.dark-mode .btn-dark-mode {
+            background: #6a82fb;
+            color: #fff;
+        }
+        
+        body.dark-mode .btn-dark-mode:hover {
+            background: #5a6fd8;
+        }
+        
         body.dark-mode .pdf-viewer {
-            background: #232946;
+            background: #1a1f2e;
+        }
+        
+        body.dark-mode .pdf-iframe {
+            background: #1a1f2e;
+        }
+        
+        body.dark-mode .loading {
+            color: #b0b0b0;
+        }
+        
+        body.dark-mode .loading-spinner {
+            border-color: #2a2a3a;
+            border-top-color: #6a82fb;
+        }
+        
+        body.dark-mode .watermark {
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 100px,
+                rgba(106, 130, 251, 0.05) 100px,
+                rgba(106, 130, 251, 0.05) 200px
+            );
+        }
+        
+        body.dark-mode .watermark::before {
+            color: rgba(106, 130, 251, 0.15);
+        }
+        
+        /* Dark mode toggle icon */
+        .dark-mode-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        body.dark-mode .dark-mode-icon {
+            transform: rotate(180deg);
         }
         
         /* Mobile responsive */
@@ -235,6 +307,9 @@
             <h1>{{ title }}</h1>
             <div class="preview-controls">
                 <button class="btn btn-secondary" onclick="goBack()">← Back to Resources</button>
+                <button class="btn btn-dark-mode" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+                    <span class="dark-mode-icon">🌙</span>
+                </button>
                 <button class="btn btn-primary" onclick="toggleFullscreen()">Fullscreen</button>
             </div>
         </div>
@@ -257,8 +332,44 @@
 
     <script src="script.js"></script>
     <script>
+        // Dark mode functionality
+        function toggleDarkMode() {
+            const body = document.body;
+            const isDarkMode = body.classList.contains('dark-mode');
+            
+            if (isDarkMode) {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'false');
+                updateDarkModeIcon(false);
+            } else {
+                body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'true');
+                updateDarkModeIcon(true);
+            }
+        }
+        
+        function updateDarkModeIcon(isDark) {
+            const icon = document.querySelector('.dark-mode-icon');
+            if (isDark) {
+                icon.textContent = '☀️';
+            } else {
+                icon.textContent = '🌙';
+            }
+        }
+        
+        function initializeDarkMode() {
+            const savedDarkMode = localStorage.getItem('darkMode');
+            if (savedDarkMode === 'true') {
+                document.body.classList.add('dark-mode');
+                updateDarkModeIcon(true);
+            }
+        }
+        
         // Enhanced security features
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize dark mode
+            initializeDarkMode();
+            
             // Disable right-click
             document.addEventListener('contextmenu', function(e) {
                 e.preventDefault();
