@@ -7,12 +7,45 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="style.css">
     <style>
+        :root {
+            --bg-primary: #f4f6fb;
+            --bg-secondary: #fff;
+            --text-primary: #232946;
+            --text-secondary: #666;
+            --border-color: #e9ecef;
+            --shadow: rgba(0,0,0,0.1);
+            --accent-color: #6a82fb;
+            --accent-hover: #5a6fd8;
+            --btn-secondary-bg: #f1f3f5;
+            --btn-secondary-hover: #e9ecef;
+            --loading-bg: #f3f3f3;
+            --watermark-color: rgba(106, 130, 251, 0.1);
+            --watermark-bg: rgba(106, 130, 251, 0.03);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f1419;
+            --bg-secondary: #1a1d29;
+            --text-primary: #e8eaed;
+            --text-secondary: #9aa0a6;
+            --border-color: #3c4043;
+            --shadow: rgba(0,0,0,0.3);
+            --accent-color: #8ab4f8;
+            --accent-hover: #aecbfa;
+            --btn-secondary-bg: #2a2a3a;
+            --btn-secondary-hover: #3a3a4a;
+            --loading-bg: #3c4043;
+            --watermark-color: rgba(138, 180, 248, 0.15);
+            --watermark-bg: rgba(138, 180, 248, 0.05);
+        }
+
         body {
             margin: 0;
             padding: 0;
-            background: #f4f6fb;
+            background: var(--bg-primary);
             font-family: 'Inter', sans-serif;
             overflow: hidden;
+            transition: background-color 0.3s ease;
         }
         
         .preview-container {
@@ -26,20 +59,22 @@
         }
         
         .preview-header {
-            background: #fff;
+            background: var(--bg-secondary);
             padding: 1rem 2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px var(--shadow);
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
         
         .preview-header h1 {
             margin: 0;
-            color: #232946;
+            color: var(--text-primary);
             font-size: 1.5rem;
             font-weight: 600;
+            transition: color 0.3s ease;
         }
         
         .preview-controls {
@@ -60,35 +95,59 @@
         }
         
         .btn-primary {
-            background: #6a82fb;
+            background: var(--accent-color);
             color: #fff;
         }
         
         .btn-primary:hover {
-            background: #5a6fd8;
+            background: var(--accent-hover);
         }
         
         .btn-secondary {
-            background: #f1f3f5;
-            color: #232946;
+            background: var(--btn-secondary-bg);
+            color: var(--text-primary);
         }
         
         .btn-secondary:hover {
-            background: #e9ecef;
+            background: var(--btn-secondary-hover);
+        }
+
+        .theme-toggle {
+            background: var(--btn-secondary-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theme-toggle:hover {
+            background: var(--btn-secondary-hover);
+        }
+
+        .theme-toggle svg {
+            width: 16px;
+            height: 16px;
         }
         
         .pdf-viewer {
             flex: 1;
-            background: #fff;
+            background: var(--bg-secondary);
             position: relative;
             overflow: hidden;
+            transition: background-color 0.3s ease;
         }
         
         .pdf-iframe {
             width: 100%;
             height: 100%;
             border: none;
-            background: #fff;
+            background: var(--bg-secondary);
+            transition: background-color 0.3s ease;
         }
         
         .loading {
@@ -97,17 +156,19 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            color: #666;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
         }
         
         .loading-spinner {
             width: 40px;
             height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #6a82fb;
+            border: 4px solid var(--loading-bg);
+            border-top: 4px solid var(--accent-color);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 1rem;
+            transition: border-color 0.3s ease;
         }
         
         @keyframes spin {
@@ -143,9 +204,10 @@
                 45deg,
                 transparent,
                 transparent 100px,
-                rgba(106, 130, 251, 0.03) 100px,
-                rgba(106, 130, 251, 0.03) 200px
+                var(--watermark-bg) 100px,
+                var(--watermark-bg) 200px
             );
+            transition: background 0.3s ease;
         }
         
         .watermark::before {
@@ -156,36 +218,10 @@
             transform: translate(-50%, -50%) rotate(-45deg);
             font-size: 3rem;
             font-weight: bold;
-            color: rgba(106, 130, 251, 0.1);
+            color: var(--watermark-color);
             white-space: nowrap;
             pointer-events: none;
-        }
-        
-        /* Dark mode support */
-        body.dark-mode {
-            background: #181c2a;
-        }
-        
-        body.dark-mode .preview-header {
-            background: #232946;
-            color: #f4f4f4;
-        }
-        
-        body.dark-mode .preview-header h1 {
-            color: #f4f4f4;
-        }
-        
-        body.dark-mode .btn-secondary {
-            background: #2a2a3a;
-            color: #f4f4f4;
-        }
-        
-        body.dark-mode .btn-secondary:hover {
-            background: #3a3a4a;
-        }
-        
-        body.dark-mode .pdf-viewer {
-            background: #232946;
+            transition: color 0.3s ease;
         }
         
         /* Mobile responsive */
@@ -221,9 +257,27 @@
             z-index: 10000;
             background: transparent;
         }
+
+        /* Error styling */
+        .error-container {
+            color: #fc5c7d;
+            margin-bottom: 1rem;
+        }
+
+        .error-container svg {
+            color: #fc5c7d;
+        }
+
+        [data-theme="dark"] .error-container {
+            color: #f28b82;
+        }
+
+        [data-theme="dark"] .error-container svg {
+            color: #f28b82;
+        }
     </style>
 </head>
-<body>
+<body data-theme="light">
     <!-- Screenshot prevention overlay -->
     <div class="screenshot-prevention"></div>
     
@@ -234,6 +288,22 @@
         <div class="preview-header">
             <h1>{{ title }}</h1>
             <div class="preview-controls">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">
+                    <svg class="sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
                 <button class="btn btn-secondary" onclick="goBack()">← Back to Resources</button>
                 <button class="btn btn-primary" onclick="toggleFullscreen()">Fullscreen</button>
             </div>
@@ -257,8 +327,53 @@
 
     <script src="script.js"></script>
     <script>
+        // Theme management
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('pdf-preview-theme', newTheme);
+            
+            // Update theme toggle icons
+            const sunIcon = document.querySelector('.sun-icon');
+            const moonIcon = document.querySelector('.moon-icon');
+            
+            if (newTheme === 'dark') {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            } else {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            }
+        }
+
+        // Load saved theme preference
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('pdf-preview-theme');
+            if (savedTheme) {
+                document.body.setAttribute('data-theme', savedTheme);
+                
+                // Update theme toggle icons
+                const sunIcon = document.querySelector('.sun-icon');
+                const moonIcon = document.querySelector('.moon-icon');
+                
+                if (savedTheme === 'dark') {
+                    sunIcon.style.display = 'none';
+                    moonIcon.style.display = 'block';
+                } else {
+                    sunIcon.style.display = 'block';
+                    moonIcon.style.display = 'none';
+                }
+            }
+        }
+
         // Enhanced security features
         document.addEventListener('DOMContentLoaded', function() {
+            // Load theme preference
+            loadTheme();
+            
             // Disable right-click
             document.addEventListener('contextmenu', function(e) {
                 e.preventDefault();
@@ -351,7 +466,7 @@
         
         function showError() {
             document.getElementById('loading').innerHTML = `
-                <div style="color: #fc5c7d; margin-bottom: 1rem;">
+                <div class="error-container">
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="15" y1="9" x2="9" y2="15"></line>
