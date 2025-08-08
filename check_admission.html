@@ -6,6 +6,23 @@
   <title>Check Admission Status - Sunrise Educational Centre</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .cred-card { background:#fff; border-radius:16px; border:1px solid #e0e7ff; box-shadow:0 4px 16px rgba(100,100,255,0.08); }
+    .cred-form { display:grid; grid-template-columns:1fr; gap:0.8rem; }
+    .cred-label { font-weight:600; color:#232946; font-size:0.95rem; }
+    .cred-input { width:100%; padding:0.75rem 1rem; border:2px solid #e5e7eb; border-radius:12px; font-size:1rem; color:#232946; background:#fff; transition:all 0.25s ease; box-sizing:border-box; }
+    .cred-input:focus { outline:none; border-color:#6a82fb; box-shadow:0 0 0 3px rgba(106,130,251,0.12); }
+    .cred-actions { display:flex; gap:0.6rem; flex-wrap:wrap; }
+    .cred-info { background:#f8f9ff; border:1px solid #e0e7ff; border-radius:12px; padding:1rem; }
+    .cred-info code { background:#f1f5ff; color:#1f2937; padding:0.15rem 0.35rem; border-radius:6px; font-weight:700; }
+    @media (max-width: 540px) { .cred-actions .btn { width:100%; } }
+    body.dark-mode .cred-card { background:#232946; border-color:#444a6d; }
+    body.dark-mode .cred-label { color:#e2e8f0; }
+    body.dark-mode .cred-input { background:#181c2a; color:#f4f4f4; border-color:#444a6d; }
+    body.dark-mode .cred-input:focus { border-color:#6a82fb; box-shadow:0 0 0 3px rgba(106,130,251,0.22); }
+    body.dark-mode .cred-info { background:#232a48; border-color:#444a6d; }
+    body.dark-mode .cred-info code { background:#1f2a44; color:#e2e8f0; }
+  </style>
 </head>
 <body>
   <nav class="navbar glassmorphic">
@@ -23,27 +40,30 @@
     </div>
   </nav>
   <main class="container main-content" style="max-width: 760px;">
-    <div class="card animated-card" style="padding:1.5rem;">
+    <div class="card animated-card cred-card" style="padding:1.5rem;">
       <h2 style="text-align:center; margin-bottom:1rem;">Check Admission Status</h2>
       {% if from_submission %}
-      <div style="background:#f8f9ff; border:1px solid #e0e7ff; border-radius:12px; padding:1rem; margin-bottom:1rem;">
+      <div class="cred-info" style="margin-bottom:1rem;">
         <strong>Your Admission Portal Credentials</strong>
         <div style="margin-top:0.5rem;">Username: <code>{{ access_username }}</code></div>
         <div>Password: <code>{{ access_password }}</code></div>
         <div style="font-size:0.95rem; color:#666; margin-top:0.5rem;">Please copy and keep these safe. Use them below anytime to see your admission status.</div>
       </div>
       {% endif %}
-      <form method="POST" action="/check-admission" style="display:grid; gap:0.8rem;">
-        <label>Admission Portal Username</label>
-        <input name="access_username" required placeholder="e.g., ADM000123" class="query-input" value="{{ access_username or '' }}" />
-        <label>Admission Portal Password</label>
-        <input name="access_password" required type="password" placeholder="Your password" class="query-input" value="{{ access_password or '' }}" />
-        <button class="btn btn-primary" type="submit">Check Status</button>
+      <form method="POST" action="/check-admission" class="cred-form">
+        <label class="cred-label">Admission Portal Username</label>
+        <input name="access_username" required placeholder="e.g., ADM000123" class="cred-input" value="{{ access_username or '' }}" />
+        <label class="cred-label">Admission Portal Password</label>
+        <input name="access_password" required type="password" placeholder="Your password" class="cred-input" value="{{ access_password or '' }}" />
+        <div class="cred-actions" style="margin-top:0.2rem;">
+          <button class="btn btn-primary" type="submit">Check Status</button>
+          <a href="/admission" class="btn btn-secondary">Go to Admission Form</a>
+        </div>
       </form>
     </div>
 
     {% if result %}
-    <div class="card animated-card" style="padding:1.5rem; margin-top:1rem;">
+    <div class="card animated-card cred-card" style="padding:1.5rem; margin-top:1rem;">
       <h3>Status: <span style="color:#6a82fb;">{{ status|upper }}</span></h3>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:0.8rem;">
         <div>
