@@ -3267,6 +3267,64 @@ def api_admin_metrics_traffic():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
+@app.route('/api/admin/metrics/traffic/logs')
+def api_admin_metrics_logs():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+    try:
+        limit = int(request.args.get('limit', 200))
+        if limit < 1 or limit > 1000:
+            limit = 200
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        c.execute('''
+            SELECT l.ip, l.user_id, IFNULL(u.username,''), l.path, l.user_agent, l.visited_at
+            FROM ip_logs l
+            LEFT JOIN users u ON u.id = l.user_id
+            ORDER BY datetime(l.visited_at) DESC
+            LIMIT ?
+        ''', (limit,))
+        rows = c.fetchall()
+        conn.close()
+        data = [
+            {
+                'ip': r[0], 'user_id': r[1], 'username': r[2], 'path': r[3],
+                'user_agent': r[4], 'visited_at': r[5]
+            } for r in rows
+        ]
+        return jsonify({'success': True, 'data': data})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/admin/metrics/traffic/active')
+def api_admin_metrics_active():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+    try:
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        c.execute('''
+            SELECT ua.user_id, IFNULL(u.username,''), ua.ip, ua.last_seen
+            FROM user_activity ua
+            LEFT JOIN users u ON u.id = ua.user_id
+            WHERE ua.last_seen >= datetime('now','-10 minutes','localtime') AND ua.user_id IS NOT NULL
+            ORDER BY datetime(ua.last_seen) DESC
+        ''')
+        rows = c.fetchall()
+        conn.close()
+        data = [
+            {'user_id': r[0], 'username': r[1], 'ip': r[2], 'last_seen': r[3]} for r in rows
+        ]
+        return jsonify({'success': True, 'data': data})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/user')
+def user_dashboard():
+    if not session.get('user_id'):
+        return redirect(url_for('auth'))
+    return render_template('user.html')
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     
