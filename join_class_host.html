@@ -15,8 +15,8 @@
     .back-link { color: #6a82fb; text-decoration: none; font-weight: 500; }
     .back-link:hover { text-decoration: underline; }
     
-    .tab-container { display: flex; margin-bottom: 1rem; border-bottom: 2px solid #e0e7ff; }
-    .tab-btn { flex: 1; padding: 0.8rem; background: none; border: none; cursor: pointer; font-weight: 500; color: #666; transition: all 0.2s; }
+    .tab-container { display: flex; margin-bottom: 1rem; border-bottom: 2px solid #e0e7ff; justify-content: flex-end; gap: 0.5rem; }
+    .tab-btn { padding: 0.8rem; background: none; border: none; cursor: pointer; font-weight: 500; color: #666; transition: all 0.2s; }
     .tab-btn.active { color: #6a82fb; border-bottom: 2px solid #6a82fb; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
@@ -137,6 +137,8 @@
     body.dark-mode .tab-container {
       border-bottom-color: #3a3a4a;
     }
+    .live-watch-container { width: 100%; max-width: 680px; background: #fff; border: 1px solid #e0e7ff; border-radius: 12px; box-shadow: 0 6px 24px rgba(100,100,255,0.12); padding: 0.8rem; margin-bottom: 1.5rem; }
+    body.dark-mode .live-watch-container { background: #232946; border-color: #3a3a4a; box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
   </style>
 </head>
 <body>
@@ -145,6 +147,7 @@
       <h3 style="color:#6a82fb; margin-bottom:1rem;">Live Class (Host View)</h3>
       <video id="remoteVideo" class="video-player" autoplay playsinline style="margin-bottom:1rem;"></video>
       <div id="viewerStatus" style="margin-bottom:1rem; color:#6a82fb;"></div>
+      <div class="live-watch-container">
       {% set is_youtube = 'youtube.com' in meeting_url or 'youtu.be' in meeting_url %}
       {% if is_youtube %}
         {% set youtube_id = None %}
@@ -164,6 +167,7 @@
           Your browser does not support the video tag.
         </video>
       {% endif %}
+      </div>
       <div class="class-info">
         <h2 class="class-title">{{ topic or 'Live Class' }}</h2>
         <p class="class-description">{{ description or '' }}</p>
@@ -176,7 +180,7 @@
         <button class="tab-btn" onclick="showTab('polls')">Polls</button>
         <button class="tab-btn" onclick="showTab('doubts')">Doubts</button>
         <button class="tab-btn" onclick="showTab('controls')">Controls</button>
-        <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px; margin-left: auto;">Toggle Dark Mode</button>
+        <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
       </div>
       
       <!-- Chat Tab -->
