@@ -1761,3 +1761,56 @@ body.dark-mode q {
 body.dark-mode q::before, body.dark-mode q::after {
   color: #6a82fb !important;
 }
+
+/* === Phone-only full-width adjustments (keeps desktop unchanged) === */
+@media (max-width: 480px) {
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Ensure sections fit the viewport width on phones */
+  .container,
+  .main-content {
+    width: 100%;
+    max-width: 100vw;
+    margin: 0 auto;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  section,
+  .card-section,
+  .subscribe-section,
+  .contact-section,
+  .footer,
+  .hero-section {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+
+  /* Single-column cards on phones */
+  .card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem;
+  }
+
+  /* Make media scale within the viewport */
+  img,
+  video,
+  iframe {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Prevent nav wrapping issues while keeping scrollable behavior */
+  .nav-content {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .nav-links {
+    gap: 0.5rem;
+  }
+}
