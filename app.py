@@ -1210,21 +1210,31 @@ def admin_create_user_page():
     ''')
     disapproved_admissions = c.fetchall()
     
+    # Map admission_id -> (access_username, access_password)
+    admission_ids = [a[0] for a in admissions]
+    admission_access_map = {}
+    if admission_ids:
+        placeholders = ','.join('?' for _ in admission_ids)
+        c.execute(f'''SELECT admission_id, access_username, access_password 
+                      FROM admission_access WHERE admission_id IN ({placeholders})''', admission_ids)
+        for row in c.fetchall():
+            admission_access_map[row[0]] = (row[1], row[2])
     conn.close()
     
     # Calculate admission statistics
     pending_admissions = sum(1 for admission in admissions if admission[13] == 'pending')
     
     return render_template('admin_create_user.html', 
-                         all_classes=all_classes,
-                         users=users,
-                         paid_users=paid_users,
-                         unpaid_users=unpaid_users,
-                         admin_users=admin_users,
-                         admissions=admissions,
-                         pending_admissions=pending_admissions,
-                         approved_admissions=approved_admissions,
-                         disapproved_admissions=disapproved_admissions)
+                           all_classes=all_classes,
+                           users=users,
+                           paid_users=paid_users,
+                           unpaid_users=unpaid_users,
+                           admin_users=admin_users,
+                           admissions=admissions,
+                           admission_access_map=admission_access_map,
+                           pending_admissions=pending_admissions,
+                           approved_admissions=approved_admissions,
+                           disapproved_admissions=disapproved_admissions)
 
 @app.route('/admin/create-user', methods=['POST'])
 def admin_create_user_submit():

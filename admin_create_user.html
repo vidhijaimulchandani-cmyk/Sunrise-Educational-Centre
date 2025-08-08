@@ -586,6 +586,8 @@
                 <th>Parent Phone</th>
                 <th>Photo</th>
                 <th>Submit IP</th>
+                <th>Admission Username</th>
+                <th>Admission Password</th>
                 <th>Status</th>
                 <th>Applied Date</th>
                 <th>Actions</th>
@@ -615,6 +617,8 @@
                   {% endif %}
                 </td>
                 <td>{{ admission[15] or '-' }}</td>
+                <td>{{ (admission_access_map.get(admission[0]) or ['', ''])[0] }}</td>
+                <td>{{ (admission_access_map.get(admission[0]) or ['', ''])[1] }}</td>
                 <td>
                   <span class="status-badge 
                     {% if admission[13] == 'pending' %}status-pending
