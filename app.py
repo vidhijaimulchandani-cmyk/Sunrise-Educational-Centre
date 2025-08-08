@@ -166,6 +166,14 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def admin_api_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get('role') != 'admin':
+            return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+        return f(*args, **kwargs)
+    return decorated_function
+
 app.secret_key = 'your_secret_key_here'  # Change this to a secure random value in production
 
 # Register blueprints
@@ -179,18 +187,81 @@ if not os.path.exists(UPLOAD_FOLDER):
 init_db()
 
 # --- Queries DB Setup ---
-DB_PATH = 'queries.db'
 def init_queries_db():
-    with sqlite3.connect(DB_PATH) as conn:
+    try:
+        conn = sqlite3.connect('users.db')
         c = conn.cursor()
         c.execute('''CREATE TABLE IF NOT EXISTS queries (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             email TEXT NOT NULL,
             message TEXT NOT NULL,
-            submitted_at TEXT NOT NULL
+            submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            phone TEXT,
+            subject TEXT,
+            priority TEXT DEFAULT 'normal',
+            status TEXT DEFAULT 'pending',
+            assigned_to TEXT,
+            response TEXT,
+            responded_at TIMESTAMP,
+            responded_by TEXT,
+            category TEXT DEFAULT 'general',
+            source TEXT DEFAULT 'website'
         )''')
+        # Ensure all columns exist (for older tables)
+        c.execute("PRAGMA table_info(queries)")
+        existing_cols = {row[1] for row in c.fetchall()}
+        required_cols = {
+            'phone': "ALTER TABLE queries ADD COLUMN phone TEXT",
+            'subject': "ALTER TABLE queries ADD COLUMN subject TEXT",
+            'priority': "ALTER TABLE queries ADD COLUMN priority TEXT DEFAULT 'normal'",
+            'status': "ALTER TABLE queries ADD COLUMN status TEXT DEFAULT 'pending'",
+            'assigned_to': "ALTER TABLE queries ADD COLUMN assigned_to TEXT",
+            'response': "ALTER TABLE queries ADD COLUMN response TEXT",
+            'responded_at': "ALTER TABLE queries ADD COLUMN responded_at TIMESTAMP",
+            'responded_by': "ALTER TABLE queries ADD COLUMN responded_by TEXT",
+            'category': "ALTER TABLE queries ADD COLUMN category TEXT DEFAULT 'general'",
+            'source': "ALTER TABLE queries ADD COLUMN source TEXT DEFAULT 'website'",
+        }
+        for col, alter in required_cols.items():
+            if col not in existing_cols:
+                try:
+                    c.execute(alter)
+                except sqlite3.OperationalError:
+                    pass
+        # Indexes
+        c.execute("CREATE INDEX IF NOT EXISTS idx_queries_status ON queries(status)")
+        c.execute("CREATE INDEX IF NOT EXISTS idx_queries_priority ON queries(priority)")
+        c.execute("CREATE INDEX IF NOT EXISTS idx_queries_submitted_at ON queries(submitted_at)")
+        c.execute("CREATE INDEX IF NOT EXISTS idx_queries_category ON queries(category)")
+        # Migrate from legacy queries.db if present
+        try:
+            legacy_path = 'queries.db'
+            if os.path.exists(legacy_path):
+                try:
+                    legacy_conn = sqlite3.connect(legacy_path)
+                    legacy_c = legacy_conn.cursor()
+                    legacy_c.execute("SELECT name, email, message, submitted_at FROM queries")
+                    rows = legacy_c.fetchall()
+                    for r in rows:
+                        c.execute(
+                            "INSERT INTO queries (name, email, message, submitted_at) VALUES (?, ?, ?, ?)",
+                            (r[0], r[1], r[2], r[3])
+                        )
+                    legacy_conn.close()
+                    # Backup legacy file
+                    backup_name = f"users_backup_legacy_queries_{datetime.now().strftime('%Y%m%d_%H%M%S')}.db"
+                    try:
+                        os.rename(legacy_path, backup_name)
+                    except Exception:
+                        pass
+                except Exception:
+                    pass
+        except Exception:
+            pass
         conn.commit()
+    finally:
+        conn.close()
 init_queries_db()
 
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
@@ -234,7 +305,7 @@ def inject_global_variables():
 # Route for the main page
 @app.route('/')
 def home():
-    with sqlite3.connect(DB_PATH) as conn:
+    with sqlite3.connect('users.db') as conn:
         c = conn.cursor()
         c.execute('SELECT name, email, message, submitted_at FROM queries ORDER BY id DESC LIMIT 10')
         queries = c.fetchall()
@@ -1761,7 +1832,7 @@ def submit_query():
     email = request.form.get('email')
     message = request.form.get('message')
     submitted_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    with sqlite3.connect(DB_PATH) as conn:
+    with sqlite3.connect('users.db') as conn:
         c = conn.cursor()
         c.execute('INSERT INTO queries (name, email, message, submitted_at) VALUES (?, ?, ?, ?)',
                   (name, email, message, submitted_at))
@@ -2885,6 +2956,7 @@ def edit_profile():
 
 # Query Management Routes
 @app.route('/api/queries', methods=['GET'])
+@admin_api_required
 def api_get_queries():
     """API endpoint to get queries with filtering and pagination"""
     try:
@@ -2975,6 +3047,7 @@ def api_get_queries():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/queries/<int:query_id>/respond', methods=['POST'])
+@admin_api_required
 def api_respond_to_query(query_id):
     """API endpoint to respond to a query"""
     try:
@@ -3005,6 +3078,7 @@ def api_respond_to_query(query_id):
         return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/api/queries/<int:query_id>/status', methods=['POST'])
+@admin_api_required
 def api_update_query_status(query_id):
     """API endpoint to update query status"""
     try:
@@ -3027,6 +3101,7 @@ def api_update_query_status(query_id):
         return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/api/queries/<int:query_id>', methods=['DELETE'])
+@admin_api_required
 def api_delete_query(query_id):
     """API endpoint to delete a query"""
     try:
@@ -3043,6 +3118,7 @@ def api_delete_query(query_id):
         return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/api/queries/export')
+@admin_api_required
 def api_export_queries():
     """API endpoint to export queries as CSV"""
     try:

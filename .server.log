@@ -1,0 +1,5 @@
+INFO:bulk_upload.bulk_upload_handler:'queries' table ensured in database.
+INFO:werkzeug: * Restarting with stat
+INFO:bulk_upload.bulk_upload_handler:'queries' table ensured in database.
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 827-043-666
