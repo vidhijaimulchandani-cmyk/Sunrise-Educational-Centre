@@ -279,29 +279,49 @@
         <button class="fame-arrow fame-arrow-left" onclick="slideFame(-1)">&#8592;</button>
         <div class="fame-slider" id="fameSlider">
           <div class="fame-card">
-            <img src="img/yash.jpg" alt="Topper 1" class="fame-img">
-            <div class="fame-name">Yash Sharma</div>
-            <div class="fame-desc">Class 10 Topper<br>98.6% CBSE</div>
+            <div class="fame-image-wrapper">
+              <img src="img/yash.jpg" alt="Yash Sharma" class="fame-photo">
+              <div class="fame-overlay">
+                <div class="fame-name">Yash Sharma</div>
+                <div class="fame-meta"><span>98.6%</span><span>Class 10 (CBSE)</span><span>2024</span></div>
+              </div>
+            </div>
           </div>
           <div class="fame-card">
-            <img src="img/IMG-20250706-WA0000.jpg" alt="Topper 2" class="fame-img">
-            <div class="fame-name">Priya Singh</div>
-            <div class="fame-desc">Class 12 Science<br>97.2% CBSE</div>
+            <div class="fame-image-wrapper">
+              <img src="img/IMG-20250706-WA0000.jpg" alt="Priya Singh" class="fame-photo">
+              <div class="fame-overlay">
+                <div class="fame-name">Priya Singh</div>
+                <div class="fame-meta"><span>97.2%</span><span>Class 12 Science</span><span>2024</span></div>
+              </div>
+            </div>
           </div>
           <div class="fame-card">
-            <img src="img/yash.jpg" alt="Topper 3" class="fame-img">
-            <div class="fame-name">Aman Verma</div>
-            <div class="fame-desc">Class 11 JEE<br>99.1 Percentile</div>
+            <div class="fame-image-wrapper">
+              <img src="img/yash.jpg" alt="Aman Verma" class="fame-photo">
+              <div class="fame-overlay">
+                <div class="fame-name">Aman Verma</div>
+                <div class="fame-meta"><span>99.1 Percentile</span><span>Class 11 (JEE)</span><span>2024</span></div>
+              </div>
+            </div>
           </div>
           <div class="fame-card">
-            <img src="img/IMG-20250706-WA0000.jpg" alt="Topper 4" class="fame-img">
-            <div class="fame-name">Simran Kaur</div>
-            <div class="fame-desc">Class 9 Olympiad<br>Gold Medalist</div>
+            <div class="fame-image-wrapper">
+              <img src="img/IMG-20250706-WA0000.jpg" alt="Simran Kaur" class="fame-photo">
+              <div class="fame-overlay">
+                <div class="fame-name">Simran Kaur</div>
+                <div class="fame-meta"><span>—</span><span>Class 9 (Olympiad)</span><span>2024</span></div>
+              </div>
+            </div>
           </div>
           <div class="fame-card">
-            <img src="img/yash.jpg" alt="Topper 5" class="fame-img">
-            <div class="fame-name">Rahul Mehra</div>
-            <div class="fame-desc">Class 12 Commerce<br>96.8% CBSE</div>
+            <div class="fame-image-wrapper">
+              <img src="img/yash.jpg" alt="Rahul Mehra" class="fame-photo">
+              <div class="fame-overlay">
+                <div class="fame-name">Rahul Mehra</div>
+                <div class="fame-meta"><span>96.8%</span><span>Class 12 Commerce</span><span>2024</span></div>
+              </div>
+            </div>
           </div>
         </div>
         <button class="fame-arrow fame-arrow-right" onclick="slideFame(1)">&#8594;</button>
@@ -335,23 +355,36 @@
           scroll-snap-align: center;
           transition: box-shadow 0.2s, background 0.2s;
         }
-        .fame-img {
-          width: 80px;
-          height: 80px;
+        .fame-image-wrapper { position: relative; }
+        .fame-photo {
+          width: 100%;
+          height: 240px;
           object-fit: cover;
-          border-radius: 50%;
-          margin-bottom: 1rem;
-          border: 3px solid #6a82fb;
+          border-radius: 14px;
         }
-        .fame-name {
-          font-size: 1.15rem;
-          font-weight: 700;
-          color: #232946;
-          margin-bottom: 0.5rem;
+        .fame-overlay {
+          position: absolute;
+          left: 10px;
+          right: 10px;
+          bottom: 10px;
+          background: rgba(35,41,70,0.85);
+          color: #ffffff;
+          padding: 0.6rem 0.8rem;
+          border-radius: 10px;
+          text-align: left;
         }
-        .fame-desc {
+        .fame-overlay .fame-name {
           font-size: 1rem;
-          color: #6a82fb;
+          font-weight: 700;
+          color: #ffffff;
+          margin: 0 0 0.25rem 0;
+        }
+        .fame-meta {
+          display: flex;
+          gap: 0.6rem;
+          flex-wrap: wrap;
+          font-size: 0.85rem;
+          opacity: 0.9;
         }
         .fame-arrow {
           background: #6a82fb;
@@ -373,6 +406,7 @@
         @media (max-width: 700px) {
           .fame-slider { gap: 1rem; }
           .fame-card { min-width: 170px; max-width: 170px; padding: 1rem 0.7rem; }
+          .fame-photo { height: 200px; }
         }
         body.dark-mode .fame-card {
           background: #232946;
@@ -381,8 +415,9 @@
           border: 2px solid #6a82fb;
           margin-right: 8px;
         }
+        body.dark-mode .fame-overlay { background: rgba(0,0,0,0.68); }
         body.dark-mode .fame-name { color: #fff; }
-        body.dark-mode .fame-desc { color: #6a82fb; }
+        body.dark-mode .fame-meta { color: #aabfff; }
         body.dark-mode .fame-slider { gap: 2.5rem; }
       </style>
       <script>
