@@ -1290,6 +1290,21 @@ def admin_create_user_page():
                       FROM admission_access WHERE admission_id IN ({placeholders})''', admission_ids)
         for row in c.fetchall():
             admission_access_map[row[0]] = (row[1], row[2])
+
+    # Ensure every pending admission has credentials; auto-generate if missing
+    import secrets
+    for adm in admissions:
+        adm_id = adm[0]
+        if adm_id not in admission_access_map:
+            access_username = f"ADM{adm_id:06d}"
+            access_password = secrets.token_hex(4)
+            try:
+                c.execute('''INSERT OR IGNORE INTO admission_access (admission_id, access_username, access_password)
+                             VALUES (?, ?, ?)''', (adm_id, access_username, access_password))
+                admission_access_map[adm_id] = (access_username, access_password)
+            except Exception:
+                pass
+    conn.commit()
     conn.close()
     
     # Calculate admission statistics
@@ -1987,6 +2002,17 @@ def admission():
             user_id,
             ((request.headers.get('X-Forwarded-For','').split(',')[0].strip()) or request.remote_addr or 'unknown')
         ))
+        # Generate admission portal credentials immediately
+        new_admission_id = c.lastrowid
+        try:
+            access_username = f"ADM{new_admission_id:06d}"
+            import secrets
+            access_password = secrets.token_hex(4)
+            c.execute('''INSERT OR IGNORE INTO admission_access (admission_id, access_username, access_password)
+                         VALUES (?, ?, ?)''', (new_admission_id, access_username, access_password))
+        except Exception as _e:
+            # Non-fatal: continue even if credential generation fails
+            pass
         conn.commit()
         print('Admission saved successfully!')
         conn.close()
