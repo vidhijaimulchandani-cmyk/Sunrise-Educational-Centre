@@ -3579,6 +3579,24 @@ def api_admin_metrics_last_seen():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
+# Favicon and app icons
+@app.route('/favicon.ico')
+def favicon():
+    try:
+        return send_from_directory('attached_assets', 'image_1750584670920.png', mimetype='image/png')
+    except Exception:
+        # Fallback: return 204 if asset missing
+        from flask import Response
+        return Response(status=204)
+
+@app.route('/apple-touch-icon.png')
+def apple_touch_icon():
+    try:
+        return send_from_directory('attached_assets', 'image_1750584670920.png', mimetype='image/png')
+    except Exception:
+        from flask import Response
+        return Response(status=204)
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     
