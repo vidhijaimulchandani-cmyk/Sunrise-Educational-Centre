@@ -121,10 +121,27 @@ def init_tracking_tables():
     except Exception as e:
         print(f"Error initializing tracking tables: {e}")
 
+def init_admission_access_table():
+    try:
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        c.execute('''CREATE TABLE IF NOT EXISTS admission_access (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            admission_id INTEGER NOT NULL,
+            access_username TEXT UNIQUE NOT NULL,
+            access_password TEXT NOT NULL,
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        )''')
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Error initializing admission access table: {e}")
+
 # Call setup_db when the app starts
 with app.app_context():
     setup_db()
     init_tracking_tables()
+    init_admission_access_table()
 
 def admin_required(f):
     @wraps(f)
@@ -1728,7 +1745,7 @@ def submit_query():
 
 @app.before_request
 def require_login():
-    allowed_routes = ['home', 'auth', 'register', 'static_files', 'submit_admission', 'admission', 'check_admission_status']
+    allowed_routes = ['home', 'auth', 'register', 'static_files', 'submit_admission', 'admission', 'check_admission_status', 'check_admission']
     if request.endpoint not in allowed_routes and not session.get('user_id'):
         return redirect(url_for('auth'))
 
@@ -1807,7 +1824,6 @@ def admission():
     
     # Handle POST request (admission form submission)
     print('--- Admission form submitted ---')
-    print('--- Admission form submitted ---')
     # Handle admission form submission
     required_fields = [
         'student_name', 'dob', 'student_phone', 'student_email', 'class',
@@ -1884,6 +1900,79 @@ def admission():
         flash(f'Error saving admission: {e}', 'error')
     return redirect(url_for('home'))
 
+# Public admission check page (no login)
+@app.route('/check-admission', methods=['GET', 'POST'])
+def check_admission():
+    if request.method == 'GET':
+        return render_template('check_admission.html')
+    # POST: verify admission portal credentials and show status
+    access_username = request.form.get('access_username', '').strip()
+    access_password = request.form.get('access_password', '').strip()
+    if not access_username or not access_password:
+        flash('Please enter both username and password', 'error')
+        return render_template('check_admission.html')
+    try:
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        c.execute('SELECT admission_id FROM admission_access WHERE access_username=? AND access_password=?',
+                  (access_username, access_password))
+        row = c.fetchone()
+        if not row:
+            conn.close()
+            flash('Invalid credentials. Please check and try again.', 'error')
+            return render_template('check_admission.html')
+        admission_id = row[0]
+        # Determine status by checking tables
+        # 1) pending admissions
+        c.execute('''SELECT student_name, class, school_name, status, submitted_at FROM admissions WHERE id = ?''', (admission_id,))
+        adm = c.fetchone()
+        status = None
+        details = {}
+        if adm:
+            status = adm[3]
+            details = {
+                'student_name': adm[0],
+                'class': adm[1],
+                'school_name': adm[2],
+                'submitted_at': adm[4]
+            }
+        else:
+            # 2) approved
+            c.execute('''SELECT student_name, class, school_name, approved_at FROM approved_admissions WHERE original_admission_id = ?''', (admission_id,))
+            apr = c.fetchone()
+            if apr:
+                status = 'approved'
+                details = {
+                    'student_name': apr[0],
+                    'class': apr[1],
+                    'school_name': apr[2],
+                    'submitted_at': apr[3]
+                }
+            else:
+                # 3) disapproved
+                c.execute('''SELECT student_name, class, school_name, disapproved_at FROM disapproved_admissions WHERE original_admission_id = ?''', (admission_id,))
+                dis = c.fetchone()
+                if dis:
+                    status = 'disapproved'
+                    details = {
+                        'student_name': dis[0],
+                        'class': dis[1],
+                        'school_name': dis[2],
+                        'submitted_at': dis[3]
+                    }
+        conn.close()
+        # Determine paid/unpaid mapping for display
+        paid_status = 'paid' if status == 'approved' else 'not paid'
+        return render_template('check_admission.html',
+                               result=True,
+                               status=status or 'pending',
+                               paid_status=paid_status,
+                               details=details,
+                               access_username=access_username,
+                               access_password=access_password)
+    except Exception as e:
+        flash(f'Error checking admission: {str(e)}', 'error')
+        return render_template('check_admission.html')
 
 @app.route('/live-class-management')
 def live_class_management():

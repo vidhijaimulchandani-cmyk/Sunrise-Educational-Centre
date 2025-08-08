@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Check Admission Status - Sunrise Educational Centre</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="navbar glassmorphic">
+    <div class="container nav-content">
+      <div class="nav-logo">
+        <img src="attached_assets/image_1750584670920.png" alt="Logo">
+      </div>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/admission">Admission</a></li>
+        <li><a href="/study-resources">Study Resources</a></li>
+        <li><a href="/forum">Forum</a></li>
+        <li><a href="/online-class">Live Class</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main class="container main-content" style="max-width: 760px;">
+    <div class="card animated-card" style="padding:1.5rem;">
+      <h2 style="text-align:center; margin-bottom:1rem;">Check Admission Status</h2>
+      {% if from_submission %}
+      <div style="background:#f8f9ff; border:1px solid #e0e7ff; border-radius:12px; padding:1rem; margin-bottom:1rem;">
+        <strong>Your Admission Portal Credentials</strong>
+        <div style="margin-top:0.5rem;">Username: <code>{{ access_username }}</code></div>
+        <div>Password: <code>{{ access_password }}</code></div>
+        <div style="font-size:0.95rem; color:#666; margin-top:0.5rem;">Please copy and keep these safe. Use them below anytime to see your admission status.</div>
+      </div>
+      {% endif %}
+      <form method="POST" action="/check-admission" style="display:grid; gap:0.8rem;">
+        <label>Admission Portal Username</label>
+        <input name="access_username" required placeholder="e.g., ADM000123" class="query-input" value="{{ access_username or '' }}" />
+        <label>Admission Portal Password</label>
+        <input name="access_password" required type="password" placeholder="Your password" class="query-input" value="{{ access_password or '' }}" />
+        <button class="btn btn-primary" type="submit">Check Status</button>
+      </form>
+    </div>
+
+    {% if result %}
+    <div class="card animated-card" style="padding:1.5rem; margin-top:1rem;">
+      <h3>Status: <span style="color:#6a82fb;">{{ status|upper }}</span></h3>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:0.8rem;">
+        <div>
+          <div><strong>Student Name</strong></div>
+          <div>{{ details.student_name }}</div>
+        </div>
+        <div>
+          <div><strong>Class</strong></div>
+          <div>{{ details.class }}</div>
+        </div>
+        <div>
+          <div><strong>School</strong></div>
+          <div>{{ details.school_name }}</div>
+        </div>
+        <div>
+          <div><strong>Submitted</strong></div>
+          <div>{{ details.submitted_at }}</div>
+        </div>
+        <div>
+          <div><strong>Paid Status</strong></div>
+          <div>{{ paid_status|title }}</div>
+        </div>
+      </div>
+      <div style="margin-top:1rem;">
+        <a href="/auth" class="btn btn-primary">Proceed to Login</a>
+      </div>
+    </div>
+    {% endif %}
+  </main>
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-social">
+        <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">Instagram</a>
+        <a href="https://www.youtube.com/@MohitNariyani" target="_blank">YouTube</a>
+      </div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Contact Us</a>
+      </div>
+      <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
