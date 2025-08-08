@@ -484,6 +484,7 @@
                   <th>ID</th>
                   <th>Username</th>
                   <th>Role</th>
+                  <th>Last Online</th>
                   <th>Paid Status</th>
                   <th>Contact Info</th>
                   <th>Actions</th>
@@ -491,10 +492,11 @@
               </thead>
               <tbody id="usersTableBody">
                 {% for id, username, name, paid, mobile_no, email_address in users %}
-                <tr data-username="{{ username }}" data-role="{{ name|lower }}" data-paid="{{ paid }}">
+                <tr data-username="{{ username }}" data-role="{{ name|lower }}" data-paid="{{ paid }}" data-userid="{{ id }}">
                   <td>{{ id }}</td>
                   <td><strong>{{ username }}</strong></td>
                   <td>{{ name|title }}</td>
+                  <td id="lastSeen-{{ id }}" style="white-space:nowrap; color:#6b7280;">—</td>
                   <td>
                     <span class="status-badge {% if paid == 'paid' %}status-paid{% else %}status-unpaid{% endif %}">
                       {{ "Paid" if paid == 'paid' else "Unpaid" }}
@@ -946,6 +948,41 @@
       fetchActiveUsers();
       fetchIpLogs();
     }
+
+    // Last online column
+    function timeAgo(ts){
+      if(!ts) return '—';
+      // ts expected in '%Y-%m-%d %H:%M:%S'
+      const parsed = new Date(ts.replace(' ', 'T'));
+      if(isNaN(parsed)) return ts;
+      const diffMs = Date.now() - parsed.getTime();
+      const min = Math.floor(diffMs/60000);
+      if(min < 10) return 'Online';
+      if(min < 60) return `${min} min ago`;
+      const hr = Math.floor(min/60);
+      if(hr < 24) return `${hr} hr ago`;
+      const day = Math.floor(hr/24);
+      return `${day} d ago`;
+    }
+    async function refreshLastOnline(){
+      const rows = Array.from(document.querySelectorAll('#usersTableBody tr'));
+      if(rows.length === 0) return;
+      const ids = rows.map(r => r.getAttribute('data-userid')).filter(Boolean);
+      try {
+        const res = await fetch(`/api/admin/metrics/traffic/last_seen?user_ids=${encodeURIComponent(ids.join(','))}`);
+        const json = await res.json();
+        if(json && json.success){
+          const map = json.data || {};
+          ids.forEach(id => {
+            const cell = document.getElementById(`lastSeen-${id}`);
+            if(!cell) return;
+            const ts = map[id] || null;
+            cell.textContent = timeAgo(ts);
+            cell.style.color = ts && timeAgo(ts)==='Online' ? '#10b981' : '#6b7280';
+          });
+        }
+      } catch(e){ console.error('Last online fetch error', e); }
+    }
     
     function deleteUser(userId) {
       if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
@@ -1169,6 +1206,8 @@
     document.addEventListener('DOMContentLoaded', function(){
       fetchTrafficSummary();
       setInterval(fetchTrafficSummary, 30000);
+      refreshLastOnline();
+      setInterval(refreshLastOnline, 60000);
     });
   </script>
   <script src="script.js"></script>

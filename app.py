@@ -3417,6 +3417,29 @@ def user_dashboard():
         return redirect(url_for('auth'))
     return render_template('user.html')
 
+@app.route('/api/admin/metrics/traffic/last_seen')
+def api_admin_metrics_last_seen():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+    try:
+        user_ids_param = request.args.get('user_ids', '').strip()
+        ids = []
+        if user_ids_param:
+            ids = [i for i in (p.strip() for p in user_ids_param.split(',')) if i.isdigit()]
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        if ids:
+            placeholders = ','.join('?' for _ in ids)
+            c.execute(f"SELECT user_id, last_seen FROM user_activity WHERE user_id IN ({placeholders})", ids)
+        else:
+            c.execute("SELECT user_id, last_seen FROM user_activity")
+        rows = c.fetchall()
+        conn.close()
+        data = {str(r[0]): r[1] for r in rows if r and r[0] is not None}
+        return jsonify({'success': True, 'data': data})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     
