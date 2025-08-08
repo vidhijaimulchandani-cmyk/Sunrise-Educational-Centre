@@ -98,9 +98,33 @@ def init_poll_and_doubt_tables():
 def setup_db():
     init_poll_and_doubt_tables()
 
+# Initialize IP tracking tables
+def init_tracking_tables():
+    try:
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        c.execute('''CREATE TABLE IF NOT EXISTS ip_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ip TEXT,
+            user_id INTEGER,
+            path TEXT,
+            user_agent TEXT,
+            visited_at TEXT
+        )''')
+        c.execute('''CREATE TABLE IF NOT EXISTS user_activity (
+            user_id INTEGER PRIMARY KEY,
+            ip TEXT,
+            last_seen TEXT
+        )''')
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Error initializing tracking tables: {e}")
+
 # Call setup_db when the app starts
 with app.app_context():
     setup_db()
+    init_tracking_tables()
 
 def admin_required(f):
     @wraps(f)
@@ -3169,6 +3193,79 @@ def api_get_categories_for_class(class_id):
         
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
+
+@app.before_request
+def track_ip_activity():
+    try:
+        # Determine client IP (respect X-Forwarded-For if present)
+        xff = request.headers.get('X-Forwarded-For', '')
+        ip = (xff.split(',')[0].strip() if xff else request.remote_addr) or 'unknown'
+        user_id = session.get('user_id')
+        path = request.path
+        ua = request.headers.get('User-Agent', '')[:300]
+        now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        # Ensure tables exist (in case of reload)
+        c.execute('''CREATE TABLE IF NOT EXISTS ip_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ip TEXT,
+            user_id INTEGER,
+            path TEXT,
+            user_agent TEXT,
+            visited_at TEXT
+        )''')
+        c.execute('''CREATE TABLE IF NOT EXISTS user_activity (
+            user_id INTEGER PRIMARY KEY,
+            ip TEXT,
+            last_seen TEXT
+        )''')
+        # Insert IP log
+        c.execute('INSERT INTO ip_logs (ip, user_id, path, user_agent, visited_at) VALUES (?, ?, ?, ?, ?)',
+                  (ip, user_id, path, ua, now_str))
+        # Update user activity if logged in
+        if user_id:
+            c.execute('INSERT INTO user_activity (user_id, ip, last_seen) VALUES (?, ?, ?)
+                      ON CONFLICT(user_id) DO UPDATE SET ip=excluded.ip, last_seen=excluded.last_seen',
+                      (user_id, ip, now_str))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        # Fail silently to not block requests
+        print(f"IP tracking error: {e}")
+
+@app.route('/api/admin/metrics/traffic')
+def api_admin_metrics_traffic():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+    try:
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        # Total unique IPs (all time)
+        c.execute('SELECT COUNT(DISTINCT ip) FROM ip_logs')
+        total_unique_ips = c.fetchone()[0] or 0
+        # Unique IPs today (local time)
+        c.execute("SELECT COUNT(DISTINCT ip) FROM ip_logs WHERE date(visited_at) = date('now','localtime')")
+        unique_ips_today = c.fetchone()[0] or 0
+        # Active IPs in last 10 minutes
+        c.execute("SELECT COUNT(DISTINCT ip) FROM ip_logs WHERE visited_at >= datetime('now','-10 minutes','localtime')")
+        active_ips_now = c.fetchone()[0] or 0
+        # Active logged-in users in last 10 minutes
+        c.execute("SELECT COUNT(*) FROM user_activity WHERE last_seen >= datetime('now','-10 minutes','localtime') AND user_id IS NOT NULL")
+        active_logged_in_users = c.fetchone()[0] or 0
+        conn.close()
+        return jsonify({
+            'success': True,
+            'data': {
+                'total_unique_ips': total_unique_ips,
+                'unique_ips_today': unique_ips_today,
+                'active_ips_now': active_ips_now,
+                'active_logged_in_users': active_logged_in_users
+            }
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
