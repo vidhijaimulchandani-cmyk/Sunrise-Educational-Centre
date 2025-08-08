@@ -137,11 +137,26 @@ def init_admission_access_table():
     except Exception as e:
         print(f"Error initializing admission access table: {e}")
 
+def ensure_admissions_submit_ip_column():
+    try:
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        # Try to add submit_ip column if it does not exist
+        c.execute("PRAGMA table_info(admissions)")
+        cols = [row[1] for row in c.fetchall()]
+        if 'submit_ip' not in cols:
+            c.execute('ALTER TABLE admissions ADD COLUMN submit_ip TEXT')
+            conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Error ensuring admissions.submit_ip column: {e}")
+
 # Call setup_db when the app starts
 with app.app_context():
     setup_db()
     init_tracking_tables()
     init_admission_access_table()
+    ensure_admissions_submit_ip_column()
 
 def admin_required(f):
     @wraps(f)
@@ -1165,11 +1180,11 @@ def admin_create_user_page():
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
     
-    # Get pending admissions
+    # Get pending admissions (include submit IP as last column to avoid index shifts)
     c.execute('''
         SELECT id, student_name, dob, class, school_name, student_phone, student_email, 
                maths_marks, maths_rating, last_percentage, parent_name, parent_phone, 
-               passport_photo, status, submitted_at
+               passport_photo, status, submitted_at, submit_ip
         FROM admissions 
         ORDER BY submitted_at DESC
     ''')
@@ -1872,8 +1887,8 @@ def admission():
         
         c.execute('''INSERT INTO admissions (
             student_name, dob, student_phone, student_email, class, school_name,
-            maths_marks, maths_rating, last_percentage, parent_name, parent_phone, passport_photo, status, submitted_at, user_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
+            maths_marks, maths_rating, last_percentage, parent_name, parent_phone, passport_photo, status, submitted_at, user_id, submit_ip
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
             request.form['student_name'],
             request.form['dob'],
             request.form['student_phone'],
@@ -1888,7 +1903,8 @@ def admission():
             unique_name,
             'pending',
             datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            user_id
+            user_id,
+            ((request.headers.get('X-Forwarded-For','').split(',')[0].strip()) or request.remote_addr or 'unknown')
         ))
         conn.commit()
         print('Admission saved successfully!')

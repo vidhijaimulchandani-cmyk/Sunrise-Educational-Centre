@@ -585,6 +585,7 @@
                 <th>Parent Name</th>
                 <th>Parent Phone</th>
                 <th>Photo</th>
+                <th>Submit IP</th>
                 <th>Status</th>
                 <th>Applied Date</th>
                 <th>Actions</th>
@@ -613,6 +614,7 @@
                     <span style="color: #999;">No photo</span>
                   {% endif %}
                 </td>
+                <td>{{ admission[15] or '-' }}</td>
                 <td>
                   <span class="status-badge 
                     {% if admission[13] == 'pending' %}status-pending
