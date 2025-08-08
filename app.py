@@ -3226,9 +3226,12 @@ def track_ip_activity():
                   (ip, user_id, path, ua, now_str))
         # Update user activity if logged in
         if user_id:
-            c.execute('INSERT INTO user_activity (user_id, ip, last_seen) VALUES (?, ?, ?)
-                      ON CONFLICT(user_id) DO UPDATE SET ip=excluded.ip, last_seen=excluded.last_seen',
-                      (user_id, ip, now_str))
+            c.execute("""
+                INSERT INTO user_activity (user_id, ip, last_seen)
+                VALUES (?, ?, ?)
+                ON CONFLICT(user_id)
+                DO UPDATE SET ip=excluded.ip, last_seen=excluded.last_seen
+            """, (user_id, ip, now_str))
         conn.commit()
         conn.close()
     except Exception as e:
