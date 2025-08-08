@@ -205,3 +205,92 @@
     background: linear-gradient(135deg, var(--pico-primary-background), var(--pico-background-color));
   }
 }
+
+/* Dark Mode Styles for Study Resources */
+body.dark-mode {
+  --pico-background-color: #232946;
+  --pico-color: #f4f4f4;
+  --pico-card-background-color: #2a2a3a;
+  --pico-border-color: #3a3a4a;
+  --pico-muted-color: #b8c5d6;
+  --pico-primary-background: rgba(106,130,251,0.1);
+  --pico-primary: #6a82fb;
+}
+
+body.dark-mode .resources-section {
+  background: #232946;
+  color: #f4f4f4;
+}
+
+body.dark-mode .class-tabs {
+  border-bottom-color: #6a82fb;
+}
+
+body.dark-mode .tab-button {
+  color: #f4f4f4;
+  background: #2a2a3a;
+  border: 1px solid #3a3a4a;
+}
+
+body.dark-mode .tab-button:hover {
+  background: rgba(106,130,251,0.2);
+  color: #6a82fb;
+}
+
+body.dark-mode .tab-button.active {
+  background: #6a82fb;
+  color: #fff;
+  border-color: #6a82fb;
+}
+
+body.dark-mode .resource-card {
+  background: #2a2a3a;
+  border: 1px solid #3a3a4a;
+  color: #f4f4f4;
+}
+
+body.dark-mode .resource-card:hover {
+  background: #3a3a4a;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .resource-title {
+  color: #f4f4f4;
+}
+
+body.dark-mode .resource-description {
+  color: #b8c5d6;
+}
+
+body.dark-mode .download-btn {
+  background: #6a82fb;
+  color: #fff;
+  border: 1px solid #6a82fb;
+}
+
+body.dark-mode .download-btn:hover {
+  background: #5a72eb;
+  border-color: #5a72eb;
+}
+
+body.dark-mode .category-content {
+  background: #232946;
+  color: #f4f4f4;
+}
+
+body.dark-mode .sub-tab-button {
+  background: #2a2a3a;
+  color: #f4f4f4;
+  border: 1px solid #3a3a4a;
+}
+
+body.dark-mode .sub-tab-button:hover {
+  background: rgba(106,130,251,0.2);
+  border-color: #6a82fb;
+}
+
+body.dark-mode .sub-tab-button.active {
+  background: #6a82fb;
+  color: #fff;
+  border-color: #6a82fb;
+}

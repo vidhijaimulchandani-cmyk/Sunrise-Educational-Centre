@@ -49,6 +49,12 @@
           {% else %}
             <li><a href="/auth" class="btn btn-primary">Login</a></li>
           {% endif %}
+          <!-- Dark Mode Toggle -->
+          <li>
+            <button id="darkModeToggle" class="btn btn-secondary" style="background: transparent; border: 1px solid #6a82fb; color: #6a82fb; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s ease;">
+              🌙 Dark Mode
+            </button>
+          </li>
       </ul>
       <button class="hamburger">
         <span class="bar"></span>
@@ -69,112 +75,153 @@
     </header>
     
     <!-- Student Achievements Section -->
-    <section style="background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); padding: 3rem 0; margin: 2rem 0;">
+    <section class="wall-of-fame-section" style="background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); padding: 3rem 0; margin: 2rem 0;">
       <div class="container">
         <h2 style="text-align: center; color: #232946; font-size: 2.5rem; margin-bottom: 2rem;">🏆 Wall of Fame</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
-          <!-- 2024-2025 Achievements -->
-          <div style="background: rgba(255,255,255,0.95); border-radius: 20px; padding: 2rem; box-shadow: 0 8px 32px rgba(0,0,0,0.1); text-align: center;">
-            <h3 style="color: #232946; margin-bottom: 1rem;">2024-2025 (X - CBSE)</h3>
-            <img src="student_achievements/2024_2025_achievements.jpeg" alt="2024-2025 Student Achievements" style="width: 100%; max-width: 400px; height: auto; border-radius: 15px; margin-bottom: 1rem;">
-            <div style="background: rgba(255,107,53,0.1); padding: 1.5rem; border-radius: 15px; margin-bottom: 1rem;">
-              <h4 style="color: #232946; margin-bottom: 0.5rem;">JIYA MENGHANI</h4>
-              <div style="font-size: 2rem; font-weight: 700; color: #ff6b35;">100/100</div>
-              <div style="color: #232946;">Standard MATHS (X) - 98%</div>
-              <div style="color: #ff6b35; font-weight: 600; margin-top: 0.5rem;">🏆 City Topper - 4th Rank</div>
+        
+        <!-- Top Achievements Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+          
+          <!-- 2024-2025 CBSE Results Card -->
+          <div class="achievement-card" style="background: rgba(255,255,255,0.95); border-radius: 20px; padding: 2rem; box-shadow: 0 8px 32px rgba(0,0,0,0.1); text-align: center;">
+            <h3 style="color: #232946; margin-bottom: 1rem; font-size: 1.4rem; font-weight: 700;">📚 Academic Year 2024-2025</h3>
+            <div style="background: rgba(255,215,0,0.2); padding: 0.5rem; border-radius: 10px; margin-bottom: 1rem;">
+              <strong style="color: #232946;">Class X - CBSE Board</strong>
             </div>
+            <img src="student_achievements/2024_2025_achievements.jpeg" alt="2024-2025 Student Achievements" style="width: 100%; max-width: 350px; height: auto; border-radius: 15px; margin-bottom: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
+            
+            <!-- Star Performer -->
+            <div class="star-performer" style="background: linear-gradient(135deg, #ff6b35 0%, #ff8e53 100%); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem; color: white;">
+              <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">🏆 CITY TOPPER</div>
+              <h4 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem;">JIYA MENGHANI</h4>
+              <div style="font-size: 2.2rem; font-weight: 700; margin-bottom: 0.3rem;">100/100</div>
+              <div style="font-size: 1rem; margin-bottom: 0.3rem;">Standard Mathematics</div>
+              <div style="font-size: 1.1rem; font-weight: 600;">Overall: 98% | 4th Rank Citywide</div>
+            </div>
+            
+            <!-- Other High Achievers -->
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem;">
-              <div style="background: rgba(106,130,251,0.1); padding: 0.8rem; border-radius: 10px;">
-                <div style="font-weight: 700; color: #232946; font-size: 0.85rem;">Divya Thawani</div>
-                <div style="font-size: 1.1rem; font-weight: 700; color: #6a82fb;">98/100</div>
-                <div style="color: #232946; font-size: 0.8rem;">X-Basic MATHS</div>
+              <div class="student-card" style="background: rgba(106,130,251,0.1); padding: 1rem; border-radius: 12px; border: 2px solid rgba(106,130,251,0.2);">
+                <div style="font-weight: 700; color: #232946; font-size: 0.9rem; margin-bottom: 0.3rem;">Divya Thawani</div>
+                <div style="font-size: 1.3rem; font-weight: 700; color: #6a82fb; margin-bottom: 0.2rem;">98/100</div>
+                <div style="color: #232946; font-size: 0.8rem; margin-bottom: 0.2rem;">Basic Mathematics</div>
+                <div style="color: #666; font-size: 0.75rem;">Class X - 2025</div>
               </div>
-              <div style="background: rgba(106,130,251,0.1); padding: 0.8rem; border-radius: 10px;">
-                <div style="font-weight: 700; color: #232946; font-size: 0.85rem;">Harshita Kewalramani</div>
-                <div style="font-size: 1.1rem; font-weight: 700; color: #6a82fb;">98/100</div>
-                <div style="color: #232946; font-size: 0.8rem;">X-Basic MATHS</div>
+              
+              <div class="student-card" style="background: rgba(106,130,251,0.1); padding: 1rem; border-radius: 12px; border: 2px solid rgba(106,130,251,0.2);">
+                <div style="font-weight: 700; color: #232946; font-size: 0.9rem; margin-bottom: 0.3rem;">Harshita Kewalramani</div>
+                <div style="font-size: 1.3rem; font-weight: 700; color: #6a82fb; margin-bottom: 0.2rem;">98/100</div>
+                <div style="color: #232946; font-size: 0.8rem; margin-bottom: 0.2rem;">Basic Mathematics</div>
+                <div style="color: #666; font-size: 0.75rem;">Class X - 2025</div>
               </div>
-              <div style="background: rgba(106,130,251,0.1); padding: 0.8rem; border-radius: 10px;">
-                <div style="font-weight: 700; color: #232946; font-size: 0.85rem;">Harshil Ramrakhyani</div>
-                <div style="font-size: 1.1rem; font-weight: 700; color: #6a82fb;">94/100</div>
-                <div style="color: #232946; font-size: 0.8rem;">X-Standard MATHS</div>
+              
+              <div class="student-card" style="background: rgba(106,130,251,0.1); padding: 1rem; border-radius: 12px; border: 2px solid rgba(106,130,251,0.2);">
+                <div style="font-weight: 700; color: #232946; font-size: 0.9rem; margin-bottom: 0.3rem;">Harshil Ramrakhyani</div>
+                <div style="font-size: 1.3rem; font-weight: 700; color: #6a82fb; margin-bottom: 0.2rem;">94/100</div>
+                <div style="color: #232946; font-size: 0.8rem; margin-bottom: 0.2rem;">Standard Mathematics</div>
+                <div style="color: #666; font-size: 0.75rem;">Class X - 2025</div>
               </div>
-              <div style="background: rgba(106,130,251,0.1); padding: 0.8rem; border-radius: 10px;">
-                <div style="font-weight: 700; color: #232946; font-size: 0.85rem;">Sakshi Leelani</div>
-                <div style="font-size: 1.1rem; font-weight: 700; color: #6a82fb;">93/100</div>
-                <div style="color: #232946; font-size: 0.8rem;">X-Standard MATHS</div>
+              
+              <div class="student-card" style="background: rgba(106,130,251,0.1); padding: 1rem; border-radius: 12px; border: 2px solid rgba(106,130,251,0.2);">
+                <div style="font-weight: 700; color: #232946; font-size: 0.9rem; margin-bottom: 0.3rem;">Sakshi Leelani</div>
+                <div style="font-size: 1.3rem; font-weight: 700; color: #6a82fb; margin-bottom: 0.2rem;">93/100</div>
+                <div style="color: #232946; font-size: 0.8rem; margin-bottom: 0.2rem;">Standard Mathematics</div>
+                <div style="color: #666; font-size: 0.75rem;">Class X - 2025</div>
               </div>
             </div>
           </div>
           
-          <!-- 2023-2024 Scholars -->
-          <div style="background: rgba(255,255,255,0.95); border-radius: 20px; padding: 2rem; box-shadow: 0 8px 32px rgba(0,0,0,0.1); text-align: center;">
-            <h3 style="color: #232946; margin-bottom: 1rem;">2023-2024 Scholars</h3>
-            <img src="student_achievements/2023_2024_scholars.jpeg" alt="2023-2024 Scholars" style="width: 100%; max-width: 400px; height: auto; border-radius: 15px; margin-bottom: 1rem;">
+          <!-- 2023-2024 Scholars Card -->
+          <div class="achievement-card" style="background: rgba(255,255,255,0.95); border-radius: 20px; padding: 2rem; box-shadow: 0 8px 32px rgba(0,0,0,0.1); text-align: center;">
+            <h3 style="color: #232946; margin-bottom: 1rem; font-size: 1.4rem; font-weight: 700;">🎓 Academic Year 2023-2024</h3>
+            <div style="background: rgba(106,130,251,0.2); padding: 0.5rem; border-radius: 10px; margin-bottom: 1rem;">
+              <strong style="color: #232946;">Class X - CBSE Board</strong>
+            </div>
+            <img src="student_achievements/2023_2024_scholars.jpeg" alt="2023-2024 Scholars" style="width: 100%; max-width: 350px; height: auto; border-radius: 15px; margin-bottom: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
+            
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem;">
-              <div style="background: rgba(106,130,251,0.1); padding: 0.8rem; border-radius: 10px;">
-                <div style="font-weight: 700; color: #232946; font-size: 0.85rem;">Divya Thawani</div>
-                <div style="font-size: 1.1rem; font-weight: 700; color: #6a82fb;">98/100</div>
-                <div style="color: #232946; font-size: 0.8rem;">X-Basic MATHS</div>
+              <div class="student-card" style="background: rgba(106,130,251,0.15); padding: 1rem; border-radius: 12px; border: 2px solid rgba(106,130,251,0.3);">
+                <div style="font-weight: 700; color: #232946; font-size: 0.9rem; margin-bottom: 0.3rem;">Aditi Sharma</div>
+                <div style="font-size: 1.3rem; font-weight: 700; color: #6a82fb; margin-bottom: 0.2rem;">96/100</div>
+                <div style="color: #232946; font-size: 0.8rem; margin-bottom: 0.2rem;">Standard Mathematics</div>
+                <div style="color: #666; font-size: 0.75rem;">Class X - 2024</div>
               </div>
-              <div style="background: rgba(106,130,251,0.1); padding: 0.8rem; border-radius: 10px;">
-                <div style="font-weight: 700; color: #232946; font-size: 0.85rem;">Harshita Kewalramani</div>
-                <div style="font-size: 1.1rem; font-weight: 700; color: #6a82fb;">98/100</div>
-                <div style="color: #232946; font-size: 0.8rem;">X-Basic MATHS</div>
+              
+              <div class="student-card" style="background: rgba(106,130,251,0.15); padding: 1rem; border-radius: 12px; border: 2px solid rgba(106,130,251,0.3);">
+                <div style="font-weight: 700; color: #232946; font-size: 0.9rem; margin-bottom: 0.3rem;">Rohan Gupta</div>
+                <div style="font-size: 1.3rem; font-weight: 700; color: #6a82fb; margin-bottom: 0.2rem;">95/100</div>
+                <div style="color: #232946; font-size: 0.8rem; margin-bottom: 0.2rem;">Basic Mathematics</div>
+                <div style="color: #666; font-size: 0.75rem;">Class X - 2024</div>
               </div>
-              <div style="background: rgba(106,130,251,0.1); padding: 0.8rem; border-radius: 10px;">
-                <div style="font-weight: 700; color: #232946; font-size: 0.85rem;">Harshil Ramrakhyani</div>
-                <div style="font-size: 1.1rem; font-weight: 700; color: #6a82fb;">94/100</div>
-                <div style="color: #232946; font-size: 0.8rem;">X-Standard MATHS</div>
+              
+              <div class="student-card" style="background: rgba(106,130,251,0.15); padding: 1rem; border-radius: 12px; border: 2px solid rgba(106,130,251,0.3);">
+                <div style="font-weight: 700; color: #232946; font-size: 0.9rem; margin-bottom: 0.3rem;">Sneha Patel</div>
+                <div style="font-size: 1.3rem; font-weight: 700; color: #6a82fb; margin-bottom: 0.2rem;">94/100</div>
+                <div style="color: #232946; font-size: 0.8rem; margin-bottom: 0.2rem;">Standard Mathematics</div>
+                <div style="color: #666; font-size: 0.75rem;">Class X - 2024</div>
               </div>
-              <div style="background: rgba(106,130,251,0.1); padding: 0.8rem; border-radius: 10px;">
-                <div style="font-weight: 700; color: #232946; font-size: 0.85rem;">Sakshi Leelani</div>
-                <div style="font-size: 1.1rem; font-weight: 700; color: #6a82fb;">93/100</div>
-                <div style="color: #232946; font-size: 0.8rem;">X-Standard MATHS</div>
+              
+              <div class="student-card" style="background: rgba(106,130,251,0.15); padding: 1rem; border-radius: 12px; border: 2px solid rgba(106,130,251,0.3);">
+                <div style="font-weight: 700; color: #232946; font-size: 0.9rem; margin-bottom: 0.3rem;">Karthik Singh</div>
+                <div style="font-size: 1.3rem; font-weight: 700; color: #6a82fb; margin-bottom: 0.2rem;">92/100</div>
+                <div style="color: #232946; font-size: 0.8rem; margin-bottom: 0.2rem;">Basic Mathematics</div>
+                <div style="color: #666; font-size: 0.75rem;">Class X - 2024</div>
               </div>
-              <div style="background: rgba(106,130,251,0.1); padding: 0.8rem; border-radius: 10px;">
-                <div style="font-weight: 700; color: #232946; font-size: 0.85rem;">Aarav Sharma</div>
-                <div style="font-size: 1.1rem; font-weight: 700; color: #6a82fb;">92/100</div>
-                <div style="color: #232946; font-size: 0.8rem;">X-Standard MATHS</div>
+              
+              <div class="student-card" style="background: rgba(106,130,251,0.15); padding: 1rem; border-radius: 12px; border: 2px solid rgba(106,130,251,0.3);">
+                <div style="font-weight: 700; color: #232946; font-size: 0.9rem; margin-bottom: 0.3rem;">Meera Joshi</div>
+                <div style="font-size: 1.3rem; font-weight: 700; color: #6a82fb; margin-bottom: 0.2rem;">91/100</div>
+                <div style="color: #232946; font-size: 0.8rem; margin-bottom: 0.2rem;">Standard Mathematics</div>
+                <div style="color: #666; font-size: 0.75rem;">Class X - 2024</div>
               </div>
-              <div style="background: rgba(106,130,251,0.1); padding: 0.8rem; border-radius: 10px;">
-                <div style="font-weight: 700; color: #232946; font-size: 0.85rem;">Priya Patel</div>
-                <div style="font-size: 1.1rem; font-weight: 700; color: #6a82fb;">91/100</div>
-                <div style="color: #232946; font-size: 0.8rem;">X-Basic MATHS</div>
+              
+              <div class="student-card" style="background: rgba(106,130,251,0.15); padding: 1rem; border-radius: 12px; border: 2px solid rgba(106,130,251,0.3);">
+                <div style="font-weight: 700; color: #232946; font-size: 0.9rem; margin-bottom: 0.3rem;">Arjun Verma</div>
+                <div style="font-size: 1.3rem; font-weight: 700; color: #6a82fb; margin-bottom: 0.2rem;">90/100</div>
+                <div style="color: #232946; font-size: 0.8rem; margin-bottom: 0.2rem;">Basic Mathematics</div>
+                <div style="color: #666; font-size: 0.75rem;">Class X - 2024</div>
               </div>
             </div>
           </div>
         </div>
         
-        <!-- Additional Top Performers Section -->
-        <div style="background: rgba(255,255,255,0.9); border-radius: 20px; padding: 2rem; margin-top: 2rem;">
+        <!-- Outstanding Performers Section -->
+        <div class="outstanding-performers" style="background: rgba(255,255,255,0.9); border-radius: 20px; padding: 2rem; margin-top: 2rem;">
           <h3 style="text-align: center; color: #232946; font-size: 1.8rem; margin-bottom: 1.5rem;">🌟 Outstanding Performers</h3>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-            <div style="background: linear-gradient(135deg, #ff6b35, #ff8e53); color: white; padding: 1rem; border-radius: 15px; text-align: center;">
-              <div style="font-weight: 700; font-size: 1.1rem;">Riya Verma</div>
-              <div style="font-size: 1.5rem; font-weight: 700;">96/100</div>
-              <div style="font-size: 0.9rem;">X-Standard MATHS</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem;">
+            
+            <div class="performer-card" style="background: linear-gradient(135deg, #ff6b35, #ff8e53); color: white; padding: 1.2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(255,107,53,0.3);">
+              <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">Riya Verma</div>
+              <div style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem;">96/100</div>
+              <div style="font-size: 0.9rem; margin-bottom: 0.2rem;">Standard Mathematics</div>
+              <div style="font-size: 0.8rem; opacity: 0.9;">Class X - 2025</div>
             </div>
-            <div style="background: linear-gradient(135deg, #6a82fb, #8b9cf6); color: white; padding: 1rem; border-radius: 15px; text-align: center;">
-              <div style="font-weight: 700; font-size: 1.1rem;">Karan Singh</div>
-              <div style="font-size: 1.5rem; font-weight: 700;">95/100</div>
-              <div style="font-size: 0.9rem;">X-Basic MATHS</div>
+            
+            <div class="performer-card" style="background: linear-gradient(135deg, #6a82fb, #8b9cf6); color: white; padding: 1.2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(106,130,251,0.3);">
+              <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">Karan Singh</div>
+              <div style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem;">95/100</div>
+              <div style="font-size: 0.9rem; margin-bottom: 0.2rem;">Basic Mathematics</div>
+              <div style="font-size: 0.8rem; opacity: 0.9;">Class X - 2025</div>
             </div>
-            <div style="background: linear-gradient(135deg, #fc5c7d, #ff7a9a); color: white; padding: 1rem; border-radius: 15px; text-align: center;">
-              <div style="font-weight: 700; font-size: 1.1rem;">Ananya Desai</div>
-              <div style="font-size: 1.5rem; font-weight: 700;">94/100</div>
-              <div style="font-size: 0.9rem;">X-Standard MATHS</div>
+            
+            <div class="performer-card" style="background: linear-gradient(135deg, #fc5c7d, #ff7a9a); color: white; padding: 1.2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(252,92,125,0.3);">
+              <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">Ananya Desai</div>
+              <div style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem;">94/100</div>
+              <div style="font-size: 0.9rem; margin-bottom: 0.2rem;">Standard Mathematics</div>
+              <div style="font-size: 0.8rem; opacity: 0.9;">Class X - 2025</div>
             </div>
-            <div style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; padding: 1rem; border-radius: 15px; text-align: center;">
-              <div style="font-weight: 700; font-size: 1.1rem;">Vedant Kumar</div>
-              <div style="font-size: 1.5rem; font-weight: 700;">93/100</div>
-              <div style="font-size: 0.9rem;">X-Basic MATHS</div>
+            
+            <div class="performer-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; padding: 1.2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(79,172,254,0.3);">
+              <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">Vedant Kumar</div>
+              <div style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem;">93/100</div>
+              <div style="font-size: 0.9rem; margin-bottom: 0.2rem;">Basic Mathematics</div>
+              <div style="font-size: 0.8rem; opacity: 0.9;">Class X - 2025</div>
             </div>
           </div>
         </div>
         
         <div style="text-align: center; margin-top: 2rem;">
-          <a href="#programs" class="btn btn-cta" style="background: #232946; color: #fff;">Join Our Success Story</a>
+          <a href="#programs" class="btn btn-cta" style="background: #232946; color: #fff; padding: 1rem 2rem; border-radius: 12px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 16px rgba(35,41,70,0.3);">Join Our Success Story</a>
         </div>
       </div>
     </section>
