@@ -91,6 +91,7 @@ function setupDarkMode() {
     const isDarkMode = localStorage.getItem('darkMode') === 'true';
     if (isDarkMode) {
         document.body.classList.add('dark-mode');
+        updateToggleButton();
     }
 }
 
@@ -98,6 +99,18 @@ function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
     const isDarkMode = document.body.classList.contains('dark-mode');
     localStorage.setItem('darkMode', isDarkMode);
+    updateToggleButton();
+}
+
+function updateToggleButton() {
+    const button = document.getElementById('darkModeToggle');
+    if (button) {
+        const isDark = document.body.classList.contains('dark-mode');
+        button.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+        button.style.background = isDark ? 'rgba(255,255,255,0.1)' : 'transparent';
+        button.style.color = isDark ? '#fff' : '#6a82fb';
+        button.style.borderColor = isDark ? '#fff' : '#6a82fb';
+    }
 }
 
 // Initialize dark mode on page load

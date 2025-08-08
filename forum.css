@@ -2414,3 +2414,72 @@ body.dark-mode [style*="border-color: #e0e7ff"] {
 body.dark-mode [style*="border-color: #d1d5db"] {
   border-color: #3a3a4a !important;
 }
+
+/* Dark Mode Styles for Forum */
+body.dark-mode {
+  --pico-background-color: #232946;
+  --pico-color: #f4f4f4;
+  --pico-card-background-color: #2a2a3a;
+  --pico-border-color: #3a3a4a;
+  --pico-muted-color: #b8c5d6;
+  --pico-primary-background: rgba(106,130,251,0.1);
+  --pico-primary: #6a82fb;
+}
+
+body.dark-mode .forum-header {
+  background: #232946;
+  color: #f4f4f4;
+}
+
+body.dark-mode .forum-actions {
+  background: #2a2a3a;
+  border-color: #3a3a4a;
+}
+
+body.dark-mode .post-card {
+  background: #2a2a3a;
+  border-color: #3a3a4a;
+  color: #f4f4f4;
+}
+
+body.dark-mode .post-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .tab-btn {
+  background: #2a2a3a;
+  border-color: #3a3a4a;
+  color: #f4f4f4;
+}
+
+body.dark-mode .tab-btn:hover {
+  background: rgba(106,130,251,0.2);
+  border-color: #6a82fb;
+}
+
+body.dark-mode .tab-btn.active {
+  background: #6a82fb;
+  color: #fff;
+}
+
+body.dark-mode input, body.dark-mode textarea, body.dark-mode select {
+  background: #2a2a3a !important;
+  color: #f4f4f4 !important;
+  border: 1px solid #3a3a4a !important;
+}
+
+body.dark-mode input:focus, body.dark-mode textarea:focus, body.dark-mode select:focus {
+  background: #232946 !important;
+  border-color: #6a82fb !important;
+  box-shadow: 0 0 0 2px rgba(106,130,251,0.2) !important;
+}
+
+body.dark-mode .topic-badge.paid {
+  background: #10b981;
+  color: white;
+}
+
+body.dark-mode .topic-badge.unpaid {
+  background: #6b7280;
+  color: white;
+}

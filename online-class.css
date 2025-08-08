@@ -201,6 +201,84 @@
   height: 40px;
 }
 
+/* Dark Mode Styles for Online Class */
+body.dark-mode .class-layout {
+  background: #232946;
+}
+
+body.dark-mode .video-section {
+  background: #2a2a3a;
+  border: 1px solid #3a3a4a;
+}
+
+body.dark-mode .sidebar {
+  background: #2a2a3a;
+  border: 1px solid #3a3a4a;
+  color: #f4f4f4;
+}
+
+body.dark-mode .chat-container {
+  background: #232946;
+  border: 1px solid #3a3a4a;
+}
+
+body.dark-mode .chat-messages {
+  background: #232946;
+  color: #f4f4f4;
+}
+
+body.dark-mode .chat-input {
+  background: #2a2a3a;
+  color: #f4f4f4;
+  border: 1px solid #3a3a4a;
+}
+
+body.dark-mode .chat-input:focus {
+  border-color: #6a82fb;
+  box-shadow: 0 0 0 2px rgba(106,130,251,0.2);
+}
+
+body.dark-mode .controls {
+  background: #2a2a3a;
+  border: 1px solid #3a3a4a;
+}
+
+body.dark-mode .control-btn {
+  background: #232946;
+  color: #f4f4f4;
+  border: 1px solid #3a3a4a;
+}
+
+body.dark-mode .control-btn:hover {
+  background: #6a82fb;
+  border-color: #6a82fb;
+}
+
+body.dark-mode .control-btn.active {
+  background: #6a82fb;
+  color: #fff;
+}
+
+body.dark-mode .student-video {
+  background: #1a1a1a;
+  border: 1px solid #3a3a4a;
+}
+
+body.dark-mode .participants-list {
+  background: #232946;
+  color: #f4f4f4;
+}
+
+body.dark-mode .participant-item {
+  background: #2a2a3a;
+  border: 1px solid #3a3a4a;
+  color: #f4f4f4;
+}
+
+body.dark-mode .participant-item:hover {
+  background: #3a3a4a;
+}
+
 @media (max-width: 768px) {
   .class-layout {
     grid-template-columns: 1fr;
