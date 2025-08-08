@@ -141,6 +141,35 @@
 </head>
 <body>
   <div class="host-container">
+    <div class="video-section">
+      <h3 style="color:#6a82fb; margin-bottom:1rem;">Live Class (Host View)</h3>
+      <video id="remoteVideo" class="video-player" autoplay playsinline style="margin-bottom:1rem;"></video>
+      <div id="viewerStatus" style="margin-bottom:1rem; color:#6a82fb;"></div>
+      {% set is_youtube = 'youtube.com' in meeting_url or 'youtu.be' in meeting_url %}
+      {% if is_youtube %}
+        {% set youtube_id = None %}
+        {% if 'youtu.be' in meeting_url %}
+          {% set youtube_id = meeting_url.split('/')[-1].split('?')[0] %}
+        {% elif 'youtube.com' in meeting_url and 'v=' in meeting_url %}
+          {% set youtube_id = meeting_url.split('v=')[1].split('&')[0] %}
+        {% endif %}
+        {% if youtube_id %}
+          <iframe class="video-player" width="640" height="360" src="https://www.youtube.com/embed/{{ youtube_id }}" frameborder="0" allowfullscreen></iframe>
+        {% else %}
+          <div class="video-player" style="display:flex;align-items:center;justify-content:center;color:#888;">Invalid YouTube Link</div>
+        {% endif %}
+      {% else %}
+        <video class="video-player" controls>
+          <source src="{{ meeting_url }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      {% endif %}
+      <div class="class-info">
+        <h2 class="class-title">{{ topic or 'Live Class' }}</h2>
+        <p class="class-description">{{ description or '' }}</p>
+        <a href="/online-class" class="back-link">&larr; Back to Online Classes</a>
+      </div>
+    </div>
     <div class="control-section">
       <div class="tab-container">
         <button class="tab-btn active" onclick="showTab('chat')">Chat</button>
