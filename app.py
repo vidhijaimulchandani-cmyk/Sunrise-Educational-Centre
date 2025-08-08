@@ -923,6 +923,17 @@ def delete_user_route(user_id):
     delete_user(user_id)
     return redirect(url_for('admin_panel'))
 
+# JSON API: Delete user (used by admin_create_user.html via fetch)
+@app.route('/admin/delete-user/<int:user_id>', methods=['POST'])
+def admin_delete_user_api(user_id):
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+    try:
+        delete_user(user_id)
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+
 # User info route
 @app.route('/user-info/<int:user_id>', methods=['GET', 'POST'])
 def user_info(user_id):
