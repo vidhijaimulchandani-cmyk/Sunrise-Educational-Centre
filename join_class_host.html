@@ -280,8 +280,20 @@
         <button class="tab-btn active" onclick="showTab('chat')">Chat</button>
         <button class="tab-btn" onclick="showTab('polls')">Polls</button>
         <button class="tab-btn" onclick="showTab('doubts')">Doubts</button>
-        <button class="tab-btn" onclick="showTab('controls')">Controls</button>
         <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
+      </div>
+      
+      <!-- Live Class Statistics -->
+      <div style="background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%); border-radius: 12px; padding: 1rem; margin-bottom: 1rem; border: 1px solid #81e6d9;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="#319795">
+              <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zM4 18v-4h3v4H4zM1 22h22v-2H1v2zM6 10.5h3V16H6v-5.5zM21 7.5V16c0 .55-.45 1-1 1s-1-.45-1-1V7.5h2zM12 4v12h3V8h2V6c0-1.11-.89-2-2-2h-3z"/>
+            </svg>
+            <span id="studentCount" style="font-weight: 600; color: #319795;">0 Students Online</span>
+          </div>
+          <button class="control-btn end-class-btn" onclick="endCurrentClass()" style="background: linear-gradient(135deg, #fc5c7d 0%, #e74c3c 100%); color: #fff; padding: 0.5rem 1rem; font-size: 0.9rem;">End Class</button>
+        </div>
       </div>
       
       <!-- Chat Tab -->
@@ -307,17 +319,31 @@
             <div id="pollOptions">
               <div class="poll-option">
                 <input type="text" placeholder="Option 1" class="poll-input" required />
+                <label style="margin-left: 0.5rem;">
+                  <input type="radio" name="correctAnswer" value="0" style="margin-right: 0.3rem;">
+                  Correct
+                </label>
               </div>
               <div class="poll-option">
                 <input type="text" placeholder="Option 2" class="poll-input" required />
+                <label style="margin-left: 0.5rem;">
+                  <input type="radio" name="correctAnswer" value="1" style="margin-right: 0.3rem;">
+                  Correct
+                </label>
               </div>
             </div>
             <button type="button" onclick="addPollOption()" style="background: #e2e8f0; color: #4a5568; border: none; padding: 0.3rem 0.6rem; border-radius: 6px; margin-bottom: 0.5rem; cursor: pointer;">+ Add Option</button>
-            <button type="submit" class="poll-btn">Create Poll</button>
+            <div style="margin: 1rem 0; padding: 0.8rem; background: #fff3cd; border-radius: 8px; border: 1px solid #ffeaa7;">
+              <span style="color: #856404; font-size: 0.9rem;">⏱️ Polls automatically end after 15 seconds</span>
+            </div>
+            <button type="submit" class="poll-btn">Create Poll (15s Timer)</button>
           </form>
         </div>
         <div id="activePolls">
           <!-- Active polls will appear here -->
+        </div>
+        <div id="pollResults" style="margin-top: 1rem;">
+          <!-- Poll results will appear here -->
         </div>
       </div>
       
@@ -339,17 +365,7 @@
         </div>
       </div>
       
-      <!-- Controls Tab -->
-      <div id="controls-tab" class="tab-content">
-        <div class="host-controls">
-          <h3 style="margin-bottom: 1rem; color: #319795;">Host Controls</h3>
-          <button class="control-btn mute-all-btn">Mute All Students</button>
-          <button class="control-btn" style="background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%); color: #fff;">Screen Share</button>
-          <button class="control-btn" style="background: linear-gradient(135deg, #38b2ac 0%, #319795 100%); color: #fff;">Record Session</button>
-          <button class="control-btn" style="background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%); color: #fff;">Breakout Rooms</button>
-          <button class="control-btn end-class-btn">End Class</button>
-        </div>
-      </div>
+
     </div>
   </div>
 
@@ -362,6 +378,31 @@
 
     // Join the room for real-time updates
     socket.emit('join-room', { room });
+    
+    // Student count management
+    let currentStudentCount = 0;
+    
+    function getCurrentStudentCount() {
+      return currentStudentCount;
+    }
+    
+    function updateStudentCount(count) {
+      currentStudentCount = count;
+      const studentCountEl = document.getElementById('studentCount');
+      if (studentCountEl) {
+        studentCountEl.textContent = `${count} Student${count !== 1 ? 's' : ''} Online`;
+      }
+    }
+    
+    // Listen for student count updates
+    socket.on('student_count_update', (data) => {
+      if (data.class_id === classId) {
+        updateStudentCount(data.count);
+      }
+    });
+    
+    // Request initial student count
+    socket.emit('get_student_count', { class_id: classId });
 
     // Live Camera Variables
     let localStream = null;
@@ -637,6 +678,10 @@
     showContentVideo();
     enumerateDevices();
 
+    // Poll management variables
+    let activePollTimers = new Map();
+    let pollStatistics = new Map();
+
     // --- Polls ---
     function renderPolls(polls) {
       const pollsContainer = document.getElementById('activePolls');
@@ -644,12 +689,34 @@
       polls.forEach(poll => {
         const pollDiv = document.createElement('div');
         pollDiv.className = 'poll-section';
+        pollDiv.style.cssText = 'border: 2px solid #fc5c7d; position: relative;';
+        
+        // Add timer display
+        const timeLeft = activePollTimers.get(poll.id) || 0;
+        const isActive = timeLeft > 0;
+        
         pollDiv.innerHTML = `
-          <h4 style="margin-bottom: 0.5rem;">${poll.question}</h4>
-          <div class="poll-options">
-            ${poll.options.map(opt => `<div style='margin:0.3rem 0; padding:0.5rem; background:#fff; border-radius:6px; border:1px solid #ffd6d6;' data-option-id='${opt.id}'>${opt.option_text} <span class='poll-votes' id='poll-votes-${opt.id}'>0</span></div>`).join('')}
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <h4 style="margin: 0; color: #fc5c7d;">${poll.question}</h4>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <span id="timer-${poll.id}" style="background: ${isActive ? '#48bb78' : '#fc5c7d'}; color: white; padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.8rem;">
+                ${isActive ? `⏱️ ${timeLeft}s` : '⏹️ Ended'}
+              </span>
+              ${isActive ? `<button onclick="endPoll(${poll.id})" style="background: #fc5c7d; color: white; border: none; padding: 0.3rem 0.6rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">End Now</button>` : ''}
+            </div>
           </div>
-          <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">Live poll</div>
+          <div class="poll-options">
+            ${poll.options.map(opt => `
+              <div style='margin:0.3rem 0; padding:0.5rem; background:#fff; border-radius:6px; border:1px solid #e0e7ff; display: flex; justify-content: space-between; align-items: center;' data-option-id='${opt.id}'>
+                <span>${opt.option_text}</span>
+                <span class='poll-votes' id='poll-votes-${opt.id}' style="font-weight: 600; color: #6a82fb;">0 votes</span>
+              </div>
+            `).join('')}
+          </div>
+          <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666; display: flex; justify-content: space-between;">
+            <span>${isActive ? '🔴 Live Poll' : '📊 Poll Results'}</span>
+            <span id="total-votes-${poll.id}">Total: 0 votes</span>
+          </div>
         `;
         pollsContainer.appendChild(pollDiv);
       });
@@ -657,73 +724,278 @@
 
     // Create poll
     function getPollOptions() {
-      return Array.from(document.querySelectorAll('#pollOptions input')).map(input => input.value).filter(val => val.trim());
+      return Array.from(document.querySelectorAll('#pollOptions input[type="text"]')).map(input => input.value).filter(val => val.trim());
     }
+    
+    function getCorrectAnswer() {
+      const correctRadio = document.querySelector('input[name="correctAnswer"]:checked');
+      return correctRadio ? parseInt(correctRadio.value) : null;
+    }
+    
     document.getElementById('pollForm').onsubmit = function(e) {
       e.preventDefault();
       var question = document.getElementById('pollQuestion').value;
       var options = getPollOptions();
+      var correctAnswer = getCorrectAnswer();
+      
       if (question && options.length >= 2) {
-        socket.emit('create_poll', { class_id: classId, question, options, created_by: 'host' });
+        if (correctAnswer === null) {
+          alert('Please select the correct answer for this poll.');
+          return;
+        }
+        
+        const pollData = { 
+          class_id: classId, 
+          question, 
+          options, 
+          correct_answer: correctAnswer,
+          created_by: 'host',
+          duration: 15 // 15 seconds
+        };
+        
+        socket.emit('create_poll', pollData);
         document.getElementById('pollForm').reset();
-        document.getElementById('pollOptions').innerHTML = `
-          <div class="poll-option">
-            <input type="text" placeholder="Option 1" class="poll-input" required />
-          </div>
-          <div class="poll-option">
-            <input type="text" placeholder="Option 2" class="poll-input" required />
-          </div>
-        `;
+        resetPollForm();
       }
     };
+    
     function addPollOption() {
       var container = document.getElementById('pollOptions');
+      var optionIndex = container.children.length;
       var newOption = document.createElement('div');
       newOption.className = 'poll-option';
-      newOption.innerHTML = '<input type="text" placeholder="Option ' + (container.children.length + 1) + '" class="poll-input" required />';
+      newOption.innerHTML = `
+        <input type="text" placeholder="Option ${optionIndex + 1}" class="poll-input" required />
+        <label style="margin-left: 0.5rem;">
+          <input type="radio" name="correctAnswer" value="${optionIndex}" style="margin-right: 0.3rem;">
+          Correct
+        </label>
+      `;
       container.appendChild(newOption);
+    }
+    
+    function resetPollForm() {
+      document.getElementById('pollOptions').innerHTML = `
+        <div class="poll-option">
+          <input type="text" placeholder="Option 1" class="poll-input" required />
+          <label style="margin-left: 0.5rem;">
+            <input type="radio" name="correctAnswer" value="0" style="margin-right: 0.3rem;">
+            Correct
+          </label>
+        </div>
+        <div class="poll-option">
+          <input type="text" placeholder="Option 2" class="poll-input" required />
+          <label style="margin-left: 0.5rem;">
+            <input type="radio" name="correctAnswer" value="1" style="margin-right: 0.3rem;">
+            Correct
+          </label>
+        </div>
+      `;
+    }
+    
+    function startPollTimer(pollId) {
+      let timeLeft = 15;
+      activePollTimers.set(pollId, timeLeft);
+      
+      const timer = setInterval(() => {
+        timeLeft--;
+        activePollTimers.set(pollId, timeLeft);
+        
+        const timerElement = document.getElementById(`timer-${pollId}`);
+        if (timerElement) {
+          if (timeLeft > 0) {
+            timerElement.innerHTML = `⏱️ ${timeLeft}s`;
+            timerElement.style.background = timeLeft > 5 ? '#48bb78' : '#ffa726';
+          } else {
+            timerElement.innerHTML = '⏹️ Ended';
+            timerElement.style.background = '#fc5c7d';
+            clearInterval(timer);
+            activePollTimers.delete(pollId);
+            endPoll(pollId);
+          }
+        } else {
+          clearInterval(timer);
+          activePollTimers.delete(pollId);
+        }
+      }, 1000);
+    }
+    
+    function endPoll(pollId) {
+      socket.emit('end_poll', { poll_id: pollId, class_id: classId });
+      activePollTimers.delete(pollId);
     }
 
     // Listen for new polls
     socket.on('new_poll', poll => {
+      startPollTimer(poll.id);
       socket.emit('get_polls_and_doubts', { class_id: classId });
     });
+    
     // Listen for poll results
     socket.on('poll_results', data => {
       if (data && data.results) {
+        let totalVotes = 0;
+        data.results.forEach(opt => {
+          totalVotes += parseInt(opt.votes) || 0;
+        });
+        
         data.results.forEach(opt => {
           const el = document.getElementById('poll-votes-' + opt.option_id);
-          if (el) el.textContent = `(${opt.votes} votes)`;
+          const percentage = totalVotes > 0 ? Math.round((opt.votes / totalVotes) * 100) : 0;
+          if (el) {
+            el.textContent = `${opt.votes} votes (${percentage}%)`;
+            el.style.color = percentage > 50 ? '#48bb78' : '#6a82fb';
+          }
         });
+        
+        const totalEl = document.getElementById('total-votes-' + data.poll_id);
+        if (totalEl) {
+          totalEl.textContent = `Total: ${totalVotes} votes`;
+        }
+        
+        updatePollResults(data);
       }
     });
+    
+    // Listen for poll ended
+    socket.on('poll_ended', data => {
+      activePollTimers.delete(data.poll_id);
+      displayFinalPollResults(data);
+    });
+    
+    function updatePollResults(data) {
+      pollStatistics.set(data.poll_id, data);
+    }
+    
+    function displayFinalPollResults(data) {
+      const resultsContainer = document.getElementById('pollResults');
+      if (!resultsContainer) return;
+      
+      let totalVotes = 0;
+      if (data.results) {
+        data.results.forEach(opt => {
+          totalVotes += parseInt(opt.votes) || 0;
+        });
+      }
+      
+      const resultDiv = document.createElement('div');
+      resultDiv.className = 'poll-section';
+      resultDiv.style.cssText = 'border: 2px solid #48bb78; background: #f0fff4; margin-bottom: 1rem;';
+      
+      const participationRate = totalVotes > 0 ? Math.round((totalVotes / (getCurrentStudentCount() || 1)) * 100) : 0;
+      
+      resultDiv.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h4 style="margin: 0; color: #48bb78;">📊 Poll Results: ${data.question || 'Unknown Question'}</h4>
+          <span style="background: #48bb78; color: white; padding: 0.3rem 0.6rem; border-radius: 12px; font-size: 0.9rem;">
+            ${participationRate}% Participation
+          </span>
+        </div>
+        <div class="poll-results-chart">
+          ${data.results ? data.results.map(opt => {
+            const percentage = totalVotes > 0 ? Math.round((opt.votes / totalVotes) * 100) : 0;
+            const isCorrect = data.correct_answer !== undefined && data.correct_answer === opt.option_index;
+            return `
+              <div style="margin: 0.5rem 0; padding: 0.8rem; background: white; border-radius: 8px; border-left: 4px solid ${isCorrect ? '#48bb78' : '#e0e7ff'};">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.3rem;">
+                  <span style="font-weight: 500;">${isCorrect ? '✅ ' : ''}${opt.option_text}</span>
+                  <span style="font-weight: 600; color: ${isCorrect ? '#48bb78' : '#6a82fb'};">${opt.votes} votes (${percentage}%)</span>
+                </div>
+                <div style="background: #f1f3f5; height: 8px; border-radius: 4px; overflow: hidden;">
+                  <div style="background: ${isCorrect ? '#48bb78' : '#6a82fb'}; height: 100%; width: ${percentage}%; transition: width 0.3s;"></div>
+                </div>
+              </div>
+            `;
+          }).join('') : '<p>No results available</p>'}
+        </div>
+        <div style="margin-top: 1rem; padding: 0.6rem; background: #e8f5e8; border-radius: 6px; text-align: center; color: #2d5a33;">
+          <strong>Total Responses: ${totalVotes} | Participation Rate: ${participationRate}%</strong>
+        </div>
+      `;
+      
+      resultsContainer.appendChild(resultDiv);
+      
+      // Auto-scroll to results
+      resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
 
     // --- Doubts ---
     function renderDoubts(doubts) {
       const doubtsList = document.getElementById('doubtsList');
       doubtsList.innerHTML = '';
+      
+      if (doubts.length === 0) {
+        doubtsList.innerHTML = `
+          <div style="text-align: center; padding: 2rem; color: #666;">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="#e0e7ff" style="margin-bottom: 1rem;">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
+            </svg>
+            <p>No doubts yet. Students can ask questions anytime!</p>
+          </div>
+        `;
+        return;
+      }
+      
       doubts.forEach(doubt => {
         const div = document.createElement('div');
         div.className = 'doubt-item';
+        div.style.cssText = `
+          background: ${doubt.status === 'open' ? '#fff' : doubt.status === 'resolved' ? '#f0fff4' : '#f8f9fa'};
+          border-left: 4px solid ${doubt.status === 'open' ? '#ffa726' : doubt.status === 'resolved' ? '#48bb78' : '#a0aec0'};
+          margin-bottom: 1rem;
+          border-radius: 8px;
+          transition: all 0.2s;
+        `;
+        
+        const timeAgo = doubt.created_at ? new Date(doubt.created_at).toLocaleTimeString() : 'Just now';
+        
         div.innerHTML = `
-          <div class="doubt-user">${doubt.username}</div>
-          <div class="doubt-text">${doubt.doubt_text}</div>
-          <div class="doubt-actions">
-            ${doubt.status === 'open' ? `<button class="doubt-btn resolve-btn" onclick="resolveDoubt(${doubt.id})">Resolve</button>
-            <button class="doubt-btn ignore-btn" onclick="ignoreDoubt(${doubt.id})">Ignore</button>` : doubt.status === 'resolved' ? '<span style="color: #48bb78; font-weight: 600;">✓ Resolved</span>' : '<span style="color: #a0aec0;">Ignored</span>'}
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <div class="doubt-user" style="font-weight: 600; color: #232946; font-size: 0.95rem;">
+              👤 ${doubt.username}
+            </div>
+            <div style="font-size: 0.8rem; color: #666;">
+              ${timeAgo}
+            </div>
+          </div>
+          <div class="doubt-text" style="color: #4a5568; margin-bottom: 1rem; line-height: 1.4;">
+            "${doubt.doubt_text}"
+          </div>
+          <div class="doubt-actions" style="display: flex; gap: 0.5rem; align-items: center;">
+            ${doubt.status === 'open' ? `
+              <button class="doubt-btn resolve-btn" onclick="resolveDoubt(${doubt.id})" style="background: #48bb78; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+                ✓ Mark Resolved
+              </button>
+              <button class="doubt-btn ignore-btn" onclick="ignoreDoubt(${doubt.id})" style="background: #e2e8f0; color: #4a5568; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+                ✕ Ignore
+              </button>
+            ` : doubt.status === 'resolved' ? 
+              '<span style="color: #48bb78; font-weight: 600; padding: 0.3rem 0.6rem; background: #e8f5e8; border-radius: 12px; font-size: 0.85rem;">✓ Resolved</span>' : 
+              '<span style="color: #a0aec0; font-weight: 500; padding: 0.3rem 0.6rem; background: #f1f3f5; border-radius: 12px; font-size: 0.85rem;">Ignored</span>'
+            }
           </div>
         `;
         doubtsList.appendChild(div);
       });
     }
+    
     function resolveDoubt(doubtId) {
       socket.emit('resolve_doubt', { doubt_id: doubtId, class_id: classId });
     }
+    
     function ignoreDoubt(doubtId) {
       socket.emit('ignore_doubt', { doubt_id: doubtId, class_id: classId });
     }
+    
     socket.on('update_doubts', data => {
       renderDoubts(data.doubts);
+    });
+    
+    // Listen for new doubts
+    socket.on('new_doubt', data => {
+      if (data.class_id === classId) {
+        socket.emit('get_polls_and_doubts', { class_id: classId });
+      }
     });
 
     // Initial fetch of polls and doubts
@@ -747,6 +1019,40 @@
       setInterval(loadMessages, 2000);
     });
 
+    // End current class function
+    function endCurrentClass() {
+      if (confirm('Are you sure you want to end this live class? This will disconnect all students.')) {
+        // Stop camera if active
+        if (isStreaming) {
+          stopCamera();
+        }
+        
+        // End all active polls
+        activePollTimers.forEach((timeLeft, pollId) => {
+          endPoll(pollId);
+        });
+        
+        // Notify server to end class
+        fetch('/api/live-classes/end', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ class_id: classId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('Class ended successfully!');
+            window.location.href = '/live-class-management';
+          } else {
+            alert('Error ending class: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error ending class: ' + error.message);
+        });
+      }
+    }
+
     // Load existing messages
     function loadMessages() {
       fetch(`/api/live-class/${classId}/messages`)
@@ -757,13 +1063,25 @@
           messages.forEach(msg => {
             const div = document.createElement('div');
             div.className = 'chat-message';
-            div.innerHTML = `<strong>${msg.username}:</strong> ${msg.message}`;
+            div.innerHTML = `<strong style="color: #6a82fb;">${msg.username}:</strong> <span style="color: #232946;">${msg.message}</span>`;
             chat.appendChild(div);
           });
           chat.scrollTop = chat.scrollHeight;
         })
         .catch(error => console.error('Error loading messages:', error));
     }
+    
+    // Listen for real-time chat messages
+    socket.on('new_chat_message', (data) => {
+      if (data.class_id === classId) {
+        const chat = document.getElementById('chatMessages');
+        const div = document.createElement('div');
+        div.className = 'chat-message';
+        div.innerHTML = `<strong style="color: #6a82fb;">${data.username}:</strong> <span style="color: #232946;">${data.message}</span>`;
+        chat.appendChild(div);
+        chat.scrollTop = chat.scrollHeight;
+      }
+    });
 
     // Send message
     document.getElementById('chatForm').onsubmit = function(e) {
