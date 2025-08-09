@@ -2087,11 +2087,11 @@ def admission():
             except Exception as _e:
                 # Non-fatal: continue even if credential generation fails
                 pass
-conn.commit()
+        conn.commit()
         print('Admission saved successfully!')
         conn.close()
-        flash('Admission submitted successfully! Your application is under review.', 'success')
-        return redirect(url_for('home'))
+        flash('Admission submitted successfully! Your portal credentials are shown below.', 'success')
+        return redirect(url_for('check_admission'))
     except Exception as e:
         print('Error inserting admission:', e)
         flash(f'Error saving admission: {e}', 'error')
