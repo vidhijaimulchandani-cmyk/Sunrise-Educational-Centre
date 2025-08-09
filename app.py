@@ -3690,6 +3690,24 @@ def home_editor():
         error = f'Failed to load homepage: {str(e)}'
     return render_template('home_customizer.html', index_html_content=index_html_content, error=error, success_message=success_message)
 
+@app.route('/api/check-admission-credentials', methods=['POST'])
+def api_check_admission_credentials():
+    try:
+        data = request.get_json(silent=True) or request.form
+        access_username = (data.get('access_username') or '').strip()
+        access_password = (data.get('access_password') or '').strip()
+        if not access_username or not access_password:
+            return jsonify({'valid': False, 'error': 'Missing credentials'}), 400
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        c.execute('SELECT admission_id FROM admission_access WHERE access_username=? AND access_password=?',
+                  (access_username, access_password))
+        row = c.fetchone()
+        conn.close()
+        return jsonify({'valid': bool(row)})
+    except Exception as e:
+        return jsonify({'valid': False, 'error': str(e)}), 500
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     
