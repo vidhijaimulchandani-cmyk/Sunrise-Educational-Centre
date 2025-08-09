@@ -3655,6 +3655,41 @@ def apple_touch_icon():
         from flask import Response
         return Response(status=204)
 
+@app.route('/admin/home-editor', methods=['GET', 'POST'])
+@admin_required
+def home_editor():
+    error = None
+    success_message = None
+    index_path = os.path.join('.', 'index.html')
+    if request.method == 'POST':
+        html_content = request.form.get('html_content', '')
+        try:
+            # Backup existing index.html
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            backup_path = os.path.join('.', f'index_backup_{timestamp}.html')
+            try:
+                with open(index_path, 'r', encoding='utf-8') as f:
+                    existing = f.read()
+                with open(backup_path, 'w', encoding='utf-8') as f:
+                    f.write(existing)
+            except Exception:
+                pass
+            # Write new content
+            with open(index_path, 'w', encoding='utf-8') as f:
+                f.write(html_content)
+            flash('Homepage updated successfully.', 'success')
+            success_message = 'Homepage updated successfully.'
+        except Exception as e:
+            error = f'Failed to update homepage: {str(e)}'
+            flash(error, 'error')
+    try:
+        with open(index_path, 'r', encoding='utf-8') as f:
+            index_html_content = f.read()
+    except Exception as e:
+        index_html_content = ''
+        error = f'Failed to load homepage: {str(e)}'
+    return render_template('home_customizer.html', index_html_content=index_html_content, error=error, success_message=success_message)
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     
