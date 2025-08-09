@@ -2073,20 +2073,20 @@ def admission():
             user_id,
             ((request.headers.get('X-Forwarded-For','').split(',')[0].strip()) or request.remote_addr or 'unknown')
         ))
-                    # Generate admission portal credentials immediately
-            new_admission_id = c.lastrowid
-            try:
-                access_username = f"ADM{new_admission_id:06d}"
-                import secrets
-                access_password = secrets.token_hex(4)
-                hashed_pw = generate_password_hash(access_password)
-                c.execute('''INSERT OR IGNORE INTO admission_access (admission_id, access_username, access_password)
-                             VALUES (?, ?, ?)''', (new_admission_id, access_username, hashed_pw))
-                # Store plain password temporarily in session to display once (not persisted)
-                session['last_admission_creds'] = {'username': access_username, 'password': access_password}
-            except Exception as _e:
-                # Non-fatal: continue even if credential generation fails
-                pass
+        # Generate admission portal credentials immediately
+        new_admission_id = c.lastrowid
+        try:
+            access_username = f"ADM{new_admission_id:06d}"
+            import secrets
+            access_password = secrets.token_hex(4)
+            hashed_pw = generate_password_hash(access_password)
+            c.execute('''INSERT OR IGNORE INTO admission_access (admission_id, access_username, access_password)
+                         VALUES (?, ?, ?)''', (new_admission_id, access_username, hashed_pw))
+            # Store plain password temporarily in session to display once (not persisted)
+            session['last_admission_creds'] = {'username': access_username, 'password': access_password}
+        except Exception as _e:
+            # Non-fatal: continue even if credential generation fails
+            pass
         conn.commit()
         print('Admission saved successfully!')
         conn.close()
