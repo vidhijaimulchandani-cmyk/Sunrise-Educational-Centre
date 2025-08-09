@@ -158,6 +158,24 @@
     
     body.dark-mode .video-controls { background: rgba(35,41,70,0.3); }
     body.dark-mode .icon-btn::after { background: #1a1a2e; }
+    
+    /* Device Selection Styles */
+    .device-selection { margin-top: 1rem; padding: 1rem; background: rgba(106,130,251,0.03); border-radius: 12px; border: 1px solid #e0e7ff; }
+    .device-row { display: flex; gap: 1rem; margin-bottom: 0.8rem; align-items: center; }
+    .device-row:last-child { margin-bottom: 0; }
+    .device-label { min-width: 80px; font-weight: 500; color: #232946; font-size: 0.9rem; }
+    .device-select { flex: 1; padding: 0.6rem 0.8rem; border: 1px solid #e0e7ff; border-radius: 8px; background: #fff; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; }
+    .device-select:focus { outline: none; border-color: #6a82fb; box-shadow: 0 0 0 2px rgba(106,130,251,0.1); }
+    .device-select:hover { border-color: #b8c5d6; }
+    .device-icon { width: 20px; height: 20px; color: #6a82fb; }
+    .device-status { font-size: 0.8rem; color: #666; margin-top: 0.5rem; }
+    
+    /* Dark mode device selection */
+    body.dark-mode .device-selection { background: rgba(35,41,70,0.2); border-color: #3a3a4a; }
+    body.dark-mode .device-label { color: #e0e7ff; }
+    body.dark-mode .device-select { background: #232946; border-color: #3a3a4a; color: #fff; }
+    body.dark-mode .device-select:focus { border-color: #6a82fb; }
+    body.dark-mode .device-status { color: #b8c5d6; }
   </style>
 </head>
 <body>
@@ -220,6 +238,31 @@
               <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zM8 15c0-.83.67-1.5 1.5-1.5S11 14.17 11 15s-.67 1.5-1.5 1.5S8 15.83 8 15zm4-4c0-.83.67-1.5 1.5-1.5S15 10.17 15 11s-.67 1.5-1.5 1.5S12 11.83 12 11zm4 4c0-.83.67-1.5 1.5-1.5S19 14.17 19 15s-.67 1.5-1.5 1.5S16 15.83 16 15z"/>
             </svg>
           </button>
+        </div>
+        
+        <!-- Device Selection -->
+        <div class="device-selection">
+          <div class="device-row">
+            <svg class="device-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
+            </svg>
+            <label class="device-label">Camera:</label>
+            <select id="videoSourceSelect" class="device-select">
+              <option value="">Select Camera...</option>
+            </select>
+          </div>
+          <div class="device-row">
+            <svg class="device-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.49 6-3.31 6-6.72h-1.7z"/>
+            </svg>
+            <label class="device-label">Microphone:</label>
+            <select id="audioSourceSelect" class="device-select">
+              <option value="">Select Microphone...</option>
+            </select>
+          </div>
+          <div class="device-status" id="deviceStatus">
+            📱 Select your camera and microphone devices
+          </div>
         </div>
       </div>
       
@@ -325,6 +368,9 @@
     let isStreaming = false;
     let isMuted = false;
     let currentVideoMode = 'content'; // 'content' or 'camera'
+    let availableDevices = { videoInputs: [], audioInputs: [] };
+    let selectedVideoDevice = null;
+    let selectedAudioDevice = null;
 
     // Camera Control Elements
     const hostCamera = document.getElementById('hostCamera');
@@ -335,26 +381,25 @@
     const showContentBtn = document.getElementById('showContentBtn');
     const contentVideo = document.getElementById('contentVideo');
     const statusText = document.getElementById('statusText');
+    const videoSourceSelect = document.getElementById('videoSourceSelect');
+    const audioSourceSelect = document.getElementById('audioSourceSelect');
+    const deviceStatus = document.getElementById('deviceStatus');
 
     // Start Camera Function
     async function startCamera() {
       try {
-        localStream = await navigator.mediaDevices.getUserMedia({
-          video: { 
-            width: { ideal: 640 },
-            height: { ideal: 360 },
-            frameRate: { ideal: 30 }
-          },
-          audio: true
-        });
-        
-        hostCamera.srcObject = localStream;
-        isStreaming = true;
+        if (!selectedVideoDevice && !selectedAudioDevice) {
+          deviceStatus.innerHTML = '⚠️ Please select camera and microphone devices first';
+          return;
+        }
+
+        await startCameraWithSelectedDevices();
         
         // Update UI
         startCameraBtn.style.display = 'none';
         stopCameraBtn.style.display = 'inline-block';
         statusText.textContent = 'Camera Active - Live Class Ready';
+        deviceStatus.innerHTML = '🔴 Live streaming with selected devices';
         
         // Notify students that host camera is live
         socket.emit('host_camera_status', { 
@@ -367,7 +412,8 @@
       } catch (error) {
         console.error('Error accessing camera:', error);
         statusText.textContent = 'Camera Access Error - Check Permissions';
-        alert('Could not access camera. Please check permissions and try again.');
+        deviceStatus.innerHTML = '❌ Failed to access selected devices';
+        alert('Could not access camera. Please check permissions and selected devices.');
       }
     }
 
@@ -478,9 +524,118 @@
     toggleMicBtn.addEventListener('click', toggleMicrophone);
     showCameraBtn.addEventListener('click', showCameraVideo);
     showContentBtn.addEventListener('click', showContentVideo);
+    videoSourceSelect.addEventListener('change', handleDeviceSelection);
+    audioSourceSelect.addEventListener('change', handleDeviceSelection);
 
-    // Initialize video mode
+    // Device Management Functions
+    async function enumerateDevices() {
+      try {
+        // Request permission first
+        await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+          .then(stream => {
+            stream.getTracks().forEach(track => track.stop());
+          });
+
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        availableDevices.videoInputs = devices.filter(device => device.kind === 'videoinput');
+        availableDevices.audioInputs = devices.filter(device => device.kind === 'audioinput');
+        
+        populateDeviceSelectors();
+        deviceStatus.innerHTML = `📱 Found ${availableDevices.videoInputs.length} camera(s) and ${availableDevices.audioInputs.length} microphone(s)`;
+        
+        console.log('Devices enumerated:', availableDevices);
+      } catch (error) {
+        console.error('Error enumerating devices:', error);
+        deviceStatus.innerHTML = '❌ Could not access media devices. Please check permissions.';
+      }
+    }
+
+    function populateDeviceSelectors() {
+      // Populate video sources
+      videoSourceSelect.innerHTML = '<option value="">Select Camera...</option>';
+      availableDevices.videoInputs.forEach((device, index) => {
+        const option = document.createElement('option');
+        option.value = device.deviceId;
+        option.textContent = device.label || `Camera ${index + 1}`;
+        videoSourceSelect.appendChild(option);
+      });
+
+      // Populate audio sources
+      audioSourceSelect.innerHTML = '<option value="">Select Microphone...</option>';
+      availableDevices.audioInputs.forEach((device, index) => {
+        const option = document.createElement('option');
+        option.value = device.deviceId;
+        option.textContent = device.label || `Microphone ${index + 1}`;
+        audioSourceSelect.appendChild(option);
+      });
+
+      // Set default selections if available
+      if (availableDevices.videoInputs.length > 0) {
+        selectedVideoDevice = availableDevices.videoInputs[0].deviceId;
+        videoSourceSelect.value = selectedVideoDevice;
+      }
+      if (availableDevices.audioInputs.length > 0) {
+        selectedAudioDevice = availableDevices.audioInputs[0].deviceId;
+        audioSourceSelect.value = selectedAudioDevice;
+      }
+    }
+
+    function handleDeviceSelection() {
+      selectedVideoDevice = videoSourceSelect.value;
+      selectedAudioDevice = audioSourceSelect.value;
+      
+      const videoDeviceName = videoSourceSelect.options[videoSourceSelect.selectedIndex]?.text || 'None';
+      const audioDeviceName = audioSourceSelect.options[audioSourceSelect.selectedIndex]?.text || 'None';
+      
+      deviceStatus.innerHTML = `🎯 Selected: ${videoDeviceName} & ${audioDeviceName}`;
+      
+      // If streaming, restart with new devices
+      if (isStreaming) {
+        restartStreamWithNewDevices();
+      }
+    }
+
+    async function restartStreamWithNewDevices() {
+      if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+      }
+      
+      try {
+        await startCameraWithSelectedDevices();
+        deviceStatus.innerHTML = '✅ Switched to new devices successfully';
+      } catch (error) {
+        console.error('Error switching devices:', error);
+        deviceStatus.innerHTML = '❌ Failed to switch devices';
+      }
+    }
+
+    async function startCameraWithSelectedDevices() {
+      const constraints = {
+        video: selectedVideoDevice ? { 
+          deviceId: { exact: selectedVideoDevice },
+          width: { ideal: 640 },
+          height: { ideal: 360 },
+          frameRate: { ideal: 30 }
+        } : {
+          width: { ideal: 640 },
+          height: { ideal: 360 },
+          frameRate: { ideal: 30 }
+        },
+        audio: selectedAudioDevice ? { 
+          deviceId: { exact: selectedAudioDevice }
+        } : true
+      };
+
+      localStream = await navigator.mediaDevices.getUserMedia(constraints);
+      hostCamera.srcObject = localStream;
+      isStreaming = true;
+      
+      return localStream;
+    }
+
+    // Initialize video mode and enumerate devices
     showContentVideo();
+    enumerateDevices();
 
     // --- Polls ---
     function renderPolls(polls) {

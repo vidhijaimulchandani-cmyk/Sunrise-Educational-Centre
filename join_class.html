@@ -89,6 +89,24 @@
     }
     .live-watch-container { width: 100%; max-width: 680px; background: #fff; border: 1px solid #e0e7ff; border-radius: 12px; box-shadow: 0 6px 24px rgba(100,100,255,0.12); padding: 0.8rem; margin-bottom: 1.5rem; }
     body.dark-mode .live-watch-container { background: #232946; border-color: #3a3a4a; box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
+    
+    /* Device Selection Styles for Student View */
+    .device-selection { margin-top: 1rem; padding: 1rem; background: rgba(106,130,251,0.03); border-radius: 12px; border: 1px solid #e0e7ff; }
+    .device-row { display: flex; gap: 1rem; margin-bottom: 0.8rem; align-items: center; }
+    .device-row:last-child { margin-bottom: 0; }
+    .device-label { min-width: 80px; font-weight: 500; color: #232946; font-size: 0.9rem; }
+    .device-select { flex: 1; padding: 0.6rem 0.8rem; border: 1px solid #e0e7ff; border-radius: 8px; background: #fff; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; }
+    .device-select:focus { outline: none; border-color: #6a82fb; box-shadow: 0 0 0 2px rgba(106,130,251,0.1); }
+    .device-select:hover { border-color: #b8c5d6; }
+    .device-icon { width: 20px; height: 20px; color: #6a82fb; }
+    .device-status { font-size: 0.8rem; color: #666; margin-top: 0.5rem; }
+    
+    /* Dark mode device selection */
+    body.dark-mode .device-selection { background: rgba(35,41,70,0.2); border-color: #3a3a4a; }
+    body.dark-mode .device-label { color: #e0e7ff; }
+    body.dark-mode .device-select { background: #232946; border-color: #3a3a4a; color: #fff; }
+    body.dark-mode .device-select:focus { border-color: #6a82fb; }
+    body.dark-mode .device-status { color: #b8c5d6; }
   </style>
 </head>
 <body>
@@ -132,6 +150,31 @@
             </svg>
             Watching content video
           </span>
+        </div>
+        
+        <!-- Device Selection for Student -->
+        <div class="device-selection" style="display: none;" id="studentDeviceSelection">
+          <div class="device-row">
+            <svg class="device-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
+            </svg>
+            <label class="device-label">Camera:</label>
+            <select id="studentVideoSelect" class="device-select">
+              <option value="">Select Camera...</option>
+            </select>
+          </div>
+          <div class="device-row">
+            <svg class="device-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.49 6-3.31 6-6.72h-1.7z"/>
+            </svg>
+            <label class="device-label">Microphone:</label>
+            <select id="studentAudioSelect" class="device-select">
+              <option value="">Select Microphone...</option>
+            </select>
+          </div>
+          <div class="device-status" id="studentDeviceStatus">
+            📱 Select your devices for participation
+          </div>
         </div>
       </div>
       <div class="class-info">
@@ -212,6 +255,15 @@ const hostCameraFeed = document.getElementById('hostCameraFeed');
 const contentVideo = document.getElementById('contentVideo');
 const liveStatusText = document.getElementById('liveStatusText');
 
+// Student Device Selection Variables
+const studentDeviceSelection = document.getElementById('studentDeviceSelection');
+const studentVideoSelect = document.getElementById('studentVideoSelect');
+const studentAudioSelect = document.getElementById('studentAudioSelect');
+const studentDeviceStatus = document.getElementById('studentDeviceStatus');
+let studentDevices = { videoInputs: [], audioInputs: [] };
+let selectedStudentVideo = null;
+let selectedStudentAudio = null;
+
 // Listen for host camera status updates
 socket.on('host_camera_status', (data) => {
   if (data.class_id === classId) {
@@ -273,6 +325,90 @@ socket.on('host_mic_status', (data) => {
     console.log(micStatus);
   }
 });
+
+// Student Device Management Functions
+async function enumerateStudentDevices() {
+  try {
+    // Request permission first
+    await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      .then(stream => {
+        stream.getTracks().forEach(track => track.stop());
+      });
+
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    studentDevices.videoInputs = devices.filter(device => device.kind === 'videoinput');
+    studentDevices.audioInputs = devices.filter(device => device.kind === 'audioinput');
+    
+    populateStudentDeviceSelectors();
+    studentDeviceStatus.innerHTML = `📱 Found ${studentDevices.videoInputs.length} camera(s) and ${studentDevices.audioInputs.length} microphone(s)`;
+    
+    // Show device selection if devices are available
+    if (studentDevices.videoInputs.length > 0 || studentDevices.audioInputs.length > 0) {
+      studentDeviceSelection.style.display = 'block';
+    }
+    
+    console.log('Student devices enumerated:', studentDevices);
+  } catch (error) {
+    console.error('Error enumerating student devices:', error);
+    studentDeviceStatus.innerHTML = '❌ Could not access media devices. Check permissions to participate.';
+  }
+}
+
+function populateStudentDeviceSelectors() {
+  // Populate video sources
+  studentVideoSelect.innerHTML = '<option value="">Select Camera...</option>';
+  studentDevices.videoInputs.forEach((device, index) => {
+    const option = document.createElement('option');
+    option.value = device.deviceId;
+    option.textContent = device.label || `Camera ${index + 1}`;
+    studentVideoSelect.appendChild(option);
+  });
+
+  // Populate audio sources
+  studentAudioSelect.innerHTML = '<option value="">Select Microphone...</option>';
+  studentDevices.audioInputs.forEach((device, index) => {
+    const option = document.createElement('option');
+    option.value = device.deviceId;
+    option.textContent = device.label || `Microphone ${index + 1}`;
+    studentAudioSelect.appendChild(option);
+  });
+
+  // Set default selections if available
+  if (studentDevices.videoInputs.length > 0) {
+    selectedStudentVideo = studentDevices.videoInputs[0].deviceId;
+    studentVideoSelect.value = selectedStudentVideo;
+  }
+  if (studentDevices.audioInputs.length > 0) {
+    selectedStudentAudio = studentDevices.audioInputs[0].deviceId;
+    studentAudioSelect.value = selectedStudentAudio;
+  }
+  
+  // Initial status update
+  handleStudentDeviceSelection();
+}
+
+function handleStudentDeviceSelection() {
+  selectedStudentVideo = studentVideoSelect.value;
+  selectedStudentAudio = studentAudioSelect.value;
+  
+  const videoDeviceName = studentVideoSelect.options[studentVideoSelect.selectedIndex]?.text || 'None';
+  const audioDeviceName = studentAudioSelect.options[studentAudioSelect.selectedIndex]?.text || 'None';
+  
+  studentDeviceStatus.innerHTML = `🎯 Ready with: ${videoDeviceName} & ${audioDeviceName}`;
+  
+  // Store selections for potential future use (like breakout rooms, participation, etc.)
+  localStorage.setItem('selectedStudentVideo', selectedStudentVideo || '');
+  localStorage.setItem('selectedStudentAudio', selectedStudentAudio || '');
+}
+
+// Add event listeners for student device selection
+if (studentVideoSelect && studentAudioSelect) {
+  studentVideoSelect.addEventListener('change', handleStudentDeviceSelection);
+  studentAudioSelect.addEventListener('change', handleStudentDeviceSelection);
+}
+
+// Initialize student device enumeration
+enumerateStudentDevices();
 
 // --- Polls ---
 function renderPolls(polls) {
