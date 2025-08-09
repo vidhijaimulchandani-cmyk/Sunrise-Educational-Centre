@@ -2105,13 +2105,25 @@ def check_admission():
         last_creds = session.pop('last_admission_creds', None)
         if last_creds:
             return render_template('check_admission.html', from_submission=True, access_username=last_creds.get('username'), access_password=last_creds.get('password'))
+        # Show last status result if available (single-use)
+        last_status = session.pop('last_admission_status', None)
+        if last_status:
+            return render_template(
+                'check_admission.html',
+                result=last_status.get('result'),
+                status=last_status.get('status'),
+                paid_status=last_status.get('paid_status'),
+                details=last_status.get('details'),
+                access_username=last_status.get('access_username'),
+                access_password=last_status.get('access_password')
+            )
         return render_template('check_admission.html')
     # POST: verify admission portal credentials and show status
     access_username = request.form.get('access_username', '').strip()
     access_password = request.form.get('access_password', '').strip()
     if not access_username or not access_password:
         flash('Please enter both username and password', 'error')
-        return render_template('check_admission.html')
+        return redirect(url_for('check_admission'))
     try:
         conn = sqlite3.connect('users.db')
         c = conn.cursor()
@@ -2121,12 +2133,12 @@ def check_admission():
         if not row:
             conn.close()
             flash('Invalid credentials. Please check and try again.', 'error')
-            return render_template('check_admission.html')
+            return redirect(url_for('check_admission'))
         admission_id, hashed_pw = row
         if not check_password_hash(hashed_pw, access_password):
             conn.close()
             flash('Invalid credentials. Please check and try again.', 'error')
-            return render_template('check_admission.html')
+            return redirect(url_for('check_admission'))
         # Determine status by checking tables
         # 1) pending admissions
         c.execute('''SELECT student_name, class, school_name, status, submitted_at FROM admissions WHERE id = ?''', (admission_id,))
@@ -2168,16 +2180,19 @@ def check_admission():
         conn.close()
         # Determine paid/unpaid mapping for display
         paid_status = 'paid' if status == 'approved' else 'not paid'
-        return render_template('check_admission.html',
-                               result=True,
-                               status=status or 'pending',
-                               paid_status=paid_status,
-                               details=details,
-                               access_username=access_username,
-                               access_password=access_password)
+        # Store result in session and redirect (PRG)
+        session['last_admission_status'] = {
+            'result': True,
+            'status': status or 'pending',
+            'paid_status': paid_status,
+            'details': details,
+            'access_username': access_username,
+            'access_password': access_password
+        }
+        return redirect(url_for('check_admission'))
     except Exception as e:
         flash(f'Error checking admission: {str(e)}', 'error')
-        return render_template('check_admission.html')
+        return redirect(url_for('check_admission'))
 
 @app.route('/live-class-management')
 def live_class_management():
