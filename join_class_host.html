@@ -145,28 +145,50 @@
   <div class="host-container">
     <div class="video-section">
       <h3 style="color:#6a82fb; margin-bottom:1rem;">Live Class (Host View)</h3>
-      <video id="remoteVideo" class="video-player" autoplay playsinline style="margin-bottom:1rem;"></video>
-      <div id="viewerStatus" style="margin-bottom:1rem; color:#6a82fb;"></div>
+      
+      <!-- Universal Video Container -->
       <div class="live-watch-container">
-      {% set is_youtube = 'youtube.com' in meeting_url or 'youtu.be' in meeting_url %}
-      {% if is_youtube %}
-        {% set youtube_id = None %}
-        {% if 'youtu.be' in meeting_url %}
-          {% set youtube_id = meeting_url.split('/')[-1].split('?')[0] %}
-        {% elif 'youtube.com' in meeting_url and 'v=' in meeting_url %}
-          {% set youtube_id = meeting_url.split('v=')[1].split('&')[0] %}
-        {% endif %}
-        {% if youtube_id %}
-          <iframe class="video-player" width="640" height="360" src="https://www.youtube.com/embed/{{ youtube_id }}" frameborder="0" allowfullscreen></iframe>
-        {% else %}
-          <div class="video-player" style="display:flex;align-items:center;justify-content:center;color:#888;">Invalid YouTube Link</div>
-        {% endif %}
-      {% else %}
-        <video class="video-player" controls>
-          <source src="{{ meeting_url }}" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-      {% endif %}
+        <div id="cameraControls" style="margin-bottom: 1rem; text-align: center;">
+          <button id="startCameraBtn" class="control-btn" style="background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: #fff; margin-right: 0.5rem;">Start Camera</button>
+          <button id="stopCameraBtn" class="control-btn" style="background: linear-gradient(135deg, #fc5c7d 0%, #e74c3c 100%); color: #fff; margin-right: 0.5rem; display: none;">Stop Camera</button>
+          <button id="toggleMicBtn" class="control-btn" style="background: linear-gradient(135deg, #6a82fb 0%, #5a6fd8 100%); color: #fff;">Mute/Unmute</button>
+        </div>
+        
+        <!-- Live Camera Feed -->
+        <video id="hostCamera" class="video-player" autoplay muted playsinline style="display: none; margin-bottom: 1rem;"></video>
+        
+        <!-- Content Video (YouTube or uploaded video) -->
+        <div id="contentVideo" style="display: block;">
+          {% set is_youtube = 'youtube.com' in meeting_url or 'youtu.be' in meeting_url %}
+          {% if is_youtube %}
+            {% set youtube_id = None %}
+            {% if 'youtu.be' in meeting_url %}
+              {% set youtube_id = meeting_url.split('/')[-1].split('?')[0] %}
+            {% elif 'youtube.com' in meeting_url and 'v=' in meeting_url %}
+              {% set youtube_id = meeting_url.split('v=')[1].split('&')[0] %}
+            {% endif %}
+            {% if youtube_id %}
+              <iframe class="video-player" width="640" height="360" src="https://www.youtube.com/embed/{{ youtube_id }}" frameborder="0" allowfullscreen></iframe>
+            {% else %}
+              <div class="video-player" style="display:flex;align-items:center;justify-content:center;color:#888;">Invalid YouTube Link</div>
+            {% endif %}
+          {% else %}
+            <video class="video-player" controls>
+              <source src="{{ meeting_url }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          {% endif %}
+        </div>
+        
+        <!-- Video Mode Toggle -->
+        <div id="videoModeControls" style="margin-top: 1rem; text-align: center;">
+          <button id="showCameraBtn" class="control-btn" style="background: linear-gradient(135deg, #9f7aea 0%, #805ad5 100%); color: #fff; margin-right: 0.5rem;">Show Live Camera</button>
+          <button id="showContentBtn" class="control-btn" style="background: linear-gradient(135deg, #38b2ac 0%, #319795 100%); color: #fff;">Show Content Video</button>
+        </div>
+      </div>
+      
+      <div id="streamingStatus" style="margin-bottom:1rem; color:#6a82fb; text-align: center;">
+        <span id="statusText">Camera Off - Ready to Start Live Class</span>
       </div>
       <div class="class-info">
         <h2 class="class-title">{{ topic or 'Live Class' }}</h2>
@@ -261,6 +283,151 @@
 
     // Join the room for real-time updates
     socket.emit('join-room', { room });
+
+    // Live Camera Variables
+    let localStream = null;
+    let isStreaming = false;
+    let isMuted = false;
+    let currentVideoMode = 'content'; // 'content' or 'camera'
+
+    // Camera Control Elements
+    const hostCamera = document.getElementById('hostCamera');
+    const startCameraBtn = document.getElementById('startCameraBtn');
+    const stopCameraBtn = document.getElementById('stopCameraBtn');
+    const toggleMicBtn = document.getElementById('toggleMicBtn');
+    const showCameraBtn = document.getElementById('showCameraBtn');
+    const showContentBtn = document.getElementById('showContentBtn');
+    const contentVideo = document.getElementById('contentVideo');
+    const statusText = document.getElementById('statusText');
+
+    // Start Camera Function
+    async function startCamera() {
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({
+          video: { 
+            width: { ideal: 640 },
+            height: { ideal: 360 },
+            frameRate: { ideal: 30 }
+          },
+          audio: true
+        });
+        
+        hostCamera.srcObject = localStream;
+        isStreaming = true;
+        
+        // Update UI
+        startCameraBtn.style.display = 'none';
+        stopCameraBtn.style.display = 'inline-block';
+        statusText.textContent = 'Camera Active - Live Class Ready';
+        
+        // Notify students that host camera is live
+        socket.emit('host_camera_status', { 
+          class_id: classId, 
+          status: 'live',
+          message: 'Host camera is now live!'
+        });
+        
+        console.log('Camera started successfully');
+      } catch (error) {
+        console.error('Error accessing camera:', error);
+        statusText.textContent = 'Camera Access Error - Check Permissions';
+        alert('Could not access camera. Please check permissions and try again.');
+      }
+    }
+
+    // Stop Camera Function
+    function stopCamera() {
+      if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+        localStream = null;
+      }
+      
+      hostCamera.srcObject = null;
+      isStreaming = false;
+      
+      // Update UI
+      startCameraBtn.style.display = 'inline-block';
+      stopCameraBtn.style.display = 'none';
+      statusText.textContent = 'Camera Off - Ready to Start Live Class';
+      
+      // Switch back to content video
+      showContentVideo();
+      
+      // Notify students that host camera is off
+      socket.emit('host_camera_status', { 
+        class_id: classId, 
+        status: 'offline',
+        message: 'Host camera is offline'
+      });
+      
+      console.log('Camera stopped');
+    }
+
+    // Toggle Microphone
+    function toggleMicrophone() {
+      if (localStream) {
+        const audioTrack = localStream.getAudioTracks()[0];
+        if (audioTrack) {
+          audioTrack.enabled = !audioTrack.enabled;
+          isMuted = !audioTrack.enabled;
+          toggleMicBtn.textContent = isMuted ? 'Unmute Mic' : 'Mute Mic';
+          toggleMicBtn.style.background = isMuted ? 
+            'linear-gradient(135deg, #fc5c7d 0%, #e74c3c 100%)' : 
+            'linear-gradient(135deg, #6a82fb 0%, #5a6fd8 100%)';
+          
+          socket.emit('host_mic_status', { 
+            class_id: classId, 
+            muted: isMuted 
+          });
+        }
+      }
+    }
+
+    // Show Camera Feed
+    function showCameraVideo() {
+      if (isStreaming) {
+        hostCamera.style.display = 'block';
+        contentVideo.style.display = 'none';
+        currentVideoMode = 'camera';
+        
+        showCameraBtn.style.opacity = '0.6';
+        showContentBtn.style.opacity = '1';
+        
+        socket.emit('host_video_mode', { 
+          class_id: classId, 
+          mode: 'camera',
+          message: 'Host is showing live camera'
+        });
+      } else {
+        alert('Please start the camera first');
+      }
+    }
+
+    // Show Content Video
+    function showContentVideo() {
+      hostCamera.style.display = 'none';
+      contentVideo.style.display = 'block';
+      currentVideoMode = 'content';
+      
+      showCameraBtn.style.opacity = '1';
+      showContentBtn.style.opacity = '0.6';
+      
+      socket.emit('host_video_mode', { 
+        class_id: classId, 
+        mode: 'content',
+        message: 'Host is showing content video'
+      });
+    }
+
+    // Event Listeners
+    startCameraBtn.addEventListener('click', startCamera);
+    stopCameraBtn.addEventListener('click', stopCamera);
+    toggleMicBtn.addEventListener('click', toggleMicrophone);
+    showCameraBtn.addEventListener('click', showCameraVideo);
+    showContentBtn.addEventListener('click', showContentVideo);
+
+    // Initialize video mode
+    showContentVideo();
 
     // --- Polls ---
     function renderPolls(polls) {
@@ -416,7 +583,15 @@
 
     // Clean up when page is unloaded
     window.addEventListener('beforeunload', () => {
-      // No specific cleanup for WebRTC host as it's not running
+      // Stop camera and cleanup
+      if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+      }
+      socket.emit('host_camera_status', { 
+        class_id: classId, 
+        status: 'offline',
+        message: 'Host has left the class'
+      });
     });
   </script>
 </body>

@@ -95,28 +95,39 @@
   <div class="join-container">
     <div class="video-section">
       <h3 style="color:#6a82fb; margin-bottom:1rem;">Live Class (Student View)</h3>
-      <video id="remoteVideo" class="video-player" autoplay playsinline style="margin-bottom:1rem;"></video>
-      <div id="viewerStatus" style="margin-bottom:1rem; color:#6a82fb;"></div>
+      
+      <!-- Universal Video Container for Students -->
       <div class="live-watch-container">
-      {% set is_youtube = 'youtube.com' in meeting_url or 'youtu.be' in meeting_url %}
-      {% if is_youtube %}
-        {% set youtube_id = None %}
-        {% if 'youtu.be' in meeting_url %}
-          {% set youtube_id = meeting_url.split('/')[-1].split('?')[0] %}
-        {% elif 'youtube.com' in meeting_url and 'v=' in meeting_url %}
-          {% set youtube_id = meeting_url.split('v=')[1].split('&')[0] %}
-        {% endif %}
-        {% if youtube_id %}
-          <iframe class="video-player" width="640" height="360" src="https://www.youtube.com/embed/{{ youtube_id }}" frameborder="0" allowfullscreen></iframe>
-        {% else %}
-          <div class="video-player" style="display:flex;align-items:center;justify-content:center;color:#888;">Invalid YouTube Link</div>
-        {% endif %}
-      {% else %}
-        <video class="video-player" controls>
-          <source src="{{ meeting_url }}" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-      {% endif %}
+        <!-- Host Live Camera Feed (when available) -->
+        <video id="hostCameraFeed" class="video-player" autoplay playsinline style="display: none; margin-bottom: 1rem;"></video>
+        
+        <!-- Content Video (YouTube or uploaded video) -->
+        <div id="contentVideo" style="display: block;">
+          {% set is_youtube = 'youtube.com' in meeting_url or 'youtu.be' in meeting_url %}
+          {% if is_youtube %}
+            {% set youtube_id = None %}
+            {% if 'youtu.be' in meeting_url %}
+              {% set youtube_id = meeting_url.split('/')[-1].split('?')[0] %}
+            {% elif 'youtube.com' in meeting_url and 'v=' in meeting_url %}
+              {% set youtube_id = meeting_url.split('v=')[1].split('&')[0] %}
+            {% endif %}
+            {% if youtube_id %}
+              <iframe class="video-player" width="640" height="360" src="https://www.youtube.com/embed/{{ youtube_id }}" frameborder="0" allowfullscreen></iframe>
+            {% else %}
+              <div class="video-player" style="display:flex;align-items:center;justify-content:center;color:#888;">Invalid YouTube Link</div>
+            {% endif %}
+          {% else %}
+            <video class="video-player" controls>
+              <source src="{{ meeting_url }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          {% endif %}
+        </div>
+        
+        <!-- Live Class Status -->
+        <div id="liveStatus" style="margin-top: 1rem; text-align: center; padding: 0.5rem; background: #f0f8ff; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <span id="liveStatusText" style="color: #6a82fb; font-weight: 500;">📹 Watching content video</span>
+        </div>
       </div>
       <div class="class-info">
         <h2 class="class-title">{{ topic or 'Live Class' }}</h2>
@@ -190,6 +201,52 @@ const room = 'liveclass_' + classId;
 
 // Join the room for real-time updates
 socket.emit('join-room', { room });
+
+// Live Camera Stream Variables
+const hostCameraFeed = document.getElementById('hostCameraFeed');
+const contentVideo = document.getElementById('contentVideo');
+const liveStatusText = document.getElementById('liveStatusText');
+
+// Listen for host camera status updates
+socket.on('host_camera_status', (data) => {
+  if (data.class_id === classId) {
+    if (data.status === 'live') {
+      liveStatusText.textContent = '🔴 ' + data.message;
+      liveStatusText.style.color = '#48bb78';
+    } else {
+      liveStatusText.textContent = '📹 ' + data.message;
+      liveStatusText.style.color = '#666';
+    }
+  }
+});
+
+// Listen for host video mode changes
+socket.on('host_video_mode', (data) => {
+  if (data.class_id === classId) {
+    if (data.mode === 'camera') {
+      // For now, we show a message that host is using camera
+      // In full WebRTC implementation, this would show the actual camera stream
+      hostCameraFeed.style.display = 'none'; // Will be 'block' when WebRTC is implemented
+      contentVideo.style.display = 'block';
+      liveStatusText.textContent = '🎥 ' + data.message + ' (WebRTC implementation pending)';
+      liveStatusText.style.color = '#fc5c7d';
+    } else {
+      hostCameraFeed.style.display = 'none';
+      contentVideo.style.display = 'block';
+      liveStatusText.textContent = '📹 ' + data.message;
+      liveStatusText.style.color = '#6a82fb';
+    }
+  }
+});
+
+// Listen for host microphone status
+socket.on('host_mic_status', (data) => {
+  if (data.class_id === classId) {
+    const micStatus = data.muted ? '🔇 Host microphone muted' : '🎤 Host microphone active';
+    // You could show this in a toast notification or update the status
+    console.log(micStatus);
+  }
+});
 
 // --- Polls ---
 function renderPolls(polls) {
