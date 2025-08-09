@@ -1256,7 +1256,7 @@ def admin_create_user_page():
     # Calculate user statistics
     paid_users = sum(1 for user in users if user[3] == 'paid')  # user[3] is paid status
     unpaid_users = sum(1 for user in users if user[3] == 'not paid')
-    admin_users = sum(1 for user in users if user[4] in ['admin', 'teacher'])  # user[4] is role
+    admin_users = sum(1 for user in users if user[2] in ['admin', 'teacher'])  # user[2] is class name
     
     # Get admissions data
     import sqlite3
