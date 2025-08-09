@@ -1,4 +1,5 @@
 from flask import Flask, render_template, send_from_directory, request, redirect, url_for, session, flash, jsonify, send_file
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import secrets
 from werkzeug.utils import secure_filename
@@ -1311,8 +1312,9 @@ def admin_create_user_page():
             access_username = f"ADM{adm_id:06d}"
             access_password = secrets.token_hex(4)
             try:
+                hashed_pw = generate_password_hash(access_password)
                 c.execute('''INSERT OR IGNORE INTO admission_access (admission_id, access_username, access_password)
-                             VALUES (?, ?, ?)''', (adm_id, access_username, access_password))
+                             VALUES (?, ?, ?)''', (adm_id, access_username, hashed_pw))
                 admission_access_map[adm_id] = (access_username, access_password)
             except Exception:
                 pass
@@ -2071,18 +2073,21 @@ def admission():
             user_id,
             ((request.headers.get('X-Forwarded-For','').split(',')[0].strip()) or request.remote_addr or 'unknown')
         ))
-        # Generate admission portal credentials immediately
-        new_admission_id = c.lastrowid
-        try:
-            access_username = f"ADM{new_admission_id:06d}"
-            import secrets
-            access_password = secrets.token_hex(4)
-            c.execute('''INSERT OR IGNORE INTO admission_access (admission_id, access_username, access_password)
-                         VALUES (?, ?, ?)''', (new_admission_id, access_username, access_password))
-        except Exception as _e:
-            # Non-fatal: continue even if credential generation fails
-            pass
-        conn.commit()
+                    # Generate admission portal credentials immediately
+            new_admission_id = c.lastrowid
+            try:
+                access_username = f"ADM{new_admission_id:06d}"
+                import secrets
+                access_password = secrets.token_hex(4)
+                hashed_pw = generate_password_hash(access_password)
+                c.execute('''INSERT OR IGNORE INTO admission_access (admission_id, access_username, access_password)
+                             VALUES (?, ?, ?)''', (new_admission_id, access_username, hashed_pw))
+                # Store plain password temporarily in session to display once (not persisted)
+                session['last_admission_creds'] = {'username': access_username, 'password': access_password}
+            except Exception as _e:
+                # Non-fatal: continue even if credential generation fails
+                pass
+conn.commit()
         print('Admission saved successfully!')
         conn.close()
         flash('Admission submitted successfully! Your application is under review.', 'success')
@@ -2106,14 +2111,18 @@ def check_admission():
     try:
         conn = sqlite3.connect('users.db')
         c = conn.cursor()
-        c.execute('SELECT admission_id FROM admission_access WHERE access_username=? AND access_password=?',
-                  (access_username, access_password))
+        c.execute('SELECT admission_id, access_password FROM admission_access WHERE access_username=?',
+                  (access_username,))
         row = c.fetchone()
         if not row:
             conn.close()
             flash('Invalid credentials. Please check and try again.', 'error')
             return render_template('check_admission.html')
-        admission_id = row[0]
+        admission_id, hashed_pw = row
+        if not check_password_hash(hashed_pw, access_password):
+            conn.close()
+            flash('Invalid credentials. Please check and try again.', 'error')
+            return render_template('check_admission.html')
         # Determine status by checking tables
         # 1) pending admissions
         c.execute('''SELECT student_name, class, school_name, status, submitted_at FROM admissions WHERE id = ?''', (admission_id,))
@@ -3700,11 +3709,12 @@ def api_check_admission_credentials():
             return jsonify({'valid': False, 'error': 'Missing credentials'}), 400
         conn = sqlite3.connect('users.db')
         c = conn.cursor()
-        c.execute('SELECT admission_id FROM admission_access WHERE access_username=? AND access_password=?',
-                  (access_username, access_password))
+        c.execute('SELECT access_password FROM admission_access WHERE access_username=?',
+                  (access_username,))
         row = c.fetchone()
         conn.close()
-        return jsonify({'valid': bool(row)})
+        is_valid = bool(row and check_password_hash(row[0], access_password))
+        return jsonify({'valid': is_valid})
     except Exception as e:
         return jsonify({'valid': False, 'error': str(e)}), 500
 
