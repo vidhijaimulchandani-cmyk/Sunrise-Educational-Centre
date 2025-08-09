@@ -125,8 +125,13 @@
         </div>
         
         <!-- Live Class Status -->
-        <div id="liveStatus" style="margin-top: 1rem; text-align: center; padding: 0.5rem; background: #f0f8ff; border-radius: 8px; border: 1px solid #e0e7ff;">
-          <span id="liveStatusText" style="color: #6a82fb; font-weight: 500;">📹 Watching content video</span>
+        <div id="liveStatus" style="margin-top: 1rem; text-align: center; padding: 1rem; background: rgba(106,130,251,0.05); border-radius: 12px; border: 1px solid #e0e7ff;">
+          <span id="liveStatusText" style="color: #6a82fb; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+            </svg>
+            Watching content video
+          </span>
         </div>
       </div>
       <div class="class-info">
@@ -211,10 +216,21 @@ const liveStatusText = document.getElementById('liveStatusText');
 socket.on('host_camera_status', (data) => {
   if (data.class_id === classId) {
     if (data.status === 'live') {
-      liveStatusText.textContent = '🔴 ' + data.message;
+      liveStatusText.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="12" cy="12" r="8" fill="#ff4444"/>
+          <circle cx="12" cy="12" r="4" fill="#fff"/>
+        </svg>
+        ${data.message}
+      `;
       liveStatusText.style.color = '#48bb78';
     } else {
-      liveStatusText.textContent = '📹 ' + data.message;
+      liveStatusText.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+        </svg>
+        ${data.message}
+      `;
       liveStatusText.style.color = '#666';
     }
   }
@@ -228,12 +244,22 @@ socket.on('host_video_mode', (data) => {
       // In full WebRTC implementation, this would show the actual camera stream
       hostCameraFeed.style.display = 'none'; // Will be 'block' when WebRTC is implemented
       contentVideo.style.display = 'block';
-      liveStatusText.textContent = '🎥 ' + data.message + ' (WebRTC implementation pending)';
+      liveStatusText.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
+        </svg>
+        ${data.message} (WebRTC implementation pending)
+      `;
       liveStatusText.style.color = '#fc5c7d';
     } else {
       hostCameraFeed.style.display = 'none';
       contentVideo.style.display = 'block';
-      liveStatusText.textContent = '📹 ' + data.message;
+      liveStatusText.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+        </svg>
+        ${data.message}
+      `;
       liveStatusText.style.color = '#6a82fb';
     }
   }

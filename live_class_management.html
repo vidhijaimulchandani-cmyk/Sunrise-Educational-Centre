@@ -569,7 +569,14 @@
         .then(data => {
           if (data.success) {
             alert('Class started successfully!');
+            // Refresh both dashboard and completed classes
             loadDashboard();
+            loadCompletedClasses();
+            // Auto-refresh every 30 seconds to keep status updated
+            setTimeout(() => {
+              loadDashboard();
+              loadCompletedClasses();
+            }, 30000);
           } else {
             alert('Error starting class: ' + data.message);
           }
@@ -590,8 +597,15 @@
         .then(response => response.json())
         .then(data => {
           if (data.success) {
-        alert('Class ended successfully!');
+            alert('Class ended successfully!');
+            // Refresh both dashboard and completed classes
             loadDashboard();
+            loadCompletedClasses();
+            // Auto-refresh every 30 seconds to keep status updated
+            setTimeout(() => {
+              loadDashboard();
+              loadCompletedClasses();
+            }, 30000);
           } else {
             alert('Error ending class: ' + data.message);
           }
@@ -1012,6 +1026,32 @@
       }
     });
     
+    // Auto-refresh status management
+    function startStatusAutoRefresh() {
+      // Refresh every 60 seconds to keep status up-to-date
+      setInterval(() => {
+        const activeTab = document.querySelector('.tab-btn.active');
+        if (activeTab) {
+          const tabText = activeTab.textContent.toLowerCase();
+          if (tabText.includes('dashboard')) {
+            loadDashboard();
+          } else if (tabText.includes('completed')) {
+            loadCompletedClasses();
+          }
+        }
+      }, 60000); // 60 seconds
+    }
+
+    // Enhanced status management
+    function refreshClassStatus() {
+      loadDashboard();
+      loadCompletedClasses();
+      console.log('Status refreshed at:', new Date().toLocaleTimeString());
+    }
+
+    // Start auto-refresh
+    startStatusAutoRefresh();
+
     // Update showTab function to load completed classes
     const originalShowTab = showTab;
     showTab = function(tabName) {
@@ -1020,6 +1060,8 @@
       // Load completed classes when tab is selected
       if (tabName === 'completed') {
         loadCompletedClasses();
+      } else if (tabName === 'dashboard') {
+        loadDashboard();
       }
     };
   </script>
