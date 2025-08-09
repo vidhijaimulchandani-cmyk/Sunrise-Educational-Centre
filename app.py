@@ -290,20 +290,145 @@ def init_queries_db():
         conn.close()
 init_queries_db()
 
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet', 
+                   ping_timeout=60, ping_interval=25, logger=True, engineio_logger=True)
 
-# --- WebRTC Signaling ---
+# Active session tracking
+active_sessions = {}
+room_participants = {}
+
+# --- Socket.IO Connection Management ---
+@socketio.on('connect')
+def handle_connect():
+    print(f"Client connected: {request.sid}")
+    active_sessions[request.sid] = {
+        'connected_at': datetime.now(),
+        'last_ping': datetime.now(),
+        'rooms': []
+    }
+    emit('connection_status', {'status': 'connected', 'session_id': request.sid})
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print(f"Client disconnected: {request.sid}")
+    if request.sid in active_sessions:
+        # Clean up user from all rooms
+        user_rooms = active_sessions[request.sid].get('rooms', [])
+        for room in user_rooms:
+            if room in room_participants:
+                if request.sid in room_participants[room]:
+                    room_participants[room].remove(request.sid)
+                    # Emit updated count to room
+                    socketio.emit('student_count_update', {
+                        'class_id': room.replace('liveclass_', ''),
+                        'count': len(room_participants[room])
+                    }, room=room)
+                    
+        del active_sessions[request.sid]
+
+@socketio.on('ping')
+def handle_ping():
+    if request.sid in active_sessions:
+        active_sessions[request.sid]['last_ping'] = datetime.now()
+    emit('pong')
+
+# --- Enhanced Room Management ---
 @socketio.on('join-room')
 def handle_join_room(data):
-    room = data['room']
-    join_room(room)
-    emit('joined-room', {'room': room}, room=room)
+    try:
+        room = data.get('room')
+        if not room:
+            emit('error', {'message': 'Room name is required'})
+            return
+            
+        join_room(room)
+        
+        # Track room participation
+        if room not in room_participants:
+            room_participants[room] = []
+        if request.sid not in room_participants[room]:
+            room_participants[room].append(request.sid)
+            
+        # Update session info
+        if request.sid in active_sessions:
+            active_sessions[request.sid]['rooms'].append(room)
+            
+        emit('joined-room', {'room': room, 'session_id': request.sid})
+        
+        # Send student count update if it's a live class room
+        if room.startswith('liveclass_'):
+            class_id = room.replace('liveclass_', '')
+            socketio.emit('student_count_update', {
+                'class_id': class_id,
+                'count': len(room_participants[room])
+            }, room=room)
+            
+        print(f"Client {request.sid} joined room {room}")
+        
+    except Exception as e:
+        print(f"Error in join-room: {e}")
+        emit('error', {'message': 'Failed to join room'})
+
+@socketio.on('leave-room')
+def handle_leave_room(data):
+    try:
+        room = data.get('room')
+        if not room:
+            return
+            
+        leave_room(room)
+        
+        # Update room participation
+        if room in room_participants and request.sid in room_participants[room]:
+            room_participants[room].remove(request.sid)
+            
+            # Send updated count
+            if room.startswith('liveclass_'):
+                class_id = room.replace('liveclass_', '')
+                socketio.emit('student_count_update', {
+                    'class_id': class_id,
+                    'count': len(room_participants[room])
+                }, room=room)
+        
+        # Update session info
+        if request.sid in active_sessions:
+            if room in active_sessions[request.sid]['rooms']:
+                active_sessions[request.sid]['rooms'].remove(room)
+                
+        emit('left-room', {'room': room})
+        print(f"Client {request.sid} left room {room}")
+        
+    except Exception as e:
+        print(f"Error in leave-room: {e}")
+
+@socketio.on('get_student_count')
+def handle_get_student_count(data):
+    try:
+        class_id = data.get('class_id')
+        if class_id:
+            room = f'liveclass_{class_id}'
+            count = len(room_participants.get(room, []))
+            emit('student_count_update', {
+                'class_id': class_id,
+                'count': count
+            })
+    except Exception as e:
+        print(f"Error getting student count: {e}")
+
+# --- WebRTC Signaling ---
 
 @socketio.on('signal')
 def handle_signal(data):
-    room = data['room']
-    signal = data['signal']
-    emit('signal', {'signal': signal, 'from': request.sid}, room=room, include_self=False)
+    try:
+        room = data.get('room')
+        signal = data.get('signal')
+        if room and signal:
+            emit('signal', {'signal': signal, 'from': request.sid}, room=room, include_self=False)
+        else:
+            emit('error', {'message': 'Invalid signal data'})
+    except Exception as e:
+        print(f"Error in signal: {e}")
+        emit('error', {'message': 'Signal failed'})
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -2948,23 +3073,41 @@ def edit_resource():
 
 @socketio.on('create_poll')
 def handle_create_poll(data):
-    class_id = data.get('class_id')
-    question = data.get('question')
-    options = data.get('options', [])
-    created_by = data.get('created_by', 'host')
-    db = get_db()
-    c = db.cursor()
-    c.execute('INSERT INTO polls (class_id, question, created_by) VALUES (?, ?, ?)', (class_id, question, created_by))
-    poll_id = c.lastrowid
-    for opt in options:
-        c.execute('INSERT INTO poll_options (poll_id, option_text) VALUES (?, ?)', (poll_id, opt))
-    db.commit()
-    # Fetch poll with options
-    c.execute('SELECT * FROM polls WHERE id=?', (poll_id,))
-    poll = dict(c.fetchone())
-    c.execute('SELECT id, option_text FROM poll_options WHERE poll_id=?', (poll_id,))
-    poll['options'] = [dict(row) for row in c.fetchall()]
-    socketio.emit('new_poll', poll, room=f'liveclass_{class_id}')
+    try:
+        class_id = data.get('class_id')
+        question = data.get('question')
+        options = data.get('options', [])
+        created_by = data.get('created_by', 'host')
+        correct_answer = data.get('correct_answer')
+        duration = data.get('duration', 15)
+        
+        if not class_id or not question or len(options) < 2:
+            emit('error', {'message': 'Invalid poll data'})
+            return
+        
+        db = get_db()
+        c = db.cursor()
+        c.execute('INSERT INTO polls (class_id, question, created_by) VALUES (?, ?, ?)', (class_id, question, created_by))
+        poll_id = c.lastrowid
+        
+        for idx, opt in enumerate(options):
+            c.execute('INSERT INTO poll_options (poll_id, option_text) VALUES (?, ?)', (poll_id, opt))
+        db.commit()
+        
+        # Fetch poll with options
+        c.execute('SELECT * FROM polls WHERE id=?', (poll_id,))
+        poll = dict(c.fetchone())
+        c.execute('SELECT id, option_text FROM poll_options WHERE poll_id=?', (poll_id,))
+        poll['options'] = [dict(row) for row in c.fetchall()]
+        poll['correct_answer'] = correct_answer
+        poll['duration'] = duration
+        
+        socketio.emit('new_poll', poll, room=f'liveclass_{class_id}')
+        print(f"Poll created: {poll_id} for class {class_id}")
+        
+    except Exception as e:
+        print(f"Error creating poll: {e}")
+        emit('error', {'message': 'Failed to create poll'})
 
 @socketio.on('vote_poll')
 def handle_vote_poll(data):
@@ -3042,6 +3185,108 @@ def handle_get_polls_and_doubts(data):
     c.execute('SELECT * FROM doubts WHERE class_id=? ORDER BY created_at ASC', (class_id,))
     doubts = [dict(row) for row in c.fetchall()]
     socketio.emit('init_polls_and_doubts', {'polls': polls, 'doubts': doubts}, room=request.sid)
+
+# New handlers for enhanced live class features
+@socketio.on('end_poll')
+def handle_end_poll(data):
+    try:
+        poll_id = data.get('poll_id')
+        class_id = data.get('class_id')
+        
+        if not poll_id or not class_id:
+            emit('error', {'message': 'Poll ID and Class ID required'})
+            return
+            
+        db = get_db()
+        c = db.cursor()
+        
+        # Get poll results
+        c.execute('SELECT * FROM polls WHERE id=?', (poll_id,))
+        poll = dict(c.fetchone())
+        
+        c.execute('SELECT id, option_text FROM poll_options WHERE poll_id=?', (poll_id,))
+        options = [dict(row) for row in c.fetchall()]
+        
+        results = []
+        for opt in options:
+            c.execute('SELECT COUNT(*) as votes FROM poll_votes WHERE option_id=?', (opt['id'],))
+            votes = c.fetchone()['votes']
+            results.append({
+                'option_id': opt['id'], 
+                'option_text': opt['option_text'], 
+                'votes': votes,
+                'option_index': options.index(opt)
+            })
+        
+        poll_data = {
+            'poll_id': poll_id,
+            'question': poll.get('question'),
+            'results': results,
+            'correct_answer': poll.get('correct_answer'),
+            'class_id': class_id
+        }
+        
+        socketio.emit('poll_ended', poll_data, room=f'liveclass_{class_id}')
+        print(f"Poll {poll_id} ended for class {class_id}")
+        
+    except Exception as e:
+        print(f"Error ending poll: {e}")
+        emit('error', {'message': 'Failed to end poll'})
+
+@socketio.on('host_camera_status')
+def handle_host_camera_status(data):
+    try:
+        class_id = data.get('class_id')
+        status = data.get('status')
+        message = data.get('message')
+        
+        if class_id:
+            socketio.emit('host_camera_status', {
+                'class_id': class_id,
+                'status': status,
+                'message': message
+            }, room=f'liveclass_{class_id}')
+            
+    except Exception as e:
+        print(f"Error broadcasting camera status: {e}")
+
+@socketio.on('host_video_mode')
+def handle_host_video_mode(data):
+    try:
+        class_id = data.get('class_id')
+        mode = data.get('mode')
+        message = data.get('message')
+        
+        if class_id:
+            socketio.emit('host_video_mode', {
+                'class_id': class_id,
+                'mode': mode,
+                'message': message
+            }, room=f'liveclass_{class_id}')
+            
+    except Exception as e:
+        print(f"Error broadcasting video mode: {e}")
+
+@socketio.on('host_mic_status')
+def handle_host_mic_status(data):
+    try:
+        class_id = data.get('class_id')
+        muted = data.get('muted')
+        
+        if class_id:
+            socketio.emit('host_mic_status', {
+                'class_id': class_id,
+                'muted': muted
+            }, room=f'liveclass_{class_id}')
+            
+    except Exception as e:
+        print(f"Error broadcasting mic status: {e}")
+
+# Enhanced error handling for Socket.IO
+@socketio.on_error()
+def error_handler(e):
+    print(f"Socket.IO error: {e}")
+    emit('error', {'message': 'An error occurred'})
 
 @app.route('/edit-profile', methods=['GET', 'POST'])
 def edit_profile():
@@ -3796,8 +4041,47 @@ def api_check_admission_credentials():
     except Exception as e:
         return jsonify({'valid': False, 'error': str(e)}), 500
 
+def cleanup_stale_sessions():
+    """Clean up stale sessions periodically"""
+    import threading
+    import time
+    
+    def cleanup():
+        while True:
+            try:
+                current_time = datetime.now()
+                stale_sessions = []
+                
+                for session_id, session_data in active_sessions.items():
+                    last_ping = session_data.get('last_ping', session_data.get('connected_at'))
+                    if current_time - last_ping > timedelta(minutes=5):  # 5 minutes timeout
+                        stale_sessions.append(session_id)
+                
+                for session_id in stale_sessions:
+                    print(f"Cleaning up stale session: {session_id}")
+                    # Clean up from rooms
+                    if session_id in active_sessions:
+                        user_rooms = active_sessions[session_id].get('rooms', [])
+                        for room in user_rooms:
+                            if room in room_participants and session_id in room_participants[room]:
+                                room_participants[room].remove(session_id)
+                        del active_sessions[session_id]
+                
+                time.sleep(60)  # Run cleanup every minute
+                
+            except Exception as e:
+                print(f"Error in session cleanup: {e}")
+                time.sleep(60)
+    
+    cleanup_thread = threading.Thread(target=cleanup, daemon=True)
+    cleanup_thread.start()
+    print("🧹 Session cleanup service started")
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
+    
+    # Start session cleanup service
+    cleanup_stale_sessions()
     
     # Default to HTTP mode to avoid SSL issues
     print("🚀 Starting server with HTTP...")

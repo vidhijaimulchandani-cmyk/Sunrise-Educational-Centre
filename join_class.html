@@ -244,11 +244,91 @@
 <script>
 // Get class ID from URL
 const classId = window.location.pathname.split('/').pop();
-const socket = io();
-const room = 'liveclass_' + classId;
 
-// Join the room for real-time updates
-socket.emit('join-room', { room });
+// Enhanced Socket.IO connection with reconnection
+const socket = io({
+  timeout: 10000,
+  reconnection: true,
+  reconnectionDelay: 1000,
+  reconnectionDelayMax: 5000,
+  maxReconnectionAttempts: 10,
+  forceNew: true
+});
+
+const room = 'liveclass_' + classId;
+let isConnected = false;
+let reconnectAttempts = 0;
+
+// Connection management
+socket.on('connect', () => {
+  console.log('Connected to server:', socket.id);
+  isConnected = true;
+  reconnectAttempts = 0;
+  
+  // Join the room
+  socket.emit('join-room', { room });
+});
+
+socket.on('disconnect', (reason) => {
+  console.log('Disconnected from server:', reason);
+  isConnected = false;
+});
+
+socket.on('connect_error', (error) => {
+  console.error('Connection error:', error);
+  reconnectAttempts++;
+  
+  const statusEl = document.getElementById('liveStatusText');
+  if (statusEl) {
+    statusEl.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+      </svg>
+      Reconnecting... (${reconnectAttempts}/10)
+    `;
+    statusEl.style.color = '#ffa726';
+  }
+});
+
+socket.on('reconnect', (attemptNumber) => {
+  console.log('Reconnected after', attemptNumber, 'attempts');
+  
+  const statusEl = document.getElementById('liveStatusText');
+  if (statusEl) {
+    statusEl.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+      </svg>
+      Reconnected to live class
+    `;
+    statusEl.style.color = '#48bb78';
+  }
+});
+
+socket.on('reconnect_failed', () => {
+  console.error('Failed to reconnect after maximum attempts');
+  
+  const statusEl = document.getElementById('liveStatusText');
+  if (statusEl) {
+    statusEl.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+      </svg>
+      Connection lost - Please refresh
+    `;
+    statusEl.style.color = '#fc5c7d';
+  }
+});
+
+// Error handling
+socket.on('error', (data) => {
+  console.error('Socket error:', data);
+});
+
+// Room management
+socket.on('joined-room', (data) => {
+  console.log('Joined room:', data.room);
+});
 
 // Live Camera Stream Variables
 const hostCameraFeed = document.getElementById('hostCameraFeed');

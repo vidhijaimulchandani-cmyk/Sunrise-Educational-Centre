@@ -373,11 +373,84 @@
   <script>
     // Get class ID from URL
     const classId = window.location.pathname.split('/').pop();
-    const socket = io();
+    
+    // Enhanced Socket.IO connection with reconnection
+    const socket = io({
+      timeout: 10000,
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      maxReconnectionAttempts: 10,
+      forceNew: true
+    });
+    
     const room = 'liveclass_' + classId;
+    let isConnected = false;
+    let reconnectAttempts = 0;
 
-    // Join the room for real-time updates
-    socket.emit('join-room', { room });
+    // Connection management
+    socket.on('connect', () => {
+      console.log('Connected to server:', socket.id);
+      isConnected = true;
+      reconnectAttempts = 0;
+      
+      // Update status
+      if (statusText) {
+        statusText.style.color = '#48bb78';
+      }
+      
+      // Join the room
+      socket.emit('join-room', { room });
+    });
+
+    socket.on('disconnect', (reason) => {
+      console.log('Disconnected from server:', reason);
+      isConnected = false;
+      
+      // Update status
+      if (statusText) {
+        statusText.style.color = '#fc5c7d';
+      }
+    });
+
+    socket.on('connect_error', (error) => {
+      console.error('Connection error:', error);
+      reconnectAttempts++;
+      
+      if (statusText) {
+        statusText.textContent = `Connection error - Reconnecting... (${reconnectAttempts}/10)`;
+        statusText.style.color = '#ffa726';
+      }
+    });
+
+    socket.on('reconnect', (attemptNumber) => {
+      console.log('Reconnected after', attemptNumber, 'attempts');
+      
+      if (statusText) {
+        statusText.textContent = 'Reconnected - Live Class Ready';
+        statusText.style.color = '#48bb78';
+      }
+    });
+
+    socket.on('reconnect_failed', () => {
+      console.error('Failed to reconnect after maximum attempts');
+      
+      if (statusText) {
+        statusText.textContent = 'Connection failed - Please refresh the page';
+        statusText.style.color = '#fc5c7d';
+      }
+    });
+
+    // Error handling
+    socket.on('error', (data) => {
+      console.error('Socket error:', data);
+      alert('Connection error: ' + (data.message || 'Unknown error'));
+    });
+
+    // Room management
+    socket.on('joined-room', (data) => {
+      console.log('Joined room:', data.room);
+    });
     
     // Student count management
     let currentStudentCount = 0;
