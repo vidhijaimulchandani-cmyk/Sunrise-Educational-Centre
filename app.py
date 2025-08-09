@@ -654,7 +654,7 @@ def auth():
                     return redirect(url_for('admin_panel'))
                 else:
                     return redirect(url_for('home'))
-        error = 'Invalid username, password, or role.'
+        error = 'Wrong credentials. Contact the institute.'
     return render_template('auth.html', error=error)
 
 # Route for registration
@@ -1583,6 +1583,19 @@ def approve_admission(admission_id):
                             flash(f'Admission approved and user {username} registered as paid member successfully!', 'success')
                             return redirect(url_for('view_admissions'))
                     else:
+                        # If user already exists, update their status to paid and ensure correct class/contact info
+                        try:
+                            from auth_handler import get_user_by_username, update_user
+                            existing_user = get_user_by_username(username)
+                            if existing_user:
+                                update_user(existing_user[0], username, class_id, 'paid', mobile_no=student_phone, email_address=student_email)
+                                if request.headers.get('Content-Type') == 'application/json':
+                                    return jsonify({'success': True, 'message': f'Admission approved. Existing user {username} updated to paid.'})
+                                else:
+                                    flash(f'Admission approved. Existing user {username} updated to paid.', 'success')
+                                    return redirect(url_for('view_admissions'))
+                        except Exception:
+                            pass
                         if request.headers.get('Content-Type') == 'application/json':
                             return jsonify({'success': False, 'message': 'Admission approved but user registration failed. Username may already exist.'})
                         else:
