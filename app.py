@@ -654,7 +654,7 @@ def auth():
                     return redirect(url_for('admin_panel'))
                 else:
                     return redirect(url_for('home'))
-        error = 'Invalid username, password, or role.'
+        error = 'Wrong credentials. Contact the institute.'
     return render_template('auth.html', error=error)
 
 # Route for registration
