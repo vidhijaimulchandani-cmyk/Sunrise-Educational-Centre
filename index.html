@@ -245,11 +245,11 @@
       </div>
     </section>
     <!-- Subjects We Offer section (restored to top) -->
-      <section class="card-section" style="display:flex; justify-content:center;">
+      <section class="card-section subjects-section" style="display:flex; justify-content:center;">
         <div class="card animated-card" style="max-width:700px; width:100%; margin:0 auto; padding:2.5rem;">
           <h2 style="text-align:center; margin-bottom:2rem;">Subjects We Offer</h2>
           <div style="display: flex; flex-wrap: wrap; gap: 2.5rem; justify-content:center;">
-            <div style="flex:1 1 260px; min-width:220px; background:#e6f9f3; border-radius:18px; padding:1.5rem;">
+            <div class="subject-category" style="flex:1 1 260px; min-width:220px; background:#e6f9f3; border-radius:18px; padding:1.5rem;">
               <h3 style="color:#14213d; margin-bottom:1.2rem; text-align:center;">Foundation</h3>
               <div style="display:flex; flex-direction:column; gap:1rem; align-items:center;">
                 <button onclick="showCategoriesForClass('9', 'Class 9')" class="subject-btn btn" style="background:#ffe082; color:#232946; width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #ffe082; cursor:pointer;">
@@ -262,7 +262,7 @@
                 </button>
             </div>
             </div>
-            <div style="flex:1 1 260px; min-width:220px; background:#e3f7fc; border-radius:18px; padding:1.5rem;">
+            <div class="subject-category" style="flex:1 1 260px; min-width:220px; background:#e3f7fc; border-radius:18px; padding:1.5rem;">
               <h3 style="color:#14213d; margin-bottom:1.2rem; text-align:center;">JEE Level</h3>
               <div style="display:flex; flex-direction:column; gap:1rem; align-items:center;">
                 <button onclick="showCategoriesForClass('4', 'Class 11 Applied')" class="subject-btn btn" style="background:#d1c4e9; color:#232946; width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #d1c4e9; cursor:pointer;">
@@ -1285,6 +1285,131 @@
       
       body.dark-mode #location-map {
         box-shadow: 0 4px 24px rgba(106,130,251,0.25) !important;
+      }
+
+      /* Dark mode styles for Wall of Fame section */
+      body.dark-mode .wall-of-fame-section {
+        background: linear-gradient(135deg, #2a3a5a 0%, #1e2a3a 100%) !important;
+      }
+
+      body.dark-mode .wall-of-fame-section h2 {
+        color: #f4f4f4 !important;
+      }
+
+      body.dark-mode .achievement-card {
+        background: rgba(35,41,70,0.95) !important;
+        border: 1px solid #444a6d !important;
+      }
+
+      body.dark-mode .achievement-card h3,
+      body.dark-mode .achievement-card strong,
+      body.dark-mode .achievement-card div {
+        color: #f4f4f4 !important;
+      }
+
+      body.dark-mode .performer-card {
+        background: linear-gradient(135deg, #2a3a5a 0%, #1e2a3a 100%) !important;
+        border: 1px solid #444a6d !important;
+      }
+
+      body.dark-mode .star-performer {
+        background: linear-gradient(135deg, #2a3a5a 0%, #1e2a3a 100%) !important;
+        border: 1px solid #6a82fb !important;
+      }
+
+      /* Dark mode styles for notification dropdown */
+      body.dark-mode #notifDropdown {
+        background: #232946 !important;
+        border: 1px solid #444a6d !important;
+        box-shadow: 0 4px 24px rgba(35,41,70,0.3) !important;
+      }
+
+      body.dark-mode .notification-item {
+        background: #1e293b !important;
+        color: #e2e8f0 !important;
+        border-bottom: 1px solid #334155 !important;
+      }
+
+      body.dark-mode .notification-item:hover {
+        background: #334155 !important;
+      }
+
+      /* Dark mode styles for subjects section */
+      body.dark-mode .subjects-section {
+        background: #181c2a !important;
+      }
+
+      body.dark-mode .subjects-section .card {
+        background: #232946 !important;
+        border: 1px solid #444a6d !important;
+      }
+
+      body.dark-mode .subjects-section h2,
+      body.dark-mode .subjects-section h3 {
+        color: #f4f4f4 !important;
+      }
+
+      body.dark-mode .subject-category {
+        background: #2a3a5a !important;
+        border: 1px solid #444a6d !important;
+      }
+
+      body.dark-mode .subject-btn {
+        background: #1e293b !important;
+        color: #f4f4f4 !important;
+        border: 2px solid #334155 !important;
+      }
+
+      body.dark-mode .subject-btn:hover {
+        background: #334155 !important;
+        border-color: #6a82fb !important;
+      }
+
+      /* Dark mode styles for modal */
+      body.dark-mode .modal-content {
+        background-color: #232946 !important;
+        border: 1px solid #444a6d !important;
+        box-shadow: 0 8px 32px rgba(35,41,70,0.5) !important;
+      }
+
+      body.dark-mode .modal-content h2,
+      body.dark-mode .modal-content h3,
+      body.dark-mode .modal-content p {
+        color: #f4f4f4 !important;
+      }
+
+      body.dark-mode .modal-content .close {
+        color: #aabfff !important;
+      }
+
+      body.dark-mode .modal-content .close:hover {
+        color: #6a82fb !important;
+      }
+
+      /* Dark mode styles for YouTube section */
+      body.dark-mode #youtube-section {
+        background: linear-gradient(135deg, #2a3a5a 0%, #1e2a3a 100%) !important;
+      }
+
+      body.dark-mode #youtube-section h2,
+      body.dark-mode #youtube-section p {
+        color: #f4f4f4 !important;
+      }
+
+      /* Dark mode styles for stats section */
+      body.dark-mode .stats-section {
+        background: #181c2a !important;
+      }
+
+      /* Dark mode styles for FAQ section */
+      body.dark-mode #faq {
+        background: #181c2a !important;
+      }
+
+      body.dark-mode #faq h2,
+      body.dark-mode #faq h3,
+      body.dark-mode #faq p {
+        color: #f4f4f4 !important;
       }
       
       /* Subject button styles */
