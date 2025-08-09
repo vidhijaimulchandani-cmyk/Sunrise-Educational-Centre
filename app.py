@@ -1,8 +1,32 @@
 from flask import Flask, render_template, send_from_directory, request, redirect, url_for, session, flash, jsonify, send_file
-from werkzeug.security import generate_password_hash, check_password_hash
+try:
+    from werkzeug.security import generate_password_hash, check_password_hash
+    WERKZEUG_AVAILABLE = True
+except ImportError:
+    import hashlib
+    WERKZEUG_AVAILABLE = False
+    
+    def generate_password_hash(password):
+        """Fallback password hashing using SHA-256 with salt"""
+        salt = 'admission_salt_2024'
+        return hashlib.sha256((password + salt).encode()).hexdigest()
+    
+    def check_password_hash(stored_hash, password):
+        """Fallback password verification"""
+        salt = 'admission_salt_2024'
+        computed_hash = hashlib.sha256((password + salt).encode()).hexdigest()
+        return stored_hash == computed_hash
+
 import os
 import secrets
-from werkzeug.utils import secure_filename
+try:
+    from werkzeug.utils import secure_filename
+except ImportError:
+    import re
+    def secure_filename(filename):
+        """Fallback secure filename function"""
+        filename = re.sub(r'[^a-zA-Z0-9._-]', '', filename)
+        return filename
 from auth_handler import (
     init_db, register_user, authenticate_user, save_resource, get_all_resources,
     delete_resource, get_all_users, delete_user, search_users, get_user_by_id,
@@ -1264,7 +1288,7 @@ def admin_create_user_page():
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
     
-    # Get pending admissions (include submit IP as last column to avoid index shifts)
+    # Get pending admissions (match order expected by template)
     c.execute('''
         SELECT id, student_name, dob, class, school_name, student_phone, student_email, 
                maths_marks, maths_rating, last_percentage, parent_name, parent_phone, 
@@ -1304,6 +1328,13 @@ def admin_create_user_page():
         for row in c.fetchall():
             admission_access_map[row[0]] = (row[1], row[2])
 
+    # Create admission_access_plain table for storing plain passwords for admin viewing
+    c.execute('''CREATE TABLE IF NOT EXISTS admission_access_plain (
+        admission_id INTEGER PRIMARY KEY,
+        plain_password TEXT NOT NULL,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )''')
+    
     # Ensure every pending admission has credentials; auto-generate if missing
     for adm in admissions:
         adm_id = adm[0]
@@ -1314,9 +1345,31 @@ def admin_create_user_page():
                 hashed_pw = generate_password_hash(access_password)
                 c.execute('''INSERT OR IGNORE INTO admission_access (admission_id, access_username, access_password)
                              VALUES (?, ?, ?)''', (adm_id, access_username, hashed_pw))
+                # Store plain password for admin viewing
+                c.execute('''INSERT OR REPLACE INTO admission_access_plain (admission_id, plain_password)
+                             VALUES (?, ?)''', (adm_id, access_password))
                 admission_access_map[adm_id] = (access_username, access_password)
             except Exception:
                 pass
+    
+    # Update admission_access_map with plain passwords for admin display
+    for adm_id in admission_access_map:
+        try:
+            c.execute('SELECT plain_password FROM admission_access_plain WHERE admission_id = ?', (adm_id,))
+            plain_row = c.fetchone()
+            if plain_row:
+                admission_access_map[adm_id] = (admission_access_map[adm_id][0], plain_row[0])
+            else:
+                # No plain password found, generate a new one
+                access_password = secrets.token_hex(4)
+                hashed_pw = generate_password_hash(access_password)
+                c.execute('UPDATE admission_access SET access_password = ? WHERE admission_id = ?', 
+                         (hashed_pw, adm_id))
+                c.execute('''INSERT OR REPLACE INTO admission_access_plain (admission_id, plain_password)
+                             VALUES (?, ?)''', (adm_id, access_password))
+                admission_access_map[adm_id] = (admission_access_map[adm_id][0], access_password)
+        except Exception:
+            pass
     conn.commit()
     conn.close()
     
@@ -2080,6 +2133,14 @@ def admission():
             hashed_pw = generate_password_hash(access_password)
             c.execute('''INSERT OR IGNORE INTO admission_access (admission_id, access_username, access_password)
                          VALUES (?, ?, ?)''', (new_admission_id, access_username, hashed_pw))
+            # Also store plain password for admin viewing
+            c.execute('''CREATE TABLE IF NOT EXISTS admission_access_plain (
+                admission_id INTEGER PRIMARY KEY,
+                plain_password TEXT NOT NULL,
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP
+            )''')
+            c.execute('''INSERT OR REPLACE INTO admission_access_plain (admission_id, plain_password)
+                         VALUES (?, ?)''', (new_admission_id, access_password))
             # Store plain password temporarily in session to display once (not persisted)
             session['last_admission_creds'] = {'username': access_username, 'password': access_password}
         except Exception as _e:
