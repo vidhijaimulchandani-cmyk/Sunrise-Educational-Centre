@@ -2101,6 +2101,10 @@ conn.commit()
 @app.route('/check-admission', methods=['GET', 'POST'])
 def check_admission():
     if request.method == 'GET':
+        # Prefill with freshly generated credentials if available (single-use display)
+        last_creds = session.pop('last_admission_creds', None)
+        if last_creds:
+            return render_template('check_admission.html', from_submission=True, access_username=last_creds.get('username'), access_password=last_creds.get('password'))
         return render_template('check_admission.html')
     # POST: verify admission portal credentials and show status
     access_username = request.form.get('access_username', '').strip()
