@@ -222,6 +222,7 @@ def init_queries_db():
             'responded_by': "ALTER TABLE queries ADD COLUMN responded_by TEXT",
             'category': "ALTER TABLE queries ADD COLUMN category TEXT DEFAULT 'general'",
             'source': "ALTER TABLE queries ADD COLUMN source TEXT DEFAULT 'website'",
+            'user_ip': "ALTER TABLE queries ADD COLUMN user_ip TEXT",
         }
         for col, alter in required_cols.items():
             if col not in existing_cols:
@@ -1858,16 +1859,60 @@ def submit_query():
     email = request.form.get('email')
     message = request.form.get('message')
     submitted_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    # Get user IP address
+    user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    if user_ip and ',' in user_ip:
+        user_ip = user_ip.split(',')[0].strip()
+    
     with sqlite3.connect('users.db') as conn:
         c = conn.cursor()
-        c.execute('INSERT INTO queries (name, email, message, submitted_at) VALUES (?, ?, ?, ?)',
-                  (name, email, message, submitted_at))
+        c.execute('INSERT INTO queries (name, email, message, submitted_at, user_ip) VALUES (?, ?, ?, ?, ?)',
+                  (name, email, message, submitted_at, user_ip))
         conn.commit()
     return redirect(url_for('home'))
 
+@app.route('/api/recent-queries')
+def get_recent_queries():
+    # Get user IP address
+    user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    if user_ip and ',' in user_ip:
+        user_ip = user_ip.split(',')[0].strip()
+    
+    try:
+        with sqlite3.connect('users.db') as conn:
+            c = conn.cursor()
+            # Get recent queries for this IP address (last 10)
+            c.execute('''
+                SELECT id, name, email, message, submitted_at, response, responded_at, status
+                FROM queries 
+                WHERE user_ip = ? 
+                ORDER BY submitted_at DESC 
+                LIMIT 10
+            ''', (user_ip,))
+            
+            queries = []
+            for row in c.fetchall():
+                query = {
+                    'id': row[0],
+                    'name': row[1],
+                    'email': row[2],
+                    'message': row[3],
+                    'submitted_at': row[4],
+                    'response': row[5],
+                    'responded_at': row[6],
+                    'status': row[7]
+                }
+                queries.append(query)
+            
+            return jsonify({'success': True, 'queries': queries})
+    
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
 @app.before_request
 def require_login():
-    allowed_routes = ['home', 'auth', 'register', 'static_files', 'submit_admission', 'admission', 'check_admission_status', 'check_admission']
+    allowed_routes = ['home', 'auth', 'register', 'static_files', 'submit_admission', 'admission', 'check_admission_status', 'check_admission', 'submit_query', 'get_recent_queries']
     if request.endpoint not in allowed_routes and not session.get('user_id'):
         return redirect(url_for('auth'))
 
