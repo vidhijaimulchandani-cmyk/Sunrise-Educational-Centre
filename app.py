@@ -1305,7 +1305,6 @@ def admin_create_user_page():
             admission_access_map[row[0]] = (row[1], row[2])
 
     # Ensure every pending admission has credentials; auto-generate if missing
-    import secrets
     for adm in admissions:
         adm_id = adm[0]
         if adm_id not in admission_access_map:
@@ -2077,7 +2076,6 @@ def admission():
         new_admission_id = c.lastrowid
         try:
             access_username = f"ADM{new_admission_id:06d}"
-            import secrets
             access_password = secrets.token_hex(4)
             hashed_pw = generate_password_hash(access_password)
             c.execute('''INSERT OR IGNORE INTO admission_access (admission_id, access_username, access_password)
