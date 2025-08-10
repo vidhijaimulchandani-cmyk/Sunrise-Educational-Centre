@@ -2104,7 +2104,7 @@ def get_recent_queries():
 
 @app.before_request
 def require_login():
-    allowed_routes = ['home', 'auth', 'register', 'static_files', 'submit_admission', 'admission', 'check_admission_status', 'check_admission', 'submit_query', 'get_recent_queries', 'api_get_categories_for_class']
+    allowed_routes = ['home', 'auth', 'register', 'static_files', 'submit_admission', 'admission', 'check_admission_status', 'check_admission', 'submit_query', 'get_recent_queries', 'api_get_categories_for_class', 'api_get_categories_by_class_name']
     if request.endpoint not in allowed_routes and not session.get('user_id'):
         return redirect(url_for('auth'))
 
@@ -3790,10 +3790,10 @@ def api_get_categories_for_class(class_id):
         conn = sqlite3.connect('users.db')
         c = conn.cursor()
         
-        # Get categories for the specific class
+        # Get active categories for the specific class or all
         c.execute('''SELECT id, name, description, category_type, paid_status 
                      FROM categories 
-                     WHERE target_class = ? OR target_class = 'all'
+                     WHERE is_active = 1 AND (target_class = ? OR target_class = 'all')
                      ORDER BY name''', (str(class_id),))
         
         categories = []
@@ -4076,6 +4076,35 @@ def cleanup_stale_sessions():
     cleanup_thread = threading.Thread(target=cleanup, daemon=True)
     cleanup_thread.start()
     print("🧹 Session cleanup service started")
+
+@app.route('/api/categories/by-name/<path:class_name>')
+def api_get_categories_by_class_name(class_name):
+    try:
+        # Map class_name to class_id using helper
+        from auth_handler import get_class_id_by_name
+        class_id = get_class_id_by_name(class_name)
+        if not class_id:
+            return jsonify({'success': False, 'error': f'Unknown class name: {class_name}'}), 400
+
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        c.execute('''SELECT id, name, description, category_type, paid_status 
+                     FROM categories 
+                     WHERE is_active = 1 AND (target_class = ? OR target_class = 'all')
+                     ORDER BY name''', (str(class_id),))
+        categories = [
+            {
+                'id': row[0],
+                'name': row[1],
+                'description': row[2],
+                'category_type': row[3],
+                'paid_status': row[4]
+            } for row in c.fetchall()
+        ]
+        conn.close()
+        return jsonify({'success': True, 'categories': categories, 'class_id': class_id})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))

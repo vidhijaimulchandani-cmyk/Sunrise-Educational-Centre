@@ -246,11 +246,11 @@
             <div style="flex:1 1 260px; min-width:220px; background:#e6f9f3; border-radius:18px; padding:1.5rem;">
               <h3 style="color:#14213d; margin-bottom:1.2rem; text-align:center;">Foundation</h3>
               <div style="display:flex; flex-direction:column; gap:1rem; align-items:center;">
-                <button onclick="showCategoriesForClass('9', 'Class 9')" class="subject-btn btn" style="background:#ffe082; color:#232946; width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #ffe082; cursor:pointer;">
+                <button onclick="showCategoriesForClass('class 9', 'Class 9')" class="subject-btn btn" style="background:#ffe082; color:#232946; width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #ffe082; cursor:pointer;">
                   Class 9: Core Mathematics
                   <div style='font-size:0.98rem; font-weight:400; color:#232946;'>4:00 PM – 5:00 PM</div>
                 </button>
-                <button onclick="showCategoriesForClass('2', 'Class 10')" class="subject-btn btn" style="background:#b2f0e6; color:#232946; width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #b2f0e6; cursor:pointer;">
+                <button onclick="showCategoriesForClass('class 10', 'Class 10')" class="subject-btn btn" style="background:#b2f0e6; color:#232946; width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #b2f0e6; cursor:pointer;">
                   Class 10: Mathematics
                   <div style='font-size:0.98rem; font-weight:400; color:#232946;'>5:00 PM – 6:00 PM</div>
                 </button>
@@ -259,11 +259,11 @@
             <div style="flex:1 1 260px; min-width:220px; background:#e3f7fc; border-radius:18px; padding:1.5rem;">
               <h3 style="color:#14213d; margin-bottom:1.2rem; text-align:center;">JEE Level</h3>
               <div style="display:flex; flex-direction:column; gap:1rem; align-items:center;">
-                <button onclick="showCategoriesForClass('4', 'Class 11 Applied')" class="subject-btn btn" style="background:#d1c4e9; color:#232946; width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #d1c4e9; cursor:pointer;">
+                <button onclick="showCategoriesForClass('class 11 applied', 'Class 11 Applied')" class="subject-btn btn" style="background:#d1c4e9; color:#232946; width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #d1c4e9; cursor:pointer;">
                   Class 11: Applied Mathematics
                   <div style='font-size:0.98rem; font-weight:400; color:#232946;'>6:00 PM – 7:00 PM</div>
                 </button>
-                <button onclick="showCategoriesForClass('6', 'Class 12 Applied')" class="subject-btn btn" style="background:#ffcdd2; color:#232946; width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #ffcdd2; cursor:pointer;">
+                <button onclick="showCategoriesForClass('class 12 applied', 'Class 12 Applied')" class="subject-btn btn" style="background:#ffcdd2; color:#232946; width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #ffcdd2; cursor:pointer;">
                   Class 12: Core Mathematics
                   <div style='font-size:0.98rem; font-weight:400; color:#232946;'>8:00 PM – 9:00 PM</div>
                 </button>
@@ -889,8 +889,8 @@
         overlay.style.display = 'block';
         requestAnimationFrame(() => { sidePanel.style.right = '0'; });
 
-        // Fetch categories for the specific class
-        fetch(`/api/categories/${classId}`)
+        // Fetch categories for the specific class (by name)
+        fetch(`/api/categories/by-name/${encodeURIComponent(classId)}`)
           .then(response => response.json())
           .then(data => {
             if (data.success && data.categories && data.categories.length > 0) {
@@ -906,7 +906,7 @@
                 item.innerHTML = `
                   <strong style="color:#232946;">${category.name}</strong>
                   <span style="color:#666; font-size:0.92rem;">${category.description || ''}</span>
-                  <a href="/study-resources?class=${classId}&category=${category.id}" class="btn btn-primary" style="margin-top:0.2rem;">View Resources</a>
+                                     <a href="/study-resources?class=${data.class_id}&category=${category.id}" class="btn btn-primary" style="margin-top:0.2rem;">View Resources</a>
                 `;
                 panelCategories.appendChild(item);
               });
