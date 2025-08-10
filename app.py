@@ -518,7 +518,7 @@ def inject_global_variables():
 # Route for the main page
 @app.route('/')
 def home():
-    with sqlite3.connect('users.db') as conn:
+    with sqlite3.connect(DATABASE) as conn:
         c = conn.cursor()
         c.execute('SELECT name, email, message, submitted_at FROM queries ORDER BY id DESC LIMIT 10')
         queries = c.fetchall()
@@ -765,7 +765,7 @@ def online_class():
 
 @app.route('/join-class/<int:class_id>')
 def join_class(class_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('SELECT meeting_url, topic, description FROM live_classes WHERE id=?', (class_id,))
     row = c.fetchone()
@@ -782,7 +782,7 @@ def join_class_host(class_id):
         flash('Access denied. Only hosts can access this page.', 'error')
         return redirect(url_for('admin_panel'))
     
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('SELECT meeting_url, topic, description FROM live_classes WHERE id=?', (class_id,))
     row = c.fetchone()
@@ -922,7 +922,7 @@ def admin_panel():
         # Build notification_usernames for personal ban notifications
         notification_usernames = {}
         import sqlite3
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         for n in all_notifications:
             notif_id, message, class_name, created_at, target_paid_status, status, notification_type, scheduled_time = n
@@ -1090,7 +1090,7 @@ def upload_resource():
 def get_class_name_by_id(class_id):
     """Get class name by class ID"""
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('SELECT name FROM classes WHERE id = ?', (class_id,))
         result = c.fetchone()
@@ -1198,7 +1198,7 @@ def profile():
     if not session.get('user_id'):
         return redirect(url_for('auth'))
     
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Get user info with class name
@@ -1272,7 +1272,7 @@ def admin_add_class():
     if name:
         from auth_handler import get_all_classes
         import sqlite3
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         try:
             c.execute('INSERT INTO classes (name) VALUES (?)', (name,))
@@ -1289,7 +1289,7 @@ def admin_edit_class(class_id):
     name = request.form.get('name', '').strip()
     if name:
         import sqlite3
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('UPDATE classes SET name=? WHERE id=?', (name, class_id))
         conn.commit()
@@ -1301,7 +1301,7 @@ def admin_delete_class(class_id):
     if session.get('role') not in ['admin', 'teacher']:
         return redirect(url_for('auth'))
     import sqlite3
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('DELETE FROM classes WHERE id=?', (class_id,))
     conn.commit()
@@ -1371,7 +1371,7 @@ def admin_promote_user(user_id):
     if session.get('role') != 'admin':
         return redirect(url_for('auth'))
     import sqlite3
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     # Get admin class id
     c.execute("SELECT id FROM classes WHERE name='admin'")
@@ -1387,7 +1387,7 @@ def admin_demote_user(user_id):
         return redirect(url_for('auth'))
     # Demote to student: set to first non-admin/teacher class
     import sqlite3
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute("SELECT id FROM classes WHERE name NOT IN ('admin','teacher') ORDER BY id LIMIT 1")
     student_class_id = c.fetchone()[0]
@@ -1472,7 +1472,7 @@ def admin_create_user_page():
     
     # Get admissions data
     import sqlite3
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Get pending admissions (match order expected by template)
@@ -1621,7 +1621,7 @@ def admin_ban_user(user_id):
     # Prevent banning again on the same day
     import sqlite3
     from datetime import datetime, timedelta, timezone
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('SELECT ban_effective_at FROM users WHERE id=?', (user_id,))
     row = c.fetchone()
@@ -2108,7 +2108,7 @@ def submit_query():
     if user_ip and ',' in user_ip:
         user_ip = user_ip.split(',')[0].strip()
     
-    with sqlite3.connect('users.db') as conn:
+    with sqlite3.connect(DATABASE) as conn:
         c = conn.cursor()
         c.execute('INSERT INTO queries (name, email, message, submitted_at, user_ip) VALUES (?, ?, ?, ?, ?)',
                   (name, email, message, submitted_at, user_ip))
@@ -2123,7 +2123,7 @@ def get_recent_queries():
         user_ip = user_ip.split(',')[0].strip()
     
     try:
-        with sqlite3.connect('users.db') as conn:
+        with sqlite3.connect(DATABASE) as conn:
             c = conn.cursor()
             # Get recent queries for this IP address (last 10)
             c.execute('''
@@ -2167,7 +2167,7 @@ def check_admission_status():
         return jsonify({'hasAdmission': False})
     
     user_id = session.get('user_id')
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Check in pending admissions first
