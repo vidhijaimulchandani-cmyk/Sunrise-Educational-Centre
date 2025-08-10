@@ -287,6 +287,16 @@
         </div>
       </div>
       
+      <!-- Categories Side Panel and Overlay -->
+      <div id="categoriesOverlay" onclick="closeCategoriesPanel()" style="display:none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 10000;"></div>
+      <div id="categoriesSidePanel" style="position: fixed; top: 0; right: -380px; height: 100%; width: 360px; max-width: 90vw; background: #fff; box-shadow: -4px 0 24px rgba(0,0,0,0.2); z-index: 10001; transition: right 0.3s ease; padding: 1rem 1rem 1.5rem 1rem; border-top-left-radius: 16px; border-bottom-left-radius: 16px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:0.5rem 0 0.8rem 0; border-bottom:1px solid #eee;">
+          <h3 id="panelTitle" style="margin:0; color:#232946; font-size:1.2rem;">Categories</h3>
+          <button onclick="closeCategoriesPanel()" aria-label="Close" style="background:none; border:none; font-size:1.6rem; cursor:pointer; color:#888;">×</button>
+        </div>
+        <div id="panelCategories" style="margin-top:1rem; display:grid; grid-template-columns:1fr; gap:0.75rem; overflow:auto; height:calc(100% - 60px);"></div>
+      </div>
+      
       <!-- Stats Section -->
     <section class="stats-section" style="display:flex; justify-content:center; gap:2rem; margin:2.5rem 0 2.5rem 0; flex-wrap:wrap;">
       <div style="background:#fff8e1; border-radius:20px; padding:2.2rem 2.5rem; min-width:220px; text-align:center; box-shadow:0 2px 12px rgba(100,100,100,0.07);">
@@ -867,47 +877,68 @@
         }
       }
       
-      // Function to show categories modal for a specific class
+      // Function to show categories side panel for a specific class
       function showCategoriesForClass(classId, className) {
-        const modalTitle = document.getElementById('modalTitle');
-        const categoriesList = document.getElementById('categoriesList');
-        const closeButton = document.querySelector('#categoriesModal .close');
-        const categoriesModal = document.getElementById('categoriesModal');
+        const panelTitle = document.getElementById('panelTitle');
+        const panelCategories = document.getElementById('panelCategories');
+        const overlay = document.getElementById('categoriesOverlay');
+        const sidePanel = document.getElementById('categoriesSidePanel');
 
-        modalTitle.textContent = `${className} Categories`;
-        categoriesList.innerHTML = '<div style="text-align: center; padding: 2rem;"><div style="display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #6a82fb; border-radius: 50%; animation: spin 1s linear infinite;"></div><p style="margin-top: 1rem; color: #666;">Loading categories...</p></div>';
+        panelTitle.textContent = `${className} Categories`;
+        panelCategories.innerHTML = '<div style="text-align: center; padding: 1.2rem; color:#666;">Loading...</div>';
+        overlay.style.display = 'block';
+        requestAnimationFrame(() => { sidePanel.style.right = '0'; });
 
         // Fetch categories for the specific class
         fetch(`/api/categories/${classId}`)
           .then(response => response.json())
           .then(data => {
             if (data.success && data.categories && data.categories.length > 0) {
-              categoriesList.innerHTML = '';
+              panelCategories.innerHTML = '';
               data.categories.forEach(category => {
-                const categoryDiv = document.createElement('div');
-                categoryDiv.className = 'category-item';
-                categoryDiv.innerHTML = `
-                  <h3>${category.name}</h3>
-                  <p>${category.description}</p>
-                  <a href="/study-resources?class=${classId}&category=${category.id}" class="btn btn-primary">View Resources</a>
+                const item = document.createElement('div');
+                item.style.padding = '0.75rem 0.6rem';
+                item.style.border = '1px solid #eee';
+                item.style.borderRadius = '10px';
+                item.style.display = 'flex';
+                item.style.flexDirection = 'column';
+                item.style.gap = '0.4rem';
+                item.innerHTML = `
+                  <strong style="color:#232946;">${category.name}</strong>
+                  <span style="color:#666; font-size:0.92rem;">${category.description || ''}</span>
+                  <a href="/study-resources?class=${classId}&category=${category.id}" class="btn btn-primary" style="margin-top:0.2rem;">View Resources</a>
                 `;
-                categoriesList.appendChild(categoryDiv);
+                panelCategories.appendChild(item);
               });
             } else {
-              categoriesList.innerHTML = '<p>No specific categories found for this class yet.</p>';
+              panelCategories.innerHTML = '<p style="color:#888;">No specific categories found for this class yet.</p>';
             }
-            categoriesModal.style.display = 'block';
           })
           .catch(error => {
             console.error('Error fetching categories:', error);
-            categoriesList.innerHTML = '<p>Error loading categories.</p>';
+            panelCategories.innerHTML = '<p style="color:#d33;">Error loading categories.</p>';
           });
       }
 
-      // Function to close the categories modal
-      function closeCategoriesModal() {
-        document.getElementById('categoriesModal').style.display = 'none';
-      }
+             // Function to close the categories side panel
+       function closeCategoriesPanel() {
+         const overlay = document.getElementById('categoriesOverlay');
+         const sidePanel = document.getElementById('categoriesSidePanel');
+         sidePanel.style.right = '-380px';
+         setTimeout(() => { overlay.style.display = 'none'; }, 250);
+       }
+
+       // Function to close the categories modal
+       function closeCategoriesModal() {
+         document.getElementById('categoriesModal').style.display = 'none';
+       }
+
+       // Close side panel on Escape key
+       document.addEventListener('keydown', function(e) {
+         if (e.key === 'Escape') {
+           closeCategoriesPanel();
+         }
+       });
 
       // YouTube Video Functions
       let currentVideoIndex = 0;
