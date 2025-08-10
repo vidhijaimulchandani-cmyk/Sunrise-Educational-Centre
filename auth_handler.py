@@ -4,13 +4,16 @@ from datetime import datetime, timezone
 # Import time configuration for IST
 from time_config import get_current_ist_time, format_ist_time, get_ist_timestamp
 
+# Database path - should match the one in app.py
+DATABASE = 'users.db'
+
 # ==============================================================================
 # Database Initialization and Migration
 # ==============================================================================
 
 def init_db():
     init_classes_db()  # Ensure classes table is ready first
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
 
     # --- Schema Definitions ---
@@ -215,7 +218,7 @@ def init_db():
     # Note: init_resources_db and init_live_class_db are now integrated into init_db
 
 def init_classes_db():
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''
         CREATE TABLE IF NOT EXISTS classes (
@@ -240,7 +243,7 @@ def init_classes_db():
 # ==============================================================================
 
 def get_all_classes():
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('SELECT id, name FROM classes')
     classes = c.fetchall()
@@ -248,7 +251,7 @@ def get_all_classes():
     return classes
 
 def get_class_id_by_name(class_name):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # First try exact match
@@ -325,7 +328,7 @@ def get_class_id_by_name(class_name):
 # ==============================================================================
 
 def register_user(username, password, class_id, mobile_no=None, email_address=None, paid_status='not paid'):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     try:
         # New registrations now use class_id directly with configurable paid status
@@ -339,7 +342,7 @@ def register_user(username, password, class_id, mobile_no=None, email_address=No
         conn.close()
 
 def authenticate_user(username, password):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''
         SELECT u.id, c.name FROM users u
@@ -353,7 +356,7 @@ def authenticate_user(username, password):
     return None
 
 def get_all_users():
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''
         SELECT u.id, u.username, c.name, u.paid, u.mobile_no, u.email_address FROM users u
@@ -364,7 +367,7 @@ def get_all_users():
     return users
 
 def get_user_by_id(user_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''
         SELECT u.id, u.username, u.class_id, u.paid, c.name, u.banned, u.mobile_no, u.email_address FROM users u
@@ -376,7 +379,7 @@ def get_user_by_id(user_id):
     return user
 
 def get_user_by_username(username):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''
         SELECT u.id, u.username, u.class_id, u.paid, c.name, u.banned, u.mobile_no, u.email_address FROM users u
@@ -388,7 +391,7 @@ def get_user_by_username(username):
     return user
 
 def update_user(user_id, username, class_id, paid, banned=None, mobile_no=None, email_address=None):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     if banned is not None:
         c.execute('UPDATE users SET username=?, class_id=?, paid=?, banned=?, mobile_no=?, email_address=? WHERE id=?', 
@@ -400,7 +403,7 @@ def update_user(user_id, username, class_id, paid, banned=None, mobile_no=None, 
     conn.close()
 
 def update_user_with_password(user_id, username, password, class_id, paid, banned=None, mobile_no=None, email_address=None):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     if banned is not None:
         c.execute('UPDATE users SET username=?, password=?, class_id=?, paid=?, banned=?, mobile_no=?, email_address=? WHERE id=?', 
@@ -412,7 +415,7 @@ def update_user_with_password(user_id, username, password, class_id, paid, banne
     conn.close()
 
 def search_users(query):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''
         SELECT u.id, u.username, c.name, u.paid, u.mobile_no, u.email_address FROM users u
@@ -430,7 +433,7 @@ def search_users(query):
 # ==============================================================================
 
 def save_resource(filename, class_id, filepath, title, description, category):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('INSERT INTO resources (filename, class_id, filepath, title, description, category) VALUES (?, ?, ?, ?, ?, ?)', 
               (filename, class_id, filepath, title, description, category))
@@ -438,7 +441,7 @@ def save_resource(filename, class_id, filepath, title, description, category):
     conn.close()
 
 def get_all_resources():
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''
         SELECT r.filename, r.class_id, r.filepath, r.title, r.description, r.category FROM resources r
@@ -448,7 +451,7 @@ def get_all_resources():
     return resources
 
 def get_resources_for_class_id(class_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''
         SELECT r.filename, r.class_id, r.filepath, r.title, r.description, r.category FROM resources r
@@ -460,7 +463,7 @@ def get_resources_for_class_id(class_id):
 
 def get_categories_for_class(class_id):
     """Get all categories that are available for a specific class"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Create categories table if it doesn't exist
@@ -496,7 +499,7 @@ def get_categories_for_class(class_id):
 # ==============================================================================
 
 def add_notification(message, class_id, target_paid_status='all', status='active', scheduled_time=None, notification_type='general'):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute(
         'INSERT INTO notifications (message, class_id, created_at, target_paid_status, status, scheduled_time, notification_type) VALUES (?, ?, ?, ?, ?, ?, ?)',
@@ -506,7 +509,7 @@ def add_notification(message, class_id, target_paid_status='all', status='active
     conn.close()
 
 def get_unread_notifications_for_user(user_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('SELECT class_id, paid FROM users WHERE id = ?', (user_id,))
     result = c.fetchone()
@@ -539,7 +542,7 @@ def get_unread_notifications_for_user(user_id):
     return notifications + personal_notifications
 
 def mark_notification_as_seen(user_id, notification_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     try:
         c.execute('INSERT INTO user_notification_status (user_id, notification_id, seen_at) VALUES (?, ?, ?)',
@@ -553,7 +556,7 @@ def mark_notification_as_seen(user_id, notification_id):
         conn.close()
 
 def get_notifications_for_class(class_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('SELECT message, created_at FROM notifications WHERE class_id=? ORDER BY created_at DESC', (class_id,))
     notifications = c.fetchall()
@@ -561,7 +564,7 @@ def get_notifications_for_class(class_id):
     return notifications
 
 def get_all_notifications():
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''
         SELECT n.id, n.message,
@@ -582,7 +585,7 @@ def get_all_notifications():
     return notifications
 
 def add_personal_notification(message, user_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     # Insert notification with class_id as NULL and target_paid_status as 'personal'
     c.execute(
@@ -608,21 +611,21 @@ def add_personal_notification(message, user_id):
 # ... (delete_user, delete_resource, live_class functions, etc. are here) ...
 # Note: I have integrated the unchanged functions from the previous state of the file below.
 def delete_resource(filename):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('DELETE FROM resources WHERE filename=?', (filename,))
     conn.commit()
     conn.close()
 
 def delete_user(user_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('DELETE FROM users WHERE id=?', (user_id,))
     conn.commit()
     conn.close()
 
 def create_live_class(class_code, pin, meeting_url, topic, description, status='scheduled', scheduled_time=None):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('INSERT INTO live_classes (class_code, pin, meeting_url, topic, description, created_at, status, scheduled_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
               (class_code, pin, meeting_url, topic, description, format_ist_time(get_current_ist_time()), status, scheduled_time))
@@ -632,7 +635,7 @@ def create_live_class(class_code, pin, meeting_url, topic, description, status='
     return new_class_id
 
 def get_live_class(class_code, pin):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('SELECT meeting_url FROM live_classes WHERE class_code=? AND pin=? AND is_active=1', (class_code, pin))
     result = c.fetchone()
@@ -640,7 +643,7 @@ def get_live_class(class_code, pin):
     return result[0] if result else None
 
 def get_active_classes():
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('SELECT id, class_code, pin, meeting_url, topic, description, created_at FROM live_classes WHERE is_active=1 ORDER BY created_at DESC')
     classes = c.fetchall()
@@ -648,7 +651,7 @@ def get_active_classes():
     return classes
 
 def get_class_details_by_id(class_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('SELECT class_code, pin, meeting_url, topic, description FROM live_classes WHERE id=?', (class_id,))
     details = c.fetchone()
@@ -656,14 +659,14 @@ def get_class_details_by_id(class_id):
     return details
 
 def deactivate_class(class_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('UPDATE live_classes SET is_active=0 WHERE id=?', (class_id,))
     conn.commit()
     conn.close()
 
 def delete_notification(notification_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('DELETE FROM user_notification_status WHERE notification_id=?', (notification_id,))
     c.execute('DELETE FROM notifications WHERE id=?', (notification_id,))
@@ -672,7 +675,7 @@ def delete_notification(notification_id):
 
 def update_notification_status(notification_id, status):
     """Update the status of a notification"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('UPDATE notifications SET status = ? WHERE id = ?', (status, notification_id))
     conn.commit()
@@ -680,7 +683,7 @@ def update_notification_status(notification_id, status):
 
 def get_notifications_by_status(status):
     """Get notifications by status (active, scheduled, completed, cancelled)"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''
         SELECT n.id, n.message, c.name as class_name, n.created_at, n.status, n.notification_type, n.scheduled_time
@@ -695,7 +698,7 @@ def get_notifications_by_status(status):
 
 def get_notifications_by_type(notification_type):
     """Get notifications by type (general, live_class, study_resource)"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''
         SELECT n.id, n.message, c.name as class_name, n.created_at, n.status, n.notification_type, n.scheduled_time
@@ -709,7 +712,7 @@ def get_notifications_by_type(notification_type):
     return notifications
 
 def create_topic(name, description, class_id=None, paid='unpaid'):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('INSERT INTO forum_topics (name, description, class_id, paid) VALUES (?, ?, ?, ?)', (name, description, class_id, paid))
     conn.commit()
@@ -718,7 +721,7 @@ def create_topic(name, description, class_id=None, paid='unpaid'):
     return topic_id
 
 def get_topics_by_class(class_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('SELECT id, name, description, created_at FROM forum_topics WHERE class_id = ? ORDER BY created_at DESC', (class_id,))
     topics = c.fetchall()
@@ -727,7 +730,7 @@ def get_topics_by_class(class_id):
 
 def get_topics_for_user(user_role, user_paid_status=None):
     """Get topics based on user's role/class and paid status"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     if user_role in ['admin', 'teacher']:
@@ -762,7 +765,7 @@ def get_topics_for_user(user_role, user_paid_status=None):
 
 def get_all_topics():
     """Get all forum topics for admin use"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('SELECT id, name, description, class_id, created_at, paid FROM forum_topics ORDER BY created_at DESC')
     topics = c.fetchall()
@@ -770,7 +773,7 @@ def get_all_topics():
     return topics
 
 def delete_topic(topic_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('DELETE FROM forum_topics WHERE id = ?', (topic_id,))
     conn.commit()
@@ -778,7 +781,7 @@ def delete_topic(topic_id):
 
 def can_user_access_topic(user_role, user_paid_status, topic_id):
     """Check if user can access a specific topic based on their role, paid status, and class"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Get topic details
@@ -808,7 +811,7 @@ def can_user_access_topic(user_role, user_paid_status, topic_id):
         return True  # General topic, accessible to all
     
     # Get user's class
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('SELECT id FROM classes WHERE name = ?', (user_role,))
     user_class = c.fetchone()
@@ -820,7 +823,7 @@ def can_user_access_topic(user_role, user_paid_status, topic_id):
     return False
 
 def save_forum_message(user_id, username, message, parent_id=None, topic_id=None, media_url=None):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Get user details for access control
@@ -847,7 +850,7 @@ def save_forum_message(user_id, username, message, parent_id=None, topic_id=None
     return True
 
 def get_forum_messages(parent_id=None, topic_id=None):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     if parent_id is None:
@@ -887,7 +890,7 @@ def get_forum_messages(parent_id=None, topic_id=None):
     return messages
 
 def vote_on_message(message_id, vote_type):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     if vote_type == 'upvote':
         c.execute("UPDATE forum_messages SET upvotes = upvotes + 1 WHERE id = ?", (message_id,))
@@ -897,21 +900,21 @@ def vote_on_message(message_id, vote_type):
     conn.close()
 
 def delete_forum_message(message_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute("DELETE FROM forum_messages WHERE id = ? OR parent_id = ?", (message_id, message_id))
     conn.commit()
     conn.close()
 
 def save_live_class_message(live_class_id, user_id, username, message, media_url=None):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('INSERT INTO live_class_messages (live_class_id, user_id, username, message, media_url) VALUES (?, ?, ?, ?, ?)', (live_class_id, user_id, username, message, media_url))
     conn.commit()
     conn.close()
 
 def get_live_class_messages(live_class_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('SELECT id, user_id, username, message, media_url, timestamp FROM live_class_messages WHERE live_class_id=? ORDER BY timestamp ASC', (live_class_id,))
     messages = c.fetchall()
@@ -919,7 +922,7 @@ def get_live_class_messages(live_class_id):
     return messages
 
 def delete_live_class_message(message_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('DELETE FROM live_class_messages WHERE id=?', (message_id,))
     conn.commit()
@@ -931,7 +934,7 @@ def delete_live_class_message(message_id):
 
 def update_live_class_status(class_id, status):
     """Update the status of a live class"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     if status == 'active':
@@ -946,7 +949,7 @@ def update_live_class_status(class_id, status):
 
 def get_live_classes_by_status(status):
     """Get live classes by status (scheduled, active, completed, cancelled)"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''
         SELECT id, class_code, pin, meeting_url, topic, description, created_at, status, scheduled_time
@@ -972,7 +975,7 @@ def get_completed_live_classes():
 
 def get_upcoming_live_classes():
     """Get upcoming scheduled live classes (scheduled for future or without specific time)"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     current_time = get_current_ist_time()
     c.execute('''
@@ -991,7 +994,7 @@ def schedule_live_class(class_code, pin, meeting_url, topic, description, schedu
 
 def start_live_class(class_id):
     """Mark a live class as active"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Update status to active and set activation time
@@ -1015,7 +1018,7 @@ def cancel_live_class(class_id):
 
 def get_live_class_with_status(class_id):
     """Get live class details including status"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''
         SELECT id, class_code, pin, meeting_url, topic, description, created_at, status, scheduled_time, is_active
@@ -1027,7 +1030,7 @@ def get_live_class_with_status(class_id):
 
 def auto_update_class_statuses():
     """Automatically update class statuses based on current time"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     current_time = get_current_ist_time()
     current_time_str = format_ist_time(current_time)
@@ -1066,7 +1069,7 @@ def end_live_class(class_id):
     complete_live_class(class_id)
     
     # Also deactivate the class for backward compatibility
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('UPDATE live_classes SET is_active = 0 WHERE id = ?', (class_id,))
     conn.commit()
@@ -1084,7 +1087,7 @@ def get_live_classes_for_display():
 
 def is_class_time_to_start(class_id):
     """Check if it's time for a scheduled class to start"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     current_time = get_current_ist_time()
     current_time_str = format_ist_time(current_time)
@@ -1112,7 +1115,7 @@ def can_start_class(class_id):
 
 def can_end_class(class_id):
     """Check if a class can be ended (is currently active)"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('SELECT status FROM live_classes WHERE id = ?', (class_id,))
     result = c.fetchone()
@@ -1123,7 +1126,7 @@ def can_end_class(class_id):
 # Enhanced Live Class Helper Functions
 def record_attendance(class_id, user_id, username):
     """Record user attendance in live class"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     now = get_ist_timestamp()
     
@@ -1151,7 +1154,7 @@ def record_attendance(class_id, user_id, username):
 
 def get_class_attendance(class_id):
     """Get attendance list for a class"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''
         SELECT username, joined_at
@@ -1165,7 +1168,7 @@ def get_class_attendance(class_id):
 
 def get_live_class_analytics():
     """Get basic analytics for live classes"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Total classes by status
@@ -1198,7 +1201,7 @@ def get_live_class_analytics():
 
 def cleanup_old_classes():
     """Clean up old completed classes (older than 30 days)"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Get old completed classes
@@ -1227,7 +1230,7 @@ def cleanup_old_classes():
 
 def validate_live_class_data():
     """Validate and fix live class data integrity"""
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Fix status inconsistencies

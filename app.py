@@ -2506,7 +2506,7 @@ def status_management():
     all_classes = get_all_classes()
     
     # Get all live classes with status
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''
         SELECT id, class_code, pin, meeting_url, topic, description, created_at, status, scheduled_time
@@ -2558,7 +2558,7 @@ def delete_live_class_route(class_id):
     if session.get('role') not in ['admin', 'teacher']:
         return redirect(url_for('auth'))
     
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('DELETE FROM live_class_messages WHERE live_class_id = ?', (class_id,))
     c.execute('DELETE FROM live_classes WHERE id = ?', (class_id,))
@@ -2783,7 +2783,7 @@ def create_category():
             return redirect(url_for('upload_resource'))
 
         # Save category to database
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Create categories table if it doesn't exist
@@ -2819,7 +2819,7 @@ def create_category():
 
 # Get all categories
 def get_all_categories():
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Create categories table if it doesn't exist
@@ -2847,7 +2847,7 @@ def delete_category(category_id):
         return redirect(url_for('auth'))
 
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Get category name before deleting
@@ -2890,7 +2890,7 @@ def edit_category(category_id):
             flash('Category name is required.', 'error')
             return redirect(url_for('upload_resource'))
 
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Update category
@@ -3062,7 +3062,7 @@ def edit_resource():
             return redirect(url_for('upload_resource'))
 
         # Update resource in database
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Update the resource
@@ -3321,7 +3321,7 @@ def edit_profile():
         return redirect(url_for('auth'))
     
     user_id = session['user_id']
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Get current user info
@@ -3372,7 +3372,7 @@ def edit_profile():
             flash('Username is required.', 'error')
             return render_template('profile.html', user=user, error='Username is required.')
         else:
-            conn = sqlite3.connect('users.db')
+            conn = sqlite3.connect(DATABASE)
             c = conn.cursor()
             
             try:
@@ -3450,7 +3450,7 @@ def api_get_queries():
         
         # Get total count
         count_query = query.replace("SELECT id, name, email, phone, message, subject, priority, status, category, source, submitted_at, response, responded_at, responded_by", "SELECT COUNT(*)")
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
         cursor.execute(count_query, params)
         total = cursor.fetchone()[0]
@@ -3512,7 +3512,7 @@ def api_respond_to_query(query_id):
         if not response:
             return jsonify({'success': False, 'error': 'Response is required'}), 400
         
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
         
         # Update query with response
@@ -3542,7 +3542,7 @@ def api_update_query_status(query_id):
         if not status:
             return jsonify({'success': False, 'error': 'Status is required'}), 400
         
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
         
         cursor.execute("UPDATE queries SET status = ? WHERE id = ?", (status, query_id))
@@ -3559,7 +3559,7 @@ def api_update_query_status(query_id):
 def api_delete_query(query_id):
     """API endpoint to delete a query"""
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
         
         cursor.execute("DELETE FROM queries WHERE id = ?", (query_id,))
@@ -3611,7 +3611,7 @@ def api_export_queries():
         query += " ORDER BY submitted_at DESC"
         
         # Execute query
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
         cursor.execute(query, params)
         queries = cursor.fetchall()
@@ -3649,7 +3649,7 @@ def api_export_queries():
 def get_query_statistics():
     """Get statistics for queries"""
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
         
         # Total queries
@@ -3814,7 +3814,7 @@ def pdf_content(filename):
 @app.route('/api/categories/<int:class_id>')
 def api_get_categories_for_class(class_id):
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Get categories for the specific class
@@ -3850,7 +3850,7 @@ def track_ip_activity():
         ua = request.headers.get('User-Agent', '')[:300]
         now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         # Ensure tables exist (in case of reload)
         c.execute('''CREATE TABLE IF NOT EXISTS ip_logs (
@@ -3888,7 +3888,7 @@ def api_admin_metrics_traffic():
     if session.get('role') not in ['admin', 'teacher']:
         return jsonify({'success': False, 'error': 'Unauthorized'}), 401
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         # Total unique IPs (all time)
         c.execute('SELECT COUNT(DISTINCT ip) FROM ip_logs')
@@ -3923,7 +3923,7 @@ def api_admin_metrics_logs():
         limit = int(request.args.get('limit', 200))
         if limit < 1 or limit > 1000:
             limit = 200
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('''
             SELECT l.ip, l.user_id, IFNULL(u.username,''), l.path, l.user_agent, l.visited_at
@@ -3949,7 +3949,7 @@ def api_admin_metrics_active():
     if session.get('role') not in ['admin', 'teacher']:
         return jsonify({'success': False, 'error': 'Unauthorized'}), 401
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('''
             SELECT ua.user_id, IFNULL(u.username,''), ua.ip, ua.last_seen
@@ -3982,7 +3982,7 @@ def api_admin_metrics_last_seen():
         ids = []
         if user_ids_param:
             ids = [i for i in (p.strip() for p in user_ids_param.split(',')) if i.isdigit()]
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         if ids:
             placeholders = ','.join('?' for _ in ids)
