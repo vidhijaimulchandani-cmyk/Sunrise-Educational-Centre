@@ -59,7 +59,7 @@ from time_config import (
 from bulk_upload.routes import bulk_upload_bp
 
 # Initialize Flask app
-app = Flask(__name__, static_folder='.', template_folder='.')
+app = Flask(__name__, static_folder='.', template_folder='templates')
 
 # Configuration
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -1428,7 +1428,8 @@ def admin_create_user_page():
         SELECT id, student_name, dob, class, school_name, student_phone, student_email, 
                maths_marks, maths_rating, last_percentage, parent_name, parent_phone, 
                passport_photo, approved_by, approved_at
-        FROM approved_admissions 
+        FROM admissions 
+        WHERE status = 'approved' 
         ORDER BY approved_at DESC
     ''')
     approved_admissions = c.fetchall()
@@ -1438,7 +1439,8 @@ def admin_create_user_page():
         SELECT id, student_name, dob, class, school_name, student_phone, student_email, 
                maths_marks, maths_rating, last_percentage, parent_name, parent_phone, 
                passport_photo, disapproved_by, disapproval_reason, disapproved_at
-        FROM disapproved_admissions 
+        FROM admissions 
+        WHERE status = 'disapproved' 
         ORDER BY disapproved_at DESC
     ''')
     disapproved_admissions = c.fetchall()
@@ -1643,22 +1645,26 @@ def view_admissions():
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
     
-    # Get pending admissions
+    # Get pending admissions (status is NULL or 'pending')
     c.execute('''SELECT id, student_name, dob, class, school_name, student_phone, student_email, 
                  maths_marks, maths_rating, last_percentage, parent_name, parent_phone, 
-                 passport_photo, status, submitted_at FROM admissions ORDER BY submitted_at DESC''')
+                 passport_photo, submitted_at, status FROM admissions 
+                 WHERE status IS NULL OR status = 'pending' OR status = '' 
+                 ORDER BY submitted_at DESC''')
     pending_admissions = c.fetchall()
     
     # Get approved admissions
     c.execute('''SELECT id, student_name, dob, class, school_name, student_phone, student_email, 
                  maths_marks, maths_rating, last_percentage, parent_name, parent_phone, 
-                 passport_photo, approved_by, approved_at FROM approved_admissions ORDER BY approved_at DESC''')
+                 passport_photo, approved_by, approved_at FROM admissions 
+                 WHERE status = 'approved' ORDER BY approved_at DESC''')
     approved_admissions = c.fetchall()
     
     # Get disapproved admissions
     c.execute('''SELECT id, student_name, dob, class, school_name, student_phone, student_email, 
                  maths_marks, maths_rating, last_percentage, parent_name, parent_phone, 
-                 passport_photo, disapproved_by, disapproval_reason, disapproved_at FROM disapproved_admissions ORDER BY disapproved_at DESC''')
+                 passport_photo, disapproved_by, disapproval_reason, disapproved_at FROM admissions 
+                 WHERE status = 'disapproved' ORDER BY disapproved_at DESC''')
     disapproved_admissions = c.fetchall()
     
     conn.close()
@@ -1678,6 +1684,7 @@ def view_admissions():
                          admissions=admissions, 
                          admission_type=admission_type, 
                          current_tab=tab,
+                         pending_admissions=pending_admissions,
                          approved_admissions=approved_admissions,
                          disapproved_admissions=disapproved_admissions)
 
@@ -1696,32 +1703,21 @@ def approve_admission(admission_id):
         admission_data = c.fetchone()
         
         if admission_data:
-            # Insert into approved_admissions table
-            c.execute('''INSERT INTO approved_admissions (
-                original_admission_id, student_name, dob, student_phone, student_email, class,
-                school_name, maths_marks, maths_rating, last_percentage, parent_name, 
-                parent_phone, passport_photo, user_id, approved_by, approved_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
-                admission_id, admission_data[0], admission_data[1], admission_data[2],
-                admission_data[3], admission_data[4], admission_data[5], admission_data[6],
-                admission_data[7], admission_data[8], admission_data[9], admission_data[10],
-                admission_data[11], admission_data[12], session.get('username', 'admin'),
-                datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            # Update the admission status to approved
+            c.execute('''UPDATE admissions SET 
+                         status = 'approved', 
+                         approved_by = ?, 
+                         approved_at = ? 
+                         WHERE id = ?''', (
+                session.get('username', 'admin'),
+                datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                admission_id
             ))
             
-            # Delete from original admissions table
-            c.execute('DELETE FROM admissions WHERE id = ?', (admission_id,))
-            
-            # Commit the admission changes first
+            # Commit the changes
             conn.commit()
-            conn.close()
-            conn = None
             
-            # Small delay to ensure database is fully closed
-            import time
-            time.sleep(0.1)
-            
-            # Auto-register user in the system (in a separate transaction)
+            # Auto-register user in the system
             try:
                 from auth_handler import register_user, get_class_id_by_name
                 
@@ -1828,7 +1824,9 @@ def approve_admission(admission_id):
 @admin_required
 def disapprove_admission(admission_id):
     try:
-        disapproval_reason = request.form.get('disapproval_reason', 'No reason provided')
+        # Get disapproval reason from JSON request
+        data = request.get_json()
+        disapproval_reason = data.get('reason', 'No reason provided') if data else 'No reason provided'
         
         conn = sqlite3.connect('users.db')
         c = conn.cursor()
@@ -1840,21 +1838,18 @@ def disapprove_admission(admission_id):
         admission_data = c.fetchone()
         
         if admission_data:
-            # Insert into disapproved_admissions table
-            c.execute('''INSERT INTO disapproved_admissions (
-                original_admission_id, student_name, dob, student_phone, student_email, class,
-                school_name, maths_marks, maths_rating, last_percentage, parent_name, 
-                parent_phone, passport_photo, user_id, disapproved_by, disapproval_reason, disapproved_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
-                admission_id, admission_data[0], admission_data[1], admission_data[2],
-                admission_data[3], admission_data[4], admission_data[5], admission_data[6],
-                admission_data[7], admission_data[8], admission_data[9], admission_data[10],
-                admission_data[11], admission_data[12], session.get('username', 'admin'),
-                disapproval_reason, datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            # Update the admission status to disapproved
+            c.execute('''UPDATE admissions SET 
+                         status = 'disapproved', 
+                         disapproved_by = ?, 
+                         disapproval_reason = ?,
+                         disapproved_at = ? 
+                         WHERE id = ?''', (
+                session.get('username', 'admin'),
+                disapproval_reason,
+                datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                admission_id
             ))
-            
-            # Delete from original admissions table
-            c.execute('DELETE FROM admissions WHERE id = ?', (admission_id,))
             
             conn.commit()
             conn.close()
@@ -1863,7 +1858,7 @@ def disapprove_admission(admission_id):
             if request.headers.get('Content-Type') == 'application/json':
                 return jsonify({'success': True, 'message': 'Admission disapproved successfully'})
             else:
-                flash('Admission disapproved and moved to disapproved list.', 'info')
+                flash('Admission disapproved successfully.', 'info')
                 return redirect(url_for('view_admissions'))
         else:
             conn.close()
@@ -1898,28 +1893,14 @@ def restore_approved_admission(admission_id):
         conn = sqlite3.connect('users.db')
         c = conn.cursor()
         
-        # Get the approved admission data
-        c.execute('''SELECT student_name, dob, student_phone, student_email, class, school_name,
-                      maths_marks, maths_rating, last_percentage, parent_name, parent_phone, 
-                      passport_photo, user_id FROM approved_admissions WHERE id = ?''', (admission_id,))
-        admission_data = c.fetchone()
+        # Update the admission status back to pending
+        c.execute('''UPDATE admissions SET 
+                     status = 'pending', 
+                     approved_by = NULL, 
+                     approved_at = NULL 
+                     WHERE id = ? AND status = 'approved' ''', (admission_id,))
         
-        if admission_data:
-            # Insert back into admissions table
-            c.execute('''INSERT INTO admissions (
-                student_name, dob, student_phone, student_email, class, school_name,
-                maths_marks, maths_rating, last_percentage, parent_name, parent_phone, 
-                passport_photo, status, submitted_at, user_id
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
-                admission_data[0], admission_data[1], admission_data[2], admission_data[3],
-                admission_data[4], admission_data[5], admission_data[6], admission_data[7],
-                admission_data[8], admission_data[9], admission_data[10], admission_data[11],
-                'pending', datetime.now().strftime('%Y-%m-%d %H:%M:%S'), admission_data[12]
-            ))
-            
-            # Delete from approved_admissions table
-            c.execute('DELETE FROM approved_admissions WHERE id = ?', (admission_id,))
-            
+        if c.rowcount > 0:
             conn.commit()
             conn.close()
             
@@ -1932,9 +1913,9 @@ def restore_approved_admission(admission_id):
         else:
             conn.close()
             if request.headers.get('Content-Type') == 'application/json':
-                return jsonify({'success': False, 'message': 'Admission not found'})
+                return jsonify({'success': False, 'message': 'Admission not found or not approved'})
             else:
-                flash('Admission not found.', 'error')
+                flash('Admission not found or not approved.', 'error')
                 return redirect(url_for('view_admissions', tab='approved'))
                 
     except Exception as e:
@@ -1951,28 +1932,15 @@ def restore_disapproved_admission(admission_id):
         conn = sqlite3.connect('users.db')
         c = conn.cursor()
         
-        # Get the disapproved admission data
-        c.execute('''SELECT student_name, dob, student_phone, student_email, class, school_name,
-                      maths_marks, maths_rating, last_percentage, parent_name, parent_phone, 
-                      passport_photo, user_id FROM disapproved_admissions WHERE id = ?''', (admission_id,))
-        admission_data = c.fetchone()
+        # Update the admission status back to pending
+        c.execute('''UPDATE admissions SET 
+                     status = 'pending', 
+                     disapproved_by = NULL, 
+                     disapproval_reason = NULL, 
+                     disapproved_at = NULL 
+                     WHERE id = ? AND status = 'disapproved' ''', (admission_id,))
         
-        if admission_data:
-            # Insert back into admissions table
-            c.execute('''INSERT INTO admissions (
-                student_name, dob, student_phone, student_email, class, school_name,
-                maths_marks, maths_rating, last_percentage, parent_name, parent_phone, 
-                passport_photo, status, submitted_at, user_id
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
-                admission_data[0], admission_data[1], admission_data[2], admission_data[3],
-                admission_data[4], admission_data[5], admission_data[6], admission_data[7],
-                admission_data[8], admission_data[9], admission_data[10], admission_data[11],
-                'pending', datetime.now().strftime('%Y-%m-%d %H:%M:%S'), admission_data[12]
-            ))
-            
-            # Delete from disapproved_admissions table
-            c.execute('DELETE FROM disapproved_admissions WHERE id = ?', (admission_id,))
-            
+        if c.rowcount > 0:
             conn.commit()
             conn.close()
             
@@ -1985,9 +1953,9 @@ def restore_disapproved_admission(admission_id):
         else:
             conn.close()
             if request.headers.get('Content-Type') == 'application/json':
-                return jsonify({'success': False, 'message': 'Admission not found'})
+                return jsonify({'success': False, 'message': 'Admission not found or not disapproved'})
             else:
-                flash('Admission not found.', 'error')
+                flash('Admission not found or not disapproved.', 'error')
                 return redirect(url_for('view_admissions', tab='disapproved'))
                 
     except Exception as e:
@@ -2003,16 +1971,27 @@ def delete_approved_admission(admission_id):
     try:
         conn = sqlite3.connect('users.db')
         c = conn.cursor()
-        c.execute('DELETE FROM approved_admissions WHERE id = ?', (admission_id,))
-        conn.commit()
-        conn.close()
         
-        # Check if request expects JSON
-        if request.headers.get('Content-Type') == 'application/json':
-            return jsonify({'success': True, 'message': 'Approved admission deleted successfully'})
+        # Delete the approved admission from the admissions table
+        c.execute('DELETE FROM admissions WHERE id = ? AND status = ?', (admission_id, 'approved'))
+        
+        if c.rowcount > 0:
+            conn.commit()
+            conn.close()
+            
+            # Check if request expects JSON
+            if request.headers.get('Content-Type') == 'application/json':
+                return jsonify({'success': True, 'message': 'Approved admission deleted successfully'})
+            else:
+                flash('Approved admission deleted permanently.', 'success')
+                return redirect(url_for('view_admissions', tab='approved'))
         else:
-            flash('Approved admission deleted permanently.', 'success')
-            return redirect(url_for('view_admissions', tab='approved'))
+            conn.close()
+            if request.headers.get('Content-Type') == 'application/json':
+                return jsonify({'success': False, 'message': 'Admission not found or not approved'})
+            else:
+                flash('Admission not found or not approved.', 'error')
+                return redirect(url_for('view_admissions', tab='approved'))
             
     except Exception as e:
         if request.headers.get('Content-Type') == 'application/json':
@@ -2027,16 +2006,26 @@ def delete_disapproved_admission(admission_id):
     try:
         conn = sqlite3.connect('users.db')
         c = conn.cursor()
-        c.execute('DELETE FROM disapproved_admissions WHERE id = ?', (admission_id,))
-        conn.commit()
-        conn.close()
+        # Delete the disapproved admission from the admissions table
+        c.execute('DELETE FROM admissions WHERE id = ? AND status = ?', (admission_id, 'disapproved'))
         
-        # Check if request expects JSON
-        if request.headers.get('Content-Type') == 'application/json':
-            return jsonify({'success': True, 'message': 'Disapproved admission deleted successfully'})
+        if c.rowcount > 0:
+            conn.commit()
+            conn.close()
+            
+            # Check if request expects JSON
+            if request.headers.get('Content-Type') == 'application/json':
+                return jsonify({'success': True, 'message': 'Disapproved admission deleted successfully'})
+            else:
+                flash('Disapproved admission deleted permanently.', 'success')
+                return redirect(url_for('view_admissions', tab='disapproved'))
         else:
-            flash('Disapproved admission deleted permanently.', 'success')
-            return redirect(url_for('view_admissions', tab='disapproved'))
+            conn.close()
+            if request.headers.get('Content-Type') == 'application/json':
+                return jsonify({'success': False, 'message': 'Admission not found or not disapproved'})
+            else:
+                flash('Admission not found or not disapproved.', 'error')
+                return redirect(url_for('view_admissions', tab='disapproved'))
             
     except Exception as e:
         if request.headers.get('Content-Type') == 'application/json':
@@ -2137,7 +2126,7 @@ def check_admission_status():
         })
     
     # Check in approved admissions
-    c.execute('SELECT student_name, class, school_name, "approved" as status, approved_at FROM approved_admissions WHERE user_id = ?', (user_id,))
+    c.execute('SELECT student_name, class, school_name, "approved" as status, approved_at FROM admissions WHERE user_id = ? AND status = "approved"', (user_id,))
     admission = c.fetchone()
     
     if admission:
@@ -2154,7 +2143,7 @@ def check_admission_status():
         })
     
     # Check in disapproved admissions
-    c.execute('SELECT student_name, class, school_name, "disapproved" as status, disapproved_at FROM disapproved_admissions WHERE user_id = ?', (user_id,))
+    c.execute('SELECT student_name, class, school_name, "disapproved" as status, disapproved_at FROM admissions WHERE user_id = ? AND status = "disapproved"', (user_id,))
     admission = c.fetchone()
     
     if admission:
@@ -2221,13 +2210,8 @@ def admission():
         print('Inserting into DB...')
         # Normalize class name to match database format
         class_name = request.form['class']
-        class_mappings = {
-            '9': 'class 9',
-            '10': 'class 10',
-            '11': 'class 11 applied',
-            '12': 'class 12 applied'
-        }
-        normalized_class = class_mappings.get(class_name.lower(), class_name)
+        # No need for mapping since form now sends correct class names
+        normalized_class = class_name
         
         c.execute('''INSERT INTO admissions (
             student_name, dob, student_phone, student_email, class, school_name,
@@ -2339,7 +2323,7 @@ def check_admission():
             }
         else:
             # 2) approved
-            c.execute('''SELECT student_name, class, school_name, approved_at FROM approved_admissions WHERE original_admission_id = ?''', (admission_id,))
+            c.execute('''SELECT student_name, class, school_name, approved_at FROM admissions WHERE id = ? AND status = "approved"''', (admission_id,))
             apr = c.fetchone()
             if apr:
                 status = 'approved'
@@ -2351,7 +2335,7 @@ def check_admission():
                 }
             else:
                 # 3) disapproved
-                c.execute('''SELECT student_name, class, school_name, disapproved_at FROM disapproved_admissions WHERE original_admission_id = ?''', (admission_id,))
+                c.execute('''SELECT student_name, class, school_name, disapproved_at FROM admissions WHERE id = ? AND status = "disapproved"''', (admission_id,))
                 dis = c.fetchone()
                 if dis:
                     status = 'disapproved'

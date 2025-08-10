@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Management - Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .nav-tabs .nav-link {
+            color: #495057;
+        }
+        .nav-tabs .nav-link.active {
+            color: #007bff;
+            font-weight: bold;
+        }
+        .admission-card {
+            border-left: 4px solid #007bff;
+        }
+        .admission-card.approved {
+            border-left-color: #28a745;
+        }
+        .admission-card.disapproved {
+            border-left-color: #dc3545;
+        }
+        .status-badge {
+            font-size: 0.8em;
+        }
+        .photo-preview {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4">
+                    <i class="fas fa-user-graduate"></i> Admission Management
+                </h2>
+                
+                <!-- Tab Navigation -->
+                <ul class="nav nav-tabs mb-4" id="admissionTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">
+                            Pending <span class="badge bg-warning text-dark">{{ pending_admissions|length }}</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="approved-tab" data-bs-toggle="tab" data-bs-target="#approved" type="button" role="tab">
+                            Approved <span class="badge bg-success">{{ approved_admissions|length }}</span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="disapproved-tab" data-bs-toggle="tab" data-bs-target="#disapproved" type="button" role="tab">
+                            Disapproved <span class="badge bg-danger">{{ disapproved_admissions|length }}</span>
+                        </button>
+                    </li>
+                </ul>
+                
+                <!-- Tab Content -->
+                <div class="tab-content" id="admissionTabContent">
+                    <!-- Pending Admissions -->
+                    <div class="tab-pane fade show active" id="pending" role="tabpanel">
+                        <div class="row">
+                            {% for admission in pending_admissions %}
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card admission-card h-100">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0">{{ admission[1] }}</h6>
+                                        <span class="badge bg-warning status-badge">Pending</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                {% if admission[12] %}
+                                                <img src="{{ url_for('uploaded_file', filename=admission[12]) }}" 
+                                                     class="photo-preview rounded" alt="Student Photo">
+                                                {% else %}
+                                                <div class="photo-preview bg-light rounded d-flex align-items-center justify-content-center">
+                                                    <i class="fas fa-user text-muted"></i>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-8">
+                                                <p class="mb-1"><strong>Class:</strong> {{ admission[3] }}</p>
+                                                <p class="mb-1"><strong>School:</strong> {{ admission[4] }}</p>
+                                                <p class="mb-1"><strong>Phone:</strong> {{ admission[5] }}</p>
+                                                <p class="mb-1"><strong>Email:</strong> {{ admission[6] }}</p>
+                                                <p class="mb-1"><strong>Maths:</strong> {{ admission[7] }}/100</p>
+                                                <p class="mb-1"><strong>Percentage:</strong> {{ admission[9] }}%</p>
+                                                <p class="mb-1"><strong>Submitted:</strong> {{ admission[13] }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="btn-group w-100" role="group">
+                                            <button type="button" class="btn btn-success btn-sm" 
+                                                    onclick="approveAdmission({{ admission[0] }})">
+                                                <i class="fas fa-check"></i> Approve
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-sm" 
+                                                    onclick="disapproveAdmission({{ admission[0] }})">
+                                                <i class="fas fa-times"></i> Disapprove
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Approved Admissions -->
+                    <div class="tab-pane fade" id="approved" role="tabpanel">
+                        <div class="row">
+                            {% for admission in approved_admissions %}
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card admission-card approved h-100">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0">{{ admission[1] }}</h6>
+                                        <span class="badge bg-success status-badge">Approved</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                {% if admission[12] %}
+                                                <img src="{{ url_for('uploaded_file', filename=admission[12]) }}" 
+                                                     class="photo-preview rounded" alt="Student Photo">
+                                                {% else %}
+                                                <div class="photo-preview bg-light rounded d-flex align-items-center justify-content-center">
+                                                    <i class="fas fa-user text-muted"></i>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-8">
+                                                <p class="mb-1"><strong>Class:</strong> {{ admission[3] }}</p>
+                                                <p class="mb-1"><strong>School:</strong> {{ admission[4] }}</p>
+                                                <p class="mb-1"><strong>Phone:</strong> {{ admission[5] }}</p>
+                                                <p class="mb-1"><strong>Email:</strong> {{ admission[6] }}</p>
+                                                <p class="mb-1"><strong>Maths:</strong> {{ admission[7] }}/100</p>
+                                                <p class="mb-1"><strong>Percentage:</strong> {{ admission[9] }}%</p>
+                                                <p class="mb-1"><strong>Approved:</strong> {{ admission[14] }}</p>
+                                                <p class="mb-1"><strong>By:</strong> {{ admission[13] }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="btn-group w-100" role="group">
+                                            <button type="button" class="btn btn-warning btn-sm" 
+                                                    onclick="resetAdmission({{ admission[0] }})">
+                                                <i class="fas fa-undo"></i> Reset
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-sm" 
+                                                    onclick="deleteApprovedAdmission({{ admission[0] }})">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Disapproved Admissions -->
+                    <div class="tab-pane fade" id="disapproved" role="tabpanel">
+                        <div class="row">
+                            {% for admission in disapproved_admissions %}
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card admission-card disapproved h-100">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h6 class="mb-0">{{ admission[1] }}</h6>
+                                        <span class="badge bg-danger status-badge">Disapproved</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-4">
+                                                {% if admission[12] %}
+                                                <img src="{{ url_for('uploaded_file', filename=admission[12]) }}" 
+                                                     class="photo-preview rounded" alt="Student Photo">
+                                                {% else %}
+                                                <div class="photo-preview bg-light rounded d-flex align-items-center justify-content-center">
+                                                    <i class="fas fa-user text-muted"></i>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-8">
+                                                <p class="mb-1"><strong>Class:</strong> {{ admission[3] }}</p>
+                                                <p class="mb-1"><strong>School:</strong> {{ admission[4] }}</p>
+                                                <p class="mb-1"><strong>Phone:</strong> {{ admission[5] }}</p>
+                                                <p class="mb-1"><strong>Email:</strong> {{ admission[6] }}</p>
+                                                <p class="mb-1"><strong>Maths:</strong> {{ admission[7] }}/100</p>
+                                                <p class="mb-1"><strong>Percentage:</strong> {{ admission[9] }}%</p>
+                                                <p class="mb-1"><strong>Disapproved:</strong> {{ admission[15] }}</p>
+                                                <p class="mb-1"><strong>By:</strong> {{ admission[13] }}</p>
+                                                <p class="mb-1"><strong>Reason:</strong> {{ admission[14] }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="btn-group w-100" role="group">
+                                            <button type="button" class="btn btn-warning btn-sm" 
+                                                    onclick="resetDisapprovedAdmission({{ admission[0] }})">
+                                                <i class="fas fa-undo"></i> Reset
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-sm" 
+                                                    onclick="deleteDisapprovedAdmission({{ admission[0] }})">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Disapproval Modal -->
+    <div class="modal fade" id="disapprovalModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Disapprove Admission</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="disapprovalForm">
+                        <div class="mb-3">
+                            <label for="disapprovalReason" class="form-label">Reason for Disapproval</label>
+                            <textarea class="form-control" id="disapprovalReason" rows="3" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDisapproval()">Disapprove</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentAdmissionId = null;
+        const disapprovalModal = new bootstrap.Modal(document.getElementById('disapprovalModal'));
+
+        function approveAdmission(admissionId) {
+            if (confirm('Are you sure you want to approve this admission?')) {
+                fetch(`/admin/admissions/approve/${admissionId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while approving the admission.');
+                });
+            }
+        }
+
+        function disapproveAdmission(admissionId) {
+            currentAdmissionId = admissionId;
+            disapprovalModal.show();
+        }
+
+        function confirmDisapproval() {
+            const reason = document.getElementById('disapprovalReason').value.trim();
+            if (!reason) {
+                alert('Please provide a reason for disapproval.');
+                return;
+            }
+
+            fetch(`/admin/admissions/disapprove/${currentAdmissionId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ reason: reason })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    disapprovalModal.hide();
+                    document.getElementById('disapprovalReason').value = '';
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while disapproving the admission.');
+            });
+        }
+
+        function resetAdmission(admissionId) {
+            if (confirm('Are you sure you want to reset this admission to pending status?')) {
+                fetch(`/admin/admissions/reset/${admissionId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while resetting the admission.');
+                });
+            }
+        }
+
+        function resetDisapprovedAdmission(admissionId) {
+            if (confirm('Are you sure you want to restore this disapproved admission to pending status?')) {
+                fetch(`/admin/admissions/restore-disapproved/${admissionId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while restoring the admission.');
+                });
+            }
+        }
+
+        function deleteApprovedAdmission(admissionId) {
+            if (confirm('Are you sure you want to permanently delete this approved admission? This action cannot be undone.')) {
+                fetch(`/admin/admissions/delete-approved/${admissionId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the admission.');
+                });
+            }
+        }
+
+        function deleteDisapprovedAdmission(admissionId) {
+            if (confirm('Are you sure you want to permanently delete this disapproved admission? This action cannot be undone.')) {
+                fetch(`/admin/admissions/delete-disapproved/${admissionId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while deleting the admission.');
+                });
+            }
+        }
+
+        // Set active tab based on current_tab
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentTab = '{{ current_tab }}';
+            if (currentTab && currentTab !== 'pending') {
+                const tab = document.querySelector(`#${currentTab}-tab`);
+                if (tab) {
+                    tab.click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

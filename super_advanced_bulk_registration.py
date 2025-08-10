@@ -16,29 +16,67 @@ def normalize_class_name(name):
     return re.sub(r'\s+', ' ', str(name).strip().lower())
 
 def get_class_mapping():
-    """Get mapping between normalized class names and database class IDs"""
+    """Get mapping between Excel class names and database class IDs"""
     classes = get_all_classes()
     class_mapping = {}
+    
+    # Create mapping for different class name variations
     for class_id, class_name in classes:
-        norm = normalize_class_name(class_name)
-        class_mapping[norm] = class_id
-        # Add common variations
-        if '9' in norm or 'ix' in norm:
+        class_name_lower = class_name.lower()
+        class_mapping[class_name_lower] = class_id
+        
+        # Add variations
+        if 'class 9' in class_name_lower or 'ix' in class_name_lower:
+            class_mapping['class ix'] = class_id
+            class_mapping['ix'] = class_id
+            class_mapping['IX'] = class_id
             class_mapping['class 9th'] = class_id
             class_mapping['9th'] = class_id
-        if '10' in norm or 'x' in norm:
-            class_mapping['class 10th'] = class_id
-            class_mapping['10th'] = class_id
-        if '11' in norm:
-            class_mapping['class 11th'] = class_id
-            class_mapping['11th'] = class_id
-            class_mapping['class xi applied'] = class_id
+            class_mapping['9th class'] = class_id
+            class_mapping['9'] = class_id
+        elif 'class 10' in class_name_lower:
+            if 'basic' in class_name_lower:
+                class_mapping['class x basic'] = class_id
+                class_mapping['x basic'] = class_id
+            else:
+                class_mapping['class x'] = class_id
+                class_mapping['x'] = class_id
+                class_mapping['X'] = class_id
+                class_mapping['class 10th'] = class_id
+                class_mapping['10th'] = class_id
+                class_mapping['10th class'] = class_id
+                class_mapping['10'] = class_id
+        elif '11' in class_name_lower and 'applied' in class_name_lower:
             class_mapping['xi applied'] = class_id
-        if '12' in norm:
-            class_mapping['class 12th'] = class_id
-            class_mapping['12th'] = class_id
-            class_mapping['class xii applied'] = class_id
+            class_mapping['XI Applied'] = class_id
+            class_mapping['11 applied'] = class_id
+            class_mapping['class 11th applied'] = class_id
+            class_mapping['11th applied'] = class_id
+            class_mapping['11th class applied'] = class_id
+            class_mapping['11'] = class_id  # Default to applied for backward compatibility
+        elif '11' in class_name_lower and 'core' in class_name_lower:
+            class_mapping['xi core'] = class_id
+            class_mapping['XI Core'] = class_id
+            class_mapping['11 core'] = class_id
+            class_mapping['class 11th core'] = class_id
+            class_mapping['11th core'] = class_id
+            class_mapping['11th class core'] = class_id
+        elif '12' in class_name_lower and 'applied' in class_name_lower:
             class_mapping['xii applied'] = class_id
+            class_mapping['XII Applied'] = class_id
+            class_mapping['12 applied'] = class_id
+            class_mapping['class 12th applied'] = class_id
+            class_mapping['12th applied'] = class_id
+            class_mapping['12th class applied'] = class_id
+            class_mapping['12'] = class_id  # Default to applied for backward compatibility
+        elif '12' in class_name_lower and 'core' in class_name_lower:
+            class_mapping['xii core'] = class_id
+            class_mapping['XII Core'] = class_id
+            class_mapping['12 core'] = class_id
+            class_mapping['class 12th core'] = class_id
+            class_mapping['12th core'] = class_id
+            class_mapping['12th class core'] = class_id
+    
     return class_mapping
 
 def read_excel_file(file_path):

@@ -258,26 +258,58 @@ def get_class_id_by_name(class_name):
     if not result:
         # Try to map common variations
         class_mappings = {
+            # Basic variations
             '9': 'class 9',
             'class 9': 'class 9',
             'Class 9': 'class 9',
+            'ix': 'class 9',
+            'IX': 'class 9',
+            '9th': 'class 9',
+            '9th class': 'class 9',
+            
             '10': 'class 10',
             'class 10': 'class 10',
             'Class 10': 'class 10',
-            '11': 'class 11 applied',
+            'x': 'class 10',
+            'X': 'class 10',
+            '10th': 'class 10',
+            '10th class': 'class 10',
+            
+            # Class 11 variations
+            '11': 'class 11 applied',  # Default to applied for backward compatibility
             '11 applied': 'class 11 applied',
             'class 11 applied': 'class 11 applied',
             'Class 11 Applied': 'class 11 applied',
+            'xi applied': 'class 11 applied',
+            'XI Applied': 'class 11 applied',
+            '11th applied': 'class 11 applied',
+            '11th class applied': 'class 11 applied',
+            
             '11 core': 'class 11 core',
             'class 11 core': 'class 11 core',
             'Class 11 Core': 'class 11 core',
-            '12': 'class 12 applied',
+            'xi core': 'class 11 core',
+            'XI Core': 'class 11 core',
+            '11th core': 'class 11 core',
+            '11th class core': 'class 11 core',
+            
+            # Class 12 variations
+            '12': 'class 12 applied',  # Default to applied for backward compatibility
             '12 applied': 'class 12 applied',
             'class 12 applied': 'class 12 applied',
             'Class 12 Applied': 'class 12 applied',
+            'xii applied': 'class 12 applied',
+            'XII Applied': 'class 12 applied',
+            '12th applied': 'class 12 applied',
+            '12th class applied': 'class 12 applied',
+            
             '12 core': 'class 12 core',
             'class 12 core': 'class 12 core',
-            'Class 12 Core': 'class 12 core'
+            'Class 12 Core': 'class 12 core',
+            'xii core': 'class 12 core',
+            'XII Core': 'class 12 core',
+            '12th core': 'class 12 core',
+            '12th class core': 'class 12 core'
         }
         
         mapped_name = class_mappings.get(class_name.lower())
