@@ -2216,7 +2216,7 @@ def admission():
         c.execute('''INSERT INTO admissions (
             student_name, dob, student_phone, student_email, class, school_name,
             maths_marks, maths_rating, last_percentage, parent_name, parent_phone, passport_photo, status, submitted_at, user_id, submit_ip
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
             request.form['student_name'],
             request.form['dob'],
             request.form['student_phone'],
@@ -2307,44 +2307,25 @@ def check_admission():
             conn.close()
             flash('Invalid credentials. Please check and try again.', 'error')
             return redirect(url_for('check_admission'))
-        # Determine status by checking tables
-        # 1) pending admissions
-        c.execute('''SELECT student_name, class, school_name, status, submitted_at FROM admissions WHERE id = ?''', (admission_id,))
+        # Determine status by checking the unified admissions table
+        c.execute('''SELECT student_name, class, school_name, status, submitted_at, approved_at, disapproved_at FROM admissions WHERE id = ?''', (admission_id,))
         adm = c.fetchone()
         status = None
         details = {}
         if adm:
-            status = adm[3]
+            status = adm[3]  # status column
             details = {
                 'student_name': adm[0],
                 'class': adm[1],
                 'school_name': adm[2],
                 'submitted_at': adm[4]
             }
-        else:
-            # 2) approved
-            c.execute('''SELECT student_name, class, school_name, approved_at FROM admissions WHERE id = ? AND status = "approved"''', (admission_id,))
-            apr = c.fetchone()
-            if apr:
-                status = 'approved'
-                details = {
-                    'student_name': apr[0],
-                    'class': apr[1],
-                    'school_name': apr[2],
-                    'submitted_at': apr[3]
-                }
-            else:
-                # 3) disapproved
-                c.execute('''SELECT student_name, class, school_name, disapproved_at FROM admissions WHERE id = ? AND status = "disapproved"''', (admission_id,))
-                dis = c.fetchone()
-                if dis:
-                    status = 'disapproved'
-                    details = {
-                        'student_name': dis[0],
-                        'class': dis[1],
-                        'school_name': dis[2],
-                        'submitted_at': dis[3]
-                    }
+            # If approved, use approved_at as submission time for display
+            if status == 'approved' and adm[5]:
+                details['submitted_at'] = adm[5]
+            # If disapproved, use disapproved_at as submission time for display
+            elif status == 'disapproved' and adm[6]:
+                details['submitted_at'] = adm[6]
         conn.close()
         # Determine paid/unpaid mapping for display
         paid_status = 'paid' if status == 'approved' else 'not paid'
