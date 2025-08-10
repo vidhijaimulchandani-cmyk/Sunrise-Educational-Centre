@@ -122,6 +122,7 @@ def init_poll_and_doubt_tables():
 # Initialize database tables on app startup
 def setup_db():
     init_poll_and_doubt_tables()
+    init_admissions_table()
 
 # Initialize IP tracking tables
 def init_tracking_tables():
@@ -161,6 +162,66 @@ def init_admission_access_table():
         conn.close()
     except Exception as e:
         print(f"Error initializing admission access table: {e}")
+
+def init_admissions_table():
+    """Initialize the admissions table with all required columns"""
+    try:
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        
+        # Create admissions table with all required columns
+        c.execute('''CREATE TABLE IF NOT EXISTS admissions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_name TEXT NOT NULL,
+            dob TEXT NOT NULL,
+            student_phone TEXT NOT NULL,
+            student_email TEXT NOT NULL,
+            class TEXT NOT NULL,
+            school_name TEXT NOT NULL,
+            maths_marks INTEGER NOT NULL,
+            maths_rating REAL NOT NULL,
+            last_percentage REAL NOT NULL,
+            parent_name TEXT NOT NULL,
+            parent_phone TEXT NOT NULL,
+            passport_photo TEXT,
+            status TEXT DEFAULT 'pending',
+            submitted_at TEXT DEFAULT CURRENT_TIMESTAMP,
+            user_id INTEGER,
+            submit_ip TEXT,
+            approved_at TEXT,
+            approved_by TEXT,
+            disapproved_at TEXT,
+            disapproved_by TEXT,
+            disapproval_reason TEXT
+        )''')
+        
+        # Check if required columns exist and add them if missing
+        c.execute("PRAGMA table_info(admissions)")
+        existing_columns = [row[1] for row in c.fetchall()]
+        
+        required_columns = [
+            ('user_id', 'INTEGER'),
+            ('submit_ip', 'TEXT'),
+            ('approved_at', 'TEXT'),
+            ('approved_by', 'TEXT'),
+            ('disapproved_at', 'TEXT'),
+            ('disapproved_by', 'TEXT'),
+            ('disapproval_reason', 'TEXT')
+        ]
+        
+        for col_name, col_type in required_columns:
+            if col_name not in existing_columns:
+                try:
+                    c.execute(f'ALTER TABLE admissions ADD COLUMN {col_name} {col_type}')
+                    print(f"Added column: {col_name}")
+                except Exception as e:
+                    print(f"Error adding column {col_name}: {e}")
+        
+        conn.commit()
+        conn.close()
+        print("Admissions table initialized successfully")
+    except Exception as e:
+        print(f"Error initializing admissions table: {e}")
 
 def ensure_admissions_submit_ip_column():
     try:
