@@ -86,6 +86,240 @@ body.dark-mode .login-error {
   color: #fff;
 }
 
+/* Enhanced Dark Mode Styles for Better Visibility */
+
+/* Notification dropdown dark mode */
+body.dark-mode #notifDropdown {
+  background: #232946 !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.25) !important;
+  border: 1px solid #3a3a4a !important;
+}
+
+body.dark-mode .notification-item {
+  background: #2a2a3a !important;
+  color: #f4f4f4 !important;
+  border-bottom-color: #3a3a4a !important;
+}
+
+body.dark-mode .notification-item:hover {
+  background: #3a3a4a !important;
+}
+
+/* Wall of Fame section dark mode */
+body.dark-mode section[style*="linear-gradient(135deg, #ffd700"] {
+  background: linear-gradient(135deg, #2a3a5a 0%, #1e2a3a 100%) !important;
+}
+
+body.dark-mode div[style*="background: rgba(255,255,255,0.95)"] {
+  background: rgba(35,41,70,0.95) !important;
+  color: #f4f4f4 !important;
+}
+
+/* Wall of Fame cards and content */
+body.dark-mode h2[style*="color: #232946"] {
+  color: #f4f4f4 !important;
+}
+
+body.dark-mode h3[style*="color: #232946"] {
+  color: #f4f4f4 !important;
+}
+
+body.dark-mode h4[style*="color: #232946"] {
+  color: #f4f4f4 !important;
+}
+
+body.dark-mode div[style*="color: #232946"] {
+  color: #f4f4f4 !important;
+}
+
+/* Achievement card backgrounds */
+body.dark-mode div[style*="background: rgba(255,107,53,0.1)"] {
+  background: rgba(255,107,53,0.2) !important;
+}
+
+body.dark-mode div[style*="background: rgba(106,130,251,0.1)"] {
+  background: rgba(106,130,251,0.2) !important;
+}
+
+/* Form inputs and elements */
+body.dark-mode input, body.dark-mode textarea, body.dark-mode select {
+  background: #2a2a3a !important;
+  color: #f4f4f4 !important;
+  border: 1px solid #3a3a4a !important;
+}
+
+body.dark-mode input:focus, body.dark-mode textarea:focus, body.dark-mode select:focus {
+  background: #232946 !important;
+  border-color: #6a82fb !important;
+  box-shadow: 0 0 0 2px rgba(106,130,251,0.2) !important;
+}
+
+/* Placeholder text */
+body.dark-mode input::placeholder, body.dark-mode textarea::placeholder {
+  color: #8a8a8a !important;
+}
+
+/* Modal and popup backgrounds */
+body.dark-mode .modal, body.dark-mode .popup {
+  background: #232946 !important;
+  color: #f4f4f4 !important;
+}
+
+/* Table styles */
+body.dark-mode table {
+  background: #232946 !important;
+  color: #f4f4f4 !important;
+}
+
+body.dark-mode th, body.dark-mode td {
+  border-color: #3a3a4a !important;
+  color: #f4f4f4 !important;
+}
+
+body.dark-mode tr:nth-child(even) {
+  background: #2a2a3a !important;
+}
+
+/* Light colored text that becomes invisible */
+body.dark-mode [style*="color: #888"], body.dark-mode [style*="color: #999"] {
+  color: #b8c5d6 !important;
+}
+
+/* Ensure all divs with white/light backgrounds are dark */
+body.dark-mode div[style*="background: #fff"], 
+body.dark-mode div[style*="background: white"],
+body.dark-mode div[style*="background: #f"], 
+body.dark-mode div[style*="background: rgba(255,255,255"] {
+  background: #232946 !important;
+  color: #f4f4f4 !important;
+}
+
+/* Wall of Fame Specific Styles */
+.wall-of-fame-section {
+  position: relative;
+}
+
+.achievement-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.achievement-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+}
+
+.student-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.student-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(106,130,251,0.2);
+}
+
+.performer-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.performer-card:hover {
+  transform: translateY(-3px) scale(1.02);
+}
+
+.star-performer {
+  position: relative;
+  overflow: hidden;
+}
+
+.star-performer::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+  animation: shine 3s infinite;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+  100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+}
+
+/* Enhanced Dark Mode for Wall of Fame */
+body.dark-mode .wall-of-fame-section {
+  background: linear-gradient(135deg, #2a3a5a 0%, #1e2a3a 100%) !important;
+}
+
+body.dark-mode .achievement-card {
+  background: rgba(35,41,70,0.95) !important;
+  border: 1px solid rgba(106,130,251,0.2) !important;
+  color: #f4f4f4 !important;
+}
+
+body.dark-mode .achievement-card:hover {
+  box-shadow: 0 12px 40px rgba(106,130,251,0.25) !important;
+}
+
+body.dark-mode .student-card {
+  background: rgba(106,130,251,0.15) !important;
+  border: 2px solid rgba(106,130,251,0.3) !important;
+  color: #f4f4f4 !important;
+}
+
+body.dark-mode .student-card:hover {
+  background: rgba(106,130,251,0.25) !important;
+  box-shadow: 0 6px 20px rgba(106,130,251,0.4) !important;
+}
+
+body.dark-mode .outstanding-performers {
+  background: rgba(35,41,70,0.9) !important;
+  border: 1px solid rgba(106,130,251,0.2) !important;
+}
+
+body.dark-mode .performer-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4) !important;
+}
+
+body.dark-mode .star-performer {
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8e53 100%) !important;
+}
+
+/* Dark mode color overrides for Wall of Fame text */
+body.dark-mode .wall-of-fame-section h2,
+body.dark-mode .wall-of-fame-section h3,
+body.dark-mode .wall-of-fame-section h4 {
+  color: #f4f4f4 !important;
+}
+
+body.dark-mode .wall-of-fame-section div[style*="color: #232946"] {
+  color: #f4f4f4 !important;
+}
+
+body.dark-mode .wall-of-fame-section div[style*="color: #666"] {
+  color: #b8c5d6 !important;
+}
+
+/* Responsive design for Wall of Fame */
+@media (max-width: 768px) {
+  .wall-of-fame-section .container > div:first-of-type {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .achievement-card .student-card {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .outstanding-performers > div:last-child {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+    gap: 1rem !important;
+  }
+}
+
 .navbar {
   position: sticky;
   top: 0;
@@ -1526,4 +1760,57 @@ body.dark-mode q {
 
 body.dark-mode q::before, body.dark-mode q::after {
   color: #6a82fb !important;
+}
+
+/* === Phone-only full-width adjustments (keeps desktop unchanged) === */
+@media (max-width: 480px) {
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Ensure sections fit the viewport width on phones */
+  .container,
+  .main-content {
+    width: 100%;
+    max-width: 100vw;
+    margin: 0 auto;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  section,
+  .card-section,
+  .subscribe-section,
+  .contact-section,
+  .footer,
+  .hero-section {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+  }
+
+  /* Single-column cards on phones */
+  .card-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem;
+  }
+
+  /* Make media scale within the viewport */
+  img,
+  video,
+  iframe {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Prevent nav wrapping issues while keeping scrollable behavior */
+  .nav-content {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .nav-links {
+    gap: 0.5rem;
+  }
 }

@@ -1,7 +1,32 @@
 from flask import Flask, render_template, send_from_directory, request, redirect, url_for, session, flash, jsonify, send_file
+try:
+    from werkzeug.security import generate_password_hash, check_password_hash
+    WERKZEUG_AVAILABLE = True
+except ImportError:
+    import hashlib
+    WERKZEUG_AVAILABLE = False
+    
+    def generate_password_hash(password):
+        """Fallback password hashing using SHA-256 with salt"""
+        salt = 'admission_salt_2024'
+        return hashlib.sha256((password + salt).encode()).hexdigest()
+    
+    def check_password_hash(stored_hash, password):
+        """Fallback password verification"""
+        salt = 'admission_salt_2024'
+        computed_hash = hashlib.sha256((password + salt).encode()).hexdigest()
+        return stored_hash == computed_hash
+
 import os
 import secrets
-from werkzeug.utils import secure_filename
+try:
+    from werkzeug.utils import secure_filename
+except ImportError:
+    import re
+    def secure_filename(filename):
+        """Fallback secure filename function"""
+        filename = re.sub(r'[^a-zA-Z0-9._-]', '', filename)
+        return filename
 from auth_handler import (
     init_db, register_user, authenticate_user, save_resource, get_all_resources,
     delete_resource, get_all_users, delete_user, search_users, get_user_by_id,
@@ -98,15 +123,79 @@ def init_poll_and_doubt_tables():
 def setup_db():
     init_poll_and_doubt_tables()
 
+# Initialize IP tracking tables
+def init_tracking_tables():
+    try:
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        c.execute('''CREATE TABLE IF NOT EXISTS ip_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ip TEXT,
+            user_id INTEGER,
+            path TEXT,
+            user_agent TEXT,
+            visited_at TEXT
+        )''')
+        c.execute('''CREATE TABLE IF NOT EXISTS user_activity (
+            user_id INTEGER PRIMARY KEY,
+            ip TEXT,
+            last_seen TEXT
+        )''')
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Error initializing tracking tables: {e}")
+
+def init_admission_access_table():
+    try:
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        c.execute('''CREATE TABLE IF NOT EXISTS admission_access (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            admission_id INTEGER NOT NULL,
+            access_username TEXT UNIQUE NOT NULL,
+            access_password TEXT NOT NULL,
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP
+        )''')
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Error initializing admission access table: {e}")
+
+def ensure_admissions_submit_ip_column():
+    try:
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        # Try to add submit_ip column if it does not exist
+        c.execute("PRAGMA table_info(admissions)")
+        cols = [row[1] for row in c.fetchall()]
+        if 'submit_ip' not in cols:
+            c.execute('ALTER TABLE admissions ADD COLUMN submit_ip TEXT')
+            conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Error ensuring admissions.submit_ip column: {e}")
+
 # Call setup_db when the app starts
 with app.app_context():
     setup_db()
+    init_tracking_tables()
+    init_admission_access_table()
+    ensure_admissions_submit_ip_column()
 
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if session.get('role') != 'admin':
             return redirect(url_for('auth'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+def admin_api_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get('role') != 'admin':
+            return jsonify({'success': False, 'error': 'Unauthorized'}), 401
         return f(*args, **kwargs)
     return decorated_function
 
@@ -123,34 +212,223 @@ if not os.path.exists(UPLOAD_FOLDER):
 init_db()
 
 # --- Queries DB Setup ---
-DB_PATH = 'queries.db'
 def init_queries_db():
-    with sqlite3.connect(DB_PATH) as conn:
+    try:
+        conn = sqlite3.connect('users.db')
         c = conn.cursor()
         c.execute('''CREATE TABLE IF NOT EXISTS queries (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
             email TEXT NOT NULL,
             message TEXT NOT NULL,
-            submitted_at TEXT NOT NULL
+            submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            phone TEXT,
+            subject TEXT,
+            priority TEXT DEFAULT 'normal',
+            status TEXT DEFAULT 'pending',
+            assigned_to TEXT,
+            response TEXT,
+            responded_at TIMESTAMP,
+            responded_by TEXT,
+            category TEXT DEFAULT 'general',
+            source TEXT DEFAULT 'website'
         )''')
+        # Ensure all columns exist (for older tables)
+        c.execute("PRAGMA table_info(queries)")
+        existing_cols = {row[1] for row in c.fetchall()}
+        required_cols = {
+            'phone': "ALTER TABLE queries ADD COLUMN phone TEXT",
+            'subject': "ALTER TABLE queries ADD COLUMN subject TEXT",
+            'priority': "ALTER TABLE queries ADD COLUMN priority TEXT DEFAULT 'normal'",
+            'status': "ALTER TABLE queries ADD COLUMN status TEXT DEFAULT 'pending'",
+            'assigned_to': "ALTER TABLE queries ADD COLUMN assigned_to TEXT",
+            'response': "ALTER TABLE queries ADD COLUMN response TEXT",
+            'responded_at': "ALTER TABLE queries ADD COLUMN responded_at TIMESTAMP",
+            'responded_by': "ALTER TABLE queries ADD COLUMN responded_by TEXT",
+            'category': "ALTER TABLE queries ADD COLUMN category TEXT DEFAULT 'general'",
+            'source': "ALTER TABLE queries ADD COLUMN source TEXT DEFAULT 'website'",
+            'user_ip': "ALTER TABLE queries ADD COLUMN user_ip TEXT",
+        }
+        for col, alter in required_cols.items():
+            if col not in existing_cols:
+                try:
+                    c.execute(alter)
+                except sqlite3.OperationalError:
+                    pass
+        # Indexes
+        c.execute("CREATE INDEX IF NOT EXISTS idx_queries_status ON queries(status)")
+        c.execute("CREATE INDEX IF NOT EXISTS idx_queries_priority ON queries(priority)")
+        c.execute("CREATE INDEX IF NOT EXISTS idx_queries_submitted_at ON queries(submitted_at)")
+        c.execute("CREATE INDEX IF NOT EXISTS idx_queries_category ON queries(category)")
+        # Migrate from legacy queries.db if present
+        try:
+            legacy_path = 'queries.db'
+            if os.path.exists(legacy_path):
+                try:
+                    legacy_conn = sqlite3.connect(legacy_path)
+                    legacy_c = legacy_conn.cursor()
+                    legacy_c.execute("SELECT name, email, message, submitted_at FROM queries")
+                    rows = legacy_c.fetchall()
+                    for r in rows:
+                        c.execute(
+                            "INSERT INTO queries (name, email, message, submitted_at) VALUES (?, ?, ?, ?)",
+                            (r[0], r[1], r[2], r[3])
+                        )
+                    legacy_conn.close()
+                    # Backup legacy file
+                    backup_name = f"users_backup_legacy_queries_{datetime.now().strftime('%Y%m%d_%H%M%S')}.db"
+                    try:
+                        os.rename(legacy_path, backup_name)
+                    except Exception:
+                        pass
+                except Exception:
+                    pass
+        except Exception:
+            pass
         conn.commit()
+    finally:
+        conn.close()
 init_queries_db()
 
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet', 
+                   ping_timeout=60, ping_interval=25, logger=True, engineio_logger=True)
 
-# --- WebRTC Signaling ---
+# Active session tracking
+active_sessions = {}
+room_participants = {}
+
+# --- Socket.IO Connection Management ---
+@socketio.on('connect')
+def handle_connect():
+    print(f"Client connected: {request.sid}")
+    active_sessions[request.sid] = {
+        'connected_at': datetime.now(),
+        'last_ping': datetime.now(),
+        'rooms': []
+    }
+    emit('connection_status', {'status': 'connected', 'session_id': request.sid})
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print(f"Client disconnected: {request.sid}")
+    if request.sid in active_sessions:
+        # Clean up user from all rooms
+        user_rooms = active_sessions[request.sid].get('rooms', [])
+        for room in user_rooms:
+            if room in room_participants:
+                if request.sid in room_participants[room]:
+                    room_participants[room].remove(request.sid)
+                    # Emit updated count to room
+                    socketio.emit('student_count_update', {
+                        'class_id': room.replace('liveclass_', ''),
+                        'count': len(room_participants[room])
+                    }, room=room)
+                    
+        del active_sessions[request.sid]
+
+@socketio.on('ping')
+def handle_ping():
+    if request.sid in active_sessions:
+        active_sessions[request.sid]['last_ping'] = datetime.now()
+    emit('pong')
+
+# --- Enhanced Room Management ---
 @socketio.on('join-room')
 def handle_join_room(data):
-    room = data['room']
-    join_room(room)
-    emit('joined-room', {'room': room}, room=room)
+    try:
+        room = data.get('room')
+        if not room:
+            emit('error', {'message': 'Room name is required'})
+            return
+            
+        join_room(room)
+        
+        # Track room participation
+        if room not in room_participants:
+            room_participants[room] = []
+        if request.sid not in room_participants[room]:
+            room_participants[room].append(request.sid)
+            
+        # Update session info
+        if request.sid in active_sessions:
+            active_sessions[request.sid]['rooms'].append(room)
+            
+        emit('joined-room', {'room': room, 'session_id': request.sid})
+        
+        # Send student count update if it's a live class room
+        if room.startswith('liveclass_'):
+            class_id = room.replace('liveclass_', '')
+            socketio.emit('student_count_update', {
+                'class_id': class_id,
+                'count': len(room_participants[room])
+            }, room=room)
+            
+        print(f"Client {request.sid} joined room {room}")
+        
+    except Exception as e:
+        print(f"Error in join-room: {e}")
+        emit('error', {'message': 'Failed to join room'})
+
+@socketio.on('leave-room')
+def handle_leave_room(data):
+    try:
+        room = data.get('room')
+        if not room:
+            return
+            
+        leave_room(room)
+        
+        # Update room participation
+        if room in room_participants and request.sid in room_participants[room]:
+            room_participants[room].remove(request.sid)
+            
+            # Send updated count
+            if room.startswith('liveclass_'):
+                class_id = room.replace('liveclass_', '')
+                socketio.emit('student_count_update', {
+                    'class_id': class_id,
+                    'count': len(room_participants[room])
+                }, room=room)
+        
+        # Update session info
+        if request.sid in active_sessions:
+            if room in active_sessions[request.sid]['rooms']:
+                active_sessions[request.sid]['rooms'].remove(room)
+                
+        emit('left-room', {'room': room})
+        print(f"Client {request.sid} left room {room}")
+        
+    except Exception as e:
+        print(f"Error in leave-room: {e}")
+
+@socketio.on('get_student_count')
+def handle_get_student_count(data):
+    try:
+        class_id = data.get('class_id')
+        if class_id:
+            room = f'liveclass_{class_id}'
+            count = len(room_participants.get(room, []))
+            emit('student_count_update', {
+                'class_id': class_id,
+                'count': count
+            })
+    except Exception as e:
+        print(f"Error getting student count: {e}")
+
+# --- WebRTC Signaling ---
 
 @socketio.on('signal')
 def handle_signal(data):
-    room = data['room']
-    signal = data['signal']
-    emit('signal', {'signal': signal, 'from': request.sid}, room=room, include_self=False)
+    try:
+        room = data.get('room')
+        signal = data.get('signal')
+        if room and signal:
+            emit('signal', {'signal': signal, 'from': request.sid}, room=room, include_self=False)
+        else:
+            emit('error', {'message': 'Invalid signal data'})
+    except Exception as e:
+        print(f"Error in signal: {e}")
+        emit('error', {'message': 'Signal failed'})
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -178,7 +456,7 @@ def inject_global_variables():
 # Route for the main page
 @app.route('/')
 def home():
-    with sqlite3.connect(DB_PATH) as conn:
+    with sqlite3.connect('users.db') as conn:
         c = conn.cursor()
         c.execute('SELECT name, email, message, submitted_at FROM queries ORDER BY id DESC LIMIT 10')
         queries = c.fetchall()
@@ -526,7 +804,7 @@ def auth():
                     return redirect(url_for('admin_panel'))
                 else:
                     return redirect(url_for('home'))
-        error = 'Invalid username, password, or role.'
+        error = 'Wrong credentials. Contact the institute.'
     return render_template('auth.html', error=error)
 
 # Route for registration
@@ -795,6 +1073,17 @@ def delete_user_route(user_id):
         return redirect(url_for('auth'))
     delete_user(user_id)
     return redirect(url_for('admin_panel'))
+
+# JSON API: Delete user (used by admin_create_user.html via fetch)
+@app.route('/admin/delete-user/<int:user_id>', methods=['POST'])
+def admin_delete_user_api(user_id):
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+    try:
+        delete_user(user_id)
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
 
 # User info route
 @app.route('/user-info/<int:user_id>', methods=['GET', 'POST'])
@@ -1117,18 +1406,18 @@ def admin_create_user_page():
     # Calculate user statistics
     paid_users = sum(1 for user in users if user[3] == 'paid')  # user[3] is paid status
     unpaid_users = sum(1 for user in users if user[3] == 'not paid')
-    admin_users = sum(1 for user in users if user[4] in ['admin', 'teacher'])  # user[4] is role
+    admin_users = sum(1 for user in users if user[2] in ['admin', 'teacher'])  # user[2] is class name
     
     # Get admissions data
     import sqlite3
     conn = sqlite3.connect('users.db')
     c = conn.cursor()
     
-    # Get pending admissions
+    # Get pending admissions (match order expected by template)
     c.execute('''
         SELECT id, student_name, dob, class, school_name, student_phone, student_email, 
                maths_marks, maths_rating, last_percentage, parent_name, parent_phone, 
-               passport_photo, status, submitted_at
+               passport_photo, status, submitted_at, submit_ip
         FROM admissions 
         ORDER BY submitted_at DESC
     ''')
@@ -1154,21 +1443,75 @@ def admin_create_user_page():
     ''')
     disapproved_admissions = c.fetchall()
     
+    # Map admission_id -> (access_username, access_password)
+    admission_ids = [a[0] for a in admissions]
+    admission_access_map = {}
+    if admission_ids:
+        placeholders = ','.join('?' for _ in admission_ids)
+        c.execute(f'''SELECT admission_id, access_username, access_password 
+                      FROM admission_access WHERE admission_id IN ({placeholders})''', admission_ids)
+        for row in c.fetchall():
+            admission_access_map[row[0]] = (row[1], row[2])
+
+    # Create admission_access_plain table for storing plain passwords for admin viewing
+    c.execute('''CREATE TABLE IF NOT EXISTS admission_access_plain (
+        admission_id INTEGER PRIMARY KEY,
+        plain_password TEXT NOT NULL,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )''')
+    
+    # Ensure every pending admission has credentials; auto-generate if missing
+    for adm in admissions:
+        adm_id = adm[0]
+        if adm_id not in admission_access_map:
+            access_username = f"ADM{adm_id:06d}"
+            access_password = secrets.token_hex(4)
+            try:
+                hashed_pw = generate_password_hash(access_password)
+                c.execute('''INSERT OR IGNORE INTO admission_access (admission_id, access_username, access_password)
+                             VALUES (?, ?, ?)''', (adm_id, access_username, hashed_pw))
+                # Store plain password for admin viewing
+                c.execute('''INSERT OR REPLACE INTO admission_access_plain (admission_id, plain_password)
+                             VALUES (?, ?)''', (adm_id, access_password))
+                admission_access_map[adm_id] = (access_username, access_password)
+            except Exception:
+                pass
+    
+    # Update admission_access_map with plain passwords for admin display
+    for adm_id in admission_access_map:
+        try:
+            c.execute('SELECT plain_password FROM admission_access_plain WHERE admission_id = ?', (adm_id,))
+            plain_row = c.fetchone()
+            if plain_row:
+                admission_access_map[adm_id] = (admission_access_map[adm_id][0], plain_row[0])
+            else:
+                # No plain password found, generate a new one
+                access_password = secrets.token_hex(4)
+                hashed_pw = generate_password_hash(access_password)
+                c.execute('UPDATE admission_access SET access_password = ? WHERE admission_id = ?', 
+                         (hashed_pw, adm_id))
+                c.execute('''INSERT OR REPLACE INTO admission_access_plain (admission_id, plain_password)
+                             VALUES (?, ?)''', (adm_id, access_password))
+                admission_access_map[adm_id] = (admission_access_map[adm_id][0], access_password)
+        except Exception:
+            pass
+    conn.commit()
     conn.close()
     
     # Calculate admission statistics
     pending_admissions = sum(1 for admission in admissions if admission[13] == 'pending')
     
     return render_template('admin_create_user.html', 
-                         all_classes=all_classes,
-                         users=users,
-                         paid_users=paid_users,
-                         unpaid_users=unpaid_users,
-                         admin_users=admin_users,
-                         admissions=admissions,
-                         pending_admissions=pending_admissions,
-                         approved_admissions=approved_admissions,
-                         disapproved_admissions=disapproved_admissions)
+                           all_classes=all_classes,
+                           users=users,
+                           paid_users=paid_users,
+                           unpaid_users=unpaid_users,
+                           admin_users=admin_users,
+                           admissions=admissions,
+                           admission_access_map=admission_access_map,
+                           pending_admissions=pending_admissions,
+                           approved_admissions=approved_admissions,
+                           disapproved_admissions=disapproved_admissions)
 
 @app.route('/admin/create-user', methods=['POST'])
 def admin_create_user_submit():
@@ -1419,6 +1762,19 @@ def approve_admission(admission_id):
                             flash(f'Admission approved and user {username} registered as paid member successfully!', 'success')
                             return redirect(url_for('view_admissions'))
                     else:
+                        # If user already exists, update their status to paid and ensure correct class/contact info
+                        try:
+                            from auth_handler import get_user_by_username, update_user
+                            existing_user = get_user_by_username(username)
+                            if existing_user:
+                                update_user(existing_user[0], username, class_id, 'paid', mobile_no=student_phone, email_address=student_email)
+                                if request.headers.get('Content-Type') == 'application/json':
+                                    return jsonify({'success': True, 'message': f'Admission approved. Existing user {username} updated to paid.'})
+                                else:
+                                    flash(f'Admission approved. Existing user {username} updated to paid.', 'success')
+                                    return redirect(url_for('view_admissions'))
+                        except Exception:
+                            pass
                         if request.headers.get('Content-Type') == 'application/json':
                             return jsonify({'success': False, 'message': 'Admission approved but user registration failed. Username may already exist.'})
                         else:
@@ -1695,16 +2051,60 @@ def submit_query():
     email = request.form.get('email')
     message = request.form.get('message')
     submitted_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    with sqlite3.connect(DB_PATH) as conn:
+    
+    # Get user IP address
+    user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    if user_ip and ',' in user_ip:
+        user_ip = user_ip.split(',')[0].strip()
+    
+    with sqlite3.connect('users.db') as conn:
         c = conn.cursor()
-        c.execute('INSERT INTO queries (name, email, message, submitted_at) VALUES (?, ?, ?, ?)',
-                  (name, email, message, submitted_at))
+        c.execute('INSERT INTO queries (name, email, message, submitted_at, user_ip) VALUES (?, ?, ?, ?, ?)',
+                  (name, email, message, submitted_at, user_ip))
         conn.commit()
     return redirect(url_for('home'))
 
+@app.route('/api/recent-queries')
+def get_recent_queries():
+    # Get user IP address
+    user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    if user_ip and ',' in user_ip:
+        user_ip = user_ip.split(',')[0].strip()
+    
+    try:
+        with sqlite3.connect('users.db') as conn:
+            c = conn.cursor()
+            # Get recent queries for this IP address (last 10)
+            c.execute('''
+                SELECT id, name, email, message, submitted_at, response, responded_at, status
+                FROM queries 
+                WHERE user_ip = ? 
+                ORDER BY submitted_at DESC 
+                LIMIT 10
+            ''', (user_ip,))
+            
+            queries = []
+            for row in c.fetchall():
+                query = {
+                    'id': row[0],
+                    'name': row[1],
+                    'email': row[2],
+                    'message': row[3],
+                    'submitted_at': row[4],
+                    'response': row[5],
+                    'responded_at': row[6],
+                    'status': row[7]
+                }
+                queries.append(query)
+            
+            return jsonify({'success': True, 'queries': queries})
+    
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
 @app.before_request
 def require_login():
-    allowed_routes = ['home', 'auth', 'register', 'static_files', 'submit_admission', 'admission', 'check_admission_status']
+    allowed_routes = ['home', 'auth', 'register', 'static_files', 'submit_admission', 'admission', 'check_admission_status', 'check_admission', 'submit_query', 'get_recent_queries', 'api_get_categories_for_class', 'api_get_categories_by_class_name']
     if request.endpoint not in allowed_routes and not session.get('user_id'):
         return redirect(url_for('auth'))
 
@@ -1783,7 +2183,6 @@ def admission():
     
     # Handle POST request (admission form submission)
     print('--- Admission form submitted ---')
-    print('--- Admission form submitted ---')
     # Handle admission form submission
     required_fields = [
         'student_name', 'dob', 'student_phone', 'student_email', 'class',
@@ -1832,8 +2231,8 @@ def admission():
         
         c.execute('''INSERT INTO admissions (
             student_name, dob, student_phone, student_email, class, school_name,
-            maths_marks, maths_rating, last_percentage, parent_name, parent_phone, passport_photo, status, submitted_at, user_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
+            maths_marks, maths_rating, last_percentage, parent_name, parent_phone, passport_photo, status, submitted_at, user_id, submit_ip
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
             request.form['student_name'],
             request.form['dob'],
             request.form['student_phone'],
@@ -1848,18 +2247,136 @@ def admission():
             unique_name,
             'pending',
             datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            user_id
+            user_id,
+            ((request.headers.get('X-Forwarded-For','').split(',')[0].strip()) or request.remote_addr or 'unknown')
         ))
+        # Generate admission portal credentials immediately
+        new_admission_id = c.lastrowid
+        try:
+            access_username = f"ADM{new_admission_id:06d}"
+            access_password = secrets.token_hex(4)
+            hashed_pw = generate_password_hash(access_password)
+            c.execute('''INSERT OR IGNORE INTO admission_access (admission_id, access_username, access_password)
+                         VALUES (?, ?, ?)''', (new_admission_id, access_username, hashed_pw))
+            # Also store plain password for admin viewing
+            c.execute('''CREATE TABLE IF NOT EXISTS admission_access_plain (
+                admission_id INTEGER PRIMARY KEY,
+                plain_password TEXT NOT NULL,
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP
+            )''')
+            c.execute('''INSERT OR REPLACE INTO admission_access_plain (admission_id, plain_password)
+                         VALUES (?, ?)''', (new_admission_id, access_password))
+            # Store plain password temporarily in session to display once (not persisted)
+            session['last_admission_creds'] = {'username': access_username, 'password': access_password}
+        except Exception as _e:
+            # Non-fatal: continue even if credential generation fails
+            pass
         conn.commit()
         print('Admission saved successfully!')
         conn.close()
-        flash('Admission submitted successfully! Your application is under review.', 'success')
-        return redirect(url_for('home'))
+        flash('Admission submitted successfully! Your portal credentials are shown below.', 'success')
+        return redirect(url_for('check_admission'))
     except Exception as e:
         print('Error inserting admission:', e)
         flash(f'Error saving admission: {e}', 'error')
     return redirect(url_for('home'))
 
+# Public admission check page (no login)
+@app.route('/check-admission', methods=['GET', 'POST'])
+def check_admission():
+    if request.method == 'GET':
+        # Prefill with freshly generated credentials if available (single-use display)
+        last_creds = session.pop('last_admission_creds', None)
+        if last_creds:
+            return render_template('check_admission.html', from_submission=True, access_username=last_creds.get('username'), access_password=last_creds.get('password'))
+        # Show last status result if available (single-use)
+        last_status = session.pop('last_admission_status', None)
+        if last_status:
+            return render_template(
+                'check_admission.html',
+                result=last_status.get('result'),
+                status=last_status.get('status'),
+                paid_status=last_status.get('paid_status'),
+                details=last_status.get('details'),
+                access_username=last_status.get('access_username'),
+                access_password=last_status.get('access_password')
+            )
+        return render_template('check_admission.html')
+    # POST: verify admission portal credentials and show status
+    access_username = request.form.get('access_username', '').strip()
+    access_password = request.form.get('access_password', '').strip()
+    if not access_username or not access_password:
+        flash('Please enter both username and password', 'error')
+        return redirect(url_for('check_admission'))
+    try:
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        c.execute('SELECT admission_id, access_password FROM admission_access WHERE access_username=?',
+                  (access_username,))
+        row = c.fetchone()
+        if not row:
+            conn.close()
+            flash('Invalid credentials. Please check and try again.', 'error')
+            return redirect(url_for('check_admission'))
+        admission_id, hashed_pw = row
+        if not check_password_hash(hashed_pw, access_password):
+            conn.close()
+            flash('Invalid credentials. Please check and try again.', 'error')
+            return redirect(url_for('check_admission'))
+        # Determine status by checking tables
+        # 1) pending admissions
+        c.execute('''SELECT student_name, class, school_name, status, submitted_at FROM admissions WHERE id = ?''', (admission_id,))
+        adm = c.fetchone()
+        status = None
+        details = {}
+        if adm:
+            status = adm[3]
+            details = {
+                'student_name': adm[0],
+                'class': adm[1],
+                'school_name': adm[2],
+                'submitted_at': adm[4]
+            }
+        else:
+            # 2) approved
+            c.execute('''SELECT student_name, class, school_name, approved_at FROM approved_admissions WHERE original_admission_id = ?''', (admission_id,))
+            apr = c.fetchone()
+            if apr:
+                status = 'approved'
+                details = {
+                    'student_name': apr[0],
+                    'class': apr[1],
+                    'school_name': apr[2],
+                    'submitted_at': apr[3]
+                }
+            else:
+                # 3) disapproved
+                c.execute('''SELECT student_name, class, school_name, disapproved_at FROM disapproved_admissions WHERE original_admission_id = ?''', (admission_id,))
+                dis = c.fetchone()
+                if dis:
+                    status = 'disapproved'
+                    details = {
+                        'student_name': dis[0],
+                        'class': dis[1],
+                        'school_name': dis[2],
+                        'submitted_at': dis[3]
+                    }
+        conn.close()
+        # Determine paid/unpaid mapping for display
+        paid_status = 'paid' if status == 'approved' else 'not paid'
+        # Store result in session and redirect (PRG)
+        session['last_admission_status'] = {
+            'result': True,
+            'status': status or 'pending',
+            'paid_status': paid_status,
+            'details': details,
+            'access_username': access_username,
+            'access_password': access_password
+        }
+        return redirect(url_for('check_admission'))
+    except Exception as e:
+        flash(f'Error checking admission: {str(e)}', 'error')
+        return redirect(url_for('check_admission'))
 
 @app.route('/live-class-management')
 def live_class_management():
@@ -2556,23 +3073,41 @@ def edit_resource():
 
 @socketio.on('create_poll')
 def handle_create_poll(data):
-    class_id = data.get('class_id')
-    question = data.get('question')
-    options = data.get('options', [])
-    created_by = data.get('created_by', 'host')
-    db = get_db()
-    c = db.cursor()
-    c.execute('INSERT INTO polls (class_id, question, created_by) VALUES (?, ?, ?)', (class_id, question, created_by))
-    poll_id = c.lastrowid
-    for opt in options:
-        c.execute('INSERT INTO poll_options (poll_id, option_text) VALUES (?, ?)', (poll_id, opt))
-    db.commit()
-    # Fetch poll with options
-    c.execute('SELECT * FROM polls WHERE id=?', (poll_id,))
-    poll = dict(c.fetchone())
-    c.execute('SELECT id, option_text FROM poll_options WHERE poll_id=?', (poll_id,))
-    poll['options'] = [dict(row) for row in c.fetchall()]
-    socketio.emit('new_poll', poll, room=f'liveclass_{class_id}')
+    try:
+        class_id = data.get('class_id')
+        question = data.get('question')
+        options = data.get('options', [])
+        created_by = data.get('created_by', 'host')
+        correct_answer = data.get('correct_answer')
+        duration = data.get('duration', 15)
+        
+        if not class_id or not question or len(options) < 2:
+            emit('error', {'message': 'Invalid poll data'})
+            return
+        
+        db = get_db()
+        c = db.cursor()
+        c.execute('INSERT INTO polls (class_id, question, created_by) VALUES (?, ?, ?)', (class_id, question, created_by))
+        poll_id = c.lastrowid
+        
+        for idx, opt in enumerate(options):
+            c.execute('INSERT INTO poll_options (poll_id, option_text) VALUES (?, ?)', (poll_id, opt))
+        db.commit()
+        
+        # Fetch poll with options
+        c.execute('SELECT * FROM polls WHERE id=?', (poll_id,))
+        poll = dict(c.fetchone())
+        c.execute('SELECT id, option_text FROM poll_options WHERE poll_id=?', (poll_id,))
+        poll['options'] = [dict(row) for row in c.fetchall()]
+        poll['correct_answer'] = correct_answer
+        poll['duration'] = duration
+        
+        socketio.emit('new_poll', poll, room=f'liveclass_{class_id}')
+        print(f"Poll created: {poll_id} for class {class_id}")
+        
+    except Exception as e:
+        print(f"Error creating poll: {e}")
+        emit('error', {'message': 'Failed to create poll'})
 
 @socketio.on('vote_poll')
 def handle_vote_poll(data):
@@ -2650,6 +3185,108 @@ def handle_get_polls_and_doubts(data):
     c.execute('SELECT * FROM doubts WHERE class_id=? ORDER BY created_at ASC', (class_id,))
     doubts = [dict(row) for row in c.fetchall()]
     socketio.emit('init_polls_and_doubts', {'polls': polls, 'doubts': doubts}, room=request.sid)
+
+# New handlers for enhanced live class features
+@socketio.on('end_poll')
+def handle_end_poll(data):
+    try:
+        poll_id = data.get('poll_id')
+        class_id = data.get('class_id')
+        
+        if not poll_id or not class_id:
+            emit('error', {'message': 'Poll ID and Class ID required'})
+            return
+            
+        db = get_db()
+        c = db.cursor()
+        
+        # Get poll results
+        c.execute('SELECT * FROM polls WHERE id=?', (poll_id,))
+        poll = dict(c.fetchone())
+        
+        c.execute('SELECT id, option_text FROM poll_options WHERE poll_id=?', (poll_id,))
+        options = [dict(row) for row in c.fetchall()]
+        
+        results = []
+        for opt in options:
+            c.execute('SELECT COUNT(*) as votes FROM poll_votes WHERE option_id=?', (opt['id'],))
+            votes = c.fetchone()['votes']
+            results.append({
+                'option_id': opt['id'], 
+                'option_text': opt['option_text'], 
+                'votes': votes,
+                'option_index': options.index(opt)
+            })
+        
+        poll_data = {
+            'poll_id': poll_id,
+            'question': poll.get('question'),
+            'results': results,
+            'correct_answer': poll.get('correct_answer'),
+            'class_id': class_id
+        }
+        
+        socketio.emit('poll_ended', poll_data, room=f'liveclass_{class_id}')
+        print(f"Poll {poll_id} ended for class {class_id}")
+        
+    except Exception as e:
+        print(f"Error ending poll: {e}")
+        emit('error', {'message': 'Failed to end poll'})
+
+@socketio.on('host_camera_status')
+def handle_host_camera_status(data):
+    try:
+        class_id = data.get('class_id')
+        status = data.get('status')
+        message = data.get('message')
+        
+        if class_id:
+            socketio.emit('host_camera_status', {
+                'class_id': class_id,
+                'status': status,
+                'message': message
+            }, room=f'liveclass_{class_id}')
+            
+    except Exception as e:
+        print(f"Error broadcasting camera status: {e}")
+
+@socketio.on('host_video_mode')
+def handle_host_video_mode(data):
+    try:
+        class_id = data.get('class_id')
+        mode = data.get('mode')
+        message = data.get('message')
+        
+        if class_id:
+            socketio.emit('host_video_mode', {
+                'class_id': class_id,
+                'mode': mode,
+                'message': message
+            }, room=f'liveclass_{class_id}')
+            
+    except Exception as e:
+        print(f"Error broadcasting video mode: {e}")
+
+@socketio.on('host_mic_status')
+def handle_host_mic_status(data):
+    try:
+        class_id = data.get('class_id')
+        muted = data.get('muted')
+        
+        if class_id:
+            socketio.emit('host_mic_status', {
+                'class_id': class_id,
+                'muted': muted
+            }, room=f'liveclass_{class_id}')
+            
+    except Exception as e:
+        print(f"Error broadcasting mic status: {e}")
+
+# Enhanced error handling for Socket.IO
+@socketio.on_error()
+def error_handler(e):
+    print(f"Socket.IO error: {e}")
+    emit('error', {'message': 'An error occurred'})
 
 @app.route('/edit-profile', methods=['GET', 'POST'])
 def edit_profile():
@@ -2746,6 +3383,7 @@ def edit_profile():
 
 # Query Management Routes
 @app.route('/api/queries', methods=['GET'])
+@admin_api_required
 def api_get_queries():
     """API endpoint to get queries with filtering and pagination"""
     try:
@@ -2836,6 +3474,7 @@ def api_get_queries():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/queries/<int:query_id>/respond', methods=['POST'])
+@admin_api_required
 def api_respond_to_query(query_id):
     """API endpoint to respond to a query"""
     try:
@@ -2866,6 +3505,7 @@ def api_respond_to_query(query_id):
         return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/api/queries/<int:query_id>/status', methods=['POST'])
+@admin_api_required
 def api_update_query_status(query_id):
     """API endpoint to update query status"""
     try:
@@ -2888,6 +3528,7 @@ def api_update_query_status(query_id):
         return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/api/queries/<int:query_id>', methods=['DELETE'])
+@admin_api_required
 def api_delete_query(query_id):
     """API endpoint to delete a query"""
     try:
@@ -2904,6 +3545,7 @@ def api_delete_query(query_id):
         return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/api/queries/export')
+@admin_api_required
 def api_export_queries():
     """API endpoint to export queries as CSV"""
     try:
@@ -3143,15 +3785,15 @@ def pdf_content(filename):
 
 # Route to get categories for a specific class
 @app.route('/api/categories/<int:class_id>')
-def get_categories_for_class(class_id):
+def api_get_categories_for_class(class_id):
     try:
         conn = sqlite3.connect('users.db')
         c = conn.cursor()
         
-        # Get categories for the specific class
+        # Get active categories for the specific class or all
         c.execute('''SELECT id, name, description, category_type, paid_status 
                      FROM categories 
-                     WHERE target_class = ? OR target_class = 'all'
+                     WHERE is_active = 1 AND (target_class = ? OR target_class = 'all')
                      ORDER BY name''', (str(class_id),))
         
         categories = []
@@ -3170,8 +3812,305 @@ def get_categories_for_class(class_id):
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
 
+@app.before_request
+def track_ip_activity():
+    try:
+        # Determine client IP (respect X-Forwarded-For if present)
+        xff = request.headers.get('X-Forwarded-For', '')
+        ip = (xff.split(',')[0].strip() if xff else request.remote_addr) or 'unknown'
+        user_id = session.get('user_id')
+        path = request.path
+        ua = request.headers.get('User-Agent', '')[:300]
+        now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        # Ensure tables exist (in case of reload)
+        c.execute('''CREATE TABLE IF NOT EXISTS ip_logs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ip TEXT,
+            user_id INTEGER,
+            path TEXT,
+            user_agent TEXT,
+            visited_at TEXT
+        )''')
+        c.execute('''CREATE TABLE IF NOT EXISTS user_activity (
+            user_id INTEGER PRIMARY KEY,
+            ip TEXT,
+            last_seen TEXT
+        )''')
+        # Insert IP log
+        c.execute('INSERT INTO ip_logs (ip, user_id, path, user_agent, visited_at) VALUES (?, ?, ?, ?, ?)',
+                  (ip, user_id, path, ua, now_str))
+        # Update user activity if logged in
+        if user_id:
+            c.execute("""
+                INSERT INTO user_activity (user_id, ip, last_seen)
+                VALUES (?, ?, ?)
+                ON CONFLICT(user_id)
+                DO UPDATE SET ip=excluded.ip, last_seen=excluded.last_seen
+            """, (user_id, ip, now_str))
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        # Fail silently to not block requests
+        print(f"IP tracking error: {e}")
+
+@app.route('/api/admin/metrics/traffic')
+def api_admin_metrics_traffic():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+    try:
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        # Total unique IPs (all time)
+        c.execute('SELECT COUNT(DISTINCT ip) FROM ip_logs')
+        total_unique_ips = c.fetchone()[0] or 0
+        # Unique IPs today (local time)
+        c.execute("SELECT COUNT(DISTINCT ip) FROM ip_logs WHERE date(visited_at) = date('now','localtime')")
+        unique_ips_today = c.fetchone()[0] or 0
+        # Active IPs in last 10 minutes
+        c.execute("SELECT COUNT(DISTINCT ip) FROM ip_logs WHERE visited_at >= datetime('now','-10 minutes','localtime')")
+        active_ips_now = c.fetchone()[0] or 0
+        # Active logged-in users in last 10 minutes
+        c.execute("SELECT COUNT(*) FROM user_activity WHERE last_seen >= datetime('now','-10 minutes','localtime') AND user_id IS NOT NULL")
+        active_logged_in_users = c.fetchone()[0] or 0
+        conn.close()
+        return jsonify({
+            'success': True,
+            'data': {
+                'total_unique_ips': total_unique_ips,
+                'unique_ips_today': unique_ips_today,
+                'active_ips_now': active_ips_now,
+                'active_logged_in_users': active_logged_in_users
+            }
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/admin/metrics/traffic/logs')
+def api_admin_metrics_logs():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+    try:
+        limit = int(request.args.get('limit', 200))
+        if limit < 1 or limit > 1000:
+            limit = 200
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        c.execute('''
+            SELECT l.ip, l.user_id, IFNULL(u.username,''), l.path, l.user_agent, l.visited_at
+            FROM ip_logs l
+            LEFT JOIN users u ON u.id = l.user_id
+            ORDER BY datetime(l.visited_at) DESC
+            LIMIT ?
+        ''', (limit,))
+        rows = c.fetchall()
+        conn.close()
+        data = [
+            {
+                'ip': r[0], 'user_id': r[1], 'username': r[2], 'path': r[3],
+                'user_agent': r[4], 'visited_at': r[5]
+            } for r in rows
+        ]
+        return jsonify({'success': True, 'data': data})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/admin/metrics/traffic/active')
+def api_admin_metrics_active():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+    try:
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        c.execute('''
+            SELECT ua.user_id, IFNULL(u.username,''), ua.ip, ua.last_seen
+            FROM user_activity ua
+            LEFT JOIN users u ON u.id = ua.user_id
+            WHERE ua.last_seen >= datetime('now','-10 minutes','localtime') AND ua.user_id IS NOT NULL
+            ORDER BY datetime(ua.last_seen) DESC
+        ''')
+        rows = c.fetchall()
+        conn.close()
+        data = [
+            {'user_id': r[0], 'username': r[1], 'ip': r[2], 'last_seen': r[3]} for r in rows
+        ]
+        return jsonify({'success': True, 'data': data})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/user')
+def user_dashboard():
+    if not session.get('user_id'):
+        return redirect(url_for('auth'))
+    return render_template('user.html')
+
+@app.route('/api/admin/metrics/traffic/last_seen')
+def api_admin_metrics_last_seen():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+    try:
+        user_ids_param = request.args.get('user_ids', '').strip()
+        ids = []
+        if user_ids_param:
+            ids = [i for i in (p.strip() for p in user_ids_param.split(',')) if i.isdigit()]
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        if ids:
+            placeholders = ','.join('?' for _ in ids)
+            c.execute(f"SELECT user_id, last_seen FROM user_activity WHERE user_id IN ({placeholders})", ids)
+        else:
+            c.execute("SELECT user_id, last_seen FROM user_activity")
+        rows = c.fetchall()
+        conn.close()
+        data = {str(r[0]): r[1] for r in rows if r and r[0] is not None}
+        return jsonify({'success': True, 'data': data})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+# Favicon and app icons
+@app.route('/favicon.ico')
+def favicon():
+    try:
+        return send_from_directory('attached_assets', 'image_1750584670920.png', mimetype='image/png')
+    except Exception:
+        # Fallback: return 204 if asset missing
+        from flask import Response
+        return Response(status=204)
+
+@app.route('/apple-touch-icon.png')
+def apple_touch_icon():
+    try:
+        return send_from_directory('attached_assets', 'image_1750584670920.png', mimetype='image/png')
+    except Exception:
+        from flask import Response
+        return Response(status=204)
+
+@app.route('/admin/home-editor', methods=['GET', 'POST'])
+@admin_required
+def home_editor():
+    error = None
+    success_message = None
+    index_path = os.path.join('.', 'index.html')
+    if request.method == 'POST':
+        html_content = request.form.get('html_content', '')
+        try:
+            # Backup existing index.html
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            backup_path = os.path.join('.', f'index_backup_{timestamp}.html')
+            try:
+                with open(index_path, 'r', encoding='utf-8') as f:
+                    existing = f.read()
+                with open(backup_path, 'w', encoding='utf-8') as f:
+                    f.write(existing)
+            except Exception:
+                pass
+            # Write new content
+            with open(index_path, 'w', encoding='utf-8') as f:
+                f.write(html_content)
+            flash('Homepage updated successfully.', 'success')
+            success_message = 'Homepage updated successfully.'
+        except Exception as e:
+            error = f'Failed to update homepage: {str(e)}'
+            flash(error, 'error')
+    try:
+        with open(index_path, 'r', encoding='utf-8') as f:
+            index_html_content = f.read()
+    except Exception as e:
+        index_html_content = ''
+        error = f'Failed to load homepage: {str(e)}'
+    return render_template('home_customizer.html', index_html_content=index_html_content, error=error, success_message=success_message)
+
+@app.route('/api/check-admission-credentials', methods=['POST'])
+def api_check_admission_credentials():
+    try:
+        data = request.get_json(silent=True) or request.form
+        access_username = (data.get('access_username') or '').strip()
+        access_password = (data.get('access_password') or '').strip()
+        if not access_username or not access_password:
+            return jsonify({'valid': False, 'error': 'Missing credentials'}), 400
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        c.execute('SELECT access_password FROM admission_access WHERE access_username=?',
+                  (access_username,))
+        row = c.fetchone()
+        conn.close()
+        is_valid = bool(row and check_password_hash(row[0], access_password))
+        return jsonify({'valid': is_valid})
+    except Exception as e:
+        return jsonify({'valid': False, 'error': str(e)}), 500
+
+def cleanup_stale_sessions():
+    """Clean up stale sessions periodically"""
+    import threading
+    import time
+    
+    def cleanup():
+        while True:
+            try:
+                current_time = datetime.now()
+                stale_sessions = []
+                
+                for session_id, session_data in active_sessions.items():
+                    last_ping = session_data.get('last_ping', session_data.get('connected_at'))
+                    if current_time - last_ping > timedelta(minutes=5):  # 5 minutes timeout
+                        stale_sessions.append(session_id)
+                
+                for session_id in stale_sessions:
+                    print(f"Cleaning up stale session: {session_id}")
+                    # Clean up from rooms
+                    if session_id in active_sessions:
+                        user_rooms = active_sessions[session_id].get('rooms', [])
+                        for room in user_rooms:
+                            if room in room_participants and session_id in room_participants[room]:
+                                room_participants[room].remove(session_id)
+                        del active_sessions[session_id]
+                
+                time.sleep(60)  # Run cleanup every minute
+                
+            except Exception as e:
+                print(f"Error in session cleanup: {e}")
+                time.sleep(60)
+    
+    cleanup_thread = threading.Thread(target=cleanup, daemon=True)
+    cleanup_thread.start()
+    print("🧹 Session cleanup service started")
+
+@app.route('/api/categories/by-name/<path:class_name>')
+def api_get_categories_by_class_name(class_name):
+    try:
+        # Map class_name to class_id using helper
+        from auth_handler import get_class_id_by_name
+        class_id = get_class_id_by_name(class_name)
+        if not class_id:
+            return jsonify({'success': False, 'error': f'Unknown class name: {class_name}'}), 400
+
+        conn = sqlite3.connect('users.db')
+        c = conn.cursor()
+        c.execute('''SELECT id, name, description, category_type, paid_status 
+                     FROM categories 
+                     WHERE is_active = 1 AND (target_class = ? OR target_class = 'all')
+                     ORDER BY name''', (str(class_id),))
+        categories = [
+            {
+                'id': row[0],
+                'name': row[1],
+                'description': row[2],
+                'category_type': row[3],
+                'paid_status': row[4]
+            } for row in c.fetchall()
+        ]
+        conn.close()
+        return jsonify({'success': True, 'categories': categories, 'class_id': class_id})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
+    
+    # Start session cleanup service
+    cleanup_stale_sessions()
     
     # Default to HTTP mode to avoid SSL issues
     print("🚀 Starting server with HTTP...")

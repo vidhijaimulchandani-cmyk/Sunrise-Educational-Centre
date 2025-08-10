@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Check Admission Status - Sunrise Educational Centre</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body.dark-mode .navbar { background: rgba(35,41,70,0.95); border-bottom: 1px solid #44476a; }
+    body.dark-mode .nav-links a { color: #e0e7ff; }
+    body.dark-mode .nav-links a:hover { background:#44476a; color:#6a82fb; }
+    body.dark-mode .footer { background:#0f1221; color:#e2e8f0; }
+    body.dark-mode .footer a { color:#93c5fd; }
+    body.dark-mode .footer a:hover { color:#bfdbfe; }
+    .cred-card { background:#fff; border-radius:16px; border:1px solid #e0e7ff; box-shadow:0 4px 16px rgba(100,100,255,0.08); }
+    .cred-form { display:grid; grid-template-columns:1fr; gap:0.8rem; }
+    .cred-label { font-weight:600; color:#232946; font-size:0.95rem; }
+    .cred-input { width:100%; padding:0.75rem 1rem; border:2px solid #e5e7eb; border-radius:12px; font-size:1rem; color:#232946; background:#fff; transition:all 0.25s ease; box-sizing:border-box; }
+    .cred-input:focus { outline:none; border-color:#6a82fb; box-shadow:0 0 0 3px rgba(106,130,251,0.12); }
+    .cred-actions { display:flex; gap:0.6rem; flex-wrap:wrap; }
+    .cred-info { background:#f8f9ff; border:1px solid #e0e7ff; border-radius:12px; padding:1rem; }
+    .cred-info code { background:#f1f5ff; color:#1f2937; padding:0.15rem 0.35rem; border-radius:6px; font-weight:700; }
+    @media (max-width: 540px) { .cred-actions .btn { width:100%; } }
+    body.dark-mode .cred-card { background:#232946; border-color:#444a6d; }
+    body.dark-mode .cred-label { color:#e2e8f0; }
+    body.dark-mode .cred-input { background:#181c2a; color:#f4f4f4; border-color:#444a6d; }
+    body.dark-mode .cred-input:focus { border-color:#6a82fb; box-shadow:0 0 0 3px rgba(106,130,251,0.22); }
+    body.dark-mode .cred-info { background:#232a48; border-color:#444a6d; }
+    body.dark-mode .cred-info code { background:#1f2a44; color:#e2e8f0; }
+  </style>
+</head>
+<body>
+  <nav class="navbar glassmorphic">
+    <div class="container nav-content">
+      <div class="nav-logo">
+        <img src="attached_assets/image_1750584670920.png" alt="Logo">
+      </div>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/admission">Admission</a></li>
+        <li><a href="/study-resources">Study Resources</a></li>
+        <li><a href="/forum">Forum</a></li>
+        <li><a href="/online-class">Live Class</a></li>
+      </ul>
+    </div>
+  </nav>
+  <main class="container main-content" style="max-width: 760px;">
+    <div class="card animated-card cred-card" style="padding:1.5rem;">
+      <h2 style="text-align:center; margin-bottom:1rem;">Check Admission Status</h2>
+      {% if from_submission %}
+      <div class="cred-info" style="margin-bottom:1rem;">
+        <strong>Your Admission Portal Credentials</strong>
+        <div style="margin-top:0.5rem;">Username: <code>{{ access_username }}</code></div>
+        <div>Password: <code>{{ access_password }}</code></div>
+        <div style="font-size:0.95rem; color:#666; margin-top:0.5rem;">Please copy and keep these safe. Use them below anytime to see your admission status.</div>
+      </div>
+      {% endif %}
+      <form method="POST" action="/check-admission" class="cred-form">
+        <label class="cred-label">Admission Portal Username</label>
+        <input name="access_username" required placeholder="e.g., ADM000123" class="cred-input" value="{{ access_username or '' }}" />
+        <label class="cred-label">Admission Portal Password</label>
+        <input name="access_password" required type="password" placeholder="Your password" class="cred-input" value="{{ access_password or '' }}" />
+        <div class="cred-actions" style="margin-top:0.2rem;">
+          <button class="btn btn-primary" type="submit">Check Status</button>
+          <a href="/admission" class="btn btn-secondary">Go to Admission Form</a>
+        </div>
+      </form>
+    </div>
+
+    {% if result %}
+    <div class="card animated-card cred-card" style="padding:1.5rem; margin-top:1rem;">
+      <h3>Status: <span style="color:#6a82fb;">{{ status|upper }}</span></h3>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:0.8rem;">
+        <div>
+          <div><strong>Student Name</strong></div>
+          <div>{{ details.student_name }}</div>
+        </div>
+        <div>
+          <div><strong>Class</strong></div>
+          <div>{{ details.class }}</div>
+        </div>
+        <div>
+          <div><strong>School</strong></div>
+          <div>{{ details.school_name }}</div>
+        </div>
+        <div>
+          <div><strong>Submitted</strong></div>
+          <div>{{ details.submitted_at }}</div>
+        </div>
+        <div>
+          <div><strong>Paid Status</strong></div>
+          <div>{{ paid_status|title }}</div>
+        </div>
+      </div>
+      <div style="margin-top:1rem;">
+        <a href="/auth" class="btn btn-primary">Proceed to Login</a>
+      </div>
+    </div>
+    {% endif %}
+  </main>
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-social">
+        <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">Instagram</a>
+        <a href="https://www.youtube.com/@MohitNariyani" target="_blank">YouTube</a>
+      </div>
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Contact Us</a>
+      </div>
+      <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>

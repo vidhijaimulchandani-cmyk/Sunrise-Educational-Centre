@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>User Management - Admin</title>
+  <link rel="icon" type="image/png" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
   <link rel="stylesheet" href="style.css" />
   <style>
@@ -392,6 +394,7 @@
     <div class="tab-container">
       <button class="tab-btn active" onclick="showTab('users')">User Management</button>
       <button class="tab-btn" onclick="showTab('admissions')">Admissions</button>
+      <button class="tab-btn" onclick="showTab('ip')">IP Tracker</button>
     </div>
     
     <!-- Users Tab -->
@@ -429,6 +432,17 @@
         <!-- Current Users Section -->
         <div class="users-section">
           <h2>👥 Current Users</h2>
+          <!-- Quick Traffic Metrics (helps reviewing activity for admissions decisions) -->
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap; margin:0 0 1rem 0;">
+            <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+              <span style="color:#6b7280;">Active logins (10m):</span>
+              <strong id="umActiveLogins">--</strong>
+            </div>
+            <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+              <span style="color:#6b7280;">Active IPs (10m):</span>
+              <strong id="umActiveIps">--</strong>
+            </div>
+          </div>
           
           <!-- User Statistics -->
           <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
@@ -472,6 +486,7 @@
                   <th>ID</th>
                   <th>Username</th>
                   <th>Role</th>
+                  <th>Last Online</th>
                   <th>Paid Status</th>
                   <th>Contact Info</th>
                   <th>Actions</th>
@@ -479,10 +494,11 @@
               </thead>
               <tbody id="usersTableBody">
                 {% for id, username, name, paid, mobile_no, email_address in users %}
-                <tr data-username="{{ username }}" data-role="{{ name|lower }}" data-paid="{{ paid }}">
+                <tr data-username="{{ username }}" data-role="{{ name|lower }}" data-paid="{{ paid }}" data-userid="{{ id }}">
                   <td>{{ id }}</td>
                   <td><strong>{{ username }}</strong></td>
                   <td>{{ name|title }}</td>
+                  <td id="lastSeen-{{ id }}" style="white-space:nowrap; color:#6b7280;">—</td>
                   <td>
                     <span class="status-badge {% if paid == 'paid' %}status-paid{% else %}status-unpaid{% endif %}">
                       {{ "Paid" if paid == 'paid' else "Unpaid" }}
@@ -525,6 +541,17 @@
             <button class="btn btn-primary" onclick="bulkApprove()">Bulk Approve</button>
           </div>
         </div>
+        <!-- Quick Traffic Metrics for context -->
+        <div style="display:flex; gap:0.8rem; flex-wrap:wrap; margin:0 0 1rem 0;">
+          <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+            <span style="color:#6b7280;">Active logins (10m):</span>
+            <strong id="amActiveLogins">--</strong>
+          </div>
+          <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+            <span style="color:#6b7280;">Active IPs (10m):</span>
+            <strong id="amActiveIps">--</strong>
+          </div>
+        </div>
         
         <div class="search-bar">
           <input type="text" id="admissionSearch" placeholder="Search by student name..." class="search-input" onkeyup="filterAdmissions()">
@@ -560,6 +587,9 @@
                 <th>Parent Name</th>
                 <th>Parent Phone</th>
                 <th>Photo</th>
+                <th>Submit IP</th>
+                <th>Admission Username</th>
+                <th>Admission Password</th>
                 <th>Status</th>
                 <th>Applied Date</th>
                 <th>Actions</th>
@@ -588,6 +618,9 @@
                     <span style="color: #999;">No photo</span>
                   {% endif %}
                 </td>
+                <td>{{ admission[15] or '-' }}</td>
+                <td>{{ (admission_access_map.get(admission[0]) or ['', ''])[0] }}</td>
+                <td>{{ (admission_access_map.get(admission[0]) or ['', ''])[1] }}</td>
                 <td>
                   <span class="status-badge 
                     {% if admission[13] == 'pending' %}status-pending
@@ -741,6 +774,70 @@
         </div>
       </div>
     </div>
+
+    <!-- IP Tracker Tab -->
+    <div id="ip-tab" class="tab-content">
+      <div class="users-section">
+        <div class="section-header" style="margin-bottom:1rem;">
+          <h2>🌐 IP Tracker</h2>
+          <div class="section-actions">
+            <button class="btn btn-primary" onclick="refreshIpTracker()">Refresh</button>
+          </div>
+        </div>
+        <!-- Summary -->
+        <div style="display:flex; gap:0.8rem; flex-wrap:wrap; margin:0 0 1rem 0;">
+          <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+            <span style="color:#6b7280;">Active logins (10m):</span>
+            <strong id="ipActiveLogins">--</strong>
+          </div>
+          <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+            <span style="color:#6b7280;">Active IPs (10m):</span>
+            <strong id="ipActiveIps">--</strong>
+          </div>
+          <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+            <span style="color:#6b7280;">Unique IPs (today):</span>
+            <strong id="ipUniqueToday">--</strong>
+          </div>
+          <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+            <span style="color:#6b7280;">Unique IPs (all):</span>
+            <strong id="ipUniqueAll">--</strong>
+          </div>
+        </div>
+        
+        <!-- Active Logged-in Users -->
+        <h3 style="margin-top:0.5rem; color:#232946;">Active Logged-in Users (last 10m)</h3>
+        <div class="table-container">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>IP</th>
+                <th>Last Seen</th>
+              </tr>
+            </thead>
+            <tbody id="activeUsersTbody"></tbody>
+          </table>
+        </div>
+        
+        <!-- Recent IP Logs -->
+        <h3 style="margin-top:2rem; color:#232946;">Recent IP Logs</h3>
+        <div class="table-container">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>IP</th>
+                <th>Username</th>
+                <th>Path</th>
+                <th>User-Agent</th>
+              </tr>
+            </thead>
+            <tbody id="ipLogsTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -753,6 +850,10 @@
       // Show selected tab
       document.getElementById(tabName + '-tab').classList.add('active');
       event.target.classList.add('active');
+      // When opening IP tab, refresh data
+      if (tabName === 'ip') {
+        refreshIpTracker();
+      }
     }
     
     // User Management Functions
@@ -787,6 +888,108 @@
         
         row.style.display = shouldShow ? 'table-row' : 'none';
       });
+    }
+    
+    // Traffic metrics and IP tracker
+    async function fetchTrafficSummary(){
+      try {
+        const res = await fetch('/api/admin/metrics/traffic');
+        const json = await res.json();
+        if(json && json.success){
+          const d = json.data || {};
+          // Users section
+          const umLogins = document.getElementById('umActiveLogins');
+          const umIps = document.getElementById('umActiveIps');
+          if (umLogins) umLogins.textContent = d.active_logged_in_users ?? '--';
+          if (umIps) umIps.textContent = d.active_ips_now ?? '--';
+          // Admissions section
+          const amLogins = document.getElementById('amActiveLogins');
+          const amIps = document.getElementById('amActiveIps');
+          if (amLogins) amLogins.textContent = d.active_logged_in_users ?? '--';
+          if (amIps) amIps.textContent = d.active_ips_now ?? '--';
+          // IP tab summary
+          const ipLogins = document.getElementById('ipActiveLogins');
+          const ipIps = document.getElementById('ipActiveIps');
+          const ipToday = document.getElementById('ipUniqueToday');
+          const ipAll = document.getElementById('ipUniqueAll');
+          if (ipLogins) ipLogins.textContent = d.active_logged_in_users ?? '--';
+          if (ipIps) ipIps.textContent = d.active_ips_now ?? '--';
+          if (ipToday) ipToday.textContent = d.unique_ips_today ?? '--';
+          if (ipAll) ipAll.textContent = d.total_unique_ips ?? '--';
+        }
+      } catch(e){ console.error('Traffic summary error', e); }
+    }
+    async function fetchActiveUsers(){
+      try {
+        const res = await fetch('/api/admin/metrics/traffic/active');
+        const json = await res.json();
+        if(json && json.success){
+          const tbody = document.getElementById('activeUsersTbody');
+          if (!tbody) return;
+          tbody.innerHTML = '';
+          (json.data || []).forEach(r => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${r.user_id ?? ''}</td><td><strong>${r.username || ''}</strong></td><td>${r.ip || ''}</td><td>${r.last_seen || ''}</td>`;
+            tbody.appendChild(tr);
+          });
+        }
+      } catch(e){ console.error('Active users fetch error', e); }
+    }
+    async function fetchIpLogs(){
+      try {
+        const res = await fetch('/api/admin/metrics/traffic/logs?limit=300');
+        const json = await res.json();
+        if(json && json.success){
+          const tbody = document.getElementById('ipLogsTbody');
+          if (!tbody) return;
+          tbody.innerHTML = '';
+          (json.data || []).forEach(r => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${r.visited_at || ''}</td><td>${r.ip || ''}</td><td>${r.username || ''}</td><td>${r.path || ''}</td><td style="max-width:480px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${r.user_agent || ''}</td>`;
+            tbody.appendChild(tr);
+          });
+        }
+      } catch(e){ console.error('IP logs fetch error', e); }
+    }
+    function refreshIpTracker(){
+      fetchTrafficSummary();
+      fetchActiveUsers();
+      fetchIpLogs();
+    }
+
+    // Last online column
+    function timeAgo(ts){
+      if(!ts) return '—';
+      // ts expected in '%Y-%m-%d %H:%M:%S'
+      const parsed = new Date(ts.replace(' ', 'T'));
+      if(isNaN(parsed)) return ts;
+      const diffMs = Date.now() - parsed.getTime();
+      const min = Math.floor(diffMs/60000);
+      if(min < 10) return 'Online';
+      if(min < 60) return `${min} min ago`;
+      const hr = Math.floor(min/60);
+      if(hr < 24) return `${hr} hr ago`;
+      const day = Math.floor(hr/24);
+      return `${day} d ago`;
+    }
+    async function refreshLastOnline(){
+      const rows = Array.from(document.querySelectorAll('#usersTableBody tr'));
+      if(rows.length === 0) return;
+      const ids = rows.map(r => r.getAttribute('data-userid')).filter(Boolean);
+      try {
+        const res = await fetch(`/api/admin/metrics/traffic/last_seen?user_ids=${encodeURIComponent(ids.join(','))}`);
+        const json = await res.json();
+        if(json && json.success){
+          const map = json.data || {};
+          ids.forEach(id => {
+            const cell = document.getElementById(`lastSeen-${id}`);
+            if(!cell) return;
+            const ts = map[id] || null;
+            cell.textContent = timeAgo(ts);
+            cell.style.color = ts && timeAgo(ts)==='Online' ? '#10b981' : '#6b7280';
+          });
+        }
+      } catch(e){ console.error('Last online fetch error', e); }
     }
     
     function deleteUser(userId) {
@@ -1006,6 +1209,14 @@
         });
       }
     }
+    
+    // Initial refresh + interval updates for metrics
+    document.addEventListener('DOMContentLoaded', function(){
+      fetchTrafficSummary();
+      setInterval(fetchTrafficSummary, 30000);
+      refreshLastOnline();
+      setInterval(refreshLastOnline, 60000);
+    });
   </script>
   <script src="script.js"></script>
 </body>

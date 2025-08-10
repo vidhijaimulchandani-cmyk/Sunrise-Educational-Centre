@@ -87,33 +87,96 @@
     body.dark-mode .tab-container {
       border-bottom-color: #3a3a4a;
     }
+    .live-watch-container { width: 100%; max-width: 680px; background: #fff; border: 1px solid #e0e7ff; border-radius: 12px; box-shadow: 0 6px 24px rgba(100,100,255,0.12); padding: 0.8rem; margin-bottom: 1.5rem; }
+    body.dark-mode .live-watch-container { background: #232946; border-color: #3a3a4a; box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
+    
+    /* Device Selection Styles for Student View */
+    .device-selection { margin-top: 1rem; padding: 1rem; background: rgba(106,130,251,0.03); border-radius: 12px; border: 1px solid #e0e7ff; }
+    .device-row { display: flex; gap: 1rem; margin-bottom: 0.8rem; align-items: center; }
+    .device-row:last-child { margin-bottom: 0; }
+    .device-label { min-width: 80px; font-weight: 500; color: #232946; font-size: 0.9rem; }
+    .device-select { flex: 1; padding: 0.6rem 0.8rem; border: 1px solid #e0e7ff; border-radius: 8px; background: #fff; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; }
+    .device-select:focus { outline: none; border-color: #6a82fb; box-shadow: 0 0 0 2px rgba(106,130,251,0.1); }
+    .device-select:hover { border-color: #b8c5d6; }
+    .device-icon { width: 20px; height: 20px; color: #6a82fb; }
+    .device-status { font-size: 0.8rem; color: #666; margin-top: 0.5rem; }
+    
+    /* Dark mode device selection */
+    body.dark-mode .device-selection { background: rgba(35,41,70,0.2); border-color: #3a3a4a; }
+    body.dark-mode .device-label { color: #e0e7ff; }
+    body.dark-mode .device-select { background: #232946; border-color: #3a3a4a; color: #fff; }
+    body.dark-mode .device-select:focus { border-color: #6a82fb; }
+    body.dark-mode .device-status { color: #b8c5d6; }
   </style>
 </head>
 <body>
   <div class="join-container">
     <div class="video-section">
       <h3 style="color:#6a82fb; margin-bottom:1rem;">Live Class (Student View)</h3>
-      <video id="remoteVideo" class="video-player" autoplay playsinline style="margin-bottom:1rem;"></video>
-      <div id="viewerStatus" style="margin-bottom:1rem; color:#6a82fb;"></div>
-      {% set is_youtube = 'youtube.com' in meeting_url or 'youtu.be' in meeting_url %}
-      {% if is_youtube %}
-        {% set youtube_id = None %}
-        {% if 'youtu.be' in meeting_url %}
-          {% set youtube_id = meeting_url.split('/')[-1].split('?')[0] %}
-        {% elif 'youtube.com' in meeting_url and 'v=' in meeting_url %}
-          {% set youtube_id = meeting_url.split('v=')[1].split('&')[0] %}
-        {% endif %}
-        {% if youtube_id %}
-          <iframe class="video-player" width="640" height="360" src="https://www.youtube.com/embed/{{ youtube_id }}" frameborder="0" allowfullscreen></iframe>
-        {% else %}
-          <div class="video-player" style="display:flex;align-items:center;justify-content:center;color:#888;">Invalid YouTube Link</div>
-        {% endif %}
-      {% else %}
-        <video class="video-player" controls>
-          <source src="{{ meeting_url }}" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-      {% endif %}
+      
+      <!-- Universal Video Container for Students -->
+      <div class="live-watch-container">
+        <!-- Host Live Camera Feed (when available) -->
+        <video id="hostCameraFeed" class="video-player" autoplay playsinline style="display: none; margin-bottom: 1rem;"></video>
+        
+        <!-- Content Video (YouTube or uploaded video) -->
+        <div id="contentVideo" style="display: block;">
+          {% set is_youtube = 'youtube.com' in meeting_url or 'youtu.be' in meeting_url %}
+          {% if is_youtube %}
+            {% set youtube_id = None %}
+            {% if 'youtu.be' in meeting_url %}
+              {% set youtube_id = meeting_url.split('/')[-1].split('?')[0] %}
+            {% elif 'youtube.com' in meeting_url and 'v=' in meeting_url %}
+              {% set youtube_id = meeting_url.split('v=')[1].split('&')[0] %}
+            {% endif %}
+            {% if youtube_id %}
+              <iframe class="video-player" width="640" height="360" src="https://www.youtube.com/embed/{{ youtube_id }}" frameborder="0" allowfullscreen></iframe>
+            {% else %}
+              <div class="video-player" style="display:flex;align-items:center;justify-content:center;color:#888;">Invalid YouTube Link</div>
+            {% endif %}
+          {% else %}
+            <video class="video-player" controls>
+              <source src="{{ meeting_url }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          {% endif %}
+        </div>
+        
+        <!-- Live Class Status -->
+        <div id="liveStatus" style="margin-top: 1rem; text-align: center; padding: 1rem; background: rgba(106,130,251,0.05); border-radius: 12px; border: 1px solid #e0e7ff;">
+          <span id="liveStatusText" style="color: #6a82fb; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+            </svg>
+            Watching content video
+          </span>
+        </div>
+        
+        <!-- Device Selection for Student -->
+        <div class="device-selection" style="display: none;" id="studentDeviceSelection">
+          <div class="device-row">
+            <svg class="device-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
+            </svg>
+            <label class="device-label">Camera:</label>
+            <select id="studentVideoSelect" class="device-select">
+              <option value="">Select Camera...</option>
+            </select>
+          </div>
+          <div class="device-row">
+            <svg class="device-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.49 6-3.31 6-6.72h-1.7z"/>
+            </svg>
+            <label class="device-label">Microphone:</label>
+            <select id="studentAudioSelect" class="device-select">
+              <option value="">Select Microphone...</option>
+            </select>
+          </div>
+          <div class="device-status" id="studentDeviceStatus">
+            📱 Select your devices for participation
+          </div>
+        </div>
+      </div>
       <div class="class-info">
         <h2 class="class-title">{{ topic or 'Live Class' }}</h2>
         <p class="class-description">{{ description or '' }}</p>
@@ -121,11 +184,11 @@
       </div>
     </div>
     <div class="info-section">
-      <div class="tab-container" style="display:flex; margin-bottom: 1rem; border-bottom: 2px solid #e0e7ff;">
+      <div class="tab-container" style="display:flex; justify-content:flex-end; gap:0.5rem; margin-bottom: 1rem; border-bottom: 2px solid #e0e7ff;">
         <button class="tab-btn active" onclick="showTab('chat')">Chat</button>
         <button class="tab-btn" onclick="showTab('polls')">Polls</button>
         <button class="tab-btn" onclick="showTab('doubts')">Doubts</button>
-        <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px; margin-left: auto;">Toggle Dark Mode</button>
+        <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
       </div>
       <!-- Chat Tab -->
       <div id="chat-tab" class="tab-content active">
@@ -181,11 +244,251 @@
 <script>
 // Get class ID from URL
 const classId = window.location.pathname.split('/').pop();
-const socket = io();
-const room = 'liveclass_' + classId;
 
-// Join the room for real-time updates
-socket.emit('join-room', { room });
+// Enhanced Socket.IO connection with reconnection
+const socket = io({
+  timeout: 10000,
+  reconnection: true,
+  reconnectionDelay: 1000,
+  reconnectionDelayMax: 5000,
+  maxReconnectionAttempts: 10,
+  forceNew: true
+});
+
+const room = 'liveclass_' + classId;
+let isConnected = false;
+let reconnectAttempts = 0;
+
+// Connection management
+socket.on('connect', () => {
+  console.log('Connected to server:', socket.id);
+  isConnected = true;
+  reconnectAttempts = 0;
+  
+  // Join the room
+  socket.emit('join-room', { room });
+});
+
+socket.on('disconnect', (reason) => {
+  console.log('Disconnected from server:', reason);
+  isConnected = false;
+});
+
+socket.on('connect_error', (error) => {
+  console.error('Connection error:', error);
+  reconnectAttempts++;
+  
+  const statusEl = document.getElementById('liveStatusText');
+  if (statusEl) {
+    statusEl.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+      </svg>
+      Reconnecting... (${reconnectAttempts}/10)
+    `;
+    statusEl.style.color = '#ffa726';
+  }
+});
+
+socket.on('reconnect', (attemptNumber) => {
+  console.log('Reconnected after', attemptNumber, 'attempts');
+  
+  const statusEl = document.getElementById('liveStatusText');
+  if (statusEl) {
+    statusEl.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+      </svg>
+      Reconnected to live class
+    `;
+    statusEl.style.color = '#48bb78';
+  }
+});
+
+socket.on('reconnect_failed', () => {
+  console.error('Failed to reconnect after maximum attempts');
+  
+  const statusEl = document.getElementById('liveStatusText');
+  if (statusEl) {
+    statusEl.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+      </svg>
+      Connection lost - Please refresh
+    `;
+    statusEl.style.color = '#fc5c7d';
+  }
+});
+
+// Error handling
+socket.on('error', (data) => {
+  console.error('Socket error:', data);
+});
+
+// Room management
+socket.on('joined-room', (data) => {
+  console.log('Joined room:', data.room);
+});
+
+// Live Camera Stream Variables
+const hostCameraFeed = document.getElementById('hostCameraFeed');
+const contentVideo = document.getElementById('contentVideo');
+const liveStatusText = document.getElementById('liveStatusText');
+
+// Student Device Selection Variables
+const studentDeviceSelection = document.getElementById('studentDeviceSelection');
+const studentVideoSelect = document.getElementById('studentVideoSelect');
+const studentAudioSelect = document.getElementById('studentAudioSelect');
+const studentDeviceStatus = document.getElementById('studentDeviceStatus');
+let studentDevices = { videoInputs: [], audioInputs: [] };
+let selectedStudentVideo = null;
+let selectedStudentAudio = null;
+
+// Listen for host camera status updates
+socket.on('host_camera_status', (data) => {
+  if (data.class_id === classId) {
+    if (data.status === 'live') {
+      liveStatusText.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="12" cy="12" r="8" fill="#ff4444"/>
+          <circle cx="12" cy="12" r="4" fill="#fff"/>
+        </svg>
+        ${data.message}
+      `;
+      liveStatusText.style.color = '#48bb78';
+    } else {
+      liveStatusText.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+        </svg>
+        ${data.message}
+      `;
+      liveStatusText.style.color = '#666';
+    }
+  }
+});
+
+// Listen for host video mode changes
+socket.on('host_video_mode', (data) => {
+  if (data.class_id === classId) {
+    if (data.mode === 'camera') {
+      // For now, we show a message that host is using camera
+      // In full WebRTC implementation, this would show the actual camera stream
+      hostCameraFeed.style.display = 'none'; // Will be 'block' when WebRTC is implemented
+      contentVideo.style.display = 'block';
+      liveStatusText.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
+        </svg>
+        ${data.message} (WebRTC implementation pending)
+      `;
+      liveStatusText.style.color = '#fc5c7d';
+    } else {
+      hostCameraFeed.style.display = 'none';
+      contentVideo.style.display = 'block';
+      liveStatusText.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+        </svg>
+        ${data.message}
+      `;
+      liveStatusText.style.color = '#6a82fb';
+    }
+  }
+});
+
+// Listen for host microphone status
+socket.on('host_mic_status', (data) => {
+  if (data.class_id === classId) {
+    const micStatus = data.muted ? '🔇 Host microphone muted' : '🎤 Host microphone active';
+    // You could show this in a toast notification or update the status
+    console.log(micStatus);
+  }
+});
+
+// Student Device Management Functions
+async function enumerateStudentDevices() {
+  try {
+    // Request permission first
+    await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      .then(stream => {
+        stream.getTracks().forEach(track => track.stop());
+      });
+
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    studentDevices.videoInputs = devices.filter(device => device.kind === 'videoinput');
+    studentDevices.audioInputs = devices.filter(device => device.kind === 'audioinput');
+    
+    populateStudentDeviceSelectors();
+    studentDeviceStatus.innerHTML = `📱 Found ${studentDevices.videoInputs.length} camera(s) and ${studentDevices.audioInputs.length} microphone(s)`;
+    
+    // Show device selection if devices are available
+    if (studentDevices.videoInputs.length > 0 || studentDevices.audioInputs.length > 0) {
+      studentDeviceSelection.style.display = 'block';
+    }
+    
+    console.log('Student devices enumerated:', studentDevices);
+  } catch (error) {
+    console.error('Error enumerating student devices:', error);
+    studentDeviceStatus.innerHTML = '❌ Could not access media devices. Check permissions to participate.';
+  }
+}
+
+function populateStudentDeviceSelectors() {
+  // Populate video sources
+  studentVideoSelect.innerHTML = '<option value="">Select Camera...</option>';
+  studentDevices.videoInputs.forEach((device, index) => {
+    const option = document.createElement('option');
+    option.value = device.deviceId;
+    option.textContent = device.label || `Camera ${index + 1}`;
+    studentVideoSelect.appendChild(option);
+  });
+
+  // Populate audio sources
+  studentAudioSelect.innerHTML = '<option value="">Select Microphone...</option>';
+  studentDevices.audioInputs.forEach((device, index) => {
+    const option = document.createElement('option');
+    option.value = device.deviceId;
+    option.textContent = device.label || `Microphone ${index + 1}`;
+    studentAudioSelect.appendChild(option);
+  });
+
+  // Set default selections if available
+  if (studentDevices.videoInputs.length > 0) {
+    selectedStudentVideo = studentDevices.videoInputs[0].deviceId;
+    studentVideoSelect.value = selectedStudentVideo;
+  }
+  if (studentDevices.audioInputs.length > 0) {
+    selectedStudentAudio = studentDevices.audioInputs[0].deviceId;
+    studentAudioSelect.value = selectedStudentAudio;
+  }
+  
+  // Initial status update
+  handleStudentDeviceSelection();
+}
+
+function handleStudentDeviceSelection() {
+  selectedStudentVideo = studentVideoSelect.value;
+  selectedStudentAudio = studentAudioSelect.value;
+  
+  const videoDeviceName = studentVideoSelect.options[studentVideoSelect.selectedIndex]?.text || 'None';
+  const audioDeviceName = studentAudioSelect.options[studentAudioSelect.selectedIndex]?.text || 'None';
+  
+  studentDeviceStatus.innerHTML = `🎯 Ready with: ${videoDeviceName} & ${audioDeviceName}`;
+  
+  // Store selections for potential future use (like breakout rooms, participation, etc.)
+  localStorage.setItem('selectedStudentVideo', selectedStudentVideo || '');
+  localStorage.setItem('selectedStudentAudio', selectedStudentAudio || '');
+}
+
+// Add event listeners for student device selection
+if (studentVideoSelect && studentAudioSelect) {
+  studentVideoSelect.addEventListener('change', handleStudentDeviceSelection);
+  studentAudioSelect.addEventListener('change', handleStudentDeviceSelection);
+}
+
+// Initialize student device enumeration
+enumerateStudentDevices();
 
 // --- Polls ---
 function renderPolls(polls) {

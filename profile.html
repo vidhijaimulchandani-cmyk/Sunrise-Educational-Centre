@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>My Profile - Sunrise Education Centre</title>
+  <link rel="icon" type="image/png" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="style.css" />
   <style>
@@ -571,11 +573,11 @@
       </div>
       <ul class="nav-links">
         <li><a href="/">Home</a></li>
+        <li><a href="/online-class">Live Class</a></li>
         <li><a href="/study-resources">Study Resources</a></li>
         <li><a href="/forum">Forum</a></li>
-        <li><a href="/online-class">Live Classes</a></li>
-        <li><a href="/logout" class="btn btn-primary">Logout</a></li>
-      </ul>
+                 <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+</ul>
     </div>
   </nav>
   
@@ -722,6 +724,45 @@
 
   </script>
   <script src="script.js"></script>
+  
+  <script>
+    // Dark Mode functionality
+    function setupDarkMode() {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            updateToggleButton();
+        }
+    }
+
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', isDarkMode);
+        updateToggleButton();
+    }
+
+    function updateToggleButton() {
+        const button = document.getElementById('darkModeToggle');
+        if (button) {
+            const isDark = document.body.classList.contains('dark-mode');
+            button.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+            button.style.background = isDark ? 'rgba(255,255,255,0.1)' : 'transparent';
+            button.style.color = isDark ? '#fff' : '#6a82fb';
+            button.style.borderColor = isDark ? '#fff' : '#6a82fb';
+        }
+    }
+
+    // Initialize dark mode on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        setupDarkMode();
+        
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('click', toggleDarkMode);
+        }
+    });
+  </script>
   
   <footer class="footer">
     <div class="container footer-content">

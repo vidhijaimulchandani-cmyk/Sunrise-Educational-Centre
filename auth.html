@@ -57,6 +57,8 @@
         </div>
         {% if error %}
         <div class="login-error">{{ error }}</div>
+        {% else %}
+        <div class="login-hint" style="margin-top:0.75rem; font-size:0.95rem; color:#6b7280;">Tip: If you face login issues, contact the institute.</div>
         {% endif %}
       </div>
     </div>
@@ -109,4 +111,43 @@
       }
     });
   </script>
+  <script>
+    // Dark Mode functionality
+    function setupDarkMode() {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            updateToggleButton();
+        }
+    }
+
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', isDarkMode);
+        updateToggleButton();
+    }
+
+    function updateToggleButton() {
+        const button = document.getElementById('darkModeToggle');
+        if (button) {
+            const isDark = document.body.classList.contains('dark-mode');
+            button.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+            button.style.background = isDark ? 'rgba(255,255,255,0.1)' : 'transparent';
+            button.style.color = isDark ? '#fff' : '#6a82fb';
+            button.style.borderColor = isDark ? '#fff' : '#6a82fb';
+        }
+    }
+
+    // Initialize dark mode on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        setupDarkMode();
+        
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('click', toggleDarkMode);
+        }
+    });
+  </script>
+</body>
 </html>

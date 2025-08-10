@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Live Class - Sunrise Education Centre</title>
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     <link rel="stylesheet" href="style.css" />
   </head>
@@ -41,12 +43,12 @@
             </div>
           </li>
           {% endif %}
-          {% if username %}
-            <li><a href="/logout" class="btn btn-primary">Logout</a></li>
-          {% else %}
-          <li><a href="/auth" class="btn btn-primary">Login</a></li>
-          {% endif %}
-        </ul>
+                     {% if username %}
+             <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+           {% else %}
+           <li><a href="/auth" class="btn btn-primary">Login</a></li>
+           {% endif %}
+</ul>
       </div>
     </nav>
     <header class="hero-section">
@@ -181,7 +183,46 @@
         document.querySelector('.live-tab-btn').style.background = (tab === 'live') ? '#e3f7fc' : '#f1f3f5';
         document.querySelector('.upcoming-tab-btn').style.background = (tab === 'upcoming') ? '#ffe082' : '#f1f3f5';
         document.querySelector('.schedule-tab-btn').style.background = (tab === 'schedule') ? '#d1c4e9' : '#f1f3f5';
+        
+        // Refresh class status when tab is changed
+        refreshClassStatus();
       }
+
+      // Auto-refresh class status every 30 seconds
+      function refreshClassStatus() {
+        fetch('/api/live-classes/status')
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              // Check if page needs to be refreshed due to status changes
+              const hasActiveClasses = data.active && data.active.length > 0;
+              const hasUpcomingClasses = data.upcoming && data.upcoming.length > 0;
+              const hasCompletedClasses = data.completed && data.completed.length > 0;
+              
+              // If significant changes detected, refresh the page
+              if (shouldRefreshPage(hasActiveClasses, hasUpcomingClasses, hasCompletedClasses)) {
+                console.log('Class status changed, refreshing page...');
+                window.location.reload();
+              }
+            }
+          })
+          .catch(error => {
+            console.log('Status check failed:', error);
+          });
+      }
+
+      // Check if page should be refreshed based on status changes
+      function shouldRefreshPage(hasActive, hasUpcoming, hasCompleted) {
+        const currentActiveClasses = document.querySelectorAll('#live-tab-content .card-section').length;
+        const currentUpcomingClasses = document.querySelectorAll('#upcoming-tab-content .card-section').length;
+        const currentCompletedClasses = document.querySelectorAll('#schedule-tab-content .card-section').length;
+        
+        // Refresh if active classes count changed significantly
+        return (hasActive && currentActiveClasses === 0) || (!hasActive && currentActiveClasses > 0);
+      }
+
+      // Start auto-refresh when page loads
+      setInterval(refreshClassStatus, 30000); // 30 seconds
 
       const notifBell = document.getElementById('notifBell');
       const notifDropdown = document.getElementById('notifDropdown');
@@ -580,5 +621,44 @@
         }
       }
     </style>
+    <script src="script.js"></script>
+    <script>
+      // Dark Mode functionality
+      function setupDarkMode() {
+          const isDarkMode = localStorage.getItem('darkMode') === 'true';
+          if (isDarkMode) {
+              document.body.classList.add('dark-mode');
+              updateToggleButton();
+          }
+      }
+
+      function toggleDarkMode() {
+          document.body.classList.toggle('dark-mode');
+          const isDarkMode = document.body.classList.contains('dark-mode');
+          localStorage.setItem('darkMode', isDarkMode);
+          updateToggleButton();
+      }
+
+      function updateToggleButton() {
+          const button = document.getElementById('darkModeToggle');
+          if (button) {
+              const isDark = document.body.classList.contains('dark-mode');
+              button.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+              button.style.background = isDark ? 'rgba(255,255,255,0.1)' : 'transparent';
+              button.style.color = isDark ? '#fff' : '#6a82fb';
+              button.style.borderColor = isDark ? '#fff' : '#6a82fb';
+          }
+      }
+
+      // Initialize dark mode on page load
+      document.addEventListener('DOMContentLoaded', function() {
+          setupDarkMode();
+          
+          const darkModeToggle = document.getElementById('darkModeToggle');
+          if (darkModeToggle) {
+              darkModeToggle.addEventListener('click', toggleDarkMode);
+          }
+      });
+    </script>
   </body>
 </html>

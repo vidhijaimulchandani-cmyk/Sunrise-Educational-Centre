@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Admin Dashboard</title>
+  <link rel="icon" type="image/png" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="forum.css" />
@@ -582,6 +584,28 @@
     </div>
   </nav>
   <main class="container main-content">
+    <!-- Traffic & Active Users Tracker -->
+    <section class="admin-section" style="margin-top:1rem; padding:1rem 1.2rem; display:flex; gap:0.8rem; align-items:center; justify-content:flex-start; background:#fff; border:1px solid #e5e7eb;">
+      <div style="font-weight:700; color:#6a82fb;">Traffic</div>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+          <span style="color:#6b7280;">Active IPs (10m):</span>
+          <strong id="metricActiveIps">--</strong>
+        </div>
+        <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+          <span style="color:#6b7280;">Active logins (10m):</span>
+          <strong id="metricActiveUsers">--</strong>
+        </div>
+        <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+          <span style="color:#6b7280;">Unique IPs (today):</span>
+          <strong id="metricIpsToday">--</strong>
+        </div>
+        <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+          <span style="color:#6b7280;">Unique IPs (all):</span>
+          <strong id="metricIpsAll">--</strong>
+        </div>
+      </div>
+    </section>
     <section id="analytics" class="admin-section" aria-label="Analytics">
       <h2>Analytics & Reports</h2>
       <div class="admin-dashboard-cards" style="margin:0 0 2rem 0;">
@@ -653,6 +677,7 @@
       <h2>Content Management</h2>
       <p style="color: #666; margin-bottom: 1.5rem;">Comprehensive management of forum topics, discussions, and content moderation.</p>
       <a href="/content-management" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">📝 Content Management Dashboard</a>
+      <a href="/admin/home-editor" class="btn btn-secondary" style="margin-left:0.5rem; margin-bottom:1.2rem; display:inline-block;">🏠 Home Page Editor</a>
       <p style="color: #666; margin-bottom: 1rem;">Access the new comprehensive content management interface with advanced filtering, analytics, and moderation tools.</p>
       
       <!-- Quick Overview -->
@@ -717,6 +742,24 @@
   </main>
   <script src="script.js"></script>
   <script>
+    // Admin traffic metrics fetcher
+    async function refreshTrafficMetrics(){
+      try {
+        const res = await fetch('/api/admin/metrics/traffic');
+        const json = await res.json();
+        if(json && json.success){
+          const d = json.data || {};
+          document.getElementById('metricActiveIps').textContent = d.active_ips_now ?? '--';
+          document.getElementById('metricActiveUsers').textContent = d.active_logged_in_users ?? '--';
+          document.getElementById('metricIpsToday').textContent = d.unique_ips_today ?? '--';
+          document.getElementById('metricIpsAll').textContent = d.total_unique_ips ?? '--';
+        }
+      } catch(e){ console.error('Traffic metrics error', e); }
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+      refreshTrafficMetrics();
+      setInterval(refreshTrafficMetrics, 30000); // refresh every 30s
+    });
     // Force light mode for admin panel - aggressive prevention
     function forceLightMode() {
       // Remove any dark mode class
@@ -776,7 +819,7 @@
       });
     }
     
-
+ 
   </script>
 </body>
 </html> 

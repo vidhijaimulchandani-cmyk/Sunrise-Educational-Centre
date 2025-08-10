@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin - Home Page Editor</title>
+  <link rel="icon" type="image/png" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { background: #f8fafc; color: #1e293b; font-family: 'Inter', sans-serif; }
+    .container { max-width: 1400px; margin: 1.5rem auto; padding: 0 1rem; }
+    .header { display:flex; align-items:center; justify-content:space-between; margin-bottom: 1rem; }
+    .header h1 { font-size: 1.5rem; margin: 0; color: #232946; }
+    .actions { display:flex; gap: 0.5rem; }
+    .btn { border: none; border-radius: 8px; padding: 0.6rem 1rem; font-weight: 600; cursor: pointer; }
+    .btn-primary { background: linear-gradient(135deg, #6a82fb 0%, #5a6fd8 100%); color: #fff; }
+    .btn-secondary { background: #e2e8f0; color: #1e293b; }
+    .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .panel { background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(100,100,255,0.08); padding: 1rem; }
+    .panel h2 { margin: 0 0 0.75rem 0; font-size: 1rem; color: #334155; }
+    .editor { width: 100%; min-height: 70vh; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 0.92rem; color: #0f172a; box-sizing: border-box; }
+    iframe { width: 100%; height: 72vh; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; }
+    .alert { padding: 0.75rem 1rem; border-radius: 8px; margin: 0.75rem 0; }
+    .alert-success { background: #dcfce7; color: #14532d; border: 1px solid #86efac; }
+    .alert-error { background: #fee2e2; color: #7f1d1d; border: 1px solid #fecaca; }
+    @media (max-width: 1024px) { .editor-grid { grid-template-columns: 1fr; } iframe { height: 60vh; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Home Page Editor</h1>
+      <div class="actions">
+        <a href="/" class="btn btn-secondary" target="_blank">Open Home</a>
+        <a href="/admin" class="btn btn-secondary">Back to Admin</a>
+      </div>
+    </div>
+
+    {% if error %}
+      <div class="alert alert-error">{{ error }}</div>
+    {% endif %}
+    {% if success_message %}
+      <div class="alert alert-success">{{ success_message }}</div>
+    {% endif %}
+
+    <form method="POST" onsubmit="return confirm('Save changes to homepage?');" style="margin-bottom: 1rem;">
+      <div class="panel">
+        <h2>Edit index.html</h2>
+        <textarea id="htmlEditor" name="html_content" class="editor" spellcheck="false">{{ index_html_content }}</textarea>
+        <div style="display:flex; gap:0.5rem; margin-top:0.75rem;">
+          <button type="button" class="btn btn-secondary" onclick="refreshPreview()">Preview</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="panel">
+      <h2>Live Preview</h2>
+      <iframe id="previewFrame" srcdoc=""></iframe>
+    </div>
+  </div>
+
+  <script>
+    const editor = document.getElementById('htmlEditor');
+    const frame = document.getElementById('previewFrame');
+    function refreshPreview() {
+      frame.srcdoc = editor.value;
+    }
+    // Auto-load preview on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      refreshPreview();
+    });
+  </script>
+</body>
+</html>

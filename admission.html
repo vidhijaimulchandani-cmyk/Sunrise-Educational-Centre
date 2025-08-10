@@ -528,6 +528,15 @@
             background: #7f1d1d;
             color: #fee2e2;
         }
+        body.dark-mode .navbar {
+            background: rgba(35,41,70,0.95);
+            border-bottom: 1px solid #44476a;
+        }
+        body.dark-mode .nav-links a { color: #e0e7ff; }
+        body.dark-mode .nav-links a:hover { background:#44476a; color:#6a82fb; }
+        body.dark-mode .footer { background:#0f1221; color:#e2e8f0; }
+        body.dark-mode .footer a { color:#93c5fd; }
+        body.dark-mode .footer a:hover { color:#bfdbfe; }
     </style>
 </head>
 <body>
@@ -566,7 +575,10 @@
             <div class="admission-header">
                 <h1>Student Admission Form</h1>
                 <p>Join Sunrise Educational Centre and start your journey towards academic excellence. Please fill out all required fields accurately.</p>
-                <button id="darkModeToggle" class="btn btn-secondary" style="margin-top: 1rem;">Toggle Dark Mode</button>
+                <div style="display:flex; gap:0.6rem; justify-content:center; flex-wrap:wrap; margin-top:1rem;">
+                    <button id="darkModeToggle" class="btn btn-secondary">Toggle Dark Mode</button>
+                    <a href="/check-admission" class="btn btn-primary">Check Admission Status</a>
+                </div>
             </div>
             
             <div class="form-note">
