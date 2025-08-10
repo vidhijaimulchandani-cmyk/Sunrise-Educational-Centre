@@ -2104,7 +2104,7 @@ def get_recent_queries():
 
 @app.before_request
 def require_login():
-    allowed_routes = ['home', 'auth', 'register', 'static_files', 'submit_admission', 'admission', 'check_admission_status', 'check_admission', 'submit_query', 'get_recent_queries']
+    allowed_routes = ['home', 'auth', 'register', 'static_files', 'submit_admission', 'admission', 'check_admission_status', 'check_admission', 'submit_query', 'get_recent_queries', 'api_get_categories_for_class']
     if request.endpoint not in allowed_routes and not session.get('user_id'):
         return redirect(url_for('auth'))
 
