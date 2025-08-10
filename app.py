@@ -65,7 +65,7 @@ app = Flask(__name__, static_folder='.', template_folder='templates')
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['SECRET_KEY'] = secrets.token_hex(16)
 
-DATABASE = 'bulk_upload/users.db'
+DATABASE = 'users.db'
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -127,7 +127,7 @@ def setup_db():
 # Initialize IP tracking tables
 def init_tracking_tables():
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('''CREATE TABLE IF NOT EXISTS ip_logs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -149,7 +149,7 @@ def init_tracking_tables():
 
 def init_admission_access_table():
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('''CREATE TABLE IF NOT EXISTS admission_access (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -166,7 +166,7 @@ def init_admission_access_table():
 def init_admissions_table():
     """Initialize the admissions table with all required columns"""
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Create admissions table with all required columns
@@ -225,7 +225,7 @@ def init_admissions_table():
 
 def ensure_admissions_submit_ip_column():
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         # Try to add submit_ip column if it does not exist
         c.execute("PRAGMA table_info(admissions)")
@@ -242,6 +242,7 @@ with app.app_context():
     setup_db()
     init_tracking_tables()
     init_admission_access_table()
+    init_admissions_table()  # Initialize admissions table with all required columns
     ensure_admissions_submit_ip_column()
 
 def admin_required(f):
@@ -275,7 +276,7 @@ init_db()
 # --- Queries DB Setup ---
 def init_queries_db():
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('''CREATE TABLE IF NOT EXISTS queries (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -1703,7 +1704,7 @@ def special_dashboard():
 def view_admissions():
     tab = request.args.get('tab', 'pending')
     
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Get pending admissions (status is NULL or 'pending')
@@ -1754,7 +1755,7 @@ def view_admissions():
 def approve_admission(admission_id):
     conn = None
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Get the admission data
@@ -1889,7 +1890,7 @@ def disapprove_admission(admission_id):
         data = request.get_json()
         disapproval_reason = data.get('reason', 'No reason provided') if data else 'No reason provided'
         
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Get the admission data
@@ -1939,7 +1940,7 @@ def disapprove_admission(admission_id):
 @app.route('/admin/admissions/reset/<int:admission_id>', methods=['POST'])
 @admin_required
 def reset_admission(admission_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('UPDATE admissions SET status = ? WHERE id = ?', ('pending', admission_id))
     conn.commit()
@@ -1951,7 +1952,7 @@ def reset_admission(admission_id):
 @admin_required
 def restore_approved_admission(admission_id):
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Update the admission status back to pending
@@ -1990,7 +1991,7 @@ def restore_approved_admission(admission_id):
 @admin_required
 def restore_disapproved_admission(admission_id):
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Update the admission status back to pending
@@ -2030,7 +2031,7 @@ def restore_disapproved_admission(admission_id):
 @admin_required
 def delete_approved_admission(admission_id):
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Delete the approved admission from the admissions table
@@ -2065,7 +2066,7 @@ def delete_approved_admission(admission_id):
 @admin_required
 def delete_disapproved_admission(admission_id):
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         # Delete the disapproved admission from the admissions table
         c.execute('DELETE FROM admissions WHERE id = ? AND status = ?', (admission_id, 'disapproved'))
@@ -2266,7 +2267,7 @@ def admission():
 
     # Insert into DB
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         print('Inserting into DB...')
         # Normalize class name to match database format
@@ -2354,7 +2355,7 @@ def check_admission():
         flash('Please enter both username and password', 'error')
         return redirect(url_for('check_admission'))
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('SELECT admission_id, access_password FROM admission_access WHERE access_username=?',
                   (access_username,))
@@ -4056,7 +4057,7 @@ def api_check_admission_credentials():
         access_password = (data.get('access_password') or '').strip()
         if not access_username or not access_password:
             return jsonify({'valid': False, 'error': 'Missing credentials'}), 400
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('SELECT access_password FROM admission_access WHERE access_username=?',
                   (access_username,))
