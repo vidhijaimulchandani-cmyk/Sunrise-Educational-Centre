@@ -150,6 +150,11 @@
             </svg>
             Watching content video
           </span>
+          <div style="margin-top: 0.5rem;">
+            <button id="requestHostStreamBtn" onclick="requestHostStream()" style="background: #6a82fb; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">
+              📹 Request Host Camera
+            </button>
+          </div>
         </div>
         
         <!-- Device Selection for Student -->
@@ -335,6 +340,11 @@ const hostCameraFeed = document.getElementById('hostCameraFeed');
 const contentVideo = document.getElementById('contentVideo');
 const liveStatusText = document.getElementById('liveStatusText');
 
+// WebRTC Variables for receiving host stream
+let peerConnection = null;
+let hostStream = null;
+let isHostStreamConnected = false;
+
 // Student Device Selection Variables
 const studentDeviceSelection = document.getElementById('studentDeviceSelection');
 const studentVideoSelect = document.getElementById('studentVideoSelect');
@@ -368,19 +378,139 @@ socket.on('host_camera_status', (data) => {
   }
 });
 
+// WebRTC Functions for receiving host stream
+async function initializeWebRTC() {
+  try {
+    const configuration = {
+      iceServers: [
+        { urls: 'stun:stun.l.google.com:19302' },
+        { urls: 'stun:stun1.l.google.com:19302' }
+      ]
+    };
+    
+    peerConnection = new RTCPeerConnection(configuration);
+    
+    // Handle incoming tracks from host
+    peerConnection.ontrack = (event) => {
+      console.log('Received host stream:', event.streams[0]);
+      hostStream = event.streams[0];
+      hostCameraFeed.srcObject = hostStream;
+      hostCameraFeed.style.display = 'block';
+      contentVideo.style.display = 'none';
+      isHostStreamConnected = true;
+      
+      liveStatusText.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="12" cy="12" r="8" fill="#ff4444"/>
+          <circle cx="12" cy="12" r="4" fill="#fff"/>
+        </svg>
+        🔴 Live Host Camera
+      `;
+      liveStatusText.style.color = '#48bb78';
+      
+      // Hide the request button when connected
+      const requestBtn = document.getElementById('requestHostStreamBtn');
+      if (requestBtn) {
+        requestBtn.style.display = 'none';
+      }
+    };
+    
+    // Handle ICE candidates
+    peerConnection.onicecandidate = (event) => {
+      if (event.candidate) {
+        socket.emit('webrtc_ice_candidate', {
+          class_id: classId,
+          candidate: event.candidate,
+          from_user: getUserId(),
+          to_user: 'host'
+        });
+      }
+    };
+    
+    // Handle connection state changes
+    peerConnection.onconnectionstatechange = () => {
+      console.log('Connection state:', peerConnection.connectionState);
+      if (peerConnection.connectionState === 'connected') {
+        console.log('Connected to host stream!');
+      } else if (peerConnection.connectionState === 'disconnected' || 
+                 peerConnection.connectionState === 'failed') {
+        console.log('Disconnected from host stream');
+        hostCameraFeed.style.display = 'none';
+        contentVideo.style.display = 'block';
+        isHostStreamConnected = false;
+        
+        // Show the request button again
+        const requestBtn = document.getElementById('requestHostStreamBtn');
+        if (requestBtn) {
+          requestBtn.style.display = 'inline-block';
+        }
+      }
+    };
+    
+    console.log('WebRTC initialized for receiving host stream');
+  } catch (error) {
+    console.error('Error initializing WebRTC:', error);
+  }
+}
+
+async function requestHostStream() {
+  try {
+    if (!peerConnection) {
+      await initializeWebRTC();
+    }
+    
+    // Create offer to request host stream
+    const offer = await peerConnection.createOffer();
+    await peerConnection.setLocalDescription(offer);
+    
+    socket.emit('webrtc_offer', {
+      class_id: classId,
+      offer: offer,
+      from_user: getUserId(),
+      to_user: 'host'
+    });
+    
+    console.log('Requested host stream');
+  } catch (error) {
+    console.error('Error requesting host stream:', error);
+  }
+}
+
+async function handleHostAnswer(answer) {
+  try {
+    if (peerConnection) {
+      await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+      console.log('Set host answer');
+    }
+  } catch (error) {
+    console.error('Error handling host answer:', error);
+  }
+}
+
+async function handleHostICECandidate(candidate) {
+  try {
+    if (peerConnection) {
+      await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+      console.log('Added host ICE candidate');
+    }
+  } catch (error) {
+    console.error('Error handling host ICE candidate:', error);
+  }
+}
+
 // Listen for host video mode changes
 socket.on('host_video_mode', (data) => {
   if (data.class_id === classId) {
     if (data.mode === 'camera') {
-      // For now, we show a message that host is using camera
-      // In full WebRTC implementation, this would show the actual camera stream
-      hostCameraFeed.style.display = 'none'; // Will be 'block' when WebRTC is implemented
-      contentVideo.style.display = 'block';
+      // Request host stream when they switch to camera mode
+      if (!isHostStreamConnected) {
+        requestHostStream();
+      }
       liveStatusText.innerHTML = `
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
           <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
         </svg>
-        ${data.message} (WebRTC implementation pending)
+        🔴 Connecting to Host Camera...
       `;
       liveStatusText.style.color = '#fc5c7d';
     } else {
@@ -558,6 +688,90 @@ socket.emit('get_polls_and_doubts', { class_id: classId });
 socket.on('init_polls_and_doubts', data => {
   renderPolls(data.polls);
   renderDoubts(data.doubts);
+});
+
+// --- Chat Functionality ---
+function sendChatMessage() {
+  const chatInput = document.getElementById('chatInput');
+  const message = chatInput.value.trim();
+  
+  if (message && isConnected) {
+    socket.emit('chat_message', {
+      class_id: classId,
+      user_id: getUserId(),
+      username: getUsername(),
+      message: message,
+      type: 'chat'
+    });
+    chatInput.value = '';
+  }
+}
+
+function renderChatMessage(messageData) {
+  const chatMessages = document.getElementById('chatMessages');
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'chat-message';
+  
+  const timestamp = new Date(messageData.created_at).toLocaleTimeString();
+  messageDiv.innerHTML = `
+    <div style="font-weight: 600; color: #6a82fb; font-size: 0.9rem;">
+      ${messageData.username} <span style="color: #888; font-weight: 400; font-size: 0.8rem;">${timestamp}</span>
+    </div>
+    <div style="margin-top: 0.2rem;">${messageData.message}</div>
+  `;
+  
+  chatMessages.appendChild(messageDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Chat event listeners
+socket.on('new_chat_message', (messageData) => {
+  renderChatMessage(messageData);
+});
+
+socket.on('chat_messages_history', (data) => {
+  const chatMessages = document.getElementById('chatMessages');
+  chatMessages.innerHTML = '';
+  data.messages.forEach(message => {
+    renderChatMessage(message);
+  });
+});
+
+// Chat form submission
+document.getElementById('chatForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  sendChatMessage();
+});
+
+// Add error handling for chat
+socket.on('error', (data) => {
+  console.error('Chat error:', data);
+  if (data.message) {
+    alert('Chat error: ' + data.message);
+  }
+});
+
+// Load chat history when joining
+socket.emit('get_chat_messages', { class_id: classId, limit: 50 });
+
+// WebRTC Event Listeners for receiving host stream
+socket.on('host_stream_ready', (data) => {
+  if (data.class_id === classId) {
+    console.log('Host stream is ready, requesting connection...');
+    requestHostStream();
+  }
+});
+
+socket.on('webrtc_answer', (data) => {
+  if (data.from_user === 'host') {
+    handleHostAnswer(data.answer);
+  }
+});
+
+socket.on('webrtc_ice_candidate', (data) => {
+  if (data.from_user === 'host') {
+    handleHostICECandidate(data.candidate);
+  }
 });
 
 // --- Helpers ---

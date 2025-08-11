@@ -353,6 +353,21 @@
         </div>
       </div>
       
+      <!-- Controls Tab -->
+      <div id="controls-tab" class="tab-content">
+        <div class="host-controls">
+          <h3 style="margin-bottom: 1rem; color: #6a82fb;">Host Controls</h3>
+          <div style="margin-bottom: 1rem;">
+            <div style="font-weight: 600; color: #232946; margin-bottom: 0.5rem;">Student Count:</div>
+            <div id="studentCount" style="font-size: 1.2rem; color: #6a82fb; font-weight: 700;">0 Students Online</div>
+          </div>
+          <button class="control-btn mute-all-btn" onclick="muteAllStudents()">🔇 Mute All Students</button>
+          <button class="control-btn end-class-btn" onclick="endCurrentClass()">⏹️ End Live Class</button>
+          <div style="margin-top: 1rem; padding: 1rem; background: #fff3cd; border-radius: 8px; border: 1px solid #ffeaa7;">
+            <span style="color: #856404; font-size: 0.9rem;">💡 Tip: Use the camera controls above to manage your live stream</span>
+          </div>
+        </div>
+      </div>
 
     </div>
   </div>
@@ -473,6 +488,10 @@
     let availableDevices = { videoInputs: [], audioInputs: [] };
     let selectedVideoDevice = null;
     let selectedAudioDevice = null;
+    
+    // WebRTC Variables
+    let peerConnections = new Map(); // Store peer connections for each student
+    let isWebRTCReady = false;
 
     // Camera Control Elements
     const hostCamera = document.getElementById('hostCamera');
@@ -508,6 +527,11 @@
           class_id: classId, 
           status: 'live',
           message: 'Host camera is now live!'
+        });
+        
+        // Notify students that host stream is ready for WebRTC
+        socket.emit('host_stream_ready', { 
+          class_id: classId 
         });
         
         console.log('Camera started successfully');
@@ -598,6 +622,13 @@
           mode: 'camera',
           message: 'Host is showing live camera'
         });
+        
+        // Notify students that host stream is ready for WebRTC
+        if (isStreaming) {
+          socket.emit('host_stream_ready', { 
+            class_id: classId 
+          });
+        }
       } else {
         alert('Please start the camera first');
       }
@@ -732,7 +763,123 @@
       hostCamera.srcObject = localStream;
       isStreaming = true;
       
+      // Initialize WebRTC for streaming to students
+      await initializeWebRTC();
+      
       return localStream;
+    }
+    
+    // WebRTC Functions
+    async function initializeWebRTC() {
+      try {
+        // Create RTCPeerConnection with STUN servers
+        const configuration = {
+          iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' }
+          ]
+        };
+        
+        // Notify students that host stream is ready
+        socket.emit('host_stream_ready', { class_id: classId });
+        isWebRTCReady = true;
+        
+        console.log('WebRTC initialized for host streaming');
+      } catch (error) {
+        console.error('Error initializing WebRTC:', error);
+      }
+    }
+    
+    async function createPeerConnection(studentId) {
+      try {
+        const configuration = {
+          iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' }
+          ]
+        };
+        
+        const peerConnection = new RTCPeerConnection(configuration);
+        
+        // Add local stream tracks to peer connection
+        if (localStream) {
+          localStream.getTracks().forEach(track => {
+            peerConnection.addTrack(track, localStream);
+          });
+        }
+        
+        // Handle ICE candidates
+        peerConnection.onicecandidate = (event) => {
+          if (event.candidate) {
+            socket.emit('webrtc_ice_candidate', {
+              class_id: classId,
+              candidate: event.candidate,
+              from_user: 'host',
+              to_user: studentId
+            });
+          }
+        };
+        
+        // Handle connection state changes
+        peerConnection.onconnectionstatechange = () => {
+          console.log(`Connection state with ${studentId}:`, peerConnection.connectionState);
+        };
+        
+        peerConnections.set(studentId, peerConnection);
+        return peerConnection;
+      } catch (error) {
+        console.error('Error creating peer connection:', error);
+        return null;
+      }
+    }
+    
+    async function handleStudentOffer(studentId, offer) {
+      try {
+        let peerConnection = peerConnections.get(studentId);
+        
+        if (!peerConnection) {
+          peerConnection = await createPeerConnection(studentId);
+        }
+        
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+        const answer = await peerConnection.createAnswer();
+        await peerConnection.setLocalDescription(answer);
+        
+        socket.emit('webrtc_answer', {
+          class_id: classId,
+          answer: answer,
+          from_user: 'host',
+          to_user: studentId
+        });
+        
+        console.log(`Sent answer to student ${studentId}`);
+      } catch (error) {
+        console.error('Error handling student offer:', error);
+      }
+    }
+    
+    async function handleStudentAnswer(studentId, answer) {
+      try {
+        const peerConnection = peerConnections.get(studentId);
+        if (peerConnection) {
+          await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+          console.log(`Set remote description for student ${studentId}`);
+        }
+      } catch (error) {
+        console.error('Error handling student answer:', error);
+      }
+    }
+    
+    async function handleStudentICECandidate(studentId, candidate) {
+      try {
+        const peerConnection = peerConnections.get(studentId);
+        if (peerConnection) {
+          await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+          console.log(`Added ICE candidate for student ${studentId}`);
+        }
+      } catch (error) {
+        console.error('Error handling student ICE candidate:', error);
+      }
     }
 
     // Initialize video mode and enumerate devices
@@ -1076,9 +1223,23 @@
 
     // Load messages on page load
     document.addEventListener('DOMContentLoaded', function() {
-      // Auto-refresh messages every 2 seconds for host
-      setInterval(loadMessages, 2000);
+      // Chat is now handled by socket.io events
+      console.log('Host page loaded, chat functionality ready');
     });
+
+    // Mute all students function
+    function muteAllStudents() {
+      if (confirm('Are you sure you want to mute all students?')) {
+        // This would be implemented with WebRTC to actually mute students
+        // For now, we'll just show a notification
+        socket.emit('host_mic_status', { 
+          class_id: classId, 
+          muted: true,
+          message: 'Host has muted all students'
+        });
+        alert('Mute all students feature would be implemented with WebRTC');
+      }
+    }
 
     // End current class function
     function endCurrentClass() {
@@ -1114,59 +1275,91 @@
       }
     }
 
-    // Load existing messages
-    function loadMessages() {
-      fetch(`/api/live-class/${classId}/messages`)
-        .then(response => response.json())
-        .then(messages => {
-          const chat = document.getElementById('chatMessages');
-          chat.innerHTML = '';
-          messages.forEach(msg => {
-            const div = document.createElement('div');
-            div.className = 'chat-message';
-            div.innerHTML = `<strong style="color: #6a82fb;">${msg.username}:</strong> <span style="color: #232946;">${msg.message}</span>`;
-            chat.appendChild(div);
-          });
-          chat.scrollTop = chat.scrollHeight;
-        })
-        .catch(error => console.error('Error loading messages:', error));
-    }
-    
-    // Listen for real-time chat messages
-    socket.on('new_chat_message', (data) => {
-      if (data.class_id === classId) {
-        const chat = document.getElementById('chatMessages');
-        const div = document.createElement('div');
-        div.className = 'chat-message';
-        div.innerHTML = `<strong style="color: #6a82fb;">${data.username}:</strong> <span style="color: #232946;">${data.message}</span>`;
-        chat.appendChild(div);
-        chat.scrollTop = chat.scrollHeight;
+    // --- Chat Functionality ---
+    function sendChatMessage() {
+      const chatInput = document.getElementById('chatInput');
+      const message = chatInput.value.trim();
+      
+      if (message && isConnected) {
+        socket.emit('chat_message', {
+          class_id: classId,
+          user_id: 'host',
+          username: 'Host',
+          message: message,
+          type: 'chat'
+        });
+        chatInput.value = '';
       }
+    }
+
+    function renderChatMessage(messageData) {
+      const chatMessages = document.getElementById('chatMessages');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'chat-message';
+      
+      const timestamp = new Date(messageData.created_at).toLocaleTimeString();
+      const isHost = messageData.username === 'Host';
+      const usernameColor = isHost ? '#fc5c7d' : '#6a82fb';
+      
+      messageDiv.innerHTML = `
+        <div style="font-weight: 600; color: ${usernameColor}; font-size: 0.9rem;">
+          ${messageData.username} <span style="color: #888; font-weight: 400; font-size: 0.8rem;">${timestamp}</span>
+        </div>
+        <div style="margin-top: 0.2rem;">${messageData.message}</div>
+      `;
+      
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Chat event listeners
+    socket.on('new_chat_message', (messageData) => {
+      renderChatMessage(messageData);
     });
 
-    // Send message
-    document.getElementById('chatForm').onsubmit = function(e) {
+    socket.on('chat_messages_history', (data) => {
+      const chatMessages = document.getElementById('chatMessages');
+      chatMessages.innerHTML = '';
+      data.messages.forEach(message => {
+        renderChatMessage(message);
+      });
+    });
+
+    // Chat form submission
+    document.getElementById('chatForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      const input = document.getElementById('chatInput');
-      const msg = input.value.trim();
-      if (!msg) return;
-      
-      fetch(`/api/live-class/${classId}/messages`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: msg })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          input.value = '';
-          loadMessages(); // Reload messages to show the new one
-        }
-      })
-      .catch(error => console.error('Error sending message:', error));
-    };
+      sendChatMessage();
+    });
+
+    // Load chat history when joining
+    socket.emit('get_chat_messages', { class_id: classId, limit: 50 });
+
+    // Add error handling for chat
+    socket.on('error', (data) => {
+      console.error('Chat error:', data);
+      if (data.message) {
+        alert('Chat error: ' + data.message);
+      }
+    });
+    
+    // WebRTC Event Listeners
+    socket.on('webrtc_offer', (data) => {
+      if (data.from_user !== 'host') {
+        handleStudentOffer(data.from_user, data.offer);
+      }
+    });
+    
+    socket.on('webrtc_answer', (data) => {
+      if (data.from_user !== 'host') {
+        handleStudentAnswer(data.from_user, data.answer);
+      }
+    });
+    
+    socket.on('webrtc_ice_candidate', (data) => {
+      if (data.from_user !== 'host') {
+        handleStudentICECandidate(data.from_user, data.candidate);
+      }
+    });
 
     // Clean up when page is unloaded
     window.addEventListener('beforeunload', () => {

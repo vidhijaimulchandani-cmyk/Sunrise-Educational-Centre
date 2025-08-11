@@ -87,6 +87,18 @@ def close_connection(exception):
 def init_poll_and_doubt_tables():
     db = get_db()
     c = db.cursor()
+    
+    # Live Class Messages
+    c.execute('''CREATE TABLE IF NOT EXISTS live_class_messages (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        class_id TEXT,
+        user_id TEXT,
+        username TEXT,
+        message TEXT,
+        message_type TEXT DEFAULT 'chat',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )''')
+    
     # Polls
     c.execute('''CREATE TABLE IF NOT EXISTS polls (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -3194,7 +3206,86 @@ def edit_resource():
         flash(f'Error updating resource: {str(e)}', 'error')
         return redirect(url_for('upload_resource'))
 
-# --- SOCKET.IO EVENTS FOR POLLS AND DOUBTS ---
+# --- SOCKET.IO EVENTS FOR CHAT, POLLS AND DOUBTS ---
+
+@socketio.on('chat_message')
+def handle_chat_message(data):
+    try:
+        class_id = data.get('class_id')
+        user_id = data.get('user_id')
+        username = data.get('username', 'Anonymous')
+        message = data.get('message')
+        message_type = data.get('type', 'chat')  # chat, system, etc.
+        
+        if not class_id or not message:
+            emit('error', {'message': 'Invalid chat data'})
+            return
+        
+        # Store message in database
+        db = get_db()
+        c = db.cursor()
+        c.execute('''
+            INSERT INTO live_class_messages (class_id, user_id, username, message, message_type, created_at) 
+            VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+        ''', (class_id, user_id, username, message, message_type))
+        db.commit()
+        
+        # Broadcast message to all users in the room
+        message_data = {
+            'id': c.lastrowid,
+            'class_id': class_id,
+            'user_id': user_id,
+            'username': username,
+            'message': message,
+            'message_type': message_type,
+            'created_at': datetime.now().isoformat()
+        }
+        
+        socketio.emit('new_chat_message', message_data, room=f'liveclass_{class_id}')
+        print(f"Chat message sent: {username}: {message} in class {class_id}")
+        
+    except Exception as e:
+        print(f"Error handling chat message: {e}")
+        emit('error', {'message': 'Failed to send message'})
+
+@socketio.on('get_chat_messages')
+def handle_get_chat_messages(data):
+    try:
+        class_id = data.get('class_id')
+        limit = data.get('limit', 50)
+        
+        if not class_id:
+            emit('error', {'message': 'Class ID required'})
+            return
+        
+        db = get_db()
+        c = db.cursor()
+        c.execute('''
+            SELECT * FROM live_class_messages 
+            WHERE class_id = ? 
+            ORDER BY created_at DESC 
+            LIMIT ?
+        ''', (class_id, limit))
+        
+        messages = []
+        for row in c.fetchall():
+            messages.append({
+                'id': row[0],
+                'class_id': row[1],
+                'user_id': row[2],
+                'username': row[3],
+                'message': row[4],
+                'message_type': row[5],
+                'created_at': row[6]
+            })
+        
+        # Send messages in chronological order
+        messages.reverse()
+        emit('chat_messages_history', {'messages': messages})
+        
+    except Exception as e:
+        print(f"Error getting chat messages: {e}")
+        emit('error', {'message': 'Failed to get chat messages'})
 
 @socketio.on('create_poll')
 def handle_create_poll(data):
@@ -3406,6 +3497,73 @@ def handle_host_mic_status(data):
             
     except Exception as e:
         print(f"Error broadcasting mic status: {e}")
+
+# --- WebRTC Signaling Events ---
+@socketio.on('webrtc_offer')
+def handle_webrtc_offer(data):
+    try:
+        class_id = data.get('class_id')
+        offer = data.get('offer')
+        from_user = data.get('from_user')
+        
+        if class_id and offer:
+            # Broadcast the offer to all other users in the room
+            socketio.emit('webrtc_offer', {
+                'offer': offer,
+                'from_user': from_user
+            }, room=f'liveclass_{class_id}', skip_sid=request.sid)
+            print(f"WebRTC offer from {from_user} in class {class_id}")
+    except Exception as e:
+        print(f"Error handling WebRTC offer: {e}")
+
+@socketio.on('webrtc_answer')
+def handle_webrtc_answer(data):
+    try:
+        class_id = data.get('class_id')
+        answer = data.get('answer')
+        from_user = data.get('from_user')
+        
+        if class_id and answer:
+            # Broadcast the answer to all other users in the room
+            socketio.emit('webrtc_answer', {
+                'answer': answer,
+                'from_user': from_user
+            }, room=f'liveclass_{class_id}', skip_sid=request.sid)
+            print(f"WebRTC answer from {from_user} in class {class_id}")
+    except Exception as e:
+        print(f"Error handling WebRTC answer: {e}")
+
+@socketio.on('webrtc_ice_candidate')
+def handle_webrtc_ice_candidate(data):
+    try:
+        class_id = data.get('class_id')
+        candidate = data.get('candidate')
+        from_user = data.get('from_user')
+        
+        if class_id and candidate:
+            # Broadcast the ICE candidate to all other users in the room
+            socketio.emit('webrtc_ice_candidate', {
+                'candidate': candidate,
+                'from_user': from_user
+            }, room=f'liveclass_{class_id}', skip_sid=request.sid)
+            print(f"WebRTC ICE candidate from {from_user} in class {class_id}")
+    except Exception as e:
+        print(f"Error handling WebRTC ICE candidate: {e}")
+
+@socketio.on('host_stream_ready')
+def handle_host_stream_ready(data):
+    try:
+        class_id = data.get('class_id')
+        
+        if class_id:
+            # Notify all students that host stream is ready
+            socketio.emit('host_stream_ready', {
+                'class_id': class_id,
+                'message': 'Host camera stream is now available'
+            }, room=f'liveclass_{class_id}', skip_sid=request.sid)
+            print(f"Host stream ready notification sent for class {class_id}")
+    except Exception as e:
+        print(f"Error handling host stream ready: {e}")
 
 # Enhanced error handling for Socket.IO
 @socketio.on_error()
