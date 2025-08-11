@@ -490,6 +490,54 @@ if (studentVideoSelect && studentAudioSelect) {
 // Initialize student device enumeration
 enumerateStudentDevices();
 
+// After joining the room, tell server we are a viewer to trigger host offer
+socket.emit('viewer_join', { class_id: classId });
+
+// --- Minimal WebRTC Viewer Logic ---
+let viewerPeer = null;
+
+socket.on('signal', async (msg) => {
+  if (!msg || String(msg.class_id) !== String(classId)) return;
+  try {
+    if (msg.type === 'offer' && msg.sdp) {
+      // Create peer and set remote desc
+      viewerPeer = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+      // Attach remote stream
+      viewerPeer.ontrack = (e) => {
+        if (e.streams && e.streams[0]) {
+          hostCameraFeed.srcObject = e.streams[0];
+          hostCameraFeed.style.display = 'block';
+          contentVideo.style.display = 'none';
+        }
+      };
+      // Send ICE candidates to host
+      viewerPeer.onicecandidate = (e) => {
+        if (e.candidate) {
+          socket.emit('signal', {
+            type: 'candidate',
+            candidate: e.candidate,
+            class_id: classId
+          });
+        }
+      };
+      await viewerPeer.setRemoteDescription({ type: 'offer', sdp: msg.sdp });
+      const answer = await viewerPeer.createAnswer();
+      await viewerPeer.setLocalDescription(answer);
+      socket.emit('signal', {
+        type: 'answer',
+        sdp: answer.sdp,
+        class_id: classId
+      });
+    } else if (msg.type === 'candidate' && msg.candidate) {
+      if (viewerPeer) {
+        await viewerPeer.addIceCandidate(new RTCIceCandidate(msg.candidate));
+      }
+    }
+  } catch (err) {
+    console.error('Viewer signaling error:', err);
+  }
+});
+
 // --- Polls ---
 function renderPolls(polls) {
   const pollsContainer = document.getElementById('activePolls');

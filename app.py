@@ -498,15 +498,40 @@ def handle_get_student_count(data):
 @socketio.on('signal')
 def handle_signal(data):
     try:
+        # Support targeted signaling via 'to' sid; fallback to room broadcast
+        to_sid = data.get('to')
         room = data.get('room')
-        signal = data.get('signal')
-        if room and signal:
-            emit('signal', {'signal': signal, 'from': request.sid}, room=room, include_self=False)
+        class_id = data.get('class_id')
+        payload = {**{k: v for k, v in data.items() if k != 'to'}, 'from': request.sid}
+        if to_sid:
+            socketio.emit('signal', payload, to=to_sid)
         else:
-            emit('error', {'message': 'Invalid signal data'})
+            if not room and class_id:
+                room = f'liveclass_{class_id}'
+            if room:
+                emit('signal', payload, room=room, include_self=False)
+            else:
+                emit('error', {'message': 'Invalid signal data: missing target'})
     except Exception as e:
         print(f"Error in signal: {e}")
         emit('error', {'message': 'Signal failed'})
+
+# Notify host when a viewer joins a class to initiate WebRTC offer
+@socketio.on('viewer_join')
+def handle_viewer_join(data):
+    try:
+        class_id = data.get('class_id')
+        if not class_id:
+            emit('error', {'message': 'Class ID required for viewer_join'})
+            return
+        viewer_sid = request.sid
+        socketio.emit('viewer_join', {
+            'class_id': class_id,
+            'viewer_sid': viewer_sid
+        }, room=f'liveclass_{class_id}')
+    except Exception as e:
+        print(f"Error in viewer_join: {e}")
+        emit('error', {'message': 'Failed to notify host of viewer join'})
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
