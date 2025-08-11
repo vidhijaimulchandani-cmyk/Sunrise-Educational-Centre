@@ -59,7 +59,7 @@ from time_config import (
 from bulk_upload.routes import bulk_upload_bp
 
 # Initialize Flask app
-app = Flask(__name__, static_folder='.', template_folder='.')
+app = Flask(__name__, static_folder='.', template_folder='.', static_url_path='')
 
 # Configuration
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -500,7 +500,11 @@ def handle_signal(data):
     try:
         room = data.get('room')
         signal = data.get('signal')
-        if room and signal:
+        target = data.get('target')
+        if target and signal:
+            # Send directly to a specific socket id (each sid is a room)
+            emit('signal', {'signal': signal, 'from': request.sid}, room=target)
+        elif room and signal:
             emit('signal', {'signal': signal, 'from': request.sid}, room=room, include_self=False)
         else:
             emit('error', {'message': 'Invalid signal data'})
@@ -1119,7 +1123,7 @@ def uploaded_file(filename):
 @app.route('/<path:filename>')
 def static_files(filename):
     # Serve any file in the root or subfolders
-    return send_from_directory('.', filename)
+    return send_from_directory('.', filename, conditional=True)
 
 # Delete resource route
 @app.route('/delete-resource/<filename>', methods=['POST'])
@@ -2365,7 +2369,10 @@ def admission():
             'parent_phone': request.form['parent_phone'],
             'submitted_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
-        creds = session.get('last_admission_creds') or {'username': access_username, 'password': access_password}
+        # Ensure credentials are present for the success page even if session was not set above
+        if not session.get('last_admission_creds'):
+            session['last_admission_creds'] = {'username': access_username, 'password': access_password}
+        creds = session.get('last_admission_creds')
         return render_template('admission_success.html', student=student, creds=creds)
     except Exception as e:
         print('Error inserting admission:', e)

@@ -186,7 +186,7 @@
       <!-- Universal Video Container -->
       <div class="live-watch-container">
         <!-- Live Camera Feed -->
-        <video id="hostCamera" class="video-player" autoplay muted playsinline style="display: none;"></video>
+        <video id="hostCamera" class="video-player" autoplay muted playsinline style="display: block;"></video>
         
         <!-- Content Video (YouTube or uploaded video) -->
         <div id="contentVideo" style="display: block;">
@@ -711,6 +711,21 @@
       }
     }
 
+    // --- Minimal WebRTC host offerer to broadcast camera ---
+    let hostPeer = null;
+    let viewers = new Set();
+
+    function createOrGetHostPeer() {
+      if (hostPeer) return hostPeer;
+      hostPeer = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+      hostPeer.onicecandidate = (e) => {
+        if (e.candidate) {
+          socket.emit('signal', { room, signal: { type: 'ice-candidate', candidate: e.candidate } });
+        }
+      };
+      return hostPeer;
+    }
+
     async function startCameraWithSelectedDevices() {
       const constraints = {
         video: selectedVideoDevice ? { 
@@ -731,9 +746,33 @@
       localStream = await navigator.mediaDevices.getUserMedia(constraints);
       hostCamera.srcObject = localStream;
       isStreaming = true;
-      
+
+      // Attach tracks to peer for broadcasting
+      const pc = createOrGetHostPeer();
+      localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+
+      // Create an offer for any new viewer (students will answer)
+      const offer = await pc.createOffer({ offerToReceiveAudio: false, offerToReceiveVideo: false });
+      await pc.setLocalDescription(offer);
+      socket.emit('signal', { room, signal: { type: 'offer', sdp: pc.localDescription } });
+
       return localStream;
     }
+
+    socket.on('signal', async ({ signal, from }) => {
+      try {
+        if (!hostPeer) return;
+        if (signal.type === 'answer' && signal.sdp) {
+          // Finalize P2P with this viewer by setting remote description
+          await hostPeer.setRemoteDescription(new RTCSessionDescription(signal.sdp));
+          viewers.add(from);
+        } else if (signal.type === 'ice-candidate' && signal.candidate) {
+          await hostPeer.addIceCandidate(new RTCIceCandidate(signal.candidate));
+        }
+      } catch (err) {
+        console.error('Host signal handling error:', err);
+      }
+    });
 
     // Initialize video mode and enumerate devices
     showContentVideo();
