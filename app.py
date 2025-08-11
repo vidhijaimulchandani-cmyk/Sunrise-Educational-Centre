@@ -2265,7 +2265,7 @@ def admission():
         if not value:
             print(f'Missing required field: {field}')
             flash(f"Missing required field: {field}", 'error')
-            return redirect(url_for('home'))
+            return redirect(url_for('admission'))
 
     # Handle file upload
     photo = request.files.get('passport_photo')
@@ -2273,22 +2273,35 @@ def admission():
     if not photo or photo.filename == '':
         print('Passport photo is required.')
         flash('Passport photo is required.', 'error')
-        return redirect(url_for('home'))
+        return redirect(url_for('admission'))
     if not ('.' in photo.filename and photo.filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg'}):
         print('Invalid photo format:', photo.filename)
         flash('Invalid photo format. Only PNG, JPG, JPEG allowed.', 'error')
-        return redirect(url_for('home'))
+        return redirect(url_for('admission'))
     filename = secure_filename(photo.filename)
     unique_name = secrets.token_hex(8) + '_' + filename
     photo_path = os.path.join('uploads', 'admission_photos', unique_name)
     print('Saving photo to:', photo_path)
-    photo.save(photo_path)
+    
+    # Ensure uploads directory exists
+    os.makedirs(os.path.dirname(photo_path), exist_ok=True)
+    
+    try:
+        photo.save(photo_path)
+    except Exception as e:
+        print('Error saving photo:', e)
+        flash('Error saving photo. Please try again.', 'error')
+        return redirect(url_for('admission'))
 
     # Insert into DB
     try:
         conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         print('Inserting into DB...')
+        
+        # Check if database connection is working
+        if not conn:
+            raise Exception("Database connection failed")
         # Normalize class name to match database format
         class_name = request.form['class']
         class_mappings = {
@@ -2340,12 +2353,20 @@ def admission():
                          VALUES (?, ?, ?)''', (new_admission_id, access_username, access_password))
             # Store plain password temporarily in session to display once (not persisted)
             session['last_admission_creds'] = {'username': access_username, 'password': access_password}
+            print(f'Generated credentials: {access_username} / {access_password}')
         except Exception as _e:
             # Non-fatal: continue even if credential generation fails
-            pass
+            print(f'Warning: Credential generation failed: {_e}')
+            access_username = f"ADM{new_admission_id:06d}"
+            access_password = "TEMP123"
+            session['last_admission_creds'] = {'username': access_username, 'password': access_password}
         conn.commit()
         print('Admission saved successfully!')
         conn.close()
+        
+        # Add success message
+        flash('Admission submitted successfully! Please save your credentials.', 'success')
+        
         # Build student summary and render success page
         student = {
             'student_name': request.form['student_name'],
@@ -2362,11 +2383,16 @@ def admission():
             'submitted_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
         creds = session.get('last_admission_creds') or {'username': access_username, 'password': access_password}
-        return render_template('admission_success.html', student=student, creds=creds)
+        try:
+            return render_template('admission_success.html', student=student, creds=creds)
+        except Exception as template_error:
+            print(f'Error rendering admission_success.html: {template_error}')
+            flash('Admission submitted successfully! Please check your admission status.', 'success')
+            return redirect(url_for('check_admission'))
     except Exception as e:
         print('Error inserting admission:', e)
         flash(f'Error saving admission: {e}', 'error')
-    return redirect(url_for('home'))
+        return redirect(url_for('admission'))
 
 # Public admission check page (no login)
 @app.route('/check-admission', methods=['GET', 'POST'])
