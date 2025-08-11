@@ -1,5 +1,16 @@
 /* Forum Page Styles */
 
+/* CSS Variables for consistent theming */
+:root {
+  --pico-primary: #6a82fb;
+  --pico-primary-background: rgba(106,130,251,0.1);
+  --pico-card-background-color: #fff;
+  --pico-border-color: #e0e7ff;
+  --pico-border-radius: 12px;
+  --pico-color: #232946;
+  --pico-muted-color: #666;
+}
+
 .forum-header {
   text-align: center;
   margin: 2rem 0;

@@ -1,6 +1,17 @@
 
 /* Authentication Page Styles */
 
+/* CSS Variables for consistent theming */
+:root {
+  --pico-primary: #6a82fb;
+  --pico-primary-background: rgba(106,130,251,0.1);
+  --pico-card-background-color: #fff;
+  --pico-border-color: #e0e7ff;
+  --pico-border-radius: 12px;
+  --pico-color: #232946;
+  --pico-muted-color: #666;
+}
+
 .auth-container {
   max-width: 1200px;
   margin: 2rem auto;
@@ -170,4 +181,15 @@
   background-color: #efe;
   color: #363;
   border: 1px solid #cfc;
+}
+
+/* Dark mode CSS variables */
+body.dark-mode {
+  --pico-background-color: #232946;
+  --pico-color: #f4f4f4;
+  --pico-card-background-color: #2a2a3a;
+  --pico-border-color: #3a3a4a;
+  --pico-muted-color: #b8c5d6;
+  --pico-primary-background: rgba(106,130,251,0.1);
+  --pico-primary: #6a82fb;
 }
