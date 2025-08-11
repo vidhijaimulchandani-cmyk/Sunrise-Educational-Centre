@@ -361,6 +361,35 @@
             <div style="font-weight: 600; color: #232946; margin-bottom: 0.5rem;">Student Count:</div>
             <div id="studentCount" style="font-size: 1.2rem; color: #6a82fb; font-weight: 700;">0 Students Online</div>
           </div>
+          
+          <!-- Recording Controls -->
+          <div style="margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
+            <h4 style="margin-bottom: 0.8rem; color: #232946;">🎥 Recording Controls</h4>
+            <div style="margin-bottom: 0.8rem;">
+              <input type="text" id="recordingNameInput" placeholder="Recording Name (optional)" 
+                     style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 0.5rem;">
+              <div style="display: flex; gap: 0.5rem;">
+                <button id="startRecordingBtn" class="control-btn" style="background: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;" onclick="startRecording()">
+                  🔴 Start Recording
+                </button>
+                <button id="stopRecordingBtn" class="control-btn" style="background: #dc3545; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; display: none;" onclick="stopRecording()">
+                  ⏹️ Stop Recording
+                </button>
+              </div>
+            </div>
+            <div id="recordingStatus" style="font-size: 0.9rem; color: #666;">
+              Recording not started
+            </div>
+          </div>
+          
+          <!-- Previous Recordings -->
+          <div style="margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef;">
+            <h4 style="margin-bottom: 0.8rem; color: #232946;">📹 Previous Recordings</h4>
+            <div id="recordingsList" style="max-height: 200px; overflow-y: auto;">
+              <div style="color: #666; font-style: italic;">Loading recordings...</div>
+            </div>
+          </div>
+          
           <button class="control-btn mute-all-btn" onclick="muteAllStudents()">🔇 Mute All Students</button>
           <button class="control-btn end-class-btn" onclick="endCurrentClass()">⏹️ End Live Class</button>
           <div style="margin-top: 1rem; padding: 1rem; background: #fff3cd; border-radius: 8px; border: 1px solid #ffeaa7;">
@@ -1360,7 +1389,173 @@
         handleStudentICECandidate(data.from_user, data.candidate);
       }
     });
+    
+    // Recording Event Listeners
+    socket.on('recording_started', (data) => {
+      if (data.class_id === classId) {
+        updateRecordingStatus('Recording started', 'recording');
+        console.log('Recording started:', data);
+      }
+    });
+    
+    socket.on('recording_stopped', (data) => {
+      if (data.class_id === classId) {
+        updateRecordingStatus('Recording stopped', 'stopped');
+        loadRecordings();
+        console.log('Recording stopped:', data);
+      }
+    });
+    
+    socket.on('recording_status_response', (data) => {
+      if (data.class_id === classId) {
+        updateRecordingUI(data.active_recording, data.all_recordings);
+      }
+    });
 
+    // --- Recording Functions ---
+    let isRecording = false;
+    let currentRecordingId = null;
+    
+    function startRecording() {
+      const recordingName = document.getElementById('recordingNameInput').value.trim() || 
+                           `Live Class ${classId} - ${new Date().toLocaleString()}`;
+      
+      if (!isConnected) {
+        alert('Not connected to server. Please wait for connection.');
+        return;
+      }
+      
+      socket.emit('start_recording', {
+        class_id: classId,
+        recording_name: recordingName,
+        created_by: 'host'
+      });
+    }
+    
+    function stopRecording() {
+      if (!isConnected) {
+        alert('Not connected to server. Please wait for connection.');
+        return;
+      }
+      
+      socket.emit('stop_recording', {
+        class_id: classId
+      });
+    }
+    
+    function updateRecordingStatus(message, status) {
+      const statusEl = document.getElementById('recordingStatus');
+      const startBtn = document.getElementById('startRecordingBtn');
+      const stopBtn = document.getElementById('stopRecordingBtn');
+      
+      statusEl.textContent = message;
+      
+      if (status === 'recording') {
+        isRecording = true;
+        statusEl.style.color = '#dc3545';
+        startBtn.style.display = 'none';
+        stopBtn.style.display = 'inline-block';
+      } else {
+        isRecording = false;
+        statusEl.style.color = '#666';
+        startBtn.style.display = 'inline-block';
+        stopBtn.style.display = 'none';
+      }
+    }
+    
+    function updateRecordingUI(activeRecording, allRecordings) {
+      // Update recording status
+      if (activeRecording) {
+        updateRecordingStatus('Recording in progress...', 'recording');
+        currentRecordingId = activeRecording.recording_id;
+      } else {
+        updateRecordingStatus('Recording not started', 'stopped');
+        currentRecordingId = null;
+      }
+      
+      // Update recordings list
+      renderRecordingsList(allRecordings || []);
+    }
+    
+    function renderRecordingsList(recordings) {
+      const recordingsList = document.getElementById('recordingsList');
+      
+      if (recordings.length === 0) {
+        recordingsList.innerHTML = '<div style="color: #666; font-style: italic;">No recordings found</div>';
+        return;
+      }
+      
+      recordingsList.innerHTML = recordings.map(recording => {
+        const startedAt = new Date(recording.started_at).toLocaleString();
+        const duration = recording.duration ? formatDuration(recording.duration) : 'Unknown';
+        const fileSize = recording.file_size ? formatFileSize(recording.file_size) : 'Unknown';
+        const status = recording.status;
+        
+        let statusColor = '#666';
+        let statusText = status;
+        
+        if (status === 'recording') {
+          statusColor = '#dc3545';
+          statusText = '🔴 Recording...';
+        } else if (status === 'completed') {
+          statusColor = '#28a745';
+          statusText = '✅ Completed';
+        } else if (status === 'failed') {
+          statusColor = '#dc3545';
+          statusText = '❌ Failed';
+        }
+        
+        return `
+          <div style="border: 1px solid #ddd; border-radius: 4px; padding: 0.8rem; margin-bottom: 0.5rem; background: white;">
+            <div style="font-weight: 600; color: #232946; margin-bottom: 0.3rem;">${recording.recording_name}</div>
+            <div style="font-size: 0.8rem; color: #666; margin-bottom: 0.3rem;">
+              Started: ${startedAt} | Duration: ${duration} | Size: ${fileSize}
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color: ${statusColor}; font-size: 0.8rem; font-weight: 600;">${statusText}</span>
+              ${status === 'completed' ? 
+                `<a href="/download-recording/${recording.id}" class="control-btn" style="background: #6a82fb; color: white; text-decoration: none; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem;">📥 Download</a>` : 
+                ''
+              }
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    function formatDuration(seconds) {
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+      
+      if (hours > 0) {
+        return `${hours}h ${minutes}m ${secs}s`;
+      } else if (minutes > 0) {
+        return `${minutes}m ${secs}s`;
+      } else {
+        return `${secs}s`;
+      }
+    }
+    
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    function loadRecordings() {
+      if (isConnected) {
+        socket.emit('get_recording_status', { class_id: classId });
+      }
+    }
+    
+    // Load recordings on page load
+    loadRecordings();
+    
     // Clean up when page is unloaded
     window.addEventListener('beforeunload', () => {
       // Stop camera and cleanup

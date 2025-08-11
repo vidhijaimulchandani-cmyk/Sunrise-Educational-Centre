@@ -1,4 +1,7 @@
 from flask import Flask, render_template, send_from_directory, request, redirect, url_for, session, flash, jsonify, send_file
+import json
+import threading
+import time
 try:
     from werkzeug.security import generate_password_hash, check_password_hash
     WERKZEUG_AVAILABLE = True
@@ -68,6 +71,8 @@ app.config['SECRET_KEY'] = secrets.token_hex(16)
 # Ensure required directories exist
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'admission_photos'), exist_ok=True)
+os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'recordings'), exist_ok=True)
+os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'recordings', 'temp'), exist_ok=True)
 
 DATABASE = 'users.db'
 
@@ -97,6 +102,33 @@ def init_poll_and_doubt_tables():
         message TEXT,
         message_type TEXT DEFAULT 'chat',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )''')
+    
+    # Live Class Recordings
+    c.execute('''CREATE TABLE IF NOT EXISTS live_class_recordings (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        class_id TEXT,
+        recording_name TEXT,
+        file_path TEXT,
+        duration INTEGER DEFAULT 0,
+        file_size INTEGER DEFAULT 0,
+        status TEXT DEFAULT 'recording', -- recording, completed, failed
+        started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        ended_at TIMESTAMP,
+        created_by TEXT,
+        metadata TEXT -- JSON string for additional info
+    )''')
+    
+    # Recording Segments (for long recordings)
+    c.execute('''CREATE TABLE IF NOT EXISTS recording_segments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        recording_id INTEGER,
+        segment_number INTEGER,
+        file_path TEXT,
+        duration INTEGER DEFAULT 0,
+        file_size INTEGER DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (recording_id) REFERENCES live_class_recordings (id)
     )''')
     
     # Polls
@@ -386,6 +418,10 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet',
 # Active session tracking
 active_sessions = {}
 room_participants = {}
+
+# Recording management
+active_recordings = {}  # Track active recordings by class_id
+recording_sessions = {}  # Track recording sessions by session_id
 
 # --- Socket.IO Connection Management ---
 @socketio.on('connect')
@@ -4393,6 +4429,59 @@ def api_get_categories_by_class_name(class_name):
 def check_admission_login():
     return render_template('check_admission_login.html')
 
+@app.route('/download-recording/<int:recording_id>')
+def download_recording(recording_id):
+    """Download a recorded live class"""
+    try:
+        db = get_db()
+        c = db.cursor()
+        c.execute('''
+            SELECT file_path, recording_name, status 
+            FROM live_class_recordings 
+            WHERE id = ?
+        ''', (recording_id,))
+        
+        row = c.fetchone()
+        if not row:
+            return "Recording not found", 404
+        
+        file_path, recording_name, status = row
+        
+        if status != 'completed':
+            return "Recording not ready for download", 400
+        
+        if not os.path.exists(file_path):
+            return "Recording file not found", 404
+        
+        # Create a safe filename for download
+        safe_filename = secure_filename(f"{recording_name}.webm")
+        
+        return send_file(
+            file_path,
+            as_attachment=True,
+            download_name=safe_filename,
+            mimetype='video/webm'
+        )
+        
+    except Exception as e:
+        print(f"Error downloading recording: {e}")
+        return "Error downloading recording", 500
+
+@app.route('/api/recordings/<class_id>')
+def api_get_class_recordings(class_id):
+    """API endpoint to get recordings for a class"""
+    try:
+        recordings = get_class_recordings(class_id)
+        return jsonify({
+            'success': True,
+            'recordings': recordings
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 @app.route('/check-admission-by-ip', methods=['POST'])
 def check_admission_by_ip():
     try:
@@ -4430,6 +4519,211 @@ def check_admission_by_ip():
     except Exception:
         session['last_admission_status'] = {'result': False}
     return redirect(url_for('check_admission'))
+
+# --- Recording Management Functions ---
+def start_recording_session(class_id, recording_name, created_by):
+    """Start a new recording session for a live class"""
+    try:
+        recording_id = f"rec_{class_id}_{int(time.time())}"
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"{recording_name}_{timestamp}.webm"
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], 'recordings', filename)
+        
+        # Create recording entry in database
+        db = get_db()
+        c = db.cursor()
+        c.execute('''
+            INSERT INTO live_class_recordings 
+            (class_id, recording_name, file_path, status, created_by, metadata) 
+            VALUES (?, ?, ?, 'recording', ?, ?)
+        ''', (class_id, recording_name, file_path, created_by, json.dumps({
+            'started_at': datetime.now().isoformat(),
+            'session_id': recording_id
+        })))
+        db.commit()
+        
+        recording_db_id = c.lastrowid
+        
+        # Track active recording
+        active_recordings[class_id] = {
+            'recording_id': recording_id,
+            'db_id': recording_db_id,
+            'file_path': file_path,
+            'started_at': datetime.now(),
+            'created_by': created_by,
+            'status': 'recording'
+        }
+        
+        print(f"🎥 Started recording session {recording_id} for class {class_id}")
+        return recording_id, recording_db_id
+        
+    except Exception as e:
+        print(f"Error starting recording: {e}")
+        return None, None
+
+def stop_recording_session(class_id):
+    """Stop an active recording session"""
+    try:
+        if class_id not in active_recordings:
+            return False, "No active recording found"
+        
+        recording_info = active_recordings[class_id]
+        recording_db_id = recording_info['db_id']
+        
+        # Update database
+        db = get_db()
+        c = db.cursor()
+        c.execute('''
+            UPDATE live_class_recordings 
+            SET status = 'completed', ended_at = CURRENT_TIMESTAMP,
+                duration = ?, file_size = ?
+            WHERE id = ?
+        ''', (
+            int((datetime.now() - recording_info['started_at']).total_seconds()),
+            os.path.getsize(recording_info['file_path']) if os.path.exists(recording_info['file_path']) else 0,
+            recording_db_id
+        ))
+        db.commit()
+        
+        # Remove from active recordings
+        del active_recordings[class_id]
+        
+        print(f"🎥 Stopped recording session for class {class_id}")
+        return True, "Recording stopped successfully"
+        
+    except Exception as e:
+        print(f"Error stopping recording: {e}")
+        return False, str(e)
+
+def get_recording_status(class_id):
+    """Get the current recording status for a class"""
+    return active_recordings.get(class_id, None)
+
+def get_class_recordings(class_id):
+    """Get all recordings for a specific class"""
+    try:
+        db = get_db()
+        c = db.cursor()
+        c.execute('''
+            SELECT id, recording_name, file_path, duration, file_size, 
+                   status, started_at, ended_at, created_by, metadata
+            FROM live_class_recordings 
+            WHERE class_id = ? 
+            ORDER BY started_at DESC
+        ''', (class_id,))
+        
+        recordings = []
+        for row in c.fetchall():
+            recordings.append({
+                'id': row[0],
+                'recording_name': row[1],
+                'file_path': row[2],
+                'duration': row[3],
+                'file_size': row[4],
+                'status': row[5],
+                'started_at': row[6],
+                'ended_at': row[7],
+                'created_by': row[8],
+                'metadata': json.loads(row[9]) if row[9] else {}
+            })
+        
+        return recordings
+        
+    except Exception as e:
+        print(f"Error getting recordings: {e}")
+        return []
+
+# --- Recording Socket.IO Events ---
+@socketio.on('start_recording')
+def handle_start_recording(data):
+    try:
+        class_id = data.get('class_id')
+        recording_name = data.get('recording_name', f'Live Class {class_id}')
+        created_by = data.get('created_by', 'host')
+        
+        if not class_id:
+            emit('error', {'message': 'Class ID is required'})
+            return
+        
+        # Check if already recording
+        if class_id in active_recordings:
+            emit('error', {'message': 'Recording already in progress'})
+            return
+        
+        recording_id, db_id = start_recording_session(class_id, recording_name, created_by)
+        
+        if recording_id:
+            # Notify all users in the class
+            socketio.emit('recording_started', {
+                'class_id': class_id,
+                'recording_id': recording_id,
+                'recording_name': recording_name,
+                'started_at': datetime.now().isoformat()
+            }, room=f'liveclass_{class_id}')
+            
+            emit('recording_status', {
+                'status': 'started',
+                'recording_id': recording_id,
+                'message': 'Recording started successfully'
+            })
+        else:
+            emit('error', {'message': 'Failed to start recording'})
+            
+    except Exception as e:
+        print(f"Error in start_recording: {e}")
+        emit('error', {'message': 'Failed to start recording'})
+
+@socketio.on('stop_recording')
+def handle_stop_recording(data):
+    try:
+        class_id = data.get('class_id')
+        
+        if not class_id:
+            emit('error', {'message': 'Class ID is required'})
+            return
+        
+        success, message = stop_recording_session(class_id)
+        
+        if success:
+            # Notify all users in the class
+            socketio.emit('recording_stopped', {
+                'class_id': class_id,
+                'stopped_at': datetime.now().isoformat(),
+                'message': 'Recording stopped'
+            }, room=f'liveclass_{class_id}')
+            
+            emit('recording_status', {
+                'status': 'stopped',
+                'message': message
+            })
+        else:
+            emit('error', {'message': message})
+            
+    except Exception as e:
+        print(f"Error in stop_recording: {e}")
+        emit('error', {'message': 'Failed to stop recording'})
+
+@socketio.on('get_recording_status')
+def handle_get_recording_status(data):
+    try:
+        class_id = data.get('class_id')
+        
+        if not class_id:
+            emit('error', {'message': 'Class ID is required'})
+            return
+        
+        recording_status = get_recording_status(class_id)
+        recordings = get_class_recordings(class_id)
+        
+        emit('recording_status_response', {
+            'class_id': class_id,
+            'active_recording': recording_status,
+            'all_recordings': recordings
+        })
+        
+    except Exception as e:
+        print(f"Error in get_recording_status: {e}")
+        emit('error', {'message': 'Failed to get recording status'})
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))

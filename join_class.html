@@ -157,6 +157,16 @@
           </div>
         </div>
         
+        <!-- Recording Status Notification -->
+        <div id="recordingNotification" style="margin-top: 0.5rem; text-align: center; padding: 0.8rem; background: rgba(220,53,69,0.1); border-radius: 8px; border: 1px solid rgba(220,53,69,0.2); display: none;">
+          <span id="recordingStatusText" style="color: #dc3545; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="12" r="8" fill="#dc3545"/>
+            </svg>
+            Recording in progress
+          </span>
+        </div>
+        
         <!-- Device Selection for Student -->
         <div class="device-selection" style="display: none;" id="studentDeviceSelection">
           <div class="device-row">
@@ -773,6 +783,41 @@ socket.on('webrtc_ice_candidate', (data) => {
     handleHostICECandidate(data.candidate);
   }
 });
+
+// Recording Event Listeners
+socket.on('recording_started', (data) => {
+  if (data.class_id === classId) {
+    showRecordingNotification(true, 'Recording started');
+    console.log('Recording started:', data);
+  }
+});
+
+socket.on('recording_stopped', (data) => {
+  if (data.class_id === classId) {
+    showRecordingNotification(false, 'Recording stopped');
+    console.log('Recording stopped:', data);
+  }
+});
+
+function showRecordingNotification(isRecording, message) {
+  const notification = document.getElementById('recordingNotification');
+  const statusText = document.getElementById('recordingStatusText');
+  
+  if (isRecording) {
+    notification.style.display = 'block';
+    notification.style.background = 'rgba(220,53,69,0.1)';
+    notification.style.borderColor = 'rgba(220,53,69,0.2)';
+    statusText.style.color = '#dc3545';
+    statusText.innerHTML = `
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <circle cx="12" cy="12" r="8" fill="#dc3545"/>
+      </svg>
+      🔴 Recording in progress
+    `;
+  } else {
+    notification.style.display = 'none';
+  }
+}
 
 // --- Helpers ---
 function getUserId() {
