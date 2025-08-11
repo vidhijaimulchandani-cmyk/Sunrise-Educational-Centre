@@ -107,6 +107,112 @@
     body.dark-mode .device-select { background: #232946; border-color: #3a3a4a; color: #fff; }
     body.dark-mode .device-select:focus { border-color: #6a82fb; }
     body.dark-mode .device-status { color: #b8c5d6; }
+    
+    /* Mobile Responsive Styles */
+    @media (max-width: 768px) {
+      .join-container {
+        flex-direction: column;
+        margin: 1rem auto;
+        max-width: 95%;
+      }
+      
+      .video-section, .info-section {
+        padding: 1rem;
+      }
+      
+      .info-section {
+        border-left: none;
+        border-top: 1px solid #eee;
+      }
+      
+      .video-player {
+        max-width: 100%;
+        height: 240px;
+      }
+      
+      .live-watch-container {
+        max-width: 100%;
+        padding: 0.5rem;
+      }
+      
+      .device-selection {
+        padding: 0.8rem;
+      }
+      
+      .device-row {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+      }
+      
+      .device-label {
+        min-width: auto;
+        font-size: 0.85rem;
+      }
+      
+      .device-select {
+        width: 100%;
+        font-size: 0.85rem;
+      }
+      
+      .chat-card {
+        max-height: 400px;
+        min-height: 280px;
+        padding: 1rem;
+      }
+      
+      .chat-messages {
+        min-height: 180px;
+        max-height: 280px;
+        font-size: 0.95rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .join-container {
+        margin: 0.5rem auto;
+        max-width: 98%;
+        border-radius: 12px;
+      }
+      
+      .video-section, .info-section {
+        padding: 0.8rem;
+      }
+      
+      .video-player {
+        height: 200px;
+      }
+      
+      .class-title {
+        font-size: 1.3rem;
+      }
+      
+      .class-description {
+        font-size: 0.9rem;
+      }
+      
+      .chat-card {
+        padding: 0.8rem;
+        max-height: 350px;
+        min-height: 250px;
+      }
+      
+      .chat-messages {
+        min-height: 150px;
+        max-height: 220px;
+        font-size: 0.9rem;
+      }
+      
+      .chat-input {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.6rem;
+      }
+      
+      .chat-send-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+      }
+    }
   </style>
 </head>
 <body>

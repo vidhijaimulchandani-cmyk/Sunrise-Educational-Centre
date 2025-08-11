@@ -176,6 +176,201 @@
     body.dark-mode .device-select { background: #232946; border-color: #3a3a4a; color: #fff; }
     body.dark-mode .device-select:focus { border-color: #6a82fb; }
     body.dark-mode .device-status { color: #b8c5d6; }
+    
+    /* Mobile Responsive Styles */
+    @media (max-width: 1200px) {
+      .host-container {
+        flex-direction: column;
+        margin: 1rem auto;
+        max-width: 95%;
+      }
+      
+      .video-section, .control-section {
+        padding: 1rem;
+      }
+      
+      .control-section {
+        border-left: none;
+        border-top: 1px solid #eee;
+        max-height: 60vh;
+      }
+      
+      .video-player {
+        max-width: 100%;
+        height: 300px;
+      }
+      
+      .live-watch-container {
+        max-width: 100%;
+        padding: 0.5rem;
+      }
+      
+      .video-controls {
+        gap: 0.8rem;
+        padding: 0.8rem;
+      }
+      
+      .icon-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .host-container {
+        margin: 0.5rem auto;
+        max-width: 98%;
+        border-radius: 12px;
+      }
+      
+      .video-section, .control-section {
+        padding: 0.8rem;
+      }
+      
+      .video-player {
+        height: 240px;
+      }
+      
+      .class-title {
+        font-size: 1.3rem;
+      }
+      
+      .class-description {
+        font-size: 0.9rem;
+      }
+      
+      .tab-container {
+        flex-wrap: wrap;
+        gap: 0.3rem;
+      }
+      
+      .tab-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+      }
+      
+      .chat-card, .poll-section, .doubts-section, .host-controls {
+        padding: 1rem;
+        margin-bottom: 0.8rem;
+      }
+      
+      .chat-messages {
+        max-height: 180px;
+        font-size: 0.9rem;
+      }
+      
+      .device-selection {
+        padding: 0.8rem;
+      }
+      
+      .device-row {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+      }
+      
+      .device-label {
+        min-width: auto;
+        font-size: 0.85rem;
+      }
+      
+      .device-select {
+        width: 100%;
+        font-size: 0.85rem;
+      }
+      
+      .video-controls {
+        gap: 0.6rem;
+        padding: 0.6rem;
+      }
+      
+      .icon-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+      
+      .control-btn {
+        padding: 0.6rem;
+        font-size: 0.9rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .host-container {
+        margin: 0.3rem auto;
+        max-width: 99%;
+        border-radius: 8px;
+      }
+      
+      .video-section, .control-section {
+        padding: 0.6rem;
+      }
+      
+      .video-player {
+        height: 200px;
+      }
+      
+      .class-title {
+        font-size: 1.2rem;
+      }
+      
+      .class-description {
+        font-size: 0.85rem;
+      }
+      
+      .tab-btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+      }
+      
+      .chat-card, .poll-section, .doubts-section, .host-controls {
+        padding: 0.8rem;
+        margin-bottom: 0.6rem;
+      }
+      
+      .chat-messages {
+        max-height: 150px;
+        font-size: 0.85rem;
+      }
+      
+      .chat-input, .poll-input {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.6rem;
+      }
+      
+      .chat-send-btn, .poll-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.85rem;
+      }
+      
+      .control-btn {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+      }
+      
+      .video-controls {
+        gap: 0.5rem;
+        padding: 0.5rem;
+      }
+      
+      .icon-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+      }
+      
+      .doubt-item {
+        padding: 0.6rem;
+        margin-bottom: 0.4rem;
+      }
+      
+      .doubt-btn {
+        padding: 0.2rem 0.4rem;
+        font-size: 0.75rem;
+      }
+    }
   </style>
 </head>
 <body>
