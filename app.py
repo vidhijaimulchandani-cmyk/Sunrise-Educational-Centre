@@ -2550,6 +2550,18 @@ def send_live_class_message(class_id):
     
     save_live_class_message(class_id, user_id, username, message)
     
+    # Broadcast to all participants including host
+    try:
+        from flask_socketio import emit
+        socketio.emit('new_chat_message', {
+            'class_id': class_id,
+            'user_id': user_id,
+            'username': username,
+            'message': message
+        }, room=f'liveclass_{class_id}')
+    except Exception:
+        pass
+    
     return jsonify({'success': True}), 201
 
 # ==============================================================================
