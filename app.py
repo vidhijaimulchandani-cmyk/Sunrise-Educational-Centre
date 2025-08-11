@@ -2305,14 +2305,18 @@ def admission():
             '9': 'class 9',
             '10': 'class 10',
             '11': 'class 11 applied',
-            '12': 'class 12 applied'
+            '11 applied': 'class 11 applied',
+            '11 core': 'class 11 core',
+            '12': 'class 12 applied',
+            '12 applied': 'class 12 applied',
+            '12 core': 'class 12 core'
         }
         normalized_class = class_mappings.get(class_name.lower(), class_name)
         
         c.execute('''INSERT INTO admissions (
             student_name, dob, student_phone, student_email, class, school_name,
             maths_marks, maths_rating, last_percentage, parent_name, parent_phone, passport_photo, status, submitted_at, user_id, submit_ip
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
             request.form['student_name'],
             request.form['dob'],
             request.form['student_phone'],
