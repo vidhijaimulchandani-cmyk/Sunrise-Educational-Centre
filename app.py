@@ -65,7 +65,11 @@ app = Flask(__name__, static_folder='.', template_folder='.')
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['SECRET_KEY'] = secrets.token_hex(16)
 
-DATABASE = 'bulk_upload/users.db'
+# Ensure required directories exist
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'admission_photos'), exist_ok=True)
+
+DATABASE = 'users.db'
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -126,7 +130,7 @@ def setup_db():
 # Initialize IP tracking tables
 def init_tracking_tables():
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('''CREATE TABLE IF NOT EXISTS ip_logs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -148,7 +152,7 @@ def init_tracking_tables():
 
 def init_admission_access_table():
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('''CREATE TABLE IF NOT EXISTS admission_access (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -164,7 +168,7 @@ def init_admission_access_table():
 
 def ensure_admissions_submit_ip_column():
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         # Try to add submit_ip column if it does not exist
         c.execute("PRAGMA table_info(admissions)")
@@ -176,12 +180,86 @@ def ensure_admissions_submit_ip_column():
     except Exception as e:
         print(f"Error ensuring admissions.submit_ip column: {e}")
 
+def init_admissions_tables():
+    try:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        c.execute('''CREATE TABLE IF NOT EXISTS admissions (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          student_name TEXT NOT NULL,
+          dob TEXT,
+          student_phone TEXT,
+          student_email TEXT,
+          class TEXT,
+          school_name TEXT,
+          maths_marks INTEGER,
+          maths_rating REAL,
+          last_percentage REAL,
+          parent_name TEXT,
+          parent_phone TEXT,
+          passport_photo TEXT,
+          status TEXT DEFAULT 'pending',
+          submitted_at TEXT,
+          user_id INTEGER,
+          submit_ip TEXT,
+          approved_at TEXT,
+          approved_by TEXT,
+          disapproved_at TEXT,
+          disapproved_by TEXT,
+          disapproval_reason TEXT
+        )''')
+        c.execute('''CREATE TABLE IF NOT EXISTS admission_access (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          admission_id INTEGER NOT NULL UNIQUE,
+          access_username TEXT UNIQUE,
+          access_password TEXT NOT NULL,
+          created_at TEXT,
+          FOREIGN KEY(admission_id) REFERENCES admissions(id) ON DELETE CASCADE
+        )''')
+        c.execute('''CREATE TABLE IF NOT EXISTS admission_access_plain (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          admission_id INTEGER NOT NULL UNIQUE,
+          access_username TEXT UNIQUE,
+          access_password_plain TEXT NOT NULL,
+          created_at TEXT,
+          FOREIGN KEY(admission_id) REFERENCES admissions(id) ON DELETE CASCADE
+        )''')
+        # Views or denormalized tables for approved/disapproved
+        c.execute('''CREATE TABLE IF NOT EXISTS approved_admissions (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          original_admission_id INTEGER,
+          student_name TEXT, dob TEXT, student_phone TEXT, student_email TEXT,
+          class TEXT, school_name TEXT, maths_marks INTEGER, maths_rating REAL,
+          last_percentage REAL, parent_name TEXT, parent_phone TEXT,
+          passport_photo TEXT, user_id INTEGER,
+          approved_by TEXT, approved_at TEXT
+        )''')
+        c.execute('''CREATE TABLE IF NOT EXISTS disapproved_admissions (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          original_admission_id INTEGER,
+          student_name TEXT, dob TEXT, student_phone TEXT, student_email TEXT,
+          class TEXT, school_name TEXT, maths_marks INTEGER, maths_rating REAL,
+          last_percentage REAL, parent_name TEXT, parent_phone TEXT,
+          passport_photo TEXT, user_id INTEGER,
+          disapproved_by TEXT, disapproval_reason TEXT, disapproved_at TEXT
+        )''')
+        # Ensure submit_ip exists
+        c.execute("PRAGMA table_info(admissions)")
+        cols = [r[1] for r in c.fetchall()]
+        if 'submit_ip' not in cols:
+            c.execute('ALTER TABLE admissions ADD COLUMN submit_ip TEXT')
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f"Error initializing admissions tables: {e}")
+
 # Call setup_db when the app starts
 with app.app_context():
     setup_db()
     init_tracking_tables()
     init_admission_access_table()
     ensure_admissions_submit_ip_column()
+    init_admissions_tables()
 
 def admin_required(f):
     @wraps(f)
@@ -214,7 +292,7 @@ init_db()
 # --- Queries DB Setup ---
 def init_queries_db():
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('''CREATE TABLE IF NOT EXISTS queries (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -456,7 +534,7 @@ def inject_global_variables():
 # Route for the main page
 @app.route('/')
 def home():
-    with sqlite3.connect('users.db') as conn:
+    with sqlite3.connect(DATABASE) as conn:
         c = conn.cursor()
         c.execute('SELECT name, email, message, submitted_at FROM queries ORDER BY id DESC LIMIT 10')
         queries = c.fetchall()
@@ -703,7 +781,7 @@ def online_class():
 
 @app.route('/join-class/<int:class_id>')
 def join_class(class_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('SELECT meeting_url, topic, description FROM live_classes WHERE id=?', (class_id,))
     row = c.fetchone()
@@ -720,7 +798,7 @@ def join_class_host(class_id):
         flash('Access denied. Only hosts can access this page.', 'error')
         return redirect(url_for('admin_panel'))
     
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('SELECT meeting_url, topic, description FROM live_classes WHERE id=?', (class_id,))
     row = c.fetchone()
@@ -860,7 +938,7 @@ def admin_panel():
         # Build notification_usernames for personal ban notifications
         notification_usernames = {}
         import sqlite3
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         for n in all_notifications:
             notif_id, message, class_name, created_at, target_paid_status, status, notification_type, scheduled_time = n
@@ -1028,7 +1106,7 @@ def upload_resource():
 def get_class_name_by_id(class_id):
     """Get class name by class ID"""
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('SELECT name FROM classes WHERE id = ?', (class_id,))
         result = c.fetchone()
@@ -1136,7 +1214,7 @@ def profile():
     if not session.get('user_id'):
         return redirect(url_for('auth'))
     
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Get user info with class name
@@ -1210,7 +1288,7 @@ def admin_add_class():
     if name:
         from auth_handler import get_all_classes
         import sqlite3
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         try:
             c.execute('INSERT INTO classes (name) VALUES (?)', (name,))
@@ -1227,7 +1305,7 @@ def admin_edit_class(class_id):
     name = request.form.get('name', '').strip()
     if name:
         import sqlite3
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('UPDATE classes SET name=? WHERE id=?', (name, class_id))
         conn.commit()
@@ -1239,7 +1317,7 @@ def admin_delete_class(class_id):
     if session.get('role') not in ['admin', 'teacher']:
         return redirect(url_for('auth'))
     import sqlite3
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('DELETE FROM classes WHERE id=?', (class_id,))
     conn.commit()
@@ -1309,7 +1387,7 @@ def admin_promote_user(user_id):
     if session.get('role') != 'admin':
         return redirect(url_for('auth'))
     import sqlite3
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     # Get admin class id
     c.execute("SELECT id FROM classes WHERE name='admin'")
@@ -1325,7 +1403,7 @@ def admin_demote_user(user_id):
         return redirect(url_for('auth'))
     # Demote to student: set to first non-admin/teacher class
     import sqlite3
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute("SELECT id FROM classes WHERE name NOT IN ('admin','teacher') ORDER BY id LIMIT 1")
     student_class_id = c.fetchone()[0]
@@ -1410,7 +1488,7 @@ def admin_create_user_page():
     
     # Get admissions data
     import sqlite3
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Get pending admissions (match order expected by template)
@@ -1455,8 +1533,10 @@ def admin_create_user_page():
 
     # Create admission_access_plain table for storing plain passwords for admin viewing
     c.execute('''CREATE TABLE IF NOT EXISTS admission_access_plain (
-        admission_id INTEGER PRIMARY KEY,
-        plain_password TEXT NOT NULL,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        admission_id INTEGER NOT NULL UNIQUE,
+        access_username TEXT UNIQUE,
+        access_password_plain TEXT NOT NULL,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP
     )''')
     
@@ -1471,8 +1551,8 @@ def admin_create_user_page():
                 c.execute('''INSERT OR IGNORE INTO admission_access (admission_id, access_username, access_password)
                              VALUES (?, ?, ?)''', (adm_id, access_username, hashed_pw))
                 # Store plain password for admin viewing
-                c.execute('''INSERT OR REPLACE INTO admission_access_plain (admission_id, plain_password)
-                             VALUES (?, ?)''', (adm_id, access_password))
+                c.execute('''INSERT OR REPLACE INTO admission_access_plain (admission_id, access_username, access_password_plain)
+                             VALUES (?, ?, ?)''', (adm_id, access_username, access_password))
                 admission_access_map[adm_id] = (access_username, access_password)
             except Exception:
                 pass
@@ -1480,7 +1560,7 @@ def admin_create_user_page():
     # Update admission_access_map with plain passwords for admin display
     for adm_id in admission_access_map:
         try:
-            c.execute('SELECT plain_password FROM admission_access_plain WHERE admission_id = ?', (adm_id,))
+            c.execute('SELECT access_password_plain FROM admission_access_plain WHERE admission_id = ?', (adm_id,))
             plain_row = c.fetchone()
             if plain_row:
                 admission_access_map[adm_id] = (admission_access_map[adm_id][0], plain_row[0])
@@ -1490,8 +1570,8 @@ def admin_create_user_page():
                 hashed_pw = generate_password_hash(access_password)
                 c.execute('UPDATE admission_access SET access_password = ? WHERE admission_id = ?', 
                          (hashed_pw, adm_id))
-                c.execute('''INSERT OR REPLACE INTO admission_access_plain (admission_id, plain_password)
-                             VALUES (?, ?)''', (adm_id, access_password))
+                c.execute('''INSERT OR REPLACE INTO admission_access_plain (admission_id, access_username, access_password_plain)
+                             VALUES (?, ?, ?)''', (adm_id, f"ADM{adm_id:06d}", access_password))
                 admission_access_map[adm_id] = (admission_access_map[adm_id][0], access_password)
         except Exception:
             pass
@@ -1557,7 +1637,7 @@ def admin_ban_user(user_id):
     # Prevent banning again on the same day
     import sqlite3
     from datetime import datetime, timedelta, timezone
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('SELECT ban_effective_at FROM users WHERE id=?', (user_id,))
     row = c.fetchone()
@@ -1640,7 +1720,7 @@ def special_dashboard():
 def view_admissions():
     tab = request.args.get('tab', 'pending')
     
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Get pending admissions
@@ -1686,7 +1766,7 @@ def view_admissions():
 def approve_admission(admission_id):
     conn = None
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Get the admission data
@@ -1830,7 +1910,7 @@ def disapprove_admission(admission_id):
     try:
         disapproval_reason = request.form.get('disapproval_reason', 'No reason provided')
         
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Get the admission data
@@ -1883,7 +1963,7 @@ def disapprove_admission(admission_id):
 @app.route('/admin/admissions/reset/<int:admission_id>', methods=['POST'])
 @admin_required
 def reset_admission(admission_id):
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('UPDATE admissions SET status = ? WHERE id = ?', ('pending', admission_id))
     conn.commit()
@@ -1895,7 +1975,7 @@ def reset_admission(admission_id):
 @admin_required
 def restore_approved_admission(admission_id):
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Get the approved admission data
@@ -1948,7 +2028,7 @@ def restore_approved_admission(admission_id):
 @admin_required
 def restore_disapproved_admission(admission_id):
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Get the disapproved admission data
@@ -2001,7 +2081,7 @@ def restore_disapproved_admission(admission_id):
 @admin_required
 def delete_approved_admission(admission_id):
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('DELETE FROM approved_admissions WHERE id = ?', (admission_id,))
         conn.commit()
@@ -2025,7 +2105,7 @@ def delete_approved_admission(admission_id):
 @admin_required
 def delete_disapproved_admission(admission_id):
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('DELETE FROM disapproved_admissions WHERE id = ?', (admission_id,))
         conn.commit()
@@ -2057,7 +2137,7 @@ def submit_query():
     if user_ip and ',' in user_ip:
         user_ip = user_ip.split(',')[0].strip()
     
-    with sqlite3.connect('users.db') as conn:
+    with sqlite3.connect(DATABASE) as conn:
         c = conn.cursor()
         c.execute('INSERT INTO queries (name, email, message, submitted_at, user_ip) VALUES (?, ?, ?, ?, ?)',
                   (name, email, message, submitted_at, user_ip))
@@ -2072,7 +2152,7 @@ def get_recent_queries():
         user_ip = user_ip.split(',')[0].strip()
     
     try:
-        with sqlite3.connect('users.db') as conn:
+        with sqlite3.connect(DATABASE) as conn:
             c = conn.cursor()
             # Get recent queries for this IP address (last 10)
             c.execute('''
@@ -2116,7 +2196,7 @@ def check_admission_status():
         return jsonify({'hasAdmission': False})
     
     user_id = session.get('user_id')
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Check in pending admissions first
@@ -2216,7 +2296,7 @@ def admission():
 
     # Insert into DB
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         print('Inserting into DB...')
         # Normalize class name to match database format
@@ -2260,12 +2340,14 @@ def admission():
                          VALUES (?, ?, ?)''', (new_admission_id, access_username, hashed_pw))
             # Also store plain password for admin viewing
             c.execute('''CREATE TABLE IF NOT EXISTS admission_access_plain (
-                admission_id INTEGER PRIMARY KEY,
-                plain_password TEXT NOT NULL,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                admission_id INTEGER NOT NULL UNIQUE,
+                access_username TEXT UNIQUE,
+                access_password_plain TEXT NOT NULL,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP
             )''')
-            c.execute('''INSERT OR REPLACE INTO admission_access_plain (admission_id, plain_password)
-                         VALUES (?, ?)''', (new_admission_id, access_password))
+            c.execute('''INSERT OR REPLACE INTO admission_access_plain (admission_id, access_username, access_password_plain)
+                         VALUES (?, ?, ?)''', (new_admission_id, access_username, access_password))
             # Store plain password temporarily in session to display once (not persisted)
             session['last_admission_creds'] = {'username': access_username, 'password': access_password}
         except Exception as _e:
@@ -2274,8 +2356,23 @@ def admission():
         conn.commit()
         print('Admission saved successfully!')
         conn.close()
-        flash('Admission submitted successfully! Your portal credentials are shown below.', 'success')
-        return redirect(url_for('check_admission'))
+        # Build student summary and render success page
+        student = {
+            'student_name': request.form['student_name'],
+            'dob': request.form['dob'],
+            'student_phone': request.form['student_phone'],
+            'student_email': request.form['student_email'],
+            'class': normalized_class,
+            'school_name': request.form['school_name'],
+            'maths_marks': request.form['maths_marks'],
+            'maths_rating': request.form['maths_rating'],
+            'last_percentage': request.form['last_percentage'],
+            'parent_name': request.form['parent_name'],
+            'parent_phone': request.form['parent_phone'],
+            'submitted_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        }
+        creds = session.get('last_admission_creds') or {'username': access_username, 'password': access_password}
+        return render_template('admission_success.html', student=student, creds=creds)
     except Exception as e:
         print('Error inserting admission:', e)
         flash(f'Error saving admission: {e}', 'error')
@@ -2309,7 +2406,7 @@ def check_admission():
         flash('Please enter both username and password', 'error')
         return redirect(url_for('check_admission'))
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('SELECT admission_id, access_password FROM admission_access WHERE access_username=?',
                   (access_username,))
@@ -2479,7 +2576,7 @@ def status_management():
     all_classes = get_all_classes()
     
     # Get all live classes with status
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''
         SELECT id, class_code, pin, meeting_url, topic, description, created_at, status, scheduled_time
@@ -2531,7 +2628,7 @@ def delete_live_class_route(class_id):
     if session.get('role') not in ['admin', 'teacher']:
         return redirect(url_for('auth'))
     
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('DELETE FROM live_class_messages WHERE live_class_id = ?', (class_id,))
     c.execute('DELETE FROM live_classes WHERE id = ?', (class_id,))
@@ -2756,7 +2853,7 @@ def create_category():
             return redirect(url_for('upload_resource'))
 
         # Save category to database
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Create categories table if it doesn't exist
@@ -2792,7 +2889,7 @@ def create_category():
 
 # Get all categories
 def get_all_categories():
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Create categories table if it doesn't exist
@@ -2820,7 +2917,7 @@ def delete_category(category_id):
         return redirect(url_for('auth'))
 
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Get category name before deleting
@@ -2863,7 +2960,7 @@ def edit_category(category_id):
             flash('Category name is required.', 'error')
             return redirect(url_for('upload_resource'))
 
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Update category
@@ -3035,7 +3132,7 @@ def edit_resource():
             return redirect(url_for('upload_resource'))
 
         # Update resource in database
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Update the resource
@@ -3294,7 +3391,7 @@ def edit_profile():
         return redirect(url_for('auth'))
     
     user_id = session['user_id']
-    conn = sqlite3.connect('users.db')
+    conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
     # Get current user info
@@ -3345,7 +3442,7 @@ def edit_profile():
             flash('Username is required.', 'error')
             return render_template('profile.html', user=user, error='Username is required.')
         else:
-            conn = sqlite3.connect('users.db')
+            conn = sqlite3.connect(DATABASE)
             c = conn.cursor()
             
             try:
@@ -3423,7 +3520,7 @@ def api_get_queries():
         
         # Get total count
         count_query = query.replace("SELECT id, name, email, phone, message, subject, priority, status, category, source, submitted_at, response, responded_at, responded_by", "SELECT COUNT(*)")
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
         cursor.execute(count_query, params)
         total = cursor.fetchone()[0]
@@ -3485,7 +3582,7 @@ def api_respond_to_query(query_id):
         if not response:
             return jsonify({'success': False, 'error': 'Response is required'}), 400
         
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
         
         # Update query with response
@@ -3515,7 +3612,7 @@ def api_update_query_status(query_id):
         if not status:
             return jsonify({'success': False, 'error': 'Status is required'}), 400
         
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
         
         cursor.execute("UPDATE queries SET status = ? WHERE id = ?", (status, query_id))
@@ -3532,7 +3629,7 @@ def api_update_query_status(query_id):
 def api_delete_query(query_id):
     """API endpoint to delete a query"""
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
         
         cursor.execute("DELETE FROM queries WHERE id = ?", (query_id,))
@@ -3584,7 +3681,7 @@ def api_export_queries():
         query += " ORDER BY submitted_at DESC"
         
         # Execute query
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
         cursor.execute(query, params)
         queries = cursor.fetchall()
@@ -3622,7 +3719,7 @@ def api_export_queries():
 def get_query_statistics():
     """Get statistics for queries"""
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
         
         # Total queries
@@ -3787,7 +3884,7 @@ def pdf_content(filename):
 @app.route('/api/categories/<int:class_id>')
 def api_get_categories_for_class(class_id):
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         
         # Get active categories for the specific class or all
@@ -3823,7 +3920,7 @@ def track_ip_activity():
         ua = request.headers.get('User-Agent', '')[:300]
         now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         # Ensure tables exist (in case of reload)
         c.execute('''CREATE TABLE IF NOT EXISTS ip_logs (
@@ -3861,7 +3958,7 @@ def api_admin_metrics_traffic():
     if session.get('role') not in ['admin', 'teacher']:
         return jsonify({'success': False, 'error': 'Unauthorized'}), 401
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         # Total unique IPs (all time)
         c.execute('SELECT COUNT(DISTINCT ip) FROM ip_logs')
@@ -3896,7 +3993,7 @@ def api_admin_metrics_logs():
         limit = int(request.args.get('limit', 200))
         if limit < 1 or limit > 1000:
             limit = 200
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('''
             SELECT l.ip, l.user_id, IFNULL(u.username,''), l.path, l.user_agent, l.visited_at
@@ -3922,7 +4019,7 @@ def api_admin_metrics_active():
     if session.get('role') not in ['admin', 'teacher']:
         return jsonify({'success': False, 'error': 'Unauthorized'}), 401
     try:
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('''
             SELECT ua.user_id, IFNULL(u.username,''), ua.ip, ua.last_seen
@@ -3955,7 +4052,7 @@ def api_admin_metrics_last_seen():
         ids = []
         if user_ids_param:
             ids = [i for i in (p.strip() for p in user_ids_param.split(',')) if i.isdigit()]
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         if ids:
             placeholders = ','.join('?' for _ in ids)
@@ -4030,7 +4127,7 @@ def api_check_admission_credentials():
         access_password = (data.get('access_password') or '').strip()
         if not access_username or not access_password:
             return jsonify({'valid': False, 'error': 'Missing credentials'}), 400
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('SELECT access_password FROM admission_access WHERE access_username=?',
                   (access_username,))
@@ -4086,7 +4183,7 @@ def api_get_categories_by_class_name(class_name):
         if not class_id:
             return jsonify({'success': False, 'error': f'Unknown class name: {class_name}'}), 400
 
-        conn = sqlite3.connect('users.db')
+        conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('''SELECT id, name, description, category_type, paid_status 
                      FROM categories 
@@ -4105,6 +4202,48 @@ def api_get_categories_by_class_name(class_name):
         return jsonify({'success': True, 'categories': categories, 'class_id': class_id})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/check-admission-login')
+def check_admission_login():
+    return render_template('check_admission_login.html')
+
+@app.route('/check-admission-by-ip', methods=['POST'])
+def check_admission_by_ip():
+    try:
+        user_ip = (request.headers.get('X-Forwarded-For','').split(',')[0].strip()) or request.remote_addr or 'unknown'
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        c.execute('''SELECT id, student_name, class, school_name, submitted_at FROM admissions
+                     WHERE submit_ip = ? ORDER BY submitted_at DESC LIMIT 1''', (user_ip,))
+        row = c.fetchone()
+        status = None
+        details = {}
+        if row:
+            status = 'pending'
+            details = {'student_name': row[1], 'class': row[2], 'school_name': row[3], 'submitted_at': row[4]}
+        else:
+            # Check approved then disapproved by linking original ids via access table if exists
+            c.execute('''SELECT student_name, class, school_name, approved_at FROM approved_admissions
+                         ORDER BY approved_at DESC LIMIT 1''')
+            apr = c.fetchone()
+            if apr:
+                status = 'approved'
+                details = {'student_name': apr[0], 'class': apr[1], 'school_name': apr[2], 'submitted_at': apr[3]}
+            else:
+                c.execute('''SELECT student_name, class, school_name, disapproved_at FROM disapproved_admissions
+                             ORDER BY disapproved_at DESC LIMIT 1''')
+                dis = c.fetchone()
+                if dis:
+                    status = 'disapproved'
+                    details = {'student_name': dis[0], 'class': dis[1], 'school_name': dis[2], 'submitted_at': dis[3]}
+        conn.close()
+        if status:
+            session['last_admission_status'] = {'result': True, 'status': status, 'details': details}
+        else:
+            session['last_admission_status'] = {'result': False}
+    except Exception:
+        session['last_admission_status'] = {'result': False}
+    return redirect(url_for('check_admission'))
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
