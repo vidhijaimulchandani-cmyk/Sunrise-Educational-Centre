@@ -759,25 +759,16 @@ def online_class():
         return redirect(url_for('auth'))
 
     from auth_handler import get_upcoming_live_classes, get_active_live_classes, get_completed_live_classes, get_user_by_id
-
     upcoming_classes = get_upcoming_live_classes()
     active_classes = get_active_live_classes()
     completed_classes = get_completed_live_classes()
-
-    # Student: filter by paid status
-    if role not in ['admin', 'teacher']:
-        user = get_user_by_id(user_id)
-        user_paid_status = None
-        if user and len(user) > 3:
-            user_paid_status = user[3]  # paid status is 4th column in users table
-        # Filter each list by paid status if needed
-        if user_paid_status != 'paid':
-            active_classes = [c for c in active_classes if len(c) > 6 and (c[6] == 'unpaid')]
-            upcoming_classes = [c for c in upcoming_classes if len(c) > 6 and (c[6] == 'unpaid')]
-            completed_classes = [c for c in completed_classes if len(c) > 6 and (c[6] == 'unpaid')]
-
+    
     return render_template('online-class.html', role=role, username=username,
-        upcoming_classes=upcoming_classes, active_classes=active_classes, completed_classes=completed_classes)
+                           upcoming_classes=upcoming_classes,
+                           active_classes=active_classes,
+                           completed_classes=completed_classes,
+                           user_notifications=user_notifications,
+                           format_datetime_for_display=format_datetime_for_display)
 
 @app.route('/join-class/<int:class_id>')
 def join_class(class_id):

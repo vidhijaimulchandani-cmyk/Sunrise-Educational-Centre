@@ -78,7 +78,14 @@ def init_db():
             topic TEXT,
             description TEXT,
             is_active INTEGER NOT NULL DEFAULT 1,
-            created_at TEXT NOT NULL
+            created_at TEXT NOT NULL,
+            status TEXT DEFAULT 'scheduled',
+            scheduled_time TEXT,
+            activated_at TEXT,
+            completed_at TEXT,
+            recording_url TEXT,
+            duration_minutes INTEGER,
+            attendance_count INTEGER
         )
     ''')
     c.execute('''
@@ -196,6 +203,26 @@ def init_db():
             c.execute("ALTER TABLE forum_messages ADD COLUMN topic_id INTEGER REFERENCES forum_topics(id)")
             c.execute("ALTER TABLE forum_messages ADD COLUMN media_url TEXT")
             c.execute('PRAGMA user_version = 5')
+            conn.commit()
+        except sqlite3.OperationalError as e:
+            if "duplicate column" not in str(e):
+                raise e
+    
+    if db_version < 6:
+        # Migration V6: Add status/time/recording fields to live_classes
+        try:
+            cols = [r[1] for r in c.execute('PRAGMA table_info(live_classes)').fetchall()]
+            def addcol(name, type_sql):
+                if name not in cols:
+                    c.execute(f"ALTER TABLE live_classes ADD COLUMN {name} {type_sql}")
+            addcol('status', "TEXT DEFAULT 'scheduled'")
+            addcol('scheduled_time', 'TEXT')
+            addcol('activated_at', 'TEXT')
+            addcol('completed_at', 'TEXT')
+            addcol('recording_url', 'TEXT')
+            addcol('duration_minutes', 'INTEGER')
+            addcol('attendance_count', 'INTEGER')
+            c.execute('PRAGMA user_version = 6')
             conn.commit()
         except sqlite3.OperationalError as e:
             if "duplicate column" not in str(e):
@@ -1035,14 +1062,27 @@ def auto_update_class_statuses():
     conn.commit()
     conn.close()
 
-def end_live_class(class_id):
+def end_live_class(class_id, recording_url=None):
     """End a live class (mark as completed) - called when end button is clicked"""
+    # Mark completed
     complete_live_class(class_id)
     
-    # Also deactivate the class for backward compatibility
+    # Also deactivate the class for backward compatibility and set timestamps/recording
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
-    c.execute('UPDATE live_classes SET is_active = 0 WHERE id = ?', (class_id,))
+    from datetime import datetime
+    completed_time = format_ist_time(get_current_ist_time())
+    if recording_url:
+        c.execute('UPDATE live_classes SET is_active = 0, completed_at = ?, recording_url = ? WHERE id = ?', (completed_time, recording_url, class_id))
+    else:
+        c.execute('UPDATE live_classes SET is_active = 0, completed_at = ? WHERE id = ?', (completed_time, class_id))
+    conn.commit()
+    conn.close()
+
+def set_live_class_recording(class_id, recording_url):
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+    c.execute('UPDATE live_classes SET recording_url = ? WHERE id = ?', (recording_url, class_id))
     conn.commit()
     conn.close()
 
