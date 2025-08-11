@@ -84,11 +84,6 @@ function setupEventListeners() {
         mediaInput.addEventListener('change', handleMediaUpload);
     }
     
-    // Dark mode toggle
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    if (darkModeToggle) {
-        darkModeToggle.addEventListener('click', toggleDarkMode);
-    }
 }
 
 // Auto-select topic based on user role

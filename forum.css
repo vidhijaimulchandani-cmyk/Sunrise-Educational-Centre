@@ -1292,14 +1292,14 @@ body.dark-mode .chat-input-bar input[type="text"]::placeholder {
 }
 
 .message-content {
-  background: #2a2a3a; /* Dark blue-grey background */
-  color: #ffffff;
+  background: #ffffff;
+  color: #111b21;
   border-radius: 12px;
   padding: 1rem;
   max-width: 70%;
   position: relative;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid #3a3a4a;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e9edef;
 }
 
 .message-content:hover {
@@ -1308,8 +1308,8 @@ body.dark-mode .chat-input-bar input[type="text"]::placeholder {
 
 /* Simple Own Messages */
 .message-content.own-message {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #eaf2ff 0%, #dce9ff 100%);
+  color: #111b21;
   margin-left: auto;
   border-radius: 18px 18px 4px 18px;
   position: relative;
@@ -1322,7 +1322,7 @@ body.dark-mode .chat-input-bar input[type="text"]::placeholder {
   top: 12px;
   width: 0;
   height: 0;
-  border-left: 8px solid #667eea;
+  border-left: 8px solid #dce9ff;
   border-top: 8px solid transparent;
   border-bottom: 8px solid transparent;
 }
@@ -1355,7 +1355,7 @@ body.dark-mode .chat-input-bar input[type="text"]::placeholder {
   align-items: center;
   margin-bottom: 0.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #3a3a4a;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .own-message .message-header {
@@ -1510,6 +1510,25 @@ body.dark-mode .chat-input-bar input[type="text"]::placeholder {
 }
 
 /* Dark Mode Styles */
+body.dark-mode .message-content {
+  background: #2a2a3a;
+  color: #e2e8f0;
+  border-color: #3a3a4a;
+}
+
+body.dark-mode .message-content.own-message {
+  background: linear-gradient(135deg, #3f4e8a 0%, #5a4792 100%);
+  color: #e2e8f0;
+}
+
+body.dark-mode .message-content.own-message::before {
+  border-left-color: #3f4e8a;
+}
+
+body.dark-mode .message-header {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
 body.dark-mode .message-content.other-message {
   background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
   color: #e2e8f0;
@@ -1517,10 +1536,6 @@ body.dark-mode .message-content.other-message {
 
 body.dark-mode .message-content.other-message::before {
   border-right-color: #2d3748;
-}
-
-body.dark-mode .other-message .message-header {
-  border-bottom-color: rgba(255, 255, 255, 0.1);
 }
 
 body.dark-mode .other-message .message-actions button {
