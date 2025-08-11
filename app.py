@@ -819,7 +819,7 @@ def start_live_class():
     add_notification('A live class has started! Join now.', class_id, 'all', 'active', notification_type='live_class')
     
     flash('Live class started!', 'success')
-    return redirect(url_for('online_class'))
+    return redirect(url_for('join_class_host', class_id=class_id))
 
 @app.route('/end-live-class', methods=['POST'])
 def end_live_class():
@@ -1026,8 +1026,8 @@ def create_live_class_page():
                 notification_type='live_class'
             )
             
-            # Redirect directly to the host broadcast page
-            return redirect(url_for('join_class_host', class_id=new_class_id))
+            # Redirect to Live Class Management dashboard after creation
+            return redirect(url_for('live_class_management') + '?tab=dashboard')
         
         if not meeting_url:
             flash('No video source provided.', 'error')
@@ -1042,7 +1042,8 @@ def create_live_class_page():
             'topic': details[3], 'description': details[4],
             'code': details[0], 'pin': details[1], 'url': details[2]
         }
-        return render_template('create_class.html', class_details=class_details)
+        # After creating a class (upload/youtube), go to the Live Class Management dashboard
+        return redirect(url_for('live_class_management') + '?tab=dashboard')
     
     return render_template('create_class.html', class_details=None)
 
