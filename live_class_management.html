@@ -568,15 +568,8 @@
         .then(response => response.json())
         .then(data => {
           if (data.success) {
-            alert('Class started successfully!');
-            // Refresh both dashboard and completed classes
-            loadDashboard();
-            loadCompletedClasses();
-            // Auto-refresh every 30 seconds to keep status updated
-            setTimeout(() => {
-              loadDashboard();
-              loadCompletedClasses();
-            }, 30000);
+            // Redirect host into the room immediately after going live
+            window.location.href = `/join-class-host/${classId}`;
           } else {
             alert('Error starting class: ' + data.message);
           }
@@ -704,6 +697,12 @@
     
     // Auto-populate device options
     document.addEventListener('DOMContentLoaded', function() {
+      // Auto-select tab from URL param (?tab=dashboard|create|completed|devices)
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get('tab');
+      if (tab) {
+        showTab(tab);
+      }
       console.log('Live Class Management loaded');
     });
     

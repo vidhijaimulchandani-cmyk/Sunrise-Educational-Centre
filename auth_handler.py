@@ -936,8 +936,9 @@ def update_live_class_status(class_id, status):
     c = conn.cursor()
     
     if status == 'active':
-        # Set activated_at when transitioning to active
-        current_time = get_ist_timestamp()
+        # Set activated_at when transitioning to active (store as formatted IST time for consistent comparisons)
+        from time_config import format_ist_time, get_current_ist_time
+        current_time = format_ist_time(get_current_ist_time())
         c.execute('UPDATE live_classes SET status = ?, activated_at = ? WHERE id = ?', (status, current_time, class_id))
     else:
         c.execute('UPDATE live_classes SET status = ? WHERE id = ?', (status, class_id))
@@ -995,8 +996,9 @@ def start_live_class(class_id):
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     
-    # Update status to active and set activation time
-    current_time = get_ist_timestamp()
+    # Update status to active and set activation time (store as formatted IST time)
+    from time_config import format_ist_time, get_current_ist_time
+    current_time = format_ist_time(get_current_ist_time())
     c.execute('''
         UPDATE live_classes 
         SET status = 'active', activated_at = ? 
