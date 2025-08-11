@@ -488,6 +488,10 @@
     let availableDevices = { videoInputs: [], audioInputs: [] };
     let selectedVideoDevice = null;
     let selectedAudioDevice = null;
+    
+    // WebRTC Variables
+    let peerConnections = new Map(); // Store peer connections for each student
+    let isWebRTCReady = false;
 
     // Camera Control Elements
     const hostCamera = document.getElementById('hostCamera');
@@ -523,6 +527,11 @@
           class_id: classId, 
           status: 'live',
           message: 'Host camera is now live!'
+        });
+        
+        // Notify students that host stream is ready for WebRTC
+        socket.emit('host_stream_ready', { 
+          class_id: classId 
         });
         
         console.log('Camera started successfully');
@@ -613,6 +622,13 @@
           mode: 'camera',
           message: 'Host is showing live camera'
         });
+        
+        // Notify students that host stream is ready for WebRTC
+        if (isStreaming) {
+          socket.emit('host_stream_ready', { 
+            class_id: classId 
+          });
+        }
       } else {
         alert('Please start the camera first');
       }
@@ -747,7 +763,123 @@
       hostCamera.srcObject = localStream;
       isStreaming = true;
       
+      // Initialize WebRTC for streaming to students
+      await initializeWebRTC();
+      
       return localStream;
+    }
+    
+    // WebRTC Functions
+    async function initializeWebRTC() {
+      try {
+        // Create RTCPeerConnection with STUN servers
+        const configuration = {
+          iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' }
+          ]
+        };
+        
+        // Notify students that host stream is ready
+        socket.emit('host_stream_ready', { class_id: classId });
+        isWebRTCReady = true;
+        
+        console.log('WebRTC initialized for host streaming');
+      } catch (error) {
+        console.error('Error initializing WebRTC:', error);
+      }
+    }
+    
+    async function createPeerConnection(studentId) {
+      try {
+        const configuration = {
+          iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' }
+          ]
+        };
+        
+        const peerConnection = new RTCPeerConnection(configuration);
+        
+        // Add local stream tracks to peer connection
+        if (localStream) {
+          localStream.getTracks().forEach(track => {
+            peerConnection.addTrack(track, localStream);
+          });
+        }
+        
+        // Handle ICE candidates
+        peerConnection.onicecandidate = (event) => {
+          if (event.candidate) {
+            socket.emit('webrtc_ice_candidate', {
+              class_id: classId,
+              candidate: event.candidate,
+              from_user: 'host',
+              to_user: studentId
+            });
+          }
+        };
+        
+        // Handle connection state changes
+        peerConnection.onconnectionstatechange = () => {
+          console.log(`Connection state with ${studentId}:`, peerConnection.connectionState);
+        };
+        
+        peerConnections.set(studentId, peerConnection);
+        return peerConnection;
+      } catch (error) {
+        console.error('Error creating peer connection:', error);
+        return null;
+      }
+    }
+    
+    async function handleStudentOffer(studentId, offer) {
+      try {
+        let peerConnection = peerConnections.get(studentId);
+        
+        if (!peerConnection) {
+          peerConnection = await createPeerConnection(studentId);
+        }
+        
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+        const answer = await peerConnection.createAnswer();
+        await peerConnection.setLocalDescription(answer);
+        
+        socket.emit('webrtc_answer', {
+          class_id: classId,
+          answer: answer,
+          from_user: 'host',
+          to_user: studentId
+        });
+        
+        console.log(`Sent answer to student ${studentId}`);
+      } catch (error) {
+        console.error('Error handling student offer:', error);
+      }
+    }
+    
+    async function handleStudentAnswer(studentId, answer) {
+      try {
+        const peerConnection = peerConnections.get(studentId);
+        if (peerConnection) {
+          await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+          console.log(`Set remote description for student ${studentId}`);
+        }
+      } catch (error) {
+        console.error('Error handling student answer:', error);
+      }
+    }
+    
+    async function handleStudentICECandidate(studentId, candidate) {
+      try {
+        const peerConnection = peerConnections.get(studentId);
+        if (peerConnection) {
+          await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+          console.log(`Added ICE candidate for student ${studentId}`);
+        }
+      } catch (error) {
+        console.error('Error handling student ICE candidate:', error);
+      }
     }
 
     // Initialize video mode and enumerate devices
@@ -1207,6 +1339,25 @@
       console.error('Chat error:', data);
       if (data.message) {
         alert('Chat error: ' + data.message);
+      }
+    });
+    
+    // WebRTC Event Listeners
+    socket.on('webrtc_offer', (data) => {
+      if (data.from_user !== 'host') {
+        handleStudentOffer(data.from_user, data.offer);
+      }
+    });
+    
+    socket.on('webrtc_answer', (data) => {
+      if (data.from_user !== 'host') {
+        handleStudentAnswer(data.from_user, data.answer);
+      }
+    });
+    
+    socket.on('webrtc_ice_candidate', (data) => {
+      if (data.from_user !== 'host') {
+        handleStudentICECandidate(data.from_user, data.candidate);
       }
     });
 

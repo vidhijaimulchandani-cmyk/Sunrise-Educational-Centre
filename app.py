@@ -3472,6 +3472,73 @@ def handle_host_mic_status(data):
     except Exception as e:
         print(f"Error broadcasting mic status: {e}")
 
+# --- WebRTC Signaling Events ---
+@socketio.on('webrtc_offer')
+def handle_webrtc_offer(data):
+    try:
+        class_id = data.get('class_id')
+        offer = data.get('offer')
+        from_user = data.get('from_user')
+        
+        if class_id and offer:
+            # Broadcast the offer to all other users in the room
+            socketio.emit('webrtc_offer', {
+                'offer': offer,
+                'from_user': from_user
+            }, room=f'liveclass_{class_id}', skip_sid=request.sid)
+            print(f"WebRTC offer from {from_user} in class {class_id}")
+    except Exception as e:
+        print(f"Error handling WebRTC offer: {e}")
+
+@socketio.on('webrtc_answer')
+def handle_webrtc_answer(data):
+    try:
+        class_id = data.get('class_id')
+        answer = data.get('answer')
+        from_user = data.get('from_user')
+        
+        if class_id and answer:
+            # Broadcast the answer to all other users in the room
+            socketio.emit('webrtc_answer', {
+                'answer': answer,
+                'from_user': from_user
+            }, room=f'liveclass_{class_id}', skip_sid=request.sid)
+            print(f"WebRTC answer from {from_user} in class {class_id}")
+    except Exception as e:
+        print(f"Error handling WebRTC answer: {e}")
+
+@socketio.on('webrtc_ice_candidate')
+def handle_webrtc_ice_candidate(data):
+    try:
+        class_id = data.get('class_id')
+        candidate = data.get('candidate')
+        from_user = data.get('from_user')
+        
+        if class_id and candidate:
+            # Broadcast the ICE candidate to all other users in the room
+            socketio.emit('webrtc_ice_candidate', {
+                'candidate': candidate,
+                'from_user': from_user
+            }, room=f'liveclass_{class_id}', skip_sid=request.sid)
+            print(f"WebRTC ICE candidate from {from_user} in class {class_id}")
+    except Exception as e:
+        print(f"Error handling WebRTC ICE candidate: {e}")
+
+@socketio.on('host_stream_ready')
+def handle_host_stream_ready(data):
+    try:
+        class_id = data.get('class_id')
+        
+        if class_id:
+            # Notify all students that host stream is ready
+            socketio.emit('host_stream_ready', {
+                'class_id': class_id,
+                'message': 'Host camera stream is now available'
+            }, room=f'liveclass_{class_id}', skip_sid=request.sid)
+            print(f"Host stream ready notification sent for class {class_id}")
+    except Exception as e:
+        print(f"Error handling host stream ready: {e}")
+
 # Enhanced error handling for Socket.IO
 @socketio.on_error()
 def error_handler(e):
