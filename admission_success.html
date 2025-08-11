@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admission Submitted Successfully</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .card {max-width:780px;margin:2rem auto;padding:1.5rem;border-radius:16px;border:1px solid #e5e7eb;box-shadow:0 4px 24px rgba(0,0,0,0.06);} 
+    h2 {text-align:center;color:#16a34a;margin-bottom:0.6rem;}
+    .subtitle {text-align:center;color:#64748b;margin-bottom:1.2rem;}
+    .grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0.8rem;}
+    .row {background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:0.8rem;}
+    .label {color:#64748b;font-size:0.9rem;}
+    .value {color:#111827;font-weight:600;word-break:break-word;}
+    .creds {margin-top:1.2rem;padding:1rem;border:2px dashed #6a82fb;border-radius:12px;background:#f5f7ff;}
+    .creds h3 {margin:0 0 0.6rem 0;color:#6a82fb;}
+    .note {color:#334155;margin-top:0.5rem;}
+    .btn {display:inline-block;background:#6a82fb;color:#fff;border:none;border-radius:10px;padding:0.6rem 1rem;cursor:pointer;}
+    .actions {text-align:center;margin-top:1.2rem;}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Admission Submitted Successfully</h2>
+    <div class="subtitle">Please review your details below and save your admission portal credentials.</div>
+
+    <div class="grid">
+      <div class="row"><div class="label">Student Name</div><div class="value">{{ student.student_name }}</div></div>
+      <div class="row"><div class="label">Date of Birth</div><div class="value">{{ student.dob }}</div></div>
+      <div class="row"><div class="label">Phone</div><div class="value">{{ student.student_phone }}</div></div>
+      <div class="row"><div class="label">Email</div><div class="value">{{ student.student_email }}</div></div>
+      <div class="row"><div class="label">Class</div><div class="value">{{ student.class }}</div></div>
+      <div class="row"><div class="label">School</div><div class="value">{{ student.school_name }}</div></div>
+      <div class="row"><div class="label">Maths Marks</div><div class="value">{{ student.maths_marks }}</div></div>
+      <div class="row"><div class="label">Maths Rating</div><div class="value">{{ student.maths_rating }}</div></div>
+      <div class="row"><div class="label">Last Percentage</div><div class="value">{{ student.last_percentage }}</div></div>
+      <div class="row"><div class="label">Parent Name</div><div class="value">{{ student.parent_name }}</div></div>
+      <div class="row"><div class="label">Parent Phone</div><div class="value">{{ student.parent_phone }}</div></div>
+      <div class="row"><div class="label">Submitted At</div><div class="value">{{ student.submitted_at }}</div></div>
+    </div>
+
+    <div class="creds">
+      <h3>Admission Portal Credentials (Save These)</h3>
+      <div><strong>Admission ID (Username):</strong> {{ creds.username }}</div>
+      <div><strong>Admission Password:</strong> {{ creds.password }}</div>
+      <div class="note">These credentials are used to check your admission status at any time on the Check Admission page.</div>
+    </div>
+
+    <div class="actions">
+      <a class="btn" href="/check-admission">Go to Check Admission</a>
+      <a class="btn" style="margin-left:0.6rem; background:#10b981" href="/">Back to Home</a>
+    </div>
+  </div>
+</body>
+</html>

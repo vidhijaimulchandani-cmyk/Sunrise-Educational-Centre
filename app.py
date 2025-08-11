@@ -2356,8 +2356,23 @@ def admission():
         conn.commit()
         print('Admission saved successfully!')
         conn.close()
-        flash('Admission submitted successfully! Your portal credentials are shown below.', 'success')
-        return redirect(url_for('check_admission'))
+        # Build student summary and render success page
+        student = {
+            'student_name': request.form['student_name'],
+            'dob': request.form['dob'],
+            'student_phone': request.form['student_phone'],
+            'student_email': request.form['student_email'],
+            'class': normalized_class,
+            'school_name': request.form['school_name'],
+            'maths_marks': request.form['maths_marks'],
+            'maths_rating': request.form['maths_rating'],
+            'last_percentage': request.form['last_percentage'],
+            'parent_name': request.form['parent_name'],
+            'parent_phone': request.form['parent_phone'],
+            'submitted_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        }
+        creds = session.get('last_admission_creds') or {'username': access_username, 'password': access_password}
+        return render_template('admission_success.html', student=student, creds=creds)
     except Exception as e:
         print('Error inserting admission:', e)
         flash(f'Error saving admission: {e}', 'error')
@@ -4187,6 +4202,48 @@ def api_get_categories_by_class_name(class_name):
         return jsonify({'success': True, 'categories': categories, 'class_id': class_id})
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/check-admission-login')
+def check_admission_login():
+    return render_template('check_admission_login.html')
+
+@app.route('/check-admission-by-ip', methods=['POST'])
+def check_admission_by_ip():
+    try:
+        user_ip = (request.headers.get('X-Forwarded-For','').split(',')[0].strip()) or request.remote_addr or 'unknown'
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        c.execute('''SELECT id, student_name, class, school_name, submitted_at FROM admissions
+                     WHERE submit_ip = ? ORDER BY submitted_at DESC LIMIT 1''', (user_ip,))
+        row = c.fetchone()
+        status = None
+        details = {}
+        if row:
+            status = 'pending'
+            details = {'student_name': row[1], 'class': row[2], 'school_name': row[3], 'submitted_at': row[4]}
+        else:
+            # Check approved then disapproved by linking original ids via access table if exists
+            c.execute('''SELECT student_name, class, school_name, approved_at FROM approved_admissions
+                         ORDER BY approved_at DESC LIMIT 1''')
+            apr = c.fetchone()
+            if apr:
+                status = 'approved'
+                details = {'student_name': apr[0], 'class': apr[1], 'school_name': apr[2], 'submitted_at': apr[3]}
+            else:
+                c.execute('''SELECT student_name, class, school_name, disapproved_at FROM disapproved_admissions
+                             ORDER BY disapproved_at DESC LIMIT 1''')
+                dis = c.fetchone()
+                if dis:
+                    status = 'disapproved'
+                    details = {'student_name': dis[0], 'class': dis[1], 'school_name': dis[2], 'submitted_at': dis[3]}
+        conn.close()
+        if status:
+            session['last_admission_status'] = {'result': True, 'status': status, 'details': details}
+        else:
+            session['last_admission_status'] = {'result': False}
+    except Exception:
+        session['last_admission_status'] = {'result': False}
+    return redirect(url_for('check_admission'))
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
