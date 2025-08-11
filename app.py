@@ -59,7 +59,7 @@ from time_config import (
 from bulk_upload.routes import bulk_upload_bp
 
 # Initialize Flask app
-app = Flask(__name__, static_folder='.', template_folder='.', static_url_path='')
+app = Flask(__name__, static_folder='.', template_folder='.')
 
 # Configuration
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -500,11 +500,7 @@ def handle_signal(data):
     try:
         room = data.get('room')
         signal = data.get('signal')
-        target = data.get('target')
-        if target and signal:
-            # Send directly to a specific socket id (each sid is a room)
-            emit('signal', {'signal': signal, 'from': request.sid}, room=target)
-        elif room and signal:
+        if room and signal:
             emit('signal', {'signal': signal, 'from': request.sid}, room=room, include_self=False)
         else:
             emit('error', {'message': 'Invalid signal data'})
@@ -1123,7 +1119,7 @@ def uploaded_file(filename):
 @app.route('/<path:filename>')
 def static_files(filename):
     # Serve any file in the root or subfolders
-    return send_from_directory('.', filename, conditional=True)
+    return send_from_directory('.', filename)
 
 # Delete resource route
 @app.route('/delete-resource/<filename>', methods=['POST'])
@@ -2299,18 +2295,14 @@ def admission():
             '9': 'class 9',
             '10': 'class 10',
             '11': 'class 11 applied',
-            '11 applied': 'class 11 applied',
-            '11 core': 'class 11 core',
-            '12': 'class 12 applied',
-            '12 applied': 'class 12 applied',
-            '12 core': 'class 12 core'
+            '12': 'class 12 applied'
         }
         normalized_class = class_mappings.get(class_name.lower(), class_name)
         
         c.execute('''INSERT INTO admissions (
             student_name, dob, student_phone, student_email, class, school_name,
             maths_marks, maths_rating, last_percentage, parent_name, parent_phone, passport_photo, status, submitted_at, user_id, submit_ip
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
             request.form['student_name'],
             request.form['dob'],
             request.form['student_phone'],
@@ -2369,10 +2361,7 @@ def admission():
             'parent_phone': request.form['parent_phone'],
             'submitted_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
-        # Ensure credentials are present for the success page even if session was not set above
-        if not session.get('last_admission_creds'):
-            session['last_admission_creds'] = {'username': access_username, 'password': access_password}
-        creds = session.get('last_admission_creds')
+        creds = session.get('last_admission_creds') or {'username': access_username, 'password': access_password}
         return render_template('admission_success.html', student=student, creds=creds)
     except Exception as e:
         print('Error inserting admission:', e)
