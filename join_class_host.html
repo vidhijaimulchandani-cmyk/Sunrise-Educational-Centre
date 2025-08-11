@@ -353,6 +353,21 @@
         </div>
       </div>
       
+      <!-- Controls Tab -->
+      <div id="controls-tab" class="tab-content">
+        <div class="host-controls">
+          <h3 style="margin-bottom: 1rem; color: #6a82fb;">Host Controls</h3>
+          <div style="margin-bottom: 1rem;">
+            <div style="font-weight: 600; color: #232946; margin-bottom: 0.5rem;">Student Count:</div>
+            <div id="studentCount" style="font-size: 1.2rem; color: #6a82fb; font-weight: 700;">0 Students Online</div>
+          </div>
+          <button class="control-btn mute-all-btn" onclick="muteAllStudents()">🔇 Mute All Students</button>
+          <button class="control-btn end-class-btn" onclick="endCurrentClass()">⏹️ End Live Class</button>
+          <div style="margin-top: 1rem; padding: 1rem; background: #fff3cd; border-radius: 8px; border: 1px solid #ffeaa7;">
+            <span style="color: #856404; font-size: 0.9rem;">💡 Tip: Use the camera controls above to manage your live stream</span>
+          </div>
+        </div>
+      </div>
 
     </div>
   </div>
@@ -1076,9 +1091,23 @@
 
     // Load messages on page load
     document.addEventListener('DOMContentLoaded', function() {
-      // Auto-refresh messages every 2 seconds for host
-      setInterval(loadMessages, 2000);
+      // Chat is now handled by socket.io events
+      console.log('Host page loaded, chat functionality ready');
     });
+
+    // Mute all students function
+    function muteAllStudents() {
+      if (confirm('Are you sure you want to mute all students?')) {
+        // This would be implemented with WebRTC to actually mute students
+        // For now, we'll just show a notification
+        socket.emit('host_mic_status', { 
+          class_id: classId, 
+          muted: true,
+          message: 'Host has muted all students'
+        });
+        alert('Mute all students feature would be implemented with WebRTC');
+      }
+    }
 
     // End current class function
     function endCurrentClass() {
@@ -1114,59 +1143,72 @@
       }
     }
 
-    // Load existing messages
-    function loadMessages() {
-      fetch(`/api/live-class/${classId}/messages`)
-        .then(response => response.json())
-        .then(messages => {
-          const chat = document.getElementById('chatMessages');
-          chat.innerHTML = '';
-          messages.forEach(msg => {
-            const div = document.createElement('div');
-            div.className = 'chat-message';
-            div.innerHTML = `<strong style="color: #6a82fb;">${msg.username}:</strong> <span style="color: #232946;">${msg.message}</span>`;
-            chat.appendChild(div);
-          });
-          chat.scrollTop = chat.scrollHeight;
-        })
-        .catch(error => console.error('Error loading messages:', error));
-    }
-    
-    // Listen for real-time chat messages
-    socket.on('new_chat_message', (data) => {
-      if (data.class_id === classId) {
-        const chat = document.getElementById('chatMessages');
-        const div = document.createElement('div');
-        div.className = 'chat-message';
-        div.innerHTML = `<strong style="color: #6a82fb;">${data.username}:</strong> <span style="color: #232946;">${data.message}</span>`;
-        chat.appendChild(div);
-        chat.scrollTop = chat.scrollHeight;
+    // --- Chat Functionality ---
+    function sendChatMessage() {
+      const chatInput = document.getElementById('chatInput');
+      const message = chatInput.value.trim();
+      
+      if (message && isConnected) {
+        socket.emit('chat_message', {
+          class_id: classId,
+          user_id: 'host',
+          username: 'Host',
+          message: message,
+          type: 'chat'
+        });
+        chatInput.value = '';
       }
+    }
+
+    function renderChatMessage(messageData) {
+      const chatMessages = document.getElementById('chatMessages');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'chat-message';
+      
+      const timestamp = new Date(messageData.created_at).toLocaleTimeString();
+      const isHost = messageData.username === 'Host';
+      const usernameColor = isHost ? '#fc5c7d' : '#6a82fb';
+      
+      messageDiv.innerHTML = `
+        <div style="font-weight: 600; color: ${usernameColor}; font-size: 0.9rem;">
+          ${messageData.username} <span style="color: #888; font-weight: 400; font-size: 0.8rem;">${timestamp}</span>
+        </div>
+        <div style="margin-top: 0.2rem;">${messageData.message}</div>
+      `;
+      
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Chat event listeners
+    socket.on('new_chat_message', (messageData) => {
+      renderChatMessage(messageData);
     });
 
-    // Send message
-    document.getElementById('chatForm').onsubmit = function(e) {
+    socket.on('chat_messages_history', (data) => {
+      const chatMessages = document.getElementById('chatMessages');
+      chatMessages.innerHTML = '';
+      data.messages.forEach(message => {
+        renderChatMessage(message);
+      });
+    });
+
+    // Chat form submission
+    document.getElementById('chatForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      const input = document.getElementById('chatInput');
-      const msg = input.value.trim();
-      if (!msg) return;
-      
-      fetch(`/api/live-class/${classId}/messages`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: msg })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          input.value = '';
-          loadMessages(); // Reload messages to show the new one
-        }
-      })
-      .catch(error => console.error('Error sending message:', error));
-    };
+      sendChatMessage();
+    });
+
+    // Load chat history when joining
+    socket.emit('get_chat_messages', { class_id: classId, limit: 50 });
+
+    // Add error handling for chat
+    socket.on('error', (data) => {
+      console.error('Chat error:', data);
+      if (data.message) {
+        alert('Chat error: ' + data.message);
+      }
+    });
 
     // Clean up when page is unloaded
     window.addEventListener('beforeunload', () => {

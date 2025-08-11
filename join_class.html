@@ -560,6 +560,70 @@ socket.on('init_polls_and_doubts', data => {
   renderDoubts(data.doubts);
 });
 
+// --- Chat Functionality ---
+function sendChatMessage() {
+  const chatInput = document.getElementById('chatInput');
+  const message = chatInput.value.trim();
+  
+  if (message && isConnected) {
+    socket.emit('chat_message', {
+      class_id: classId,
+      user_id: getUserId(),
+      username: getUsername(),
+      message: message,
+      type: 'chat'
+    });
+    chatInput.value = '';
+  }
+}
+
+function renderChatMessage(messageData) {
+  const chatMessages = document.getElementById('chatMessages');
+  const messageDiv = document.createElement('div');
+  messageDiv.className = 'chat-message';
+  
+  const timestamp = new Date(messageData.created_at).toLocaleTimeString();
+  messageDiv.innerHTML = `
+    <div style="font-weight: 600; color: #6a82fb; font-size: 0.9rem;">
+      ${messageData.username} <span style="color: #888; font-weight: 400; font-size: 0.8rem;">${timestamp}</span>
+    </div>
+    <div style="margin-top: 0.2rem;">${messageData.message}</div>
+  `;
+  
+  chatMessages.appendChild(messageDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Chat event listeners
+socket.on('new_chat_message', (messageData) => {
+  renderChatMessage(messageData);
+});
+
+socket.on('chat_messages_history', (data) => {
+  const chatMessages = document.getElementById('chatMessages');
+  chatMessages.innerHTML = '';
+  data.messages.forEach(message => {
+    renderChatMessage(message);
+  });
+});
+
+// Chat form submission
+document.getElementById('chatForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  sendChatMessage();
+});
+
+// Add error handling for chat
+socket.on('error', (data) => {
+  console.error('Chat error:', data);
+  if (data.message) {
+    alert('Chat error: ' + data.message);
+  }
+});
+
+// Load chat history when joining
+socket.emit('get_chat_messages', { class_id: classId, limit: 50 });
+
 // --- Helpers ---
 function getUserId() {
   // Use a cookie, session, or fallback to random for demo
