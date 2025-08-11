@@ -356,8 +356,6 @@ socket.on('host_camera_status', (data) => {
         ${data.message}
       `;
       liveStatusText.style.color = '#48bb78';
-      // ensure student peer ready to receive
-      ensureStudentPeer();
     } else {
       liveStatusText.innerHTML = `
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -366,8 +364,6 @@ socket.on('host_camera_status', (data) => {
         ${data.message}
       `;
       liveStatusText.style.color = '#666';
-      hostCameraFeed.style.display = 'none';
-      contentVideo.style.display = 'block';
     }
   }
 });
@@ -407,62 +403,6 @@ socket.on('host_mic_status', (data) => {
     const micStatus = data.muted ? '🔇 Host microphone muted' : '🎤 Host microphone active';
     // You could show this in a toast notification or update the status
     console.log(micStatus);
-  }
-});
-
-// --- Minimal WebRTC student peer to receive host camera ---
-let studentPeer = null;
-let pendingCandidates = [];
-
-async function ensureStudentPeer() {
-  if (studentPeer) return studentPeer;
-  studentPeer = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
-  studentPeer.ontrack = (event) => {
-    // Attach remote stream to hostCameraFeed
-    if (event.streams && event.streams[0]) {
-      hostCameraFeed.srcObject = event.streams[0];
-      hostCameraFeed.style.display = 'block';
-      contentVideo.style.display = 'none';
-    }
-  };
-  studentPeer.onicecandidate = (e) => {
-    if (e.candidate) {
-      socket.emit('signal', { room, signal: { type: 'ice-candidate', candidate: e.candidate } });
-    }
-  };
-  return studentPeer;
-}
-
-socket.on('signal', async ({ signal, from }) => {
-  try {
-    const pc = await ensureStudentPeer();
-    if (signal.type === 'offer') {
-      await pc.setRemoteDescription(new RTCSessionDescription(signal.sdp));
-      const answer = await pc.createAnswer();
-      await pc.setLocalDescription(answer);
-      socket.emit('signal', { target: from, signal: { type: 'answer', sdp: pc.localDescription } });
-    } else if (signal.type === 'ice-candidate' && signal.candidate) {
-      if (pc.remoteDescription) {
-        await pc.addIceCandidate(new RTCIceCandidate(signal.candidate));
-      } else {
-        pendingCandidates.push(signal.candidate);
-      }
-    }
-    if (pc.remoteDescription && pendingCandidates.length) {
-      for (const c of pendingCandidates) {
-        try { await pc.addIceCandidate(new RTCIceCandidate(c)); } catch (_) {}
-      }
-      pendingCandidates = [];
-    }
-  } catch (err) {
-    console.error('Student signal handling error:', err);
-  }
-});
-
-// When host announces camera is live, prepare to receive
-socket.on('host_camera_status', async (data) => {
-  if (data.class_id === classId && data.status === 'live') {
-    await ensureStudentPeer();
   }
 });
 
