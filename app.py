@@ -2274,7 +2274,7 @@ def admission():
     user_id = session.get('user_id')  # This will be None for non-logged in users
     
     if request.method == 'GET':
-        return render_template('admission.html')
+        return render_template('admission.html', prev={}, error=None)
     
     # Handle POST request (admission form submission)
     print('--- Admission form submitted ---')
@@ -2284,25 +2284,23 @@ def admission():
         'school_name', 'maths_marks', 'maths_rating', 'last_percentage',
         'parent_name', 'parent_phone'
     ]
+    prev = {k: request.form.get(k, '') for k in required_fields}
     for field in required_fields:
         value = request.form.get(field)
         print(f'Field {field}:', value)
         if not value:
             print(f'Missing required field: {field}')
-            flash(f"Missing required field: {field}", 'error')
-            return redirect(url_for('home'))
+            return render_template('admission.html', prev=prev, error=f"Missing required field: {field}")
 
     # Handle file upload
     photo = request.files.get('passport_photo')
     print('Photo:', photo)
     if not photo or photo.filename == '':
         print('Passport photo is required.')
-        flash('Passport photo is required.', 'error')
-        return redirect(url_for('home'))
+        return render_template('admission.html', prev=prev, error='Passport photo is required.')
     if not ('.' in photo.filename and photo.filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg'}):
         print('Invalid photo format:', photo.filename)
-        flash('Invalid photo format. Only PNG, JPG, JPEG allowed.', 'error')
-        return redirect(url_for('home'))
+        return render_template('admission.html', prev=prev, error='Invalid photo format. Only PNG, JPG, JPEG allowed.')
     filename = secure_filename(photo.filename)
     unique_name = secrets.token_hex(8) + '_' + filename
     photo_path = os.path.join('uploads', 'admission_photos', unique_name)
@@ -2387,10 +2385,12 @@ def admission():
             'submitted_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
         creds = session.get('last_admission_creds') or {'username': access_username, 'password': access_password}
+        # Mark creds as pending clear and render success
+        session['admission_creds_displayed'] = True
         return render_template('admission_success.html', student=student, creds=creds)
     except Exception as e:
         print('Error inserting admission:', e)
-        flash(f'Error saving admission: {e}', 'error')
+        return render_template('admission.html', prev=prev, error=f'Error saving admission: {e}')
     return redirect(url_for('home'))
 
 # Public admission check page (no login)
