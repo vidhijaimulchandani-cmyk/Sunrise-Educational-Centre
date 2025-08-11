@@ -772,6 +772,10 @@
           </form>
           <div id="query-list-section" style="margin-top:2.5rem;">
             <h3 style="text-align:center; color:#6a82fb; margin-bottom:1.2rem;">Recent Queries</h3>
+            <div class="queries-dropdown" style="max-width: 500px; margin: 0 auto 0.8rem auto;">
+              <select id="recentQueriesSelect" class="query-input"></select>
+            </div>
+            <div id="recentQueryDetail" class="query-detail" style="max-width: 500px; margin: 0 auto 1rem auto; display:block;"></div>
             <div id="query-list">
               <!-- Queries will be rendered here by Flask -->
             </div>
@@ -1060,7 +1064,50 @@
           });
       }
 
-      function displayRecentQueries(queries) {
+             function displayRecentQueries(queries) {
+         // Populate dropdown
+         const select = document.getElementById('recentQueriesSelect');
+         const detail = document.getElementById('recentQueryDetail');
+         if (select) {
+           select.innerHTML = '';
+           const placeholder = document.createElement('option');
+           placeholder.value = '';
+           placeholder.textContent = 'Select a query to view details...';
+           placeholder.disabled = true;
+           placeholder.selected = true;
+           select.appendChild(placeholder);
+
+           queries.forEach(q => {
+             const label = (q.message || '').slice(0, 60).trim() + ((q.message || '').length > 60 ? '…' : '');
+             const opt = document.createElement('option');
+             opt.value = String(q.id);
+             opt.textContent = label;
+             select.appendChild(opt);
+           });
+
+           select.onchange = () => {
+             const id = select.value;
+             const q = queries.find(x => String(x.id) === id);
+             if (!q) { detail.innerHTML = ''; return; }
+             const submittedDate = new Date(q.submitted_at).toLocaleString();
+             const statusBadge = q.status || 'pending';
+             const responded = q.responded_at ? new Date(q.responded_at).toLocaleString() : '';
+             detail.innerHTML = `
+               <div class="query-item">
+                 <div class="query-header">
+                   <div class="query-meta">
+                     <span class="query-date">Submitted: ${submittedDate}</span>
+                     <span class="query-status ${statusBadge === 'responded' ? 'status-responded' : (statusBadge === 'pending' ? 'status-pending' : 'status-in-progress')}">${statusBadge}</span>
+                   </div>
+                 </div>
+                 <div class="query-content">
+                   <p class="query-message">${q.message || ''}</p>
+                   ${q.response ? `<div class="query-response"><strong>Response:</strong><p>${q.response}</p>${responded ? `<small class="response-date">Responded on ${responded}</small>` : ''}</div>` : ''}
+                 </div>
+               </div>`;
+           };
+         }
+
         const queryList = document.getElementById('query-list');
         const querySection = document.getElementById('query-list-section');
         
