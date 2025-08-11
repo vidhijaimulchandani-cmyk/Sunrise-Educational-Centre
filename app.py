@@ -766,9 +766,7 @@ def online_class():
     return render_template('online-class.html', role=role, username=username,
                            upcoming_classes=upcoming_classes,
                            active_classes=active_classes,
-                           completed_classes=completed_classes,
-                           user_notifications=user_notifications,
-                           format_datetime_for_display=format_datetime_for_display)
+                           completed_classes=completed_classes)
 
 @app.route('/join-class/<int:class_id>')
 def join_class(class_id):
