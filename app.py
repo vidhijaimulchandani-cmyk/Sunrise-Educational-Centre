@@ -2302,7 +2302,7 @@ def admission():
         c.execute('''INSERT INTO admissions (
             student_name, dob, student_phone, student_email, class, school_name,
             maths_marks, maths_rating, last_percentage, parent_name, parent_phone, passport_photo, status, submitted_at, user_id, submit_ip
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (
             request.form['student_name'],
             request.form['dob'],
             request.form['student_phone'],
