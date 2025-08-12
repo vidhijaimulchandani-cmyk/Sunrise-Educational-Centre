@@ -10,6 +10,190 @@
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="forum.css" />
     <style>
+      /* Light Theme (Default) */
+      :root {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8f9fa;
+        --bg-card: #ffffff;
+        --text-primary: #232946;
+        --text-secondary: #6b7280;
+        --text-muted: #9ca3af;
+        --border-color: #e5e7eb;
+        --border-light: #f3f4f6;
+        --accent-primary: #6a82fb;
+        --accent-secondary: #fc5c7d;
+        --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+        --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --shadow-heavy: 0 10px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Dark Theme */
+      body.dark-mode {
+        --bg-primary: #232946;
+        --bg-secondary: #1a1a2e;
+        --bg-card: #2a2a3a;
+        --text-primary: #f4f4f4;
+        --text-secondary: #b8c5d6;
+        --text-muted: #8b9bb4;
+        --border-color: #3a3a4a;
+        --border-light: #2a2a3a;
+        --accent-primary: #6a82fb;
+        --accent-secondary: #fc5c7d;
+        --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.3);
+        --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.3);
+        --shadow-heavy: 0 10px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Apply theme variables */
+      body {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      .hero-section {
+        background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+        color: white;
+      }
+
+      .card-section {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: var(--shadow-medium);
+      }
+
+      .card-section h2 {
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+      }
+
+      /* Tabs styling */
+      .tabs {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid var(--accent-primary);
+        flex-wrap: wrap;
+      }
+
+      .tab-button {
+        background: transparent;
+        border: none;
+        padding: 1rem 2rem;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--text-secondary);
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .tab-button:hover {
+        background-color: rgba(106, 130, 251, 0.1);
+        color: var(--accent-primary);
+      }
+
+      .tab-button.active {
+        border-bottom-color: var(--accent-primary);
+        color: var(--accent-primary);
+        background-color: rgba(106, 130, 251, 0.1);
+      }
+
+      .tab-button.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      /* Forum messages container */
+      #forumMessages {
+        background: var(--bg-secondary);
+        border-radius: 8px;
+        padding: 1rem;
+        min-height: 120px;
+        border: 1px solid var(--border-light);
+      }
+
+      #emptyForumMsg {
+        color: var(--text-muted);
+        text-align: center;
+        font-style: italic;
+      }
+
+      /* Chat input bar */
+      .chat-input-bar {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 0.5rem;
+        box-shadow: var(--shadow-light);
+      }
+
+      .chat-input-bar textarea {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        padding: 0.7rem 1rem;
+        font-size: 0.95rem;
+        transition: border-color 0.3s ease;
+      }
+
+      .chat-input-bar textarea:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 3px rgba(106, 130, 251, 0.1);
+      }
+
+      .chat-input-bar textarea::placeholder {
+        color: var(--text-muted);
+      }
+
+      /* Buttons */
+      .btn {
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem 1.2rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-medium);
+      }
+
+      .btn-secondary {
+        background: var(--bg-secondary);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 50%;
+        padding: 0;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-secondary:hover {
+        background: var(--accent-primary);
+        color: white;
+        border-color: var(--accent-primary);
+      }
+
+      /* Topic badges */
       .topic-badge {
         display: inline-block;
         padding: 0.2rem 0.6rem;
@@ -18,18 +202,78 @@
         font-weight: 600;
         margin-left: 0.5rem;
       }
+      
       .topic-badge.paid {
         background: #10b981;
         color: white;
       }
+      
       .topic-badge.unpaid {
         background: #6b7280;
         color: white;
       }
+      
       .topic-name {
         display: flex;
         align-items: center;
         gap: 0.5rem;
+      }
+
+      /* Dark mode toggle button */
+      #darkModeToggle {
+        background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 160px;
+      }
+
+      #darkModeToggle:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-medium);
+      }
+
+      /* Media preview */
+      #forumMediaPreview {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-light);
+        border-radius: 8px;
+        padding: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      /* Responsive design */
+      @media (max-width: 768px) {
+        .tabs {
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+        
+        .tab-button {
+          padding: 0.8rem 1rem;
+          font-size: 0.9rem;
+        }
+        
+        .card-section {
+          padding: 1rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .tabs {
+          justify-content: center;
+        }
+        
+        .tab-button {
+          flex: 1;
+          min-width: 80px;
+          padding: 0.6rem 0.5rem;
+          font-size: 0.8rem;
+        }
       }
     </style>
   </head>
@@ -50,17 +294,17 @@
               <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
               {% endif %}
             </button>
-            <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:#fff; min-width:260px; box-shadow:0 4px 24px rgba(100,100,255,0.13); border-radius:12px; z-index:100; padding:1rem;">
-              <strong style="color:#6a82fb;">Notifications</strong>
+            <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:var(--bg-card); min-width:260px; box-shadow:var(--shadow-heavy); border-radius:12px; z-index:100; padding:1rem; border:1px solid var(--border-color);">
+              <strong style="color:var(--accent-primary);">Notifications</strong>
               <ul style="list-style:none; padding:0; margin:0;">
                 {% if user_notifications and user_notifications|length > 0 %}
                 {% for id, message, created_at, status, notification_type, scheduled_time in user_notifications %}
-                <li class="notification-item" data-notification-id="{{ id }}" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='transparent'">
-                  {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                <li class="notification-item" data-notification-id="{{ id }}" style="padding:0.5rem 0; border-bottom:1px solid var(--border-light); font-size:0.98rem; color:var(--text-primary); cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='rgba(106,130,251,0.1)'" onmouseout="this.style.background='transparent'">
+                  {{ message }}<br><span style="font-size:0.85rem; color:var(--text-muted);">{{ format_datetime_for_display(created_at) }}</span>
                 </li>
                 {% endfor %}
                 {% else %}
-                  <li style="padding:0.7rem 0; color:#888; text-align:center;">No new notifications.</li>
+                  <li style="padding:0.7rem 0; color:var(--text-muted); text-align:center;">No new notifications.</li>
                 {% endif %}
               </ul>
             </div>
@@ -143,6 +387,36 @@
     <script src="script.js"></script>
     <script src="forum.js"></script>
     <script>
+      // Theme switching functionality
+      const darkModeToggle = document.getElementById('darkModeToggle');
+      
+      // Check for saved theme preference or default to light mode
+      const currentTheme = localStorage.getItem('theme') || 'light';
+      
+      // Apply theme on page load
+      if (currentTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        darkModeToggle.textContent = '☀️ Light Mode';
+      } else {
+        document.body.classList.remove('dark-mode');
+        darkModeToggle.textContent = '🌙 Dark Mode';
+      }
+      
+      // Theme toggle functionality
+      darkModeToggle.addEventListener('click', function() {
+        if (document.body.classList.contains('dark-mode')) {
+          // Switch to light mode
+          document.body.classList.remove('dark-mode');
+          localStorage.setItem('theme', 'light');
+          darkModeToggle.textContent = '🌙 Dark Mode';
+        } else {
+          // Switch to dark mode
+          document.body.classList.add('dark-mode');
+          localStorage.setItem('theme', 'dark');
+          darkModeToggle.textContent = '☀️ Light Mode';
+        }
+      });
+      
       // Notification bell dropdown
       const notifBell = document.getElementById('notifBell');
       const notifDropdown = document.getElementById('notifDropdown');
@@ -177,7 +451,7 @@
               if (data.status === 'success') {
                 // Fade out the notification
                 notificationItem.style.opacity = '0.5';
-                notificationItem.style.background = '#e8f0ff';
+                notificationItem.style.background = 'rgba(106,130,251,0.1)';
                 
                 // Remove notification after a short delay
                 setTimeout(() => {
@@ -187,7 +461,7 @@
                   const remainingNotifications = document.querySelectorAll('.notification-item');
                   if (remainingNotifications.length === 0) {
                     const noNotificationsLi = document.createElement('li');
-                    noNotificationsLi.style.cssText = 'padding:0.7rem 0; color:#888; text-align:center;';
+                    noNotificationsLi.style.cssText = 'padding:0.7rem 0; color:var(--text-muted); text-align:center;';
                     noNotificationsLi.textContent = 'No new notifications.';
                     notifDropdown.querySelector('ul').appendChild(noNotificationsLi);
                   }
