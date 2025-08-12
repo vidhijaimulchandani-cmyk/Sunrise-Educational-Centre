@@ -76,6 +76,35 @@ os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'recordings', 'temp'), exi
 
 DATABASE = 'users.db'
 
+def generate_complex_password(length=8):
+    """Generate a complex password with mixed characters"""
+    import string
+    import random
+    
+    # Define character sets (avoiding confusing characters like 0, O, 1, l, I)
+    lowercase = 'abcdefghijkmnpqrstuvwxyz'  # Removed l, o
+    uppercase = 'ABCDEFGHJKLMNPQRSTUVWXYZ'  # Removed I, O
+    digits = '23456789'  # Removed 0, 1
+    symbols = "!@#$%^&*"
+    
+    # Ensure at least one character from each set
+    password = [
+        random.choice(lowercase),  # At least one lowercase
+        random.choice(uppercase),  # At least one uppercase
+        random.choice(digits),     # At least one digit
+        random.choice(symbols)     # At least one symbol
+    ]
+    
+    # Fill remaining length with random characters from all sets
+    all_chars = lowercase + uppercase + digits + symbols
+    for _ in range(length - 4):
+        password.append(random.choice(all_chars))
+    
+    # Shuffle the password to make it more random
+    random.shuffle(password)
+    
+    return ''.join(password)
+
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
@@ -1620,7 +1649,7 @@ def admin_create_user_page():
         adm_id = adm[0]
         if adm_id not in admission_access_map:
             access_username = f"ADM{adm_id:06d}"
-            access_password = secrets.token_hex(4)
+            access_password = generate_complex_password(8)
             try:
                 hashed_pw = generate_password_hash(access_password)
                 c.execute('''INSERT OR IGNORE INTO admission_access (admission_id, access_username, access_password)
@@ -1641,7 +1670,7 @@ def admin_create_user_page():
                 admission_access_map[adm_id] = (admission_access_map[adm_id][0], plain_row[0])
             else:
                 # No plain password found, generate a new one
-                access_password = secrets.token_hex(4)
+                access_password = generate_complex_password(8)
                 hashed_pw = generate_password_hash(access_password)
                 c.execute('UPDATE admission_access SET access_password = ? WHERE admission_id = ?', 
                          (hashed_pw, adm_id))
@@ -2422,7 +2451,7 @@ def admission():
         new_admission_id = c.lastrowid
         try:
             access_username = f"ADM{new_admission_id:06d}"
-            access_password = secrets.token_hex(4)
+            access_password = generate_complex_password(8)
             hashed_pw = generate_password_hash(access_password)
             c.execute('''INSERT OR IGNORE INTO admission_access (admission_id, access_username, access_password)
                          VALUES (?, ?, ?)''', (new_admission_id, access_username, hashed_pw))
@@ -2443,7 +2472,7 @@ def admission():
             # Non-fatal: continue even if credential generation fails
             print(f'Warning: Credential generation failed: {_e}')
             access_username = f"ADM{new_admission_id:06d}"
-            access_password = "TEMP123"
+            access_password = generate_complex_password(8)
             session['last_admission_creds'] = {'username': access_username, 'password': access_password}
         conn.commit()
         print('Admission saved successfully!')
