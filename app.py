@@ -2505,7 +2505,10 @@ def check_admission():
     access_password = request.form.get('access_password', '').strip()
     if not access_username or not access_password:
         flash('Please enter both username and password', 'error')
-        return redirect(url_for('check_admission'))
+        return render_template('check_admission.html',
+            access_username=access_username,
+            access_password=access_password
+        )
     try:
         conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
@@ -2515,12 +2518,18 @@ def check_admission():
         if not row:
             conn.close()
             flash('Invalid credentials. Please check and try again.', 'error')
-            return redirect(url_for('check_admission'))
+            return render_template('check_admission.html',
+                access_username=access_username,
+                access_password=access_password
+            )
         admission_id, hashed_pw = row
         if not check_password_hash(hashed_pw, access_password):
             conn.close()
             flash('Invalid credentials. Please check and try again.', 'error')
-            return redirect(url_for('check_admission'))
+            return render_template('check_admission.html',
+                access_username=access_username,
+                access_password=access_password
+            )
         # Determine status by checking tables
         # 1) pending admissions
         c.execute('''SELECT student_name, class, school_name, status, submitted_at FROM admissions WHERE id = ?''', (admission_id,))
@@ -2562,19 +2571,21 @@ def check_admission():
         conn.close()
         # Determine paid/unpaid mapping for display
         paid_status = 'paid' if status == 'approved' else 'not paid'
-        # Store result in session and redirect (PRG)
-        session['last_admission_status'] = {
-            'result': True,
-            'status': status or 'pending',
-            'paid_status': paid_status,
-            'details': details,
-            'access_username': access_username,
-            'access_password': access_password
-        }
-        return redirect(url_for('check_admission'))
+        # Render template directly with results and preserve form values
+        return render_template('check_admission.html',
+            result=True,
+            status=status or 'pending',
+            paid_status=paid_status,
+            details=details,
+            access_username=access_username,
+            access_password=access_password
+        )
     except Exception as e:
         flash(f'Error checking admission: {str(e)}', 'error')
-        return redirect(url_for('check_admission'))
+        return render_template('check_admission.html',
+            access_username=access_username,
+            access_password=access_password
+        )
 
 @app.route('/live-class-management')
 def live_class_management():
@@ -4472,9 +4483,7 @@ def api_get_categories_by_class_name(class_name):
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
 
-@app.route('/check-admission-login')
-def check_admission_login():
-    return render_template('check_admission_login.html')
+
 
 @app.route('/download-recording/<int:recording_id>')
 def download_recording(recording_id):
