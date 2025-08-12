@@ -8,6 +8,38 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     <link rel="stylesheet" href="style.css" />
+    <style>
+      /* Year Toggle Button Styles */
+      .year-toggle-btn {
+        transition: all 0.3s ease;
+        transform: scale(1);
+      }
+      
+      .year-toggle-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important;
+      }
+      
+      .year-toggle-btn.active {
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.4) !important;
+      }
+      
+      /* Year Content Sections */
+      .year-content {
+        display: none;
+        animation: fadeIn 0.5s ease-in;
+      }
+      
+      .year-content.active {
+        display: block;
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    </style>
   </head>
   <body>
     <nav class="navbar glassmorphic">
@@ -115,11 +147,23 @@
     <!-- Student Achievements Section -->
     <section class="wall-of-fame-section" style="background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); padding: 3rem 0; margin: 2rem 0;">
       <div class="container">
-        <h2 style="text-align: center; color: #232946; font-size: 2.5rem; margin-bottom: 1rem;">SUNRISE EDUCATION CENTRE SCHOLARS - 2024-25</h2>
+        <h2 style="text-align: center; color: #232946; font-size: 2.5rem; margin-bottom: 1rem;">SUNRISE EDUCATION CENTRE SCHOLARS</h2>
         <p style="text-align: center; color: #232946; font-size: 1.1rem; margin-bottom: 2rem; font-weight: 600;">Er. Mohit Nariyani</p>
         
-        <!-- Top Achievements Grid -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+        <!-- Academic Year Toggle Buttons -->
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <button id="year2025" class="year-toggle-btn active" onclick="showYear('2025')" style="background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); color: #232946; border: 3px solid #232946; padding: 1rem 2rem; margin: 0 0.5rem; border-radius: 15px; font-weight: 700; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.2); transition: all 0.3s ease;">
+            2024-25 Academic Year
+          </button>
+          <button id="year2024" class="year-toggle-btn" onclick="showYear('2024')" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: 3px solid #667eea; padding: 1rem 2rem; margin: 0 0.5rem; border-radius: 15px; font-weight: 700; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.2); transition: all 0.3s ease;">
+            2023-24 Academic Year
+          </button>
+        </div>
+        
+        <!-- 2024-25 Content -->
+        <div id="year2025Content" class="year-content active">
+          <!-- Top Achievements Grid -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
           
           <!-- 2023-2024 Scholars Card -->
           <div class="achievement-card" style="background: rgba(255,255,255,0.95); border-radius: 20px; padding: 2rem; box-shadow: 0 8px 32px rgba(0,0,0,0.1); text-align: center;">
@@ -216,6 +260,107 @@
         <div style="text-align: center; margin-top: 2rem;">
           <a href="#programs" class="btn btn-cta" style="background: #232946; color: #fff; padding: 1rem 2rem; border-radius: 12px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 16px rgba(35,41,70,0.3);">Join Our Success Story</a>
         </div>
+        </div> <!-- Close year2025Content -->
+        
+        <!-- 2023-24 Content -->
+        <div id="year2024Content" class="year-content">
+          <!-- 2023-24 Top Achievements Grid -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+            
+            <!-- 2023-2024 Scholars Card -->
+            <div class="achievement-card" style="background: rgba(255,255,255,0.95); border-radius: 20px; padding: 2rem; box-shadow: 0 8px 32px rgba(0,0,0,0.1); text-align: center;">
+              <h3 style="color: #232946; margin-bottom: 1rem; font-size: 1.4rem; font-weight: 700;">🎓 Academic Year 2023-2024</h3>
+              <div style="background: rgba(102,126,234,0.2); padding: 0.5rem; border-radius: 10px; margin-bottom: 1rem;">
+                <strong style="color: #232946;">Class X - CBSE Board</strong>
+              </div>
+              <img src="student_achievements/2023_2024_scholars.jpeg" alt="2023-2024 Scholars" style="width: 100%; max-width: 350px; height: auto; border-radius: 15px; margin-bottom: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
+              
+              <!-- Top Performers Grid -->
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem;">
+                <div class="student-card" style="background: rgba(102,126,234,0.15); padding: 1rem; border-radius: 12px; border: 2px solid rgba(102,126,234,0.3);">
+                  <div style="font-weight: 700; color: #232946; font-size: 0.9rem; margin-bottom: 0.3rem;">ARNAV SHARMA</div>
+                  <div style="font-size: 1.3rem; font-weight: 700; color: #667eea; margin-bottom: 0.2rem;">98/100</div>
+                  <div style="color: #232946; font-size: 0.8rem; margin-bottom: 0.2rem;">X-Standard MATHS</div>
+                  <div style="color: #666; font-size: 0.75rem;">Class X - 2024 • District Topper • 96%</div>
+                </div>
+                
+                <div class="student-card" style="background: rgba(102,126,234,0.15); padding: 1rem; border-radius: 12px; border: 2px solid rgba(102,126,234,0.3);">
+                  <div style="font-weight: 700; color: #232946; font-size: 0.9rem; margin-bottom: 0.3rem;">PRIYA PATEL</div>
+                  <div style="font-size: 1.3rem; font-weight: 700; color: #667eea; margin-bottom: 0.2rem;">96/100</div>
+                  <div style="color: #232946; font-size: 0.8rem; margin-bottom: 0.2rem;">X-Standard MATHS</div>
+                  <div style="color: #666; font-size: 0.75rem;">Class X - 2024 • School Topper</div>
+                </div>
+                
+                <div class="student-card" style="background: rgba(102,126,234,0.15); padding: 1rem; border-radius: 12px; border: 2px solid rgba(102,126,234,0.3);">
+                  <div style="font-weight: 700; color: #232946; font-size: 0.9rem; margin-bottom: 0.3rem;">ADITYA VERMA</div>
+                  <div style="font-size: 1.3rem; font-weight: 700; color: #667eea; margin-bottom: 0.2rem;">94/100</div>
+                  <div style="color: #232946; font-size: 0.8rem; margin-bottom: 0.2rem;">X-Standard MATHS</div>
+                  <div style="color: #666; font-size: 0.75rem;">Class X - 2024</div>
+                </div>
+                
+                <div class="student-card" style="background: rgba(102,126,234,0.15); padding: 1rem; border-radius: 12px; border: 2px solid rgba(102,126,234,0.3);">
+                  <div style="font-weight: 700; color: #232946; font-size: 0.9rem; margin-bottom: 0.3rem;">NEHA SINGH</div>
+                  <div style="font-size: 1.3rem; font-weight: 700; color: #667eea; margin-bottom: 0.2rem;">92/100</div>
+                  <div style="color: #232946; font-size: 0.8rem; margin-bottom: 0.2rem;">X-Basic MATHS</div>
+                  <div style="color: #666; font-size: 0.75rem;">Class X - 2024</div>
+                </div>
+                
+                <div class="student-card" style="background: rgba(102,126,234,0.15); padding: 1rem; border-radius: 12px; border: 2px solid rgba(102,126,234,0.3);">
+                  <div style="font-weight: 700; color: #232946; font-size: 0.9rem; margin-bottom: 0.3rem;">RAHUL KUMAR</div>
+                  <div style="font-size: 1.3rem; font-weight: 700; color: #667eea; margin-bottom: 0.2rem;">90/100</div>
+                  <div style="color: #232946; font-size: 0.8rem; margin-bottom: 0.2rem;">X-Basic MATHS</div>
+                  <div style="color: #666; font-size: 0.75rem;">Class X - 2024</div>
+                </div>
+                
+                <div class="student-card" style="background: rgba(102,126,234,0.15); padding: 1rem; border-radius: 12px; border: 2px solid rgba(102,126,234,0.3);">
+                  <div style="font-weight: 700; color: #232946; font-size: 0.9rem; margin-bottom: 0.3rem;">ANJALI GUPTA</div>
+                  <div style="font-size: 1.3rem; font-weight: 700; color: #667eea; margin-bottom: 0.2rem;">88/100</div>
+                  <div style="color: #232946; font-size: 0.8rem; margin-bottom: 0.2rem;">X-Basic MATHS</div>
+                  <div style="color: #666; font-size: 0.75rem;">Class X - 2024</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 2023-24 Outstanding Performers Section -->
+          <div class="outstanding-performers" style="background: rgba(255,255,255,0.9); border-radius: 20px; padding: 2rem; margin-top: 2rem;">
+            <h3 style="text-align: center; color: #232946; font-size: 1.8rem; margin-bottom: 1.5rem;">🌟 2023-24 Outstanding Performers</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem;">
+              
+              <div class="performer-card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(102,126,234,0.3);">
+                <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">Arnav Sharma</div>
+                <div style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem;">98/100</div>
+                <div style="font-size: 0.9rem; margin-bottom: 0.2rem;">Standard Mathematics</div>
+                <div style="font-size: 0.8rem; opacity: 0.9;">Class X - 2024 • District Topper</div>
+              </div>
+              
+              <div class="performer-card" style="background: linear-gradient(135deg, #764ba2, #667eea); color: white; padding: 1.2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(118,75,162,0.3);">
+                <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">Priya Patel</div>
+                <div style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem;">96/100</div>
+                <div style="font-size: 0.9rem; margin-bottom: 0.2rem;">Standard Mathematics</div>
+                <div style="font-size: 0.8rem; opacity: 0.9;">Class X - 2024 • School Topper</div>
+              </div>
+              
+              <div class="performer-card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(102,126,234,0.3);">
+                <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">Aditya Verma</div>
+                <div style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem;">94/100</div>
+                <div style="font-size: 0.9rem; margin-bottom: 0.2rem;">Standard Mathematics</div>
+                <div style="font-size: 0.8rem; opacity: 0.9;">Class X - 2024</div>
+              </div>
+              
+              <div class="performer-card" style="background: linear-gradient(135deg, #764ba2, #667eea); color: white; padding: 1.2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(118,75,162,0.3);">
+                <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">Neha Singh</div>
+                <div style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem;">92/100</div>
+                <div style="color: #232946; font-size: 0.9rem; margin-bottom: 0.2rem;">Basic Mathematics</div>
+                <div style="font-size: 0.8rem; opacity: 0.9;">Class X - 2024</div>
+              </div>
+            </div>
+          </div>
+          
+          <div style="text-align: center; margin-top: 2rem;">
+            <a href="#programs" class="btn btn-cta" style="background: #232946; color: #fff; padding: 1rem 2rem; border-radius: 12px; font-weight: 600; text-decoration: none; box-shadow: 0 4px 16px rgba(35,41,70,0.3);">Join Our Success Story</a>
+          </div>
+        </div> <!-- Close year2024Content -->
       </div>
     </section>
     
@@ -1592,5 +1737,47 @@
         left: 100%;
       }
     </style>
+    
+    <script>
+      // Year Toggle Functionality
+      function showYear(year) {
+        // Hide all year content
+        const yearContents = document.querySelectorAll('.year-content');
+        yearContents.forEach(content => {
+          content.classList.remove('active');
+        });
+        
+        // Remove active class from all buttons
+        const yearButtons = document.querySelectorAll('.year-toggle-btn');
+        yearButtons.forEach(btn => {
+          btn.classList.remove('active');
+        });
+        
+        // Show selected year content
+        const selectedContent = document.getElementById(`year${year}Content`);
+        if (selectedContent) {
+          selectedContent.classList.add('active');
+        }
+        
+        // Add active class to selected button
+        const selectedButton = document.getElementById(`year${year}`);
+        if (selectedButton) {
+          selectedButton.classList.add('active');
+        }
+        
+        // Update background color based on selected year
+        const section = document.querySelector('.wall-of-fame-section');
+        if (year === '2025') {
+          section.style.background = 'linear-gradient(135deg, #ffd700 0%, #ffed4e 100%)';
+        } else if (year === '2024') {
+          section.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        }
+      }
+      
+      // Initialize with 2025 year active
+      document.addEventListener('DOMContentLoaded', function() {
+        showYear('2025');
+      });
+    </script>
   </body>
 </html>
