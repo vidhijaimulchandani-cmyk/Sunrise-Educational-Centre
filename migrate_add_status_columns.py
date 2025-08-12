@@ -35,6 +35,46 @@ except sqlite3.OperationalError as e:
     else:
         print(f"Error adding scheduled_time column to live_classes: {e}")
 
+# Add target_class column
+try:
+    c.execute("ALTER TABLE live_classes ADD COLUMN target_class TEXT DEFAULT 'all'")
+    print("✓ Added 'target_class' column to live_classes table")
+except sqlite3.OperationalError as e:
+    if "duplicate column" in str(e):
+        print("✓ 'target_class' column already exists in live_classes table")
+    else:
+        print(f"Error adding target_class column to live_classes: {e}")
+
+# Add class_stream column
+try:
+    c.execute("ALTER TABLE live_classes ADD COLUMN class_stream TEXT")
+    print("✓ Added 'class_stream' column to live_classes table")
+except sqlite3.OperationalError as e:
+    if "duplicate column" in str(e):
+        print("✓ 'class_stream' column already exists in live_classes table")
+    else:
+        print(f"Error adding class_stream column to live_classes: {e}")
+
+# Add class_type column
+try:
+    c.execute("ALTER TABLE live_classes ADD COLUMN class_type TEXT DEFAULT 'lecture'")
+    print("✓ Added 'class_type' column to live_classes table")
+except sqlite3.OperationalError as e:
+    if "duplicate column" in str(e):
+        print("✓ 'class_type' column already exists in live_classes table")
+    else:
+        print(f"Error adding class_type column to live_classes: {e}")
+
+# Add paid_status column
+try:
+    c.execute("ALTER TABLE live_classes ADD COLUMN paid_status TEXT DEFAULT 'unpaid'")
+    print("✓ Added 'paid_status' column to live_classes table")
+except sqlite3.OperationalError as e:
+    if "duplicate column" in str(e):
+        print("✓ 'paid_status' column already exists in live_classes table")
+    else:
+        print(f"Error adding paid_status column to live_classes: {e}")
+
 # Add scheduled_time column to notifications table for scheduled notifications
 try:
     c.execute("ALTER TABLE notifications ADD COLUMN scheduled_time TEXT")
