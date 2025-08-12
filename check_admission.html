@@ -148,6 +148,7 @@
       <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
     </div>
   </footer>
+  {% if result and details %}
   <script>
     function copyCredentials() {
       const username = '{{ details.student_name|lower|replace(" ", "") }}{{ details.class }}';
@@ -200,6 +201,7 @@
       }, 2000);
     }
   </script>
+  {% endif %}
   <script src="script.js"></script>
 </body>
 </html>
