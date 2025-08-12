@@ -130,10 +130,36 @@
               <strong style="color:#6a82fb;">Notifications</strong>
               <ul style="list-style:none; padding:0; margin:0;">
                 {% if user_notifications and user_notifications|length > 0 %}
-                {% for id, message, created_at, status, notification_type, scheduled_time in user_notifications %}
-                <li class="notification-item" data-notification-id="{{ id }}" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='transparent'">
-                  {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
-                </li>
+                {% for notification in user_notifications %}
+                  {% if notification|length >= 7 %}
+                    {% set id, message, created_at, status, notification_type, scheduled_time, item_type = notification %}
+                    {% if item_type == 'personal_chat' %}
+                      {% set sender_name = notification[7] if notification|length > 7 else 'User' %}
+                      <li class="notification-item personal-chat-item" data-notification-id="{{ id }}" data-type="personal_chat" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease; border-left:3px solid #fc5c7d; padding-left:0.5rem;" onmouseover="this.style.background='#ffe6cc'" onmouseout="this.style.background='transparent'">
+                        <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
+                          <span style="background:#fc5c7d; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">💬</span>
+                          <span style="color:#fc5c7d; font-size:0.8rem; font-weight:600;">@{{ sender_name }}</span>
+                        </div>
+                        {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                      </li>
+                    {% else %}
+                      <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='transparent'">
+                        <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
+                          <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
+                        </div>
+                        {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                      </li>
+                    {% endif %}
+                  {% else %}
+                    <!-- Fallback for old notification format -->
+                    {% set id, message, created_at, status, notification_type, scheduled_time = notification %}
+                    <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='transparent'">
+                      <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
+                        <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
+                      </div>
+                      {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                    </li>
+                  {% endif %}
                 {% endfor %}
                 {% else %}
                   <li style="padding:0.7rem 0; color:#888; text-align:center;">No new notifications.</li>
