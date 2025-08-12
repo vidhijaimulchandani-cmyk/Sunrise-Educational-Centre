@@ -21,6 +21,12 @@
     .chat-send-btn { border-radius:8px; background: linear-gradient(135deg, #6a82fb 0%, #5a6fd8 100%); border: none; color: #fff; padding: 0.5rem 1rem; cursor: pointer; transition: all 0.2s; }
     .chat-send-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(106,130,251,0.3); }
     .chat-message { margin: 0.3rem 0; padding: 0.4rem 0.7rem; background: #fff; border-radius: 7px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 3px solid #6a82fb; }
+    
+    /* Chat Status Indicator */
+    #chatStatusIndicator { font-size: 0.9rem; }
+    #chatStatusText.locked { color: #fc5c7d; }
+    #chatStatusText.private { color: #38b2ac; }
+    #chatStatusText.public { color: #48bb78; }
     @media (max-width: 900px) {
       .join-container { flex-direction: column; }
       .info-section { border-left: none; border-top: 1.5px solid #eee; }
@@ -75,6 +81,18 @@
       border-left-color: #6a82fb;
     }
     
+    body.dark-mode #chatStatusText.locked {
+      color: #fc5c7d;
+    }
+    
+    body.dark-mode #chatStatusText.private {
+      color: #38b2ac;
+    }
+    
+    body.dark-mode #chatStatusText.public {
+      color: #48bb78;
+    }
+    
     body.dark-mode .tab-btn {
       color: #b8c5d6;
     }
@@ -110,6 +128,33 @@
   </style>
 </head>
 <body>
+  <!-- Notification Bell for Live Class -->
+  {% if username %}
+  <div id="notifBellContainer" style="position:fixed; top:20px; right:20px; z-index:9999;">
+    <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative; z-index:10000; padding:0;">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
+      {% if user_notifications and user_notifications|length > 0 %}
+      <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
+      {% endif %}
+    </button>
+    <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:#fff; min-width:320px; box-shadow:0 4px 24px rgba(100,100,255,0.13); border-radius:12px; z-index:10001; padding:1rem;">
+      <strong style="color:#6a82fb; font-size:1.15rem;">Notifications</strong>
+      <ul style="list-style:none; padding:0; margin:0; max-height:320px; overflow-y:auto;">
+        {% if user_notifications and user_notifications|length > 0 %}
+          {% for id, message, created_at, status, notification_type, scheduled_time in user_notifications %}
+          <li class="notification-item" data-notification-id="{{ id }}" style="padding:0.9rem 1.2rem; border-bottom:1px solid #eee; font-size:1.05rem; color:#232946; background:#f8fafc; border-radius:10px; margin-bottom:0.7rem; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='#f8fafc'">
+            <strong>{{ message }}</strong><br>
+            <span style="font-size:0.92rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+          </li>
+          {% endfor %}
+        {% else %}
+          <li style="padding:1.1rem 1.2rem; color:#888; text-align:center; background:#f8fafc; border-radius:10px;">No new notifications.</li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+  
   <div class="join-container">
     <div class="video-section">
       <h3 style="color:#6a82fb; margin-bottom:1rem;">Live Class (Student View)</h3>
@@ -223,6 +268,12 @@
       <!-- Chat Tab -->
       <div id="chat-tab" class="tab-content active">
         <div class="chat-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="color: #6a82fb; margin: 0;">Live Chat</h3>
+            <div id="chatStatusIndicator" style="display: flex; gap: 0.5rem; align-items: center;">
+              <span id="chatStatusText" style="font-size: 0.9rem; color: #48bb78;">● Public</span>
+            </div>
+          </div>
           <div id="chatMessages" class="chat-messages">
             <!-- Chat messages will appear here -->
           </div>
@@ -787,6 +838,93 @@ socket.on('error', (data) => {
 
 // Load chat history when joining
 socket.emit('get_chat_messages', { class_id: classId, limit: 50 });
+
+// Chat status change handling
+socket.on('chat_status_change', (data) => {
+  if (data.class_id === classId) {
+    updateChatStatus(data.status, data.message);
+  }
+});
+
+function updateChatStatus(status, message) {
+  const statusText = document.getElementById('chatStatusText');
+  const chatForm = document.getElementById('chatForm');
+  const chatInput = document.getElementById('chatInput');
+  
+  // Remove all status classes
+  statusText.classList.remove('locked', 'private', 'public');
+  
+  if (status === 'locked') {
+    statusText.textContent = '🔒 Locked';
+    statusText.classList.add('locked');
+    chatForm.style.opacity = '0.5';
+    chatInput.disabled = true;
+    chatInput.placeholder = 'Chat is locked by host';
+    
+    // Show notification
+    showChatNotification(message, 'warning');
+  } else if (status === 'private') {
+    statusText.textContent = '🔒 Private';
+    statusText.classList.add('private');
+    chatForm.style.opacity = '0.5';
+    chatInput.disabled = true;
+    chatInput.placeholder = 'Chat is private - only host can see messages';
+    
+    // Show notification
+    showChatNotification(message, 'info');
+  } else if (status === 'public') {
+    statusText.textContent = '● Public';
+    statusText.classList.add('public');
+    chatForm.style.opacity = '1';
+    chatInput.disabled = false;
+    chatInput.placeholder = 'Type a message...';
+    
+    // Show notification
+    showChatNotification(message, 'success');
+  } else if (status === 'unlocked') {
+    statusText.textContent = '● Public';
+    statusText.classList.add('public');
+    chatForm.style.opacity = '1';
+    chatInput.disabled = false;
+    chatInput.placeholder = 'Type a message...';
+    
+    // Show notification
+    showChatNotification(message, 'success');
+  }
+}
+
+function showChatNotification(message, type) {
+  // Create a temporary notification
+  const notification = document.createElement('div');
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 1rem;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 10000;
+    max-width: 300px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  `;
+  
+  if (type === 'warning') {
+    notification.style.background = '#fc5c7d';
+  } else if (type === 'info') {
+    notification.style.background = '#38b2ac';
+  } else if (type === 'success') {
+    notification.style.background = '#48bb78';
+  }
+  
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  
+  // Remove after 3 seconds
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
+}
 
 // WebRTC Event Listeners for receiving host stream
 socket.on('host_stream_ready', (data) => {

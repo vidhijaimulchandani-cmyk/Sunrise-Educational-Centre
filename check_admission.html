@@ -28,6 +28,13 @@
     body.dark-mode .cred-input:focus { border-color:#6a82fb; box-shadow:0 0 0 3px rgba(106,130,251,0.22); }
     body.dark-mode .cred-info { background:#232a48; border-color:#444a6d; }
     body.dark-mode .cred-info code { background:#1f2a44; color:#e2e8f0; }
+    
+    /* Dark mode for approved admission section */
+    body.dark-mode .cred-card .f0fff4 { background:#1a2a1a; border-color:#2d5a2d; }
+    body.dark-mode .cred-card .f0fff4 h4 { color:#4ade80; }
+    body.dark-mode .cred-card .f0fff4 .f7fafc { background:#2a2a3a; border-color:#3a3a4a; color:#e2e8f0; }
+    body.dark-mode .cred-card .f0fff4 .2d3748 { color:#e2e8f0; }
+    body.dark-mode .cred-card .f0fff4 .666 { color:#a0aec0; }
   </style>
 </head>
 <body>
@@ -93,9 +100,38 @@
           <div>{{ paid_status|title }}</div>
         </div>
       </div>
+      
+      {% if status == 'approved' %}
+      <div style="margin-top:1.5rem; padding:1rem; background:#f0fff4; border:1px solid #c6f6d5; border-radius:8px;">
+        <h4 style="color:#38a169; margin-bottom:0.8rem;">🎉 Congratulations! Your admission has been approved!</h4>
+        <div style="background:#fff; padding:1rem; border-radius:6px; border:1px solid #c6f6d5;">
+          <div style="margin-bottom:0.8rem;">
+            <strong style="color:#2d3748;">Your Login Credentials:</strong>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+            <div>
+              <div style="font-size:0.9rem; color:#666; margin-bottom:0.3rem;">Username:</div>
+              <div style="font-family:monospace; background:#f7fafc; padding:0.5rem; border-radius:4px; border:1px solid #e2e8f0; color:#2d3748; font-weight:600;">{{ details.student_name|lower|replace(' ', '') }}{{ details.class }}</div>
+            </div>
+            <div>
+              <div style="font-size:0.9rem; color:#666; margin-bottom:0.3rem;">Password:</div>
+              <div style="font-family:monospace; background:#f7fafc; padding:0.5rem; border-radius:4px; border:1px solid #e2e8f0; color:#2d3748; font-weight:600;">{{ details.student_name|lower|replace(' ', '') }}@{{ details.class }}</div>
+            </div>
+          </div>
+          <div style="font-size:0.9rem; color:#666; line-height:1.4;">
+            <strong>Important:</strong> Please save these credentials safely. You can use them to log into your student portal and access study resources, live classes, and more.
+          </div>
+        </div>
+        <div style="margin-top:1rem;">
+          <a href="/auth" class="btn btn-primary">Login to Student Portal</a>
+          <button onclick="copyCredentials()" class="btn btn-secondary" style="margin-left:0.5rem;">📋 Copy Credentials</button>
+        </div>
+      </div>
+      {% else %}
       <div style="margin-top:1rem;">
         <a href="/auth" class="btn btn-primary">Proceed to Login</a>
       </div>
+      {% endif %}
     </div>
     {% endif %}
   </main>
@@ -112,6 +148,58 @@
       <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
     </div>
   </footer>
+  <script>
+    function copyCredentials() {
+      const username = '{{ details.student_name|lower|replace(" ", "") }}{{ details.class }}';
+      const password = '{{ details.student_name|lower|replace(" ", "") }}@{{ details.class }}';
+      const credentials = `Username: ${username}\nPassword: ${password}`;
+      
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(credentials).then(() => {
+          showCopySuccess();
+        }).catch(() => {
+          fallbackCopyTextToClipboard(credentials);
+        });
+      } else {
+        fallbackCopyTextToClipboard(credentials);
+      }
+    }
+    
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        document.execCommand('copy');
+        showCopySuccess();
+      } catch (err) {
+        console.error('Fallback: Oops, unable to copy', err);
+        alert('Unable to copy credentials. Please copy them manually.');
+      }
+      
+      document.body.removeChild(textArea);
+    }
+    
+    function showCopySuccess() {
+      const button = event.target;
+      const originalText = button.textContent;
+      button.textContent = '✅ Copied!';
+      button.style.background = '#48bb78';
+      button.style.color = 'white';
+      
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.style.background = '';
+        button.style.color = '';
+      }, 2000);
+    }
+  </script>
   <script src="script.js"></script>
 </body>
 </html>

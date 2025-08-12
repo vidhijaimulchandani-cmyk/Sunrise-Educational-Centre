@@ -29,6 +29,13 @@
     .chat-send-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(106,130,251,0.3); }
     .chat-message { margin: 0.3rem 0; padding: 0.4rem 0.7rem; background: #fff; border-radius: 7px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 3px solid #6a82fb; }
     
+    /* Chat Control Buttons */
+    .chat-control-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.8rem; border: 1px solid #e0e7ff; border-radius: 8px; background: #fff; color: #6a82fb; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; font-weight: 500; }
+    .chat-control-btn:hover { background: #f8f9ff; border-color: #6a82fb; transform: translateY(-1px); }
+    .chat-control-btn.locked { background: #ffe6e6; border-color: #fc5c7d; color: #fc5c7d; }
+    .chat-control-btn.private { background: #e6f7ff; border-color: #38b2ac; color: #38b2ac; }
+    .chat-control-btn svg { width: 18px; height: 18px; }
+    
     .poll-section { background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%); border-radius:12px; padding:1.2rem; border: 1px solid #e0e7ff; margin-bottom: 1rem; }
     .poll-input { width: 100%; border-radius:8px; border:1px solid #e0e7ff; padding:0.5rem 0.8rem; background: #fff; margin-bottom: 0.5rem; }
     .poll-option { display: flex; align-items: center; margin-bottom: 0.5rem; }
@@ -112,6 +119,29 @@
       border-left-color: #6a82fb;
     }
     
+    body.dark-mode .chat-control-btn {
+      background: #1a1a2e;
+      border-color: #3a3a4a;
+      color: #6a82fb;
+    }
+    
+    body.dark-mode .chat-control-btn:hover {
+      background: #2a2a3a;
+      border-color: #6a82fb;
+    }
+    
+    body.dark-mode .chat-control-btn.locked {
+      background: #2a1a1a;
+      border-color: #fc5c7d;
+      color: #fc5c7d;
+    }
+    
+    body.dark-mode .chat-control-btn.private {
+      background: #1a2a2a;
+      border-color: #38b2ac;
+      color: #38b2ac;
+    }
+    
     body.dark-mode .doubt-item {
       background: #1a1a2e;
       border-left-color: #48bb78;
@@ -179,6 +209,33 @@
   </style>
 </head>
 <body>
+  <!-- Notification Bell for Host -->
+  {% if username %}
+  <div id="notifBellContainer" style="position:fixed; top:20px; right:20px; z-index:9999;">
+    <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative; z-index:10000; padding:0;">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
+      {% if user_notifications and user_notifications|length > 0 %}
+      <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
+      {% endif %}
+    </button>
+    <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:#fff; min-width:320px; box-shadow:0 4px 24px rgba(100,100,255,0.13); border-radius:12px; z-index:10001; padding:1rem;">
+      <strong style="color:#6a82fb; font-size:1.15rem;">Notifications</strong>
+      <ul style="list-style:none; padding:0; margin:0; max-height:320px; overflow-y:auto;">
+        {% if user_notifications and user_notifications|length > 0 %}
+          {% for id, message, created_at, status, notification_type, scheduled_time in user_notifications %}
+          <li class="notification-item" data-notification-id="{{ id }}" style="padding:0.9rem 1.2rem; border-bottom:1px solid #eee; font-size:1.05rem; color:#232946; background:#f8fafc; border-radius:10px; margin-bottom:0.7rem; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='#f8fafc'">
+            <strong>{{ message }}</strong><br>
+            <span style="font-size:0.92rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+          </li>
+          {% endfor %}
+        {% else %}
+          <li style="padding:1.1rem 1.2rem; color:#888; text-align:center; background:#f8fafc; border-radius:10px;">No new notifications.</li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+  
   <div class="host-container">
     <div class="video-section">
       <h3 style="color:#6a82fb; margin-bottom:1rem;">Live Class (Host View)</h3>
@@ -294,7 +351,25 @@
       <!-- Chat Tab -->
       <div id="chat-tab" class="tab-content active">
         <div class="chat-card">
-          <h3 style="margin-bottom: 1rem; color: #6a82fb;">Live Chat</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="color: #6a82fb; margin: 0;">Live Chat</h3>
+            <div style="display: flex; gap: 0.5rem;">
+              <!-- Chat Lock Toggle -->
+              <button id="chatLockBtn" class="chat-control-btn" title="Lock/Unlock Chat" onclick="toggleChatLock()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10z"/>
+                </svg>
+                <span id="chatLockText">Lock Chat</span>
+              </button>
+              <!-- Chat Private Toggle -->
+              <button id="chatPrivateBtn" class="chat-control-btn" title="Toggle Private Chat" onclick="toggleChatPrivate()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                <span id="chatPrivateText">Public</span>
+              </button>
+            </div>
+          </div>
           <div id="chatMessages" class="chat-messages">
             <!-- Chat messages will appear here -->
           </div>
@@ -1572,6 +1647,74 @@
     
     // Load recordings on page load
     loadRecordings();
+    
+    // --- Chat Control Functions ---
+    let isChatLocked = false;
+    let isChatPrivate = false;
+    
+    function toggleChatLock() {
+      isChatLocked = !isChatLocked;
+      const lockBtn = document.getElementById('chatLockBtn');
+      const lockText = document.getElementById('chatLockText');
+      const chatForm = document.getElementById('chatForm');
+      const chatInput = document.getElementById('chatInput');
+      
+      if (isChatLocked) {
+        lockBtn.classList.add('locked');
+        lockText.textContent = 'Unlock Chat';
+        chatForm.style.opacity = '0.5';
+        chatInput.disabled = true;
+        chatInput.placeholder = 'Chat is locked by host';
+        
+        // Notify students that chat is locked
+        socket.emit('chat_status_change', {
+          class_id: classId,
+          status: 'locked',
+          message: 'Chat has been locked by the host'
+        });
+      } else {
+        lockBtn.classList.remove('locked');
+        lockText.textContent = 'Lock Chat';
+        chatForm.style.opacity = '1';
+        chatInput.disabled = false;
+        chatInput.placeholder = 'Type a message...';
+        
+        // Notify students that chat is unlocked
+        socket.emit('chat_status_change', {
+          class_id: classId,
+          status: 'unlocked',
+          message: 'Chat has been unlocked by the host'
+        });
+      }
+    }
+    
+    function toggleChatPrivate() {
+      isChatPrivate = !isChatPrivate;
+      const privateBtn = document.getElementById('chatPrivateBtn');
+      const privateText = document.getElementById('chatPrivateText');
+      
+      if (isChatPrivate) {
+        privateBtn.classList.add('private');
+        privateText.textContent = 'Private';
+        
+        // Notify students that chat is now private
+        socket.emit('chat_status_change', {
+          class_id: classId,
+          status: 'private',
+          message: 'Chat is now private - only host can see messages'
+        });
+      } else {
+        privateBtn.classList.remove('private');
+        privateText.textContent = 'Public';
+        
+        // Notify students that chat is now public
+        socket.emit('chat_status_change', {
+          class_id: classId,
+          status: 'public',
+          message: 'Chat is now public - all students can see messages'
+        });
+      }
+    }
     
     // Clean up when page is unloaded
     window.addEventListener('beforeunload', () => {
