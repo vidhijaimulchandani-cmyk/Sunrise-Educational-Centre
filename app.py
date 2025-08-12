@@ -4549,6 +4549,14 @@ def check_admission_login():
             access_username=access_username,
             access_password=access_password
         )
+        
+    except Exception as e:
+        print(f"DEBUG: Exception occurred: {str(e)}")
+        flash(f'Error checking admission: {str(e)}', 'error')
+        return render_template('check_admission_login.html',
+            access_username=access_username,
+            access_password=access_password
+        )
 
 # Test route to check database state
 @app.route('/test-db-state')
