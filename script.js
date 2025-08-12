@@ -87,6 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Setup profile dropdown
     setupProfileDropdown();
+    
+    // Setup notification dropdown
+    setupNotificationDropdown();
 });
 
 // Profile Dropdown Functionality
@@ -116,6 +119,85 @@ function setupProfileDropdown() {
                 profileDropdown.style.display = 'none';
             }
         });
+    }
+}
+
+// Notification Dropdown Functionality
+function setupNotificationDropdown() {
+    const notificationItems = document.querySelectorAll('.notification-item');
+    
+    notificationItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const notificationType = this.getAttribute('data-type');
+            const notificationId = this.getAttribute('data-notification-id');
+            
+            if (notificationType === 'personal_chat') {
+                // For personal chat messages, mark as read and redirect to personal chat page
+                markNotificationAsSeen(notificationId, 'personal_chat');
+                window.location.href = '/personal-chat';
+            } else {
+                // For regular notifications, mark as seen
+                markNotificationAsSeen(notificationId, 'notification');
+            }
+        });
+    });
+}
+
+// Mark notification as seen
+function markNotificationAsSeen(notificationId, notificationType = 'notification') {
+    fetch(`/api/mark-notification-seen/${notificationId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            type: notificationType
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Remove the notification item from the dropdown
+            const notificationItem = document.querySelector(`[data-notification-id="${notificationId}"]`);
+            if (notificationItem) {
+                notificationItem.remove();
+                
+                // Update notification count
+                updateNotificationCount();
+                
+                // Check if no more notifications
+                const remainingNotifications = document.querySelectorAll('.notification-item');
+                if (remainingNotifications.length === 0) {
+                    const dropdown = document.getElementById('notifDropdown');
+                    const ul = dropdown.querySelector('ul');
+                    ul.innerHTML = '<li style="padding:1.1rem 1.2rem; color:#888; text-align:center; background:#f8fafc; border-radius:10px;">No new notifications or messages.</li>';
+                    
+                    // Hide notification count badge
+                    const notificationCount = document.getElementById('notificationCount');
+                    if (notificationCount) {
+                        notificationCount.style.display = 'none';
+                    }
+                }
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error marking notification as seen:', error);
+    });
+}
+
+// Update notification count
+function updateNotificationCount() {
+    const remainingNotifications = document.querySelectorAll('.notification-item');
+    const notificationCount = document.getElementById('notificationCount');
+    
+    if (notificationCount) {
+        if (remainingNotifications.length > 0) {
+            notificationCount.textContent = remainingNotifications.length;
+            notificationCount.style.display = 'flex';
+        } else {
+            notificationCount.style.display = 'none';
+        }
     }
 }
 

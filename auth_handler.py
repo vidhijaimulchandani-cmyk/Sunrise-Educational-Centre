@@ -588,9 +588,10 @@ def get_unread_notifications_for_user(user_id):
         conn.close()
         return []
     class_id, user_paid_status = result
+    
     # Fetch class/paid notifications (only active and scheduled)
     c.execute('''
-        SELECT n.id, n.message, n.created_at, n.status, n.notification_type, n.scheduled_time
+        SELECT n.id, n.message, n.created_at, n.status, n.notification_type, n.scheduled_time, 'notification' as item_type
         FROM notifications n
         LEFT JOIN user_notification_status uns ON n.id = uns.notification_id AND uns.user_id = ?
         WHERE n.class_id = ? AND uns.notification_id IS NULL
@@ -599,9 +600,10 @@ def get_unread_notifications_for_user(user_id):
         ORDER BY n.created_at DESC
     ''', (user_id, class_id, user_paid_status))
     notifications = c.fetchall()
+    
     # Fetch personal notifications (notifications specifically for this user)
     c.execute('''
-        SELECT n.id, n.message, n.created_at, n.status, n.notification_type, n.scheduled_time
+        SELECT n.id, n.message, n.created_at, n.status, n.notification_type, n.scheduled_time, 'personal_notification' as item_type
         FROM notifications n
         LEFT JOIN user_notification_status uns ON n.id = uns.notification_id AND uns.user_id = ?
         WHERE n.class_id IS NULL AND n.target_paid_status = 'personal' AND uns.notification_id IS NULL
@@ -609,8 +611,32 @@ def get_unread_notifications_for_user(user_id):
         ORDER BY n.created_at DESC
     ''', (user_id,))
     personal_notifications = c.fetchall()
+    
+    # Fetch personal chat messages (unread)
+    c.execute('''
+        SELECT 
+            pc.id, 
+            pc.message, 
+            pc.created_at, 
+            'active' as status, 
+            'personal_chat' as notification_type, 
+            pc.created_at as scheduled_time,
+            'personal_chat' as item_type,
+            u.username as sender_name
+        FROM personal_chats pc
+        JOIN users u ON pc.sender_id = u.id
+        WHERE pc.receiver_id = ? 
+        AND pc.is_read = 0
+        ORDER BY pc.created_at DESC
+    ''', (user_id,))
+    personal_messages = c.fetchall()
+    
+    # Combine all items and sort by creation time
+    all_items = notifications + personal_notifications + personal_messages
+    all_items.sort(key=lambda x: x[2], reverse=True)
+    
     conn.close()
-    return notifications + personal_notifications
+    return all_items
 
 def mark_notification_as_seen(user_id, notification_id):
     conn = sqlite3.connect(DATABASE)

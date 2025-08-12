@@ -150,6 +150,43 @@ body.dark-mode .dropdown-item:hover {
   color: #6a82fb;
 }
 
+/* Personal Chat Notification Styles */
+.personal-chat-item {
+  border-left: 4px solid #fc5c7d !important;
+  background: #fff3e0 !important;
+}
+
+.personal-chat-item:hover {
+  background: #ffe6cc !important;
+}
+
+.personal-chat-item .notification-badge {
+  background: #fc5c7d !important;
+  color: white !important;
+}
+
+/* Dark mode personal chat notifications */
+body.dark-mode .personal-chat-item {
+  background: #2d1b69 !important;
+  border-left-color: #fc5c7d !important;
+}
+
+body.dark-mode .personal-chat-item:hover {
+  background: #3d1b69 !important;
+}
+
+body.dark-mode .personal-chat-item .notification-badge {
+  background: #fc5c7d !important;
+  color: white !important;
+}
+
+/* Notification count badge dark mode */
+body.dark-mode #notificationCount {
+  background: #fc5c7d !important;
+  color: white !important;
+  border-color: #232946 !important;
+}
+
 /* Notification dropdown base styles */
 #notifDropdown {
   background: #fff !important;

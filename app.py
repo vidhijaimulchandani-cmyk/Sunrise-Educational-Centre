@@ -40,7 +40,7 @@ from auth_handler import (
     save_forum_message, get_live_class_messages, save_live_class_message,
     create_topic, delete_topic, get_all_topics, get_topics_for_user, can_user_access_topic,
     update_user_with_password, add_personal_notification, get_forum_messages,
-    format_datetime_for_display, get_categories_for_class
+    format_datetime_for_display, get_categories_for_class, mark_messages_as_read
 )
 import csv
 from io import StringIO
@@ -4903,6 +4903,27 @@ def get_conversations():
     user_id = session['user_id']
     conversations = get_user_conversations(user_id)
     return jsonify({'conversations': conversations})
+
+@app.route('/api/mark-notification-seen/<int:notification_id>', methods=['POST'])
+def mark_notification_seen_api(notification_id):
+    if 'user_id' not in session:
+        return jsonify({'error': 'Not authenticated'}), 401
+    
+    data = request.get_json() or {}
+    notification_type = data.get('type', 'notification')
+    user_id = session['user_id']
+    
+    if notification_type == 'personal_chat':
+        # Mark personal chat message as read
+        success = mark_messages_as_read(user_id, notification_id)
+    else:
+        # Mark regular notification as seen
+        success = mark_notification_as_seen(user_id, notification_id)
+    
+    if success:
+        return jsonify({'success': True, 'message': 'Item marked as seen'})
+    else:
+        return jsonify({'error': 'Failed to mark item as seen'}), 500
 
 # Socket.IO events for real-time chat
 @socketio.on('join_chat')
