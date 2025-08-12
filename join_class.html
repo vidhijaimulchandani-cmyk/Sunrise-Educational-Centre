@@ -203,6 +203,13 @@
       <div class="class-info">
         <h2 class="class-title">{{ topic or 'Live Class' }}</h2>
         <p class="class-description">{{ description or '' }}</p>
+        {% if subject or teacher_name or target_class %}
+        <div style="margin:0.5rem 0 1rem 0; color:#555;">
+          {% if subject %}<strong>Subject:</strong> {{ subject|capitalize }}{% endif %}
+          {% if teacher_name %}{% if subject %} • {% endif %}<strong>Teacher:</strong> {{ teacher_name }}{% endif %}
+          {% if target_class %}<br><strong>Target:</strong> Class {{ target_class }}{% if target_class in ['11','12'] and class_stream %} ({{ class_stream|capitalize }}){% endif %}{% endif %}
+        </div>
+        {% endif %}
         <a href="/online-class" class="back-link">&larr; Back to Online Classes</a>
       </div>
     </div>

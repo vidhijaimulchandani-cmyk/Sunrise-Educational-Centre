@@ -820,14 +820,14 @@ def online_class():
 def join_class(class_id):
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
-    c.execute('SELECT meeting_url, topic, description FROM live_classes WHERE id=?', (class_id,))
+    c.execute('SELECT meeting_url, topic, description, target_class, class_stream, subject, teacher_name FROM live_classes WHERE id=?', (class_id,))
     row = c.fetchone()
     conn.close()
     if not row:
         flash('Class not found.', 'error')
         return redirect(url_for('online_class'))
-    meeting_url, topic, description = row
-    return render_template('join_class.html', meeting_url=meeting_url, topic=topic, description=description)
+    meeting_url, topic, description, target_class, class_stream, subject, teacher_name = row
+    return render_template('join_class.html', class_id=class_id, meeting_url=meeting_url, topic=topic, description=description, target_class=target_class, class_stream=class_stream, subject=subject, teacher_name=teacher_name)
 
 @app.route('/join-class-host/<int:class_id>')
 def join_class_host(class_id):
@@ -837,14 +837,14 @@ def join_class_host(class_id):
     
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
-    c.execute('SELECT meeting_url, topic, description FROM live_classes WHERE id=?', (class_id,))
+    c.execute('SELECT meeting_url, topic, description, target_class, class_stream, subject, teacher_name FROM live_classes WHERE id=?', (class_id,))
     row = c.fetchone()
     conn.close()
     if not row:
         flash('Class not found.', 'error')
         return redirect(url_for('admin_panel'))
-    meeting_url, topic, description = row
-    return render_template('join_class_host.html', meeting_url=meeting_url, topic=topic, description=description)
+    meeting_url, topic, description, target_class, class_stream, subject, teacher_name = row
+    return render_template('join_class_host.html', class_id=class_id, meeting_url=meeting_url, topic=topic, description=description, target_class=target_class, class_stream=class_stream, subject=subject, teacher_name=teacher_name)
 
 @app.route('/start-live-class', methods=['POST'])
 def start_live_class():
