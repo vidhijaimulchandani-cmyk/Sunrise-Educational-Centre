@@ -144,7 +144,7 @@
       </div>
       <ul class="nav-links">
         <li><a href="/admin">Admin Panel</a></li>
-        <li><a href="/personal-chat">💬 Chat</a></li>
+
         <li><a href="/logout" class="btn btn-primary">Logout</a></li>
       </ul>
     </div>
@@ -218,6 +218,18 @@
         
         <div class="form-group">
           <label for="chat_users">Select Users:</label>
+          
+          <!-- User Search by Name -->
+          <div style="margin-bottom:1rem;">
+            <label for="userSearchInput" style="display:block; margin-bottom:0.5rem; color:#374151; font-weight:500;">Search Users by Name:</label>
+            <div style="position:relative;">
+              <input type="text" id="userSearchInput" placeholder="Type @username (e.g., @yash) or search by name..." style="width:100%; padding:0.8rem; border:1px solid #e0e7ff; border-radius:8px; font-size:1rem; border-right:none; border-top-right-radius:0; border-bottom-right-radius:0;" onkeypress="if(event.key==='Enter'){event.preventDefault();searchUsers();}">
+              <button type="button" onclick="searchUsers()" style="padding:0.8rem 1rem; background:#6a82fb; color:white; border:none; border-radius:0 8px 8px 0; cursor:pointer; font-size:1rem;">Search</button>
+            </div>
+            <div id="userSearchResults" style="margin-top:0.5rem; max-height:200px; overflow-y:auto; border:1px solid #e0e7ff; border-radius:8px; display:none;"></div>
+          </div>
+          
+          <!-- Quick Selection Buttons -->
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;">
             <button type="button" class="user-tag" onclick="toggleUserSelection('all')" data-user="all">@All Users</button>
             <button type="button" class="user-tag" onclick="toggleUserSelection('paid')" data-user="paid">@Paid Users</button>
@@ -436,6 +448,67 @@
           console.error('Error sending personal messages:', error);
           alert('Error sending personal messages');
         });
+    }
+    
+    // User search functionality
+    function searchUsers() {
+      const searchInput = document.getElementById('userSearchInput').value.trim();
+      const resultsContainer = document.getElementById('userSearchResults');
+      
+      if (!searchInput) {
+        alert('Please enter a username or name to search');
+        return;
+      }
+      
+      // Remove @ symbol if present
+      const searchTerm = searchInput.startsWith('@') ? searchInput.slice(1) : searchInput;
+      
+      fetch(`/api/search-users?q=${encodeURIComponent(searchTerm)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.success && data.users.length > 0) {
+            displayUserSearchResults(data.users);
+          } else {
+            resultsContainer.innerHTML = '<div style="padding:1rem; color:#666; text-align:center;">No users found</div>';
+            resultsContainer.style.display = 'block';
+          }
+        })
+        .catch(error => {
+          console.error('Error searching users:', error);
+          resultsContainer.innerHTML = '<div style="padding:1rem; color:#fc5c7d; text-align:center;">Error searching users</div>';
+          resultsContainer.style.display = 'block';
+        });
+    }
+    
+    function displayUserSearchResults(users) {
+      const resultsContainer = document.getElementById('userSearchResults');
+      resultsContainer.innerHTML = '';
+      
+      users.forEach(user => {
+        const userDiv = document.createElement('div');
+        userDiv.style.cssText = 'padding:0.8rem; border-bottom:1px solid #e0e7ff; cursor:pointer; transition:background 0.2s ease; display:flex; justify-content:space-between; align-items:center;';
+        userDiv.innerHTML = `
+          <div>
+            <strong style="color:#374151;">@${user.username}</strong>
+            <div style="color:#6b7280; font-size:0.9rem;">${user.paid_status || 'Unknown'} • Class: ${user.class_name || 'Unknown'}</div>
+          </div>
+          <button type="button" onclick="selectUserFromSearch('${user.username}', ${user.id})" style="background:#6a82fb; color:white; border:none; padding:0.4rem 0.8rem; border-radius:6px; cursor:pointer; font-size:0.85rem;">Select</button>
+        `;
+        
+        userDiv.onmouseover = () => userDiv.style.background = '#f8fafc';
+        userDiv.onmouseout = () => userDiv.style.background = 'transparent';
+        
+        resultsContainer.appendChild(userDiv);
+      });
+      
+      resultsContainer.style.display = 'block';
+    }
+    
+    function selectUserFromSearch(username, userId) {
+      selectedUsers.set(userId, username);
+      updateSelectedUsersDisplay();
+      document.getElementById('userSearchInput').value = '';
+      document.getElementById('userSearchResults').style.display = 'none';
     }
     
     // Character counter for chat message

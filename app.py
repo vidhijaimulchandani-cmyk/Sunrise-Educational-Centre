@@ -4895,6 +4895,49 @@ def get_messages(other_user_id):
     
     return jsonify({'messages': messages})
 
+@app.route('/api/search-users')
+def search_users():
+    if 'user_id' not in session:
+        return jsonify({'error': 'Not authenticated'}), 401
+    
+    # Only admins and teachers can search users
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    query = request.args.get('q', '').strip()
+    if not query:
+        return jsonify({'error': 'Search query is required'}), 400
+    
+    try:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        
+        # Search by username (case-insensitive)
+        c.execute('''
+            SELECT u.id, u.username, u.paid_status, c.name as class_name
+            FROM users u
+            LEFT JOIN classes c ON u.class_id = c.id
+            WHERE LOWER(u.username) LIKE LOWER(?) 
+            ORDER BY u.username
+            LIMIT 20
+        ''', (f'%{query}%',))
+        
+        users = []
+        for row in c.fetchall():
+            users.append({
+                'id': row[0],
+                'username': row[1],
+                'paid_status': row[2] if row[2] else 'Unknown',
+                'class_name': row[3] if row[3] else 'Unknown'
+            })
+        
+        conn.close()
+        return jsonify({'success': True, 'users': users})
+        
+    except Exception as e:
+        print(f"Error searching users: {e}")
+        return jsonify({'error': 'Failed to search users'}), 500
+
 @app.route('/api/get-conversations')
 def get_conversations():
     if 'user_id' not in session:
