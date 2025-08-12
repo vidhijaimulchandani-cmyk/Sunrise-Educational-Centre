@@ -1018,6 +1018,15 @@ def create_live_class_page():
         topic = request.form.get('topic')
         description = request.form.get('description')
         video_source = request.form.get('video_source', 'upload')
+        target_class = request.form.get('target_class', 'all')
+        class_type = request.form.get('class_type', 'lecture')
+        paid_status = request.form.get('paid_status', 'unpaid')
+        class_stream = request.form.get('class_stream')
+        schedule_date_raw = request.form.get('schedule_date')
+        scheduled_time = None
+        if schedule_date_raw:
+            # Convert from HTML datetime-local (YYYY-MM-DDTHH:MM) to standard format (YYYY-MM-DD HH:MM:SS)
+            scheduled_time = schedule_date_raw.replace('T', ' ') + ':00' if 'T' in schedule_date_raw else schedule_date_raw
         
         meeting_url = None
         
@@ -1063,7 +1072,11 @@ def create_live_class_page():
             class_code = ''.join(secrets.choice('0123456789') for i in range(6))
             pin = ''.join(secrets.choice('0123456789') for i in range(4))
             meeting_url = f"/join-class/{class_code}"
-            new_class_id = create_live_class(class_code, pin, meeting_url, topic, description)
+            new_class_id = create_live_class(
+                class_code, pin, meeting_url, topic, description,
+                status='active', scheduled_time=scheduled_time, target_class=target_class,
+                class_stream=class_stream, class_type=class_type, paid_status=paid_status
+            )
             
             # Add notification for the class
             add_notification(
@@ -1084,7 +1097,11 @@ def create_live_class_page():
         # Create the live class
         class_code = ''.join(secrets.choice('0123456789') for i in range(6))
         pin = ''.join(secrets.choice('0123456789') for i in range(4))
-        new_class_id = create_live_class(class_code, pin, meeting_url, topic, description)
+        new_class_id = create_live_class(
+            class_code, pin, meeting_url, topic, description,
+            status='scheduled', scheduled_time=scheduled_time, target_class=target_class,
+            class_stream=class_stream, class_type=class_type, paid_status=paid_status
+        )
         details = get_class_details_by_id(new_class_id)
         class_details = {
             'topic': details[3], 'description': details[4],
@@ -2738,7 +2755,11 @@ def api_live_classes_dashboard():
                     'description': class_item[5],
                     'created_at': class_item[6],
                     'status': class_item[7],
-                    'scheduled_time': class_item[8] if len(class_item) > 8 else None
+                    'scheduled_time': class_item[8] if len(class_item) > 8 else None,
+                    'target_class': class_item[9] if len(class_item) > 9 else None,
+                    'class_stream': class_item[10] if len(class_item) > 10 else None,
+                    'class_type': class_item[11] if len(class_item) > 11 else None,
+                    'paid_status': class_item[12] if len(class_item) > 12 else None,
                 })
         
         return jsonify({'success': True, 'data': result})
@@ -2857,8 +2878,10 @@ def api_get_completed_classes():
                 'created_at': class_item[6],  # created_at
                 'status': class_item[7],  # status
                 'scheduled_time': class_item[8],  # scheduled_time
-                'class_type': 'lecture',  # default class type
-                'target_class': 'all',  # default target class
+                'class_type': class_item[11] if len(class_item) > 11 else None,
+                'target_class': class_item[9] if len(class_item) > 9 else None,
+                'class_stream': class_item[10] if len(class_item) > 10 else None,
+                'paid_status': class_item[12] if len(class_item) > 12 else None,
                 'host': 'Unknown',  # default host
                 'duration': 'N/A',  # default duration
                 'participants': 0,  # default participants

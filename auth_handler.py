@@ -88,6 +88,17 @@ def init_db():
             attendance_count INTEGER
         )
     ''')
+    # Ensure optional columns for class variations exist
+    c.execute("PRAGMA table_info(live_classes)")
+    live_class_columns = [row[1] for row in c.fetchall()]
+    if 'target_class' not in live_class_columns:
+        c.execute("ALTER TABLE live_classes ADD COLUMN target_class TEXT DEFAULT 'all'")
+    if 'class_stream' not in live_class_columns:
+        c.execute("ALTER TABLE live_classes ADD COLUMN class_stream TEXT")
+    if 'class_type' not in live_class_columns:
+        c.execute("ALTER TABLE live_classes ADD COLUMN class_type TEXT DEFAULT 'lecture'")
+    if 'paid_status' not in live_class_columns:
+        c.execute("ALTER TABLE live_classes ADD COLUMN paid_status TEXT DEFAULT 'unpaid'")
     c.execute('''
         CREATE TABLE IF NOT EXISTS classes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -265,6 +276,22 @@ def init_classes_db():
             'admin', 'teacher'
         ]
         c.executemany('INSERT INTO classes (name) VALUES (?)', [(c,) for c in classes_to_add])
+    conn.commit()
+    conn.close()
+
+def ensure_live_class_variant_columns():
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+    c.execute("PRAGMA table_info(live_classes)")
+    cols = [row[1] for row in c.fetchall()]
+    if 'target_class' not in cols:
+        c.execute("ALTER TABLE live_classes ADD COLUMN target_class TEXT DEFAULT 'all'")
+    if 'class_stream' not in cols:
+        c.execute("ALTER TABLE live_classes ADD COLUMN class_stream TEXT")
+    if 'class_type' not in cols:
+        c.execute("ALTER TABLE live_classes ADD COLUMN class_type TEXT DEFAULT 'lecture'")
+    if 'paid_status' not in cols:
+        c.execute("ALTER TABLE live_classes ADD COLUMN paid_status TEXT DEFAULT 'unpaid'")
     conn.commit()
     conn.close()
 
@@ -622,11 +649,41 @@ def delete_user(user_id):
     conn.commit()
     conn.close()
 
-def create_live_class(class_code, pin, meeting_url, topic, description, status='scheduled', scheduled_time=None):
+def create_live_class(
+    class_code,
+    pin,
+    meeting_url,
+    topic,
+    description,
+    status='scheduled',
+    scheduled_time=None,
+    target_class='all',
+    class_stream=None,
+    class_type='lecture',
+    paid_status='unpaid'
+):
+    # Ensure variant columns exist even if init_db was not called
+    ensure_live_class_variant_columns()
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
-    c.execute('INSERT INTO live_classes (class_code, pin, meeting_url, topic, description, created_at, status, scheduled_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-              (class_code, pin, meeting_url, topic, description, format_ist_time(get_current_ist_time()), status, scheduled_time))
+    created_at = format_ist_time(get_current_ist_time())
+    c.execute(
+        'INSERT INTO live_classes (class_code, pin, meeting_url, topic, description, created_at, status, scheduled_time, target_class, class_stream, class_type, paid_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        (
+            class_code,
+            pin,
+            meeting_url,
+            topic,
+            description,
+            created_at,
+            status,
+            scheduled_time,
+            target_class,
+            class_stream,
+            class_type,
+            paid_status,
+        ),
+    )
     conn.commit()
     new_class_id = c.lastrowid
     conn.close()
@@ -948,10 +1005,14 @@ def update_live_class_status(class_id, status):
 
 def get_live_classes_by_status(status):
     """Get live classes by status (scheduled, active, completed, cancelled)"""
+    # Ensure variant columns exist
+    ensure_live_class_variant_columns()
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     c.execute('''
-        SELECT id, class_code, pin, meeting_url, topic, description, created_at, status, scheduled_time
+        SELECT 
+            id, class_code, pin, meeting_url, topic, description, created_at, status, scheduled_time,
+            target_class, class_stream, class_type, paid_status
         FROM live_classes 
         WHERE status = ?
         ORDER BY created_at DESC
@@ -978,10 +1039,12 @@ def get_upcoming_live_classes():
     c = conn.cursor()
     current_time = get_current_ist_time()
     c.execute('''
-        SELECT id, class_code, pin, meeting_url, topic, description, created_at, status, scheduled_time
+        SELECT 
+            id, class_code, pin, meeting_url, topic, description, created_at, status, scheduled_time,
+            target_class, class_stream, class_type, paid_status
         FROM live_classes 
         WHERE status = 'scheduled' AND (scheduled_time > ? OR scheduled_time IS NULL)
-        ORDER BY scheduled_time ASC NULLS LAST
+        ORDER BY scheduled_time ASC
     ''', (format_ist_time(current_time),))
     classes = c.fetchall()
     conn.close()
