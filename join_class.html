@@ -117,7 +117,12 @@
       <!-- Universal Video Container for Students -->
       <div class="live-watch-container">
         <!-- Host Live Camera Feed (when available) -->
-        <video id="hostCameraFeed" class="video-player" autoplay playsinline style="display: none; margin-bottom: 1rem;"></video>
+        <div id="hostCameraContainer" style="display: none; margin-bottom: 1rem;">
+          <video id="hostCameraFeed" class="video-player" autoplay playsinline style="width: 100%; max-width: 640px; height: auto;"></video>
+          <div style="text-align: center; margin-top: 0.5rem; color: #6a82fb; font-weight: 600;">
+            🔴 Live Host Camera
+          </div>
+        </div>
         
         <!-- Content Video (YouTube or uploaded video) -->
         <div id="contentVideo" style="display: block;">
@@ -151,9 +156,12 @@
             Watching content video
           </span>
           <div style="margin-top: 0.5rem;">
-            <button id="requestHostStreamBtn" onclick="requestHostStream()" style="background: #6a82fb; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem;">
+            <button id="requestHostStreamBtn" onclick="requestHostStream()" style="background: #6a82fb; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; margin-right: 0.5rem;">
               📹 Request Host Camera
             </button>
+            <a href="/host-stream/{{ class_id }}" target="_blank" style="background: #28a745; color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.9rem; display: inline-block;">
+              🎥 View Host Stream
+            </a>
           </div>
         </div>
         
@@ -404,8 +412,13 @@ async function initializeWebRTC() {
     peerConnection.ontrack = (event) => {
       console.log('Received host stream:', event.streams[0]);
       hostStream = event.streams[0];
+      
+      const hostCameraContainer = document.getElementById('hostCameraContainer');
+      const hostCameraFeed = document.getElementById('hostCameraFeed');
+      const contentVideo = document.getElementById('contentVideo');
+      
       hostCameraFeed.srcObject = hostStream;
-      hostCameraFeed.style.display = 'block';
+      hostCameraContainer.style.display = 'block';
       contentVideo.style.display = 'none';
       isHostStreamConnected = true;
       
@@ -445,7 +458,11 @@ async function initializeWebRTC() {
       } else if (peerConnection.connectionState === 'disconnected' || 
                  peerConnection.connectionState === 'failed') {
         console.log('Disconnected from host stream');
-        hostCameraFeed.style.display = 'none';
+        
+        const hostCameraContainer = document.getElementById('hostCameraContainer');
+        const contentVideo = document.getElementById('contentVideo');
+        
+        hostCameraContainer.style.display = 'none';
         contentVideo.style.display = 'block';
         isHostStreamConnected = false;
         

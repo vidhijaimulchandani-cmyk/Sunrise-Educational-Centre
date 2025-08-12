@@ -521,6 +521,10 @@
     // WebRTC Variables
     let peerConnections = new Map(); // Store peer connections for each student
     let isWebRTCReady = false;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+    let streamUrl = null;
+    let isBroadcasting = false;
 
     // Camera Control Elements
     const hostCamera = document.getElementById('hostCamera');
@@ -545,6 +549,17 @@
 
         await startCameraWithSelectedDevices();
         
+        // Notify students that host stream is ready
+        if (localStream) {
+          isBroadcasting = true;
+          
+          // Notify students that host stream is ready
+          socket.emit('host_stream_ready', { 
+            class_id: classId,
+            message: 'Host camera stream is now available'
+          });
+        }
+        
         // Update UI
         startCameraBtn.style.display = 'none';
         stopCameraBtn.style.display = 'inline-block';
@@ -556,11 +571,6 @@
           class_id: classId, 
           status: 'live',
           message: 'Host camera is now live!'
-        });
-        
-        // Notify students that host stream is ready for WebRTC
-        socket.emit('host_stream_ready', { 
-          class_id: classId 
         });
         
         console.log('Camera started successfully');

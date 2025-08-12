@@ -4482,6 +4482,29 @@ def api_get_class_recordings(class_id):
             'error': str(e)
         }), 500
 
+@app.route('/host-stream/<class_id>')
+def host_stream_page(class_id):
+    """Page that displays the host's camera stream"""
+    try:
+        # Get class details
+        db = get_db()
+        c = db.cursor()
+        c.execute('SELECT topic, description FROM live_classes WHERE id = ?', (class_id,))
+        class_data = c.fetchone()
+        
+        if not class_data:
+            return "Class not found", 404
+        
+        topic, description = class_data
+        
+        return render_template('host_stream.html', 
+                             class_id=class_id, 
+                             topic=topic or 'Live Class',
+                             description=description or '')
+    except Exception as e:
+        print(f"Error loading host stream page: {e}")
+        return "Error loading stream", 500
+
 @app.route('/check-admission-by-ip', methods=['POST'])
 def check_admission_by_ip():
     try:
@@ -4724,6 +4747,29 @@ def handle_get_recording_status(data):
     except Exception as e:
         print(f"Error in get_recording_status: {e}")
         emit('error', {'message': 'Failed to get recording status'})
+
+@socketio.on('request_host_stream')
+def handle_request_host_stream(data):
+    try:
+        class_id = data.get('class_id')
+        
+        if not class_id:
+            emit('error', {'message': 'Class ID is required'})
+            return
+        
+        # Check if host is streaming
+        if class_id in active_recordings:
+            # Host is recording, so they should be streaming
+            emit('host_stream_ready', {
+                'class_id': class_id,
+                'message': 'Host stream is available'
+            })
+        else:
+            emit('error', {'message': 'Host is not currently streaming'})
+            
+    except Exception as e:
+        print(f"Error in request_host_stream: {e}")
+        emit('error', {'message': 'Failed to request host stream'})
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
