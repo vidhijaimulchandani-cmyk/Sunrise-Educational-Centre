@@ -144,6 +144,7 @@
       </div>
       <ul class="nav-links">
         <li><a href="/admin">Admin Panel</a></li>
+        <li><a href="/personal-chat">💬 Chat</a></li>
         <li><a href="/logout" class="btn btn-primary">Logout</a></li>
       </ul>
     </div>
@@ -208,6 +209,38 @@
         <button type="submit" class="btn btn-primary">Send Now</button>
         <button type="submit" name="schedule" value="1" class="btn btn-secondary" style="margin-left:1rem;">Schedule Notification</button>
       </form>
+
+      <!-- Personal Chat Section -->
+      <h2 style="margin-top:2.5rem;">💬 Personal Chat</h2>
+      <div style="background:#f8fafc; border-radius:12px; padding:1.5rem; margin-bottom:2rem; border:1px solid #e2e8f0;">
+        <h3 style="color:#6a82fb; margin-bottom:1rem;">Send Personal Message</h3>
+        <p style="color:#64748b; margin-bottom:1.5rem;">Send a direct message to specific users using @ mentions or select multiple users.</p>
+        
+        <div class="form-group">
+          <label for="chat_users">Select Users:</label>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;">
+            <button type="button" class="user-tag" onclick="toggleUserSelection('all')" data-user="all">@All Users</button>
+            <button type="button" class="user-tag" onclick="toggleUserSelection('paid')" data-user="paid">@Paid Users</button>
+            <button type="button" class="user-tag" onclick="toggleUserSelection('unpaid')" data-user="unpaid">@Unpaid Users</button>
+          </div>
+          
+          <div id="selectedUsersContainer" style="margin-bottom:1rem;">
+            <label>Selected Users:</label>
+            <div id="selectedUsersList" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem;"></div>
+          </div>
+          
+          <div class="form-group">
+            <label for="chat_message">Message:</label>
+            <textarea id="chat_message" name="chat_message" rows="4" placeholder="Type your personal message here..." style="width:100%; padding:0.8rem; border:1px solid #e0e7ff; border-radius:8px; font-size:1rem; resize:vertical;"></textarea>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem;">
+              <small style="color:#666;">Personal messages will be sent as direct chats to selected users</small>
+              <span id="chatCharCount" style="color:#6a82fb; font-size:0.9rem;">0/500</span>
+            </div>
+          </div>
+          
+          <button type="button" onclick="sendPersonalMessages()" class="btn btn-primary" style="margin-top:1rem;">Send Personal Messages</button>
+        </div>
+      </div>
 
       <h2 style="margin-top:2.5rem;">Past Notifications</h2>
       <div style="overflow-x:auto;">
@@ -323,7 +356,161 @@
         this.style.height = Math.min(this.scrollHeight, 200) + 'px';
       });
     }
+    
+    // Personal Chat Functionality
+    let selectedUsers = new Set();
+    
+    function toggleUserSelection(userType) {
+      const userTag = event.target;
+      
+      if (selectedUsers.has(userType)) {
+        selectedUsers.delete(userType);
+        userTag.classList.remove('selected');
+      } else {
+        selectedUsers.add(userType);
+        userTag.classList.add('selected');
+      }
+      
+      updateSelectedUsersDisplay();
+    }
+    
+    function updateSelectedUsersDisplay() {
+      const container = document.getElementById('selectedUsersList');
+      container.innerHTML = '';
+      
+      selectedUsers.forEach(userType => {
+        const tag = document.createElement('span');
+        tag.className = 'selected-user-tag';
+        tag.textContent = `@${userType}`;
+        tag.onclick = () => removeUser(userType);
+        container.appendChild(tag);
+      });
+    }
+    
+    function removeUser(userType) {
+      selectedUsers.delete(userType);
+      document.querySelector(`[data-user="${userType}"]`).classList.remove('selected');
+      updateSelectedUsersDisplay();
+    }
+    
+    function sendPersonalMessages() {
+      const message = document.getElementById('chat_message').value.trim();
+      
+      if (selectedUsers.size === 0) {
+        alert('Please select at least one user group');
+        return;
+      }
+      
+      if (!message) {
+        alert('Please enter a message');
+        return;
+      }
+      
+      if (!confirm(`Send this message to ${selectedUsers.size} user group(s)?`)) {
+        return;
+      }
+      
+      // Send personal messages to selected user groups
+      const promises = Array.from(selectedUsers).map(userType => {
+        return fetch('/api/send-personal-messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_type: userType,
+            message: message
+          })
+        });
+      });
+      
+      Promise.all(promises)
+        .then(responses => {
+          alert('Personal messages sent successfully!');
+          document.getElementById('chat_message').value = '';
+          selectedUsers.clear();
+          updateSelectedUsersDisplay();
+          document.querySelectorAll('.user-tag').forEach(tag => tag.classList.remove('selected'));
+        })
+        .catch(error => {
+          console.error('Error sending personal messages:', error);
+          alert('Error sending personal messages');
+        });
+    }
+    
+    // Character counter for chat message
+    const chatMessageTextarea = document.getElementById('chat_message');
+    const chatCharCount = document.getElementById('chatCharCount');
+    
+    if (chatMessageTextarea && chatCharCount) {
+      chatMessageTextarea.addEventListener('input', function() {
+        const currentLength = this.value.length;
+        const maxLength = 500;
+        chatCharCount.textContent = `${currentLength}/${maxLength}`;
+        
+        // Change color when approaching limit
+        if (currentLength > maxLength * 0.9) {
+          chatCharCount.style.color = '#fc5c7d';
+        } else if (currentLength > maxLength * 0.7) {
+          chatCharCount.style.color = '#f6ad55';
+        } else {
+          chatCharCount.style.color = '#6a82fb';
+        }
+      });
+    }
   </script>
+  
+  <style>
+    .user-tag {
+      background: #e0e7ff;
+      color: #6a82fb;
+      border: 1px solid #6a82fb;
+      border-radius: 20px;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .user-tag:hover {
+      background: #6a82fb;
+      color: white;
+      transform: translateY(-1px);
+    }
+    
+    .user-tag.selected {
+      background: #6a82fb;
+      color: white;
+      box-shadow: 0 2px 8px rgba(106,130,251,0.3);
+    }
+    
+    .selected-user-tag {
+      background: #fc5c7d;
+      color: white;
+      border-radius: 20px;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .selected-user-tag:hover {
+      background: #e74c3c;
+      transform: scale(1.05);
+    }
+    
+    .selected-user-tag::after {
+      content: '×';
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  </style>
+  
   <script src="script.js"></script>
 </body>
 </html> 

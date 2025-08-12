@@ -149,6 +149,44 @@ def init_db():
             paid TEXT DEFAULT 'unpaid'
         )
     ''')
+    
+    # Create personal chat tables
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS personal_chats (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            sender_id INTEGER NOT NULL,
+            receiver_id INTEGER NOT NULL,
+            message TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            is_read INTEGER DEFAULT 0,
+            FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+            FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+    ''')
+    
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS chat_rooms (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            room_name TEXT NOT NULL,
+            created_by INTEGER NOT NULL,
+            created_at TEXT NOT NULL,
+            is_active INTEGER DEFAULT 1,
+            FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE
+        )
+    ''')
+    
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS chat_room_messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            room_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            message TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            FOREIGN KEY (room_id) REFERENCES chat_rooms(id) ON DELETE CASCADE,
+            FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+    ''')
+    
     conn.commit()
 
     # --- Data Migration ---
@@ -1382,3 +1420,125 @@ def format_datetime_for_display(datetime_str):
     except Exception:
         # Fallback to original format if parsing fails
         return datetime_str[:19].replace('T', ' ') if 'T' in datetime_str else datetime_str
+
+# ==============================================================================
+# Personal Chat Functions
+# ==============================================================================
+
+def send_personal_message(sender_id, receiver_id, message):
+    """Send a personal message between two users"""
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+    
+    try:
+        c.execute('''
+            INSERT INTO personal_chats (sender_id, receiver_id, message, created_at)
+            VALUES (?, ?, ?, ?)
+        ''', (sender_id, receiver_id, message, get_current_ist_time()))
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f"Error sending personal message: {e}")
+        return False
+    finally:
+        conn.close()
+
+def get_personal_messages(user1_id, user2_id, limit=50):
+    """Get personal messages between two users"""
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+    
+    try:
+        c.execute('''
+            SELECT pc.id, pc.sender_id, pc.receiver_id, pc.message, pc.created_at, pc.is_read,
+                   u.username as sender_name
+            FROM personal_chats pc
+            JOIN users u ON pc.sender_id = u.id
+            WHERE (pc.sender_id = ? AND pc.receiver_id = ?) 
+               OR (pc.sender_id = ? AND pc.receiver_id = ?)
+            ORDER BY pc.created_at DESC
+            LIMIT ?
+        ''', (user1_id, user2_id, user2_id, user1_id, limit))
+        messages = c.fetchall()
+        return messages
+    except Exception as e:
+        print(f"Error getting personal messages: {e}")
+        return []
+    finally:
+        conn.close()
+
+def get_user_conversations(user_id):
+    """Get all conversations for a user"""
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+    
+    try:
+        c.execute('''
+            SELECT DISTINCT 
+                CASE 
+                    WHEN pc.sender_id = ? THEN pc.receiver_id
+                    ELSE pc.sender_id
+                END as other_user_id,
+                u.username as other_username,
+                MAX(pc.created_at) as last_message_time,
+                COUNT(CASE WHEN pc.receiver_id = ? AND pc.is_read = 0 THEN 1 END) as unread_count
+            FROM personal_chats pc
+            JOIN users u ON (
+                CASE 
+                    WHEN pc.sender_id = ? THEN pc.receiver_id
+                    ELSE pc.sender_id
+                END = u.id
+            )
+            WHERE pc.sender_id = ? OR pc.receiver_id = ?
+            GROUP BY other_user_id
+            ORDER BY last_message_time DESC
+        ''', (user_id, user_id, user_id, user_id, user_id))
+        conversations = c.fetchall()
+        return conversations
+    except Exception as e:
+        print(f"Error getting user conversations: {e}")
+        return []
+    finally:
+        conn.close()
+
+def mark_messages_as_read(user_id, sender_id):
+    """Mark messages as read from a specific sender"""
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+    
+    try:
+        c.execute('''
+            UPDATE personal_chats 
+            SET is_read = 1 
+            WHERE receiver_id = ? AND sender_id = ? AND is_read = 0
+        ''', (user_id, sender_id))
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f"Error marking messages as read: {e}")
+        return False
+    finally:
+        conn.close()
+
+def send_welcome_message(user_id):
+    """Send a welcome message to a new user"""
+    admin_user_id = get_admin_user_id()
+    if admin_user_id:
+        welcome_message = "Welcome to your very own Sunrise-Educational-Classes! 🎉 We're excited to have you join our community. Feel free to explore our study resources, join live classes, and connect with other students. If you have any questions, don't hesitate to ask!"
+        return send_personal_message(admin_user_id, user_id, welcome_message)
+    return False
+
+def get_admin_user_id():
+    """Get the admin user ID"""
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+    
+    try:
+        c.execute('SELECT id FROM users WHERE username = "yash" LIMIT 1')
+        result = c.fetchone()
+        return result[0] if result else None
+    except Exception as e:
+        print(f"Error getting admin user ID: {e}")
+        return None
+    finally:
+        conn.close()

@@ -86,6 +86,70 @@ body.dark-mode .login-error {
   color: #fff;
 }
 
+/* Profile Dropdown Styles */
+.profile-dropdown {
+  position: relative;
+}
+
+.profile-dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  min-width: 200px;
+  z-index: 1000;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.profile-dropdown:hover .profile-dropdown-menu {
+  display: block;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  color: #232946;
+  text-decoration: none;
+  transition: background 0.2s ease;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background: #f8fafc;
+  color: #6a82fb;
+}
+
+.dropdown-item svg {
+  color: #6a82fb;
+}
+
+/* Dark mode profile dropdown */
+body.dark-mode .profile-dropdown-menu {
+  background: #232946;
+  border: 1px solid rgba(100,100,255,0.2);
+  box-shadow: 0 4px 24px rgba(35,41,70,0.25);
+}
+
+body.dark-mode .dropdown-item {
+  color: #f4f4f4;
+  border-bottom: 1px solid #44476a;
+}
+
+body.dark-mode .dropdown-item:hover {
+  background: #44476a;
+  color: #6a82fb;
+}
+
 /* Notification dropdown base styles */
 #notifDropdown {
   background: #fff !important;

@@ -84,7 +84,40 @@ document.addEventListener('DOMContentLoaded', () => {
             navLinks.classList.toggle("active");
         });
     }
+    
+    // Setup profile dropdown
+    setupProfileDropdown();
 });
+
+// Profile Dropdown Functionality
+function setupProfileDropdown() {
+    const profileDropdown = document.getElementById('profileDropdown');
+    const profileLink = document.getElementById('profileLink');
+    
+    if (profileDropdown && profileLink) {
+        // Show dropdown on click for mobile
+        profileLink.addEventListener('click', function(e) {
+            if (window.innerWidth <= 768) {
+                e.preventDefault();
+                profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
+            }
+        });
+        
+        // Hide dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!profileLink.contains(e.target) && !profileDropdown.contains(e.target)) {
+                profileDropdown.style.display = 'none';
+            }
+        });
+        
+        // Hide dropdown on window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                profileDropdown.style.display = 'none';
+            }
+        });
+    }
+}
 
 // Unified Dark Mode Implementation
 function setupDarkMode() {

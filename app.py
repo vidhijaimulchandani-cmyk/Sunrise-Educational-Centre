@@ -938,6 +938,20 @@ def register():
             return render_template('auth.html', error='Invalid admin code. Registration denied.')
             
     if register_user(username, password, class_id):
+        # Send welcome message to new user
+        try:
+            # Get the newly registered user's ID
+            conn = sqlite3.connect(DATABASE)
+            c = conn.cursor()
+            c.execute('SELECT id FROM users WHERE username = ?', (username,))
+            new_user_id = c.fetchone()[0]
+            conn.close()
+            
+            # Send welcome message
+            send_welcome_message(new_user_id)
+        except Exception as e:
+            print(f"Warning: Could not send welcome message: {e}")
+        
         flash('Registration successful! Please log in.', 'success')
         return redirect(url_for('auth'))
     else:
@@ -4780,6 +4794,146 @@ def handle_get_recording_status(data):
     except Exception as e:
         print(f"Error in get_recording_status: {e}")
         emit('error', {'message': 'Failed to get recording status'})
+
+# ==============================================================================
+# Personal Chat Routes
+# ==============================================================================
+
+@app.route('/personal-chat')
+def personal_chat_page():
+    if 'user_id' not in session:
+        return redirect('/auth')
+    
+    user_id = session['user_id']
+    conversations = get_user_conversations(user_id)
+    users = get_all_users()
+    
+    return render_template('personal_chat.html', 
+                         conversations=conversations, 
+                         users=users, 
+                         current_user_id=user_id)
+
+@app.route('/api/send-message', methods=['POST'])
+def send_message():
+    if 'user_id' not in session:
+        return jsonify({'error': 'Not authenticated'}), 401
+    
+    data = request.get_json()
+    sender_id = session['user_id']
+    receiver_id = data.get('receiver_id')
+    message = data.get('message')
+    
+    if not receiver_id or not message:
+        return jsonify({'error': 'Missing receiver_id or message'}), 400
+    
+    success = send_personal_message(sender_id, receiver_id, message)
+    if success:
+        return jsonify({'success': True, 'message': 'Message sent'})
+    else:
+        return jsonify({'error': 'Failed to send message'}), 500
+
+@app.route('/api/send-personal-messages', methods=['POST'])
+def send_personal_messages():
+    if 'user_id' not in session:
+        return jsonify({'error': 'Not authenticated'}), 401
+    
+    data = request.get_json()
+    user_type = data.get('user_type')
+    message = data.get('message')
+    sender_id = session['user_id']
+    
+    if not user_type or not message:
+        return jsonify({'error': 'Missing user_type or message'}), 400
+    
+    try:
+        # Get users based on type
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        
+        if user_type == 'all':
+            c.execute('SELECT id FROM users WHERE id != ?', (sender_id,))
+        elif user_type == 'paid':
+            c.execute('SELECT id FROM users WHERE paid = "paid" AND id != ?', (sender_id,))
+        elif user_type == 'unpaid':
+            c.execute('SELECT id FROM users WHERE paid = "not paid" AND id != ?', (sender_id,))
+        else:
+            return jsonify({'error': 'Invalid user type'}), 400
+        
+        user_ids = [row[0] for row in c.fetchall()]
+        conn.close()
+        
+        if not user_ids:
+            return jsonify({'error': f'No users found for type: {user_type}'}), 404
+        
+        # Send personal messages to all users
+        success_count = 0
+        for user_id in user_ids:
+            if send_personal_message(sender_id, user_id, message):
+                success_count += 1
+        
+        return jsonify({
+            'success': True, 
+            'message': f'Personal messages sent to {success_count} users',
+            'total_users': len(user_ids),
+            'success_count': success_count
+        })
+        
+    except Exception as e:
+        print(f"Error sending personal messages: {e}")
+        return jsonify({'error': 'Failed to send personal messages'}), 500
+
+@app.route('/api/get-messages/<int:other_user_id>')
+def get_messages(other_user_id):
+    if 'user_id' not in session:
+        return jsonify({'error': 'Not authenticated'}), 401
+    
+    user_id = session['user_id']
+    messages = get_personal_messages(user_id, other_user_id)
+    
+    # Mark messages as read
+    mark_messages_as_read(user_id, other_user_id)
+    
+    return jsonify({'messages': messages})
+
+@app.route('/api/get-conversations')
+def get_conversations():
+    if 'user_id' not in session:
+        return jsonify({'error': 'Not authenticated'}), 401
+    
+    user_id = session['user_id']
+    conversations = get_user_conversations(user_id)
+    return jsonify({'conversations': conversations})
+
+# Socket.IO events for real-time chat
+@socketio.on('join_chat')
+def handle_join_chat(data):
+    user_id = data.get('user_id')
+    if user_id:
+        join_room(f'user_{user_id}')
+        emit('joined_chat', {'user_id': user_id})
+
+@socketio.on('send_chat_message')
+def handle_send_chat_message(data):
+    sender_id = data.get('sender_id')
+    receiver_id = data.get('receiver_id')
+    message = data.get('message')
+    
+    if sender_id and receiver_id and message:
+        success = send_personal_message(sender_id, receiver_id, message)
+        if success:
+            # Emit to both sender and receiver
+            emit('new_chat_message', {
+                'sender_id': sender_id,
+                'receiver_id': receiver_id,
+                'message': message,
+                'timestamp': datetime.now().isoformat()
+            }, room=f'user_{sender_id}')
+            emit('new_chat_message', {
+                'sender_id': sender_id,
+                'receiver_id': receiver_id,
+                'message': message,
+                'timestamp': datetime.now().isoformat()
+            }, room=f'user_{receiver_id}')
 
 @socketio.on('request_host_stream')
 def handle_request_host_stream(data):

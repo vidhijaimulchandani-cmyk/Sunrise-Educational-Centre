@@ -21,7 +21,24 @@
         <li><a href="/online-class">Live Class</a></li>
         <li><a href="/study-resources">Study Resources</a></li>
         <li><a href="/forum">Forum</a></li>
-        <li><a href="/profile">Profile</a></li>
+        <li><a href="/personal-chat">💬 Chat</a></li>
+        <li class="profile-dropdown" style="position:relative;">
+          <a href="/profile" id="profileLink">Profile</a>
+          <div class="profile-dropdown-menu" id="profileDropdown">
+            <a href="/profile" class="dropdown-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right:8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/></svg>
+              My Profile
+            </a>
+            <a href="/personal-chat" class="dropdown-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right:8px;"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" fill="currentColor"/></svg>
+              Personal Chat
+            </a>
+            <a href="/logout" class="dropdown-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right:8px;"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 8v-2H4V5z" fill="currentColor"/></svg>
+              Logout
+            </a>
+          </div>
+        </li>
           <!-- Notification Bell (rebuilt, now before login/logout) -->
           <li id="notifBellContainer" style="position:relative; z-index:9999;">
             <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative; z-index:10000; padding:0;">
