@@ -4483,7 +4483,9 @@ def api_get_categories_by_class_name(class_name):
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
 
-
+@app.route('/check-admission-login')
+def check_admission_login():
+    return render_template('check_admission_login.html')
 
 @app.route('/download-recording/<int:recording_id>')
 def download_recording(recording_id):
