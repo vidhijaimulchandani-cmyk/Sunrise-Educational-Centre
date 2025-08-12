@@ -4549,14 +4549,45 @@ def check_admission_login():
             access_username=access_username,
             access_password=access_password
         )
+
+# Test route to check database state
+@app.route('/test-db-state')
+def test_db_state():
+    try:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
         
+        # Check admissions table
+        c.execute('SELECT COUNT(*) FROM admissions')
+        admissions_count = c.fetchone()[0]
+        
+        # Check admission_access table
+        c.execute('SELECT COUNT(*) FROM admission_access')
+        access_count = c.fetchone()[0]
+        
+        # Check approved_admissions table
+        c.execute('SELECT COUNT(*) FROM approved_admissions')
+        approved_count = c.fetchone()[0]
+        
+        # Check disapproved_admissions table
+        c.execute('SELECT COUNT(*) FROM disapproved_admissions')
+        disapproved_count = c.fetchone()[0]
+        
+        # Get sample admission access records
+        c.execute('SELECT admission_id, access_username FROM admission_access LIMIT 5')
+        sample_access = c.fetchall()
+        
+        conn.close()
+        
+        return jsonify({
+            'admissions_count': admissions_count,
+            'access_count': access_count,
+            'approved_count': approved_count,
+            'disapproved_count': disapproved_count,
+            'sample_access': sample_access
+        })
     except Exception as e:
-        print(f"DEBUG: Exception occurred: {str(e)}")
-        flash(f'Error checking admission: {str(e)}', 'error')
-        return render_template('check_admission_login.html',
-            access_username=access_username,
-            access_password=access_password
-        )
+        return jsonify({'error': str(e)})
 
 @app.route('/download-recording/<int:recording_id>')
 def download_recording(recording_id):
