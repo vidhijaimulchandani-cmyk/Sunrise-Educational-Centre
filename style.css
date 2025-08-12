@@ -86,6 +86,43 @@ body.dark-mode .login-error {
   color: #fff;
 }
 
+/* Notification dropdown base styles */
+#notifDropdown {
+  background: #fff !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12) !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
+  border-radius: 12px !important;
+  min-width: 260px !important;
+  max-width: 92vw !important;
+  max-height: 60vh !important;
+  overflow-y: auto !important;
+  position: absolute !important;
+  right: 0 !important;
+  top: 36px !important;
+  z-index: 10000 !important;
+  padding: 1rem !important;
+}
+
+.notification-item {
+  padding: 0.7rem 0 !important;
+  border-bottom: 1px solid #eee !important;
+  color: #232946 !important;
+  cursor: pointer !important;
+  transition: background 0.2s ease !important;
+}
+
+.notification-item:hover {
+  background: #f0f4ff !important;
+}
+
+@media (max-width: 480px) {
+  #notifDropdown {
+    right: 0 !important;
+    left: auto !important;
+    width: min(92vw, 360px) !important;
+  }
+}
+
 /* Enhanced Dark Mode Styles for Better Visibility */
 
 /* Notification dropdown dark mode */

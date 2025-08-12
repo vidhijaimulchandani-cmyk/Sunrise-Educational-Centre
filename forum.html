@@ -421,15 +421,6 @@
       const notifBell = document.getElementById('notifBell');
       const notifDropdown = document.getElementById('notifDropdown');
       if (notifBell && notifDropdown) {
-        notifBell.addEventListener('click', function(e) {
-          notifDropdown.style.display = notifDropdown.style.display === 'block' ? 'none' : 'block';
-          e.stopPropagation();
-        });
-        document.addEventListener('click', function() {
-          notifDropdown.style.display = 'none';
-        });
-        notifDropdown.addEventListener('click', function(e) { e.stopPropagation(); });
-        
         // Handle notification clicks to mark as seen
         document.addEventListener('click', function(e) {
           if (e.target.closest('.notification-item')) {

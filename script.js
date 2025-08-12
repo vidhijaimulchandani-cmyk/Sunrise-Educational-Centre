@@ -116,6 +116,46 @@ function updateToggleButton() {
 // Initialize dark mode on page load
 document.addEventListener('DOMContentLoaded', function() {
     setupDarkMode();
+
+    // Global notification dropdown behavior
+    const bell = document.getElementById('notifBell');
+    const dropdown = document.getElementById('notifDropdown');
+    if (bell && dropdown) {
+        // Toggle on bell click
+        bell.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const isOpen = dropdown.style.display === 'block';
+            dropdown.style.display = isOpen ? 'none' : 'block';
+
+            // Ensure dropdown stays within viewport on small screens
+            if (!isOpen) {
+                const rect = dropdown.getBoundingClientRect();
+                if (rect.right > window.innerWidth) {
+                    dropdown.style.left = `${Math.max(0, window.innerWidth - rect.width - 12)}px`;
+                    dropdown.style.right = 'auto';
+                }
+            }
+        });
+
+        // Close when clicking outside
+        document.addEventListener('click', function() {
+            dropdown.style.display = 'none';
+        });
+
+        // Prevent closing when interacting inside
+        dropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Close on ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') dropdown.style.display = 'none';
+        });
+
+        // Adjust on resize/orientation change
+        window.addEventListener('resize', () => dropdown.style.display = 'none');
+        window.addEventListener('orientationchange', () => dropdown.style.display = 'none');
+    }
     
     // Setup dark mode toggle button if it exists
     const darkModeToggle = document.getElementById('darkModeToggle');
