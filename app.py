@@ -4514,14 +4514,20 @@ def api_get_categories_by_class_name(class_name):
 
 @app.route('/check-admission-login', methods=['GET', 'POST'])
 def check_admission_login():
+    print(f"DEBUG: check_admission_login called with method: {request.method}")
+    
     if request.method == 'GET':
+        print("DEBUG: Rendering GET request")
         return render_template('check_admission_login.html')
     
     # Handle POST request (form submission)
     access_username = request.form.get('access_username', '').strip()
     access_password = request.form.get('access_password', '').strip()
     
+    print(f"DEBUG: POST request with username: {access_username}")
+    
     if not access_username or not access_password:
+        print("DEBUG: Missing credentials")
         flash('Please enter both username and password', 'error')
         return render_template('check_admission_login.html',
             access_username=access_username,
@@ -4529,13 +4535,17 @@ def check_admission_login():
         )
     
     try:
+        print(f"DEBUG: Connecting to database to check credentials")
         conn = sqlite3.connect(DATABASE)
         c = conn.cursor()
         c.execute('SELECT admission_id, access_password FROM admission_access WHERE access_username=?',
                   (access_username,))
         row = c.fetchone()
         
+        print(f"DEBUG: Database query result: {row}")
+        
         if not row:
+            print("DEBUG: No user found in database")
             conn.close()
             flash('Invalid credentials. Please check and try again.', 'error')
             return render_template('check_admission_login.html',
@@ -4544,7 +4554,10 @@ def check_admission_login():
             )
         
         admission_id, hashed_pw = row
+        print(f"DEBUG: Found admission_id: {admission_id}")
+        
         if not check_password_hash(hashed_pw, access_password):
+            print("DEBUG: Password hash check failed")
             conn.close()
             flash('Invalid credentials. Please check and try again.', 'error')
             return render_template('check_admission_login.html',
@@ -4552,10 +4565,16 @@ def check_admission_login():
                 access_password=access_password
             )
         
+        print("DEBUG: Password check passed")
+        
         # Determine status by checking tables
+        print(f"DEBUG: Checking status for admission_id: {admission_id}")
+        
         # 1) pending admissions
         c.execute('''SELECT student_name, class, school_name, status, submitted_at FROM admissions WHERE id = ?''', (admission_id,))
         adm = c.fetchone()
+        print(f"DEBUG: Pending admission query result: {adm}")
+        
         status = None
         details = {}
         
@@ -4567,10 +4586,13 @@ def check_admission_login():
                 'school_name': adm[2],
                 'submitted_at': adm[4]
             }
+            print(f"DEBUG: Found pending admission with status: {status}")
         else:
             # 2) approved
             c.execute('''SELECT student_name, class, school_name, approved_at FROM approved_admissions WHERE original_admission_id = ?''', (admission_id,))
             apr = c.fetchone()
+            print(f"DEBUG: Approved admission query result: {apr}")
+            
             if apr:
                 status = 'approved'
                 details = {
@@ -4579,10 +4601,13 @@ def check_admission_login():
                     'school_name': apr[2],
                     'submitted_at': apr[3]
                 }
+                print(f"DEBUG: Found approved admission")
             else:
                 # 3) disapproved
                 c.execute('''SELECT student_name, class, school_name, disapproved_at FROM disapproved_admissions WHERE original_admission_id = ?''', (admission_id,))
                 dis = c.fetchone()
+                print(f"DEBUG: Disapproved admission query result: {dis}")
+                
                 if dis:
                     status = 'disapproved'
                     details = {
@@ -4591,11 +4616,16 @@ def check_admission_login():
                         'school_name': dis[2],
                         'submitted_at': dis[3]
                     }
+                    print(f"DEBUG: Found disapproved admission")
         
         conn.close()
         
+        print(f"DEBUG: Final status: {status}, details: {details}")
+        
         # Determine paid/unpaid mapping for display
         paid_status = 'paid' if status == 'approved' else 'not paid'
+        
+        print(f"DEBUG: Rendering template with result=True, status={status}, paid_status={paid_status}")
         
         # Render template with results
         return render_template('check_admission_login.html',
