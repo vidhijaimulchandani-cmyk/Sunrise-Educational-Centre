@@ -4483,9 +4483,107 @@ def api_get_categories_by_class_name(class_name):
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
 
-@app.route('/check-admission-login')
+@app.route('/check-admission-login', methods=['GET', 'POST'])
 def check_admission_login():
-    return render_template('check_admission_login.html')
+    if request.method == 'GET':
+        return render_template('check_admission_login.html')
+    
+    # Handle POST request (form submission)
+    access_username = request.form.get('access_username', '').strip()
+    access_password = request.form.get('access_password', '').strip()
+    
+    if not access_username or not access_password:
+        flash('Please enter both username and password', 'error')
+        return render_template('check_admission_login.html',
+            access_username=access_username,
+            access_password=access_password
+        )
+    
+    try:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        c.execute('SELECT admission_id, access_password FROM admission_access WHERE access_username=?',
+                  (access_username,))
+        row = c.fetchone()
+        
+        if not row:
+            conn.close()
+            flash('Invalid credentials. Please check and try again.', 'error')
+            return render_template('check_admission_login.html',
+                access_username=access_username,
+                access_password=access_password
+            )
+        
+        admission_id, hashed_pw = row
+        if not check_password_hash(hashed_pw, access_password):
+            conn.close()
+            flash('Invalid credentials. Please check and try again.', 'error')
+            return render_template('check_admission_login.html',
+                access_username=access_username,
+                access_password=access_password
+            )
+        
+        # Determine status by checking tables
+        # 1) pending admissions
+        c.execute('''SELECT student_name, class, school_name, status, submitted_at FROM admissions WHERE id = ?''', (admission_id,))
+        adm = c.fetchone()
+        status = None
+        details = {}
+        
+        if adm:
+            status = adm[3]
+            details = {
+                'student_name': adm[0],
+                'class': adm[1],
+                'school_name': adm[2],
+                'submitted_at': adm[4]
+            }
+        else:
+            # 2) approved
+            c.execute('''SELECT student_name, class, school_name, approved_at FROM approved_admissions WHERE original_admission_id = ?''', (admission_id,))
+            apr = c.fetchone()
+            if apr:
+                status = 'approved'
+                details = {
+                    'student_name': apr[0],
+                    'class': apr[1],
+                    'school_name': apr[2],
+                    'submitted_at': apr[3]
+                }
+            else:
+                # 3) disapproved
+                c.execute('''SELECT student_name, class, school_name, disapproved_at FROM disapproved_admissions WHERE original_admission_id = ?''', (admission_id,))
+                dis = c.fetchone()
+                if dis:
+                    status = 'disapproved'
+                    details = {
+                        'student_name': dis[0],
+                        'class': dis[1],
+                        'school_name': dis[2],
+                        'submitted_at': dis[3]
+                    }
+        
+        conn.close()
+        
+        # Determine paid/unpaid mapping for display
+        paid_status = 'paid' if status == 'approved' else 'not paid'
+        
+        # Render template with results
+        return render_template('check_admission_login.html',
+            result=True,
+            status=status or 'pending',
+            paid_status=paid_status,
+            details=details,
+            access_username=access_username,
+            access_password=access_password
+        )
+        
+    except Exception as e:
+        flash(f'Error checking admission: {str(e)}', 'error')
+        return render_template('check_admission_login.html',
+            access_username=access_username,
+            access_password=access_password
+        )
 
 @app.route('/download-recording/<int:recording_id>')
 def download_recording(recording_id):

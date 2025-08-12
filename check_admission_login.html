@@ -14,19 +14,47 @@
     .btn {display:inline-block;background:#6a82fb;color:#fff;border:none;border-radius:10px;padding:0.6rem 1rem;cursor:pointer;}
     .alt {text-align:center;margin-top:1rem;color:#64748b;}
     .divider {text-align:center;margin:1rem 0;color:#94a3b8;}
+    
+    /* Status display styles */
+    .status-card {background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1.5rem;margin-top:1rem;}
+    .status-title {color:#6a82fb;font-size:1.2rem;margin-bottom:1rem;}
+    .status-grid {display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+    .status-item {background:#fff;padding:0.8rem;border-radius:8px;border:1px solid #e2e8f0;}
+    .status-label {font-weight:600;color:#374151;font-size:0.9rem;margin-bottom:0.3rem;}
+    .status-value {color:#1f2937;}
+    
+    /* Status-specific colors */
+    .status-approved {background:#f0fff4;border-color:#c6f6d5;}
+    .status-pending {background:#eff6ff;border-color:#bfdbfe;}
+    .status-disapproved {background:#fef5e7;border-color:#fed7aa;}
+    
+    .error-message {background:#fef2f2;border:1px solid #fecaca;color:#dc2626;padding:1rem;border-radius:8px;margin-top:1rem;}
+    .success-message {background:#f0fdf4;border:1px solid #bbf7d0;color:#16a34a;padding:1rem;border-radius:8px;margin-top:1rem;}
   </style>
 </head>
 <body>
   <div class="card">
     <h2 class="title">Check Admission Status</h2>
-    <form method="POST" action="/check-admission">
+    
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="{{ 'success-message' if category == 'success' else 'error-message' }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    
+    <form method="POST" action="/check-admission-login">
       <div class="field">
         <label class="label">Admission ID (Username)</label>
-        <input name="access_username" class="input" placeholder="e.g., ADM000123" required />
+        <input name="access_username" class="input" placeholder="e.g., ADM000123" required value="{{ access_username or '' }}" />
       </div>
       <div class="field">
         <label class="label">Admission Password</label>
-        <input name="access_password" type="password" class="input" placeholder="Enter password" required />
+        <input name="access_password" type="password" class="input" placeholder="Enter password" required value="{{ access_password or '' }}" />
       </div>
       <button class="btn" type="submit">Check Status</button>
     </form>
@@ -39,6 +67,83 @@
         <button class="btn" type="submit">Use My IP</button>
       </div>
     </form>
+    
+    <!-- Status Display Section -->
+    {% if result %}
+    <div class="status-card status-{{ status or 'pending' }}">
+      <h3 class="status-title">Status: <span style="color:#6a82fb;">{{ status|upper }}</span></h3>
+      <div class="status-grid">
+        <div class="status-item">
+          <div class="status-label">Student Name</div>
+          <div class="status-value">{{ details.student_name }}</div>
+        </div>
+        <div class="status-item">
+          <div class="status-label">Class</div>
+          <div class="status-value">{{ details.class }}</div>
+        </div>
+        <div class="status-item">
+          <div class="status-label">School</div>
+          <div class="status-value">{{ details.school_name }}</div>
+        </div>
+        <div class="status-item">
+          <div class="status-label">Submitted</div>
+          <div class="status-value">{{ details.submitted_at }}</div>
+        </div>
+        <div class="status-item">
+          <div class="status-label">Paid Status</div>
+          <div class="status-value">{{ paid_status|title }}</div>
+        </div>
+      </div>
+      
+      {% if status == 'approved' %}
+      <div style="margin-top:1.5rem; padding:1rem; background:#fff; border-radius:8px; border:1px solid #c6f6d5;">
+        <h4 style="color:#38a169; margin-bottom:0.8rem;">🎉 Congratulations! Your admission has been approved!</h4>
+        <div style="background:#f0fff4; padding:1rem; border-radius:6px; border:1px solid #c6f6d5;">
+          <div style="margin-bottom:0.8rem;">
+            <strong style="color:#2d3748;">Your Login Credentials:</strong>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+            <div>
+              <div style="font-size:0.9rem; color:#666; margin-bottom:0.3rem;">Username:</div>
+              <div style="font-family:monospace; background:#f7fafc; padding:0.5rem; border-radius:4px; border:1px solid #e2e8f0; color:#2d3748; font-weight:600;">{{ details.student_name|lower|replace(' ', '') }}{{ details.class }}</div>
+            </div>
+            <div>
+              <div style="font-size:0.9rem; color:#666; margin-bottom:0.3rem;">Password:</div>
+              <div style="font-family:monospace; background:#f7fafc; padding:0.5rem; border-radius:4px; border:1px solid #e2e8f0; color:#2d3748; font-weight:600;">{{ details.student_name|lower|replace(' ', '') }}@{{ details.class }}</div>
+            </div>
+          </div>
+          <div style="font-size:0.9rem; color:#666; line-height:1.4;">
+            <strong>Important:</strong> Please save these credentials safely. You can use them to log into your student portal and access study resources, live classes, and more.
+          </div>
+        </div>
+        <div style="margin-top:1rem;">
+          <a href="/auth" class="btn btn-primary">Login to Student Portal</a>
+        </div>
+      </div>
+      {% elif status == 'disapproved' %}
+      <div style="margin-top:1.5rem; padding:1rem; background:#fff; border-radius:8px; border:1px solid #fed7aa;">
+        <h4 style="color:#d97706; margin-bottom:0.8rem;">⚠️ Admission Status Update</h4>
+        <p style="color:#92400e; line-height:1.4;">
+          Your admission application has been reviewed. Please contact the administration for more details or to discuss your application.
+        </p>
+        <div style="margin-top:1rem;">
+          <a href="/admission" class="btn btn-secondary">Submit New Application</a>
+        </div>
+      </div>
+      {% else %}
+      <div style="margin-top:1.5rem; padding:1rem; background:#fff; border-radius:8px; border:1px solid #bfdbfe;">
+        <h4 style="color:#2563eb; margin-bottom:0.8rem;">📋 Application Under Review</h4>
+        <p style="color:#1e40af; line-height:1.4;">
+          Your admission application is currently under review. We will notify you once a decision has been made.
+        </p>
+        <div style="margin-top:1rem;">
+          <a href="/auth" class="btn btn-primary">Check Back Later</a>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+    
     <div class="alt"><a href="/admission">Go to Admission Form</a></div>
   </div>
 </body>
