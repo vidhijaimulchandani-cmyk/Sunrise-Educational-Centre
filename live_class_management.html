@@ -194,6 +194,17 @@
             </select>
           </div>
           <div class="form-group">
+            <label for="subject">Subject</label>
+            <select id="subject" name="subject">
+              <option value="">Select Subject</option>
+              <option value="maths">Maths</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="teacher_name">Teacher</label>
+            <input type="text" id="teacher_name" name="teacher_name" placeholder="Auto-filled for Maths" readonly>
+          </div>
+          <div class="form-group">
             <label for="target_class">Target Class</label>
             <select id="target_class" name="target_class">
               <option value="all">All Classes</option>
@@ -552,6 +563,8 @@
             <h3>${classItem.topic || 'Untitled Class'}</h3>
             <p><strong>Code:</strong> ${classItem.class_code}</p>
             <p><strong>PIN:</strong> ${classItem.pin}</p>
+            ${classItem.subject ? `<p><strong>Subject:</strong> ${classItem.subject.charAt(0).toUpperCase() + classItem.subject.slice(1)}</p>` : ''}
+            ${classItem.teacher_name ? `<p><strong>Teacher:</strong> ${classItem.teacher_name}</p>` : ''}
             <p><strong>Target:</strong> ${targetText}</p>
             ${classItem.scheduled_time ? `<p><strong>Scheduled:</strong> ${formatDateTime(classItem.scheduled_time)}</p>` : ''}
             ${classItem.created_at ? `<p><strong>Created:</strong> ${formatDateTime(classItem.created_at)}</p>` : ''}
@@ -735,6 +748,20 @@
       }
       targetClassSelect.addEventListener('change', updateStreamVisibility);
       updateStreamVisibility();
+
+      // Auto-fill teacher for Subject Maths
+      const subjectSelect = document.getElementById('subject');
+      const teacherInput = document.getElementById('teacher_name');
+      function updateTeacherBySubject() {
+        const sub = (subjectSelect.value || '').toLowerCase();
+        if (sub === 'maths') {
+          teacherInput.value = 'Mohit sir';
+        } else {
+          teacherInput.value = '';
+        }
+      }
+      subjectSelect.addEventListener('change', updateTeacherBySubject);
+      updateTeacherBySubject();
       console.log('Live Class Management loaded');
     });
     
@@ -802,6 +829,8 @@
             <p><strong>Class Code:</strong> ${classItem.class_code || 'N/A'}</p>
             <p><strong>Host:</strong> ${host}</p>
             <p><strong>Type:</strong> ${classItem.class_type || 'Lecture'}</p>
+            ${classItem.subject ? `<p><strong>Subject:</strong> ${classItem.subject.charAt(0).toUpperCase() + classItem.subject.slice(1)}</p>` : ''}
+            ${classItem.teacher_name ? `<p><strong>Teacher:</strong> ${classItem.teacher_name}</p>` : ''}
             <p><strong>Target Class:</strong> ${(() => { const t = classItem.target_class || 'all'; const s = classItem.class_stream ? ` (${classItem.class_stream.charAt(0).toUpperCase() + classItem.class_stream.slice(1)})` : ''; if (t === 'all' || !t) return 'All Classes'; return `Class ${t}${(t === '11' || t === '12') ? s : ''}`; })()}</p>
             <p><strong>Completed:</strong> ${completionDate}</p>
             

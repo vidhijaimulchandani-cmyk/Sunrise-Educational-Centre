@@ -99,6 +99,10 @@ def init_db():
         c.execute("ALTER TABLE live_classes ADD COLUMN class_type TEXT DEFAULT 'lecture'")
     if 'paid_status' not in live_class_columns:
         c.execute("ALTER TABLE live_classes ADD COLUMN paid_status TEXT DEFAULT 'unpaid'")
+    if 'subject' not in live_class_columns:
+        c.execute("ALTER TABLE live_classes ADD COLUMN subject TEXT")
+    if 'teacher_name' not in live_class_columns:
+        c.execute("ALTER TABLE live_classes ADD COLUMN teacher_name TEXT")
     c.execute('''
         CREATE TABLE IF NOT EXISTS classes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -292,6 +296,10 @@ def ensure_live_class_variant_columns():
         c.execute("ALTER TABLE live_classes ADD COLUMN class_type TEXT DEFAULT 'lecture'")
     if 'paid_status' not in cols:
         c.execute("ALTER TABLE live_classes ADD COLUMN paid_status TEXT DEFAULT 'unpaid'")
+    if 'subject' not in cols:
+        c.execute("ALTER TABLE live_classes ADD COLUMN subject TEXT")
+    if 'teacher_name' not in cols:
+        c.execute("ALTER TABLE live_classes ADD COLUMN teacher_name TEXT")
     conn.commit()
     conn.close()
 
@@ -660,7 +668,9 @@ def create_live_class(
     target_class='all',
     class_stream=None,
     class_type='lecture',
-    paid_status='unpaid'
+    paid_status='unpaid',
+    subject=None,
+    teacher_name=None
 ):
     # Ensure variant columns exist even if init_db was not called
     ensure_live_class_variant_columns()
@@ -668,7 +678,7 @@ def create_live_class(
     c = conn.cursor()
     created_at = format_ist_time(get_current_ist_time())
     c.execute(
-        'INSERT INTO live_classes (class_code, pin, meeting_url, topic, description, created_at, status, scheduled_time, target_class, class_stream, class_type, paid_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO live_classes (class_code, pin, meeting_url, topic, description, created_at, status, scheduled_time, target_class, class_stream, class_type, paid_status, subject, teacher_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         (
             class_code,
             pin,
@@ -682,6 +692,8 @@ def create_live_class(
             class_stream,
             class_type,
             paid_status,
+            subject,
+            teacher_name,
         ),
     )
     conn.commit()
@@ -1012,7 +1024,7 @@ def get_live_classes_by_status(status):
     c.execute('''
         SELECT 
             id, class_code, pin, meeting_url, topic, description, created_at, status, scheduled_time,
-            target_class, class_stream, class_type, paid_status
+            target_class, class_stream, class_type, paid_status, subject, teacher_name
         FROM live_classes 
         WHERE status = ?
         ORDER BY created_at DESC
@@ -1041,7 +1053,7 @@ def get_upcoming_live_classes():
     c.execute('''
         SELECT 
             id, class_code, pin, meeting_url, topic, description, created_at, status, scheduled_time,
-            target_class, class_stream, class_type, paid_status
+            target_class, class_stream, class_type, paid_status, subject, teacher_name
         FROM live_classes 
         WHERE status = 'scheduled' AND (scheduled_time > ? OR scheduled_time IS NULL)
         ORDER BY scheduled_time ASC

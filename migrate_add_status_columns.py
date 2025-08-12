@@ -75,6 +75,26 @@ except sqlite3.OperationalError as e:
     else:
         print(f"Error adding paid_status column to live_classes: {e}")
 
+# Add subject column
+try:
+    c.execute("ALTER TABLE live_classes ADD COLUMN subject TEXT")
+    print("✓ Added 'subject' column to live_classes table")
+except sqlite3.OperationalError as e:
+    if "duplicate column" in str(e):
+        print("✓ 'subject' column already exists in live_classes table")
+    else:
+        print(f"Error adding subject column to live_classes: {e}")
+
+# Add teacher_name column
+try:
+    c.execute("ALTER TABLE live_classes ADD COLUMN teacher_name TEXT")
+    print("✓ Added 'teacher_name' column to live_classes table")
+except sqlite3.OperationalError as e:
+    if "duplicate column" in str(e):
+        print("✓ 'teacher_name' column already exists in live_classes table")
+    else:
+        print(f"Error adding teacher_name column to live_classes: {e}")
+
 # Add scheduled_time column to notifications table for scheduled notifications
 try:
     c.execute("ALTER TABLE notifications ADD COLUMN scheduled_time TEXT")

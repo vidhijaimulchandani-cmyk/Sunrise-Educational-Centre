@@ -1022,6 +1022,10 @@ def create_live_class_page():
         class_type = request.form.get('class_type', 'lecture')
         paid_status = request.form.get('paid_status', 'unpaid')
         class_stream = request.form.get('class_stream')
+        subject = request.form.get('subject')
+        teacher_name = None
+        if (subject or '').strip().lower() == 'maths':
+            teacher_name = 'Mohit sir'
         schedule_date_raw = request.form.get('schedule_date')
         scheduled_time = None
         if schedule_date_raw:
@@ -1075,7 +1079,8 @@ def create_live_class_page():
             new_class_id = create_live_class(
                 class_code, pin, meeting_url, topic, description,
                 status='active', scheduled_time=scheduled_time, target_class=target_class,
-                class_stream=class_stream, class_type=class_type, paid_status=paid_status
+                class_stream=class_stream, class_type=class_type, paid_status=paid_status,
+                subject=subject, teacher_name=teacher_name
             )
             
             # Add notification for the class
@@ -1100,7 +1105,8 @@ def create_live_class_page():
         new_class_id = create_live_class(
             class_code, pin, meeting_url, topic, description,
             status='scheduled', scheduled_time=scheduled_time, target_class=target_class,
-            class_stream=class_stream, class_type=class_type, paid_status=paid_status
+            class_stream=class_stream, class_type=class_type, paid_status=paid_status,
+            subject=subject, teacher_name=teacher_name
         )
         details = get_class_details_by_id(new_class_id)
         class_details = {
@@ -2760,6 +2766,8 @@ def api_live_classes_dashboard():
                     'class_stream': class_item[10] if len(class_item) > 10 else None,
                     'class_type': class_item[11] if len(class_item) > 11 else None,
                     'paid_status': class_item[12] if len(class_item) > 12 else None,
+                    'subject': class_item[13] if len(class_item) > 13 else None,
+                    'teacher_name': class_item[14] if len(class_item) > 14 else None,
                 })
         
         return jsonify({'success': True, 'data': result})
@@ -2882,6 +2890,8 @@ def api_get_completed_classes():
                 'target_class': class_item[9] if len(class_item) > 9 else None,
                 'class_stream': class_item[10] if len(class_item) > 10 else None,
                 'paid_status': class_item[12] if len(class_item) > 12 else None,
+                'subject': class_item[13] if len(class_item) > 13 else None,
+                'teacher_name': class_item[14] if len(class_item) > 14 else None,
                 'host': 'Unknown',  # default host
                 'duration': 'N/A',  # default duration
                 'participants': 0,  # default participants
