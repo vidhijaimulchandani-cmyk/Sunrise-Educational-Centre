@@ -612,6 +612,21 @@
     </div>
   </nav>
   <main class="container main-content">
+    <!-- Admin Navigation -->
+    <section class="admin-section" style="margin-top:1rem; padding:1rem 1.2rem; background:#fff; border:1px solid #e5e7eb; border-radius:8px;">
+      <h3 style="margin:0 0 1rem 0; color:#6a82fb;">Quick Navigation</h3>
+      <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+        <a href="#analytics" class="btn btn-secondary" style="font-size:0.9em; padding:0.5rem 1rem;">📊 Analytics</a>
+        <a href="#users" class="btn btn-secondary" style="font-size:0.9em; padding:0.5rem 1rem;">👥 Users</a>
+        <a href="#forum" class="btn btn-secondary" style="font-size:0.9em; padding:0.5rem 1rem;">📝 Content</a>
+        <a href="#resources" class="btn btn-secondary" style="font-size:0.9em; padding:0.5rem 1rem;">📚 Resources</a>
+        <a href="#notifications" class="btn btn-secondary" style="font-size:0.9em; padding:0.5rem 1rem;">🔔 Notifications</a>
+        <a href="#queries" class="btn btn-secondary" style="font-size:0.9em; padding:0.5rem 1rem;">❓ Queries</a>
+        <a href="#live-classes" class="btn btn-secondary" style="font-size:0.9em; padding:0.5rem 1rem;">🎥 Live Classes</a>
+        <a href="#sessions" class="btn btn-primary" style="font-size:0.9em; padding:0.5rem 1rem;">🔄 Sessions</a>
+      </div>
+    </section>
+    
     <!-- Traffic & Active Users Tracker -->
     <section class="admin-section" style="margin-top:1rem; padding:1rem 1.2rem; display:flex; gap:0.8rem; align-items:center; justify-content:flex-start; background:#fff; border:1px solid #e5e7eb;">
       <div style="font-weight:700; color:#6a82fb;">Traffic</div>
@@ -767,6 +782,37 @@
       <p style="color:#666; margin-bottom:2rem;">Create, schedule, and manage all live classes. Use the dashboard for real-time status monitoring and automatic class transitions.</p>
       <!-- No table here, only link and description -->
     </section>
+    
+    <!-- Session Management Section -->
+    <section id="sessions" class="admin-section" aria-label="Session management">
+      <h2>🔄 Active Sessions</h2>
+      <p style="color:#666; margin-bottom:2rem;">Monitor and manage active user sessions. Only one session per user is allowed.</p>
+      
+      <div style="margin-bottom: 1rem;">
+        <button onclick="refreshSessions()" class="btn btn-primary">🔄 Refresh Sessions</button>
+        <span id="sessionsCount" style="margin-left: 1rem; font-weight: 600; color: #6a82fb;">Loading...</span>
+      </div>
+      
+      <div id="sessionsTable" style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <thead>
+            <tr style="background: #6a82fb; color: #fff;">
+              <th style="padding: 12px; text-align: left; border: none;">User</th>
+              <th style="padding: 12px; text-align: left; border: none;">IP Address</th>
+              <th style="padding: 12px; text-align: left; border: none;">User Agent</th>
+              <th style="padding: 12px; text-align: left; border: none;">Created</th>
+              <th style="padding: 12px; text-align: left; border: none;">Last Activity</th>
+              <th style="padding: 12px; text-align: center; border: none;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="sessionsTableBody">
+            <tr>
+              <td colspan="6" style="padding: 20px; text-align: center; color: #666;">Loading sessions...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
   </main>
   <script src="script.js"></script>
   <script>
@@ -784,9 +830,105 @@
         }
       } catch(e){ console.error('Traffic metrics error', e); }
     }
+    
+    // Session management functions
+    async function refreshSessions() {
+      try {
+        const res = await fetch('/api/admin/sessions');
+        const json = await res.json();
+        
+        if (json && json.success) {
+          const sessions = json.data || [];
+          displaySessions(sessions);
+          document.getElementById('sessionsCount').textContent = `${sessions.length} Active Sessions`;
+        } else {
+          console.error('Failed to fetch sessions:', json.error);
+          document.getElementById('sessionsTableBody').innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center; color: #ff4444;">Error loading sessions</td></tr>';
+        }
+      } catch (e) {
+        console.error('Sessions fetch error:', e);
+        document.getElementById('sessionsTableBody').innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center; color: #ff4444;">Network error</td></tr>';
+      }
+    }
+    
+    function displaySessions(sessions) {
+      const tbody = document.getElementById('sessionsTableBody');
+      
+      if (sessions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center; color: #666;">No active sessions</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = sessions.map(session => `
+        <tr style="border-bottom: 1px solid #e5e7eb;">
+          <td style="padding: 12px; border: none;">
+            <strong>${session.username}</strong><br>
+            <small style="color: #666;">ID: ${session.user_id}</small>
+          </td>
+          <td style="padding: 12px; border: none;">
+            <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 0.9em;">${session.ip_address}</code>
+          </td>
+          <td style="padding: 12px; border: none;">
+            <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${session.user_agent}">
+              ${session.user_agent || 'Unknown'}
+            </div>
+          </td>
+          <td style="padding: 12px; border: none;">
+            <small>${formatDateTime(session.created_at)}</small>
+          </td>
+          <td style="padding: 12px; border: none;">
+            <small>${formatDateTime(session.last_activity)}</small>
+          </td>
+          <td style="padding: 12px; border: none; text-align: center;">
+            <button onclick="forceLogout(${session.user_id}, '${session.username}')" 
+                    class="btn" 
+                    style="background: #ef4444; color: #fff; padding: 6px 12px; font-size: 0.9em; border: none; border-radius: 4px; cursor: pointer;">
+              🚪 Force Logout
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+    
+    async function forceLogout(userId, username) {
+      if (!confirm(`Are you sure you want to force logout ${username}?`)) {
+        return;
+      }
+      
+      try {
+        const res = await fetch(`/api/admin/sessions/force-logout/${userId}`, {
+          method: 'POST'
+        });
+        const json = await res.json();
+        
+        if (json && json.success) {
+          alert(`Successfully force logged out ${username}`);
+          refreshSessions(); // Refresh the table
+        } else {
+          alert(`Failed to force logout: ${json.error || 'Unknown error'}`);
+        }
+      } catch (e) {
+        console.error('Force logout error:', e);
+        alert('Network error while force logging out user');
+      }
+    }
+    
+    function formatDateTime(dateTimeStr) {
+      if (!dateTimeStr) return 'Unknown';
+      try {
+        const dt = new Date(dateTimeStr);
+        return dt.toLocaleString();
+      } catch {
+        return dateTimeStr;
+      }
+    }
+    
     document.addEventListener('DOMContentLoaded', function(){
       refreshTrafficMetrics();
       setInterval(refreshTrafficMetrics, 30000); // refresh every 30s
+      
+      // Load sessions on page load
+      refreshSessions();
     });
     // Force light mode for admin panel - aggressive prevention
     function forceLightMode() {

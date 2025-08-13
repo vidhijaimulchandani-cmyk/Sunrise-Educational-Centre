@@ -51,6 +51,7 @@ import sqlite3
 from datetime import datetime, timedelta, timezone
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask import g
+import uuid
 
 # Import time configuration
 from time_config import (
@@ -268,6 +269,16 @@ def init_tracking_tables():
             ip TEXT,
             last_seen TEXT
         )''')
+        c.execute('''CREATE TABLE IF NOT EXISTS active_sessions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            session_id TEXT NOT NULL,
+            ip_address TEXT NOT NULL,
+            user_agent TEXT,
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+            last_activity TEXT DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(user_id)
+        )''')
         conn.commit()
         conn.close()
     except Exception as e:
@@ -288,6 +299,129 @@ def init_admission_access_table():
         conn.close()
     except Exception as e:
         print(f"Error initializing admission access table: {e}")
+
+def create_user_session(user_id, session_id, ip_address, user_agent):
+    """Create a new session for a user, invalidating any existing sessions"""
+    try:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        
+        # First, invalidate any existing sessions for this user
+        c.execute('DELETE FROM active_sessions WHERE user_id = ?', (user_id,))
+        
+        # Create new session
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        c.execute('''
+            INSERT INTO active_sessions (user_id, session_id, ip_address, user_agent, created_at, last_activity)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', (user_id, session_id, ip_address, user_agent, now, now))
+        
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Error creating user session: {e}")
+        return False
+
+def validate_user_session(user_id, session_id):
+    """Validate if a user's session is still active"""
+    try:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        
+        c.execute('''
+            SELECT session_id, ip_address, last_activity 
+            FROM active_sessions 
+            WHERE user_id = ?
+        ''', (user_id,))
+        
+        result = c.fetchone()
+        conn.close()
+        
+        if not result:
+            return False, "No active session found"
+        
+        stored_session_id, ip_address, last_activity = result
+        
+        # Check if session ID matches
+        if stored_session_id != session_id:
+            return False, "Session ID mismatch"
+        
+        # Check if session is not too old (optional: 24 hours)
+        try:
+            last_activity_dt = datetime.strptime(last_activity, '%Y-%m-%d %H:%M:%S')
+            if (datetime.now() - last_activity_dt).total_seconds() > 86400:  # 24 hours
+                return False, "Session expired"
+        except:
+            pass
+        
+        return True, ip_address
+    except Exception as e:
+        print(f"Error validating user session: {e}")
+        return False, "Session validation error"
+
+def update_session_activity(user_id):
+    """Update the last activity timestamp for a user's session"""
+    try:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        c.execute('''
+            UPDATE active_sessions 
+            SET last_activity = ? 
+            WHERE user_id = ?
+        ''', (now, user_id))
+        
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Error updating session activity: {e}")
+        return False
+
+def remove_user_session(user_id):
+    """Remove a user's active session (logout)"""
+    try:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        
+        c.execute('DELETE FROM active_sessions WHERE user_id = ?', (user_id,))
+        
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Error removing user session: {e}")
+        return False
+
+def get_user_session_info(user_id):
+    """Get information about a user's current session"""
+    try:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        
+        c.execute('''
+            SELECT session_id, ip_address, user_agent, created_at, last_activity
+            FROM active_sessions 
+            WHERE user_id = ?
+        ''', (user_id,))
+        
+        result = c.fetchone()
+        conn.close()
+        
+        if result:
+            return {
+                'session_id': result[0],
+                'ip_address': result[1],
+                'user_agent': result[2],
+                'created_at': result[3],
+                'last_activity': result[4]
+            }
+        return None
+    except Exception as e:
+        print(f"Error getting user session info: {e}")
+        return None
 
 def ensure_admissions_submit_ip_column():
     try:
@@ -1070,15 +1204,28 @@ def auth():
                 error = 'Your account has been banned. Please contact Mohit Sir or admin to be unbanned.'
                 return render_template('auth.html', error=error)
             if user_role == selected_role:
-                session['user_id'] = user_id
-                session['username'] = username
-                session['role'] = user_role
-                if username == 'yash' and user_role == 'admin':
-                    return redirect(url_for('special_dashboard'))
-                if user_role in ['admin', 'teacher']:
-                    return redirect(url_for('admin_panel'))
+                # Get client IP and user agent
+                xff = request.headers.get('X-Forwarded-For', '')
+                client_ip = (xff.split(',')[0].strip() if xff else request.remote_addr) or 'unknown'
+                user_agent = request.headers.get('User-Agent', '')[:300]
+                
+                # Create new session (this will invalidate any existing sessions)
+                session_id = session.sid if hasattr(session, 'sid') else str(uuid.uuid4())
+                if create_user_session(user_id, session_id, client_ip, user_agent):
+                    session['user_id'] = user_id
+                    session['username'] = username
+                    session['role'] = user_role
+                    session['session_id'] = session_id
+                    
+                    if username == 'yash' and user_role == 'admin':
+                        return redirect(url_for('special_dashboard'))
+                    if user_role in ['admin', 'teacher']:
+                        return redirect(url_for('admin_panel'))
+                    else:
+                        return redirect(url_for('home'))
                 else:
-                    return redirect(url_for('home'))
+                    error = 'Failed to create session. Please try again.'
+                    return render_template('auth.html', error=error)
         error = 'Wrong credentials. Contact the institute.'
     return render_template('auth.html', error=error)
 
@@ -1440,6 +1587,11 @@ def add_notification_route():
 
 @app.route('/logout')
 def logout():
+    # Remove session from database
+    user_id = session.get('user_id')
+    if user_id:
+        remove_user_session(user_id)
+    
     session.clear()
     flash('You have been logged out.', 'success')
     return redirect(url_for('auth'))
@@ -4289,6 +4441,25 @@ def api_get_categories_for_class(class_id):
         return jsonify({'success': False, 'error': str(e)})
 
 @app.before_request
+def validate_session():
+    """Validate user session and update activity"""
+    user_id = session.get('user_id')
+    session_id = session.get('session_id')
+    
+    if user_id and session_id:
+        # Validate the session
+        is_valid, ip_info = validate_user_session(user_id, session_id)
+        
+        if not is_valid:
+            # Session is invalid, clear it and redirect to login
+            session.clear()
+            flash('Your session has expired or is invalid. Please log in again.', 'error')
+            return redirect(url_for('auth'))
+        
+        # Update session activity
+        update_session_activity(user_id)
+
+@app.before_request
 def track_ip_activity():
     try:
         # Determine client IP (respect X-Forwarded-For if present)
@@ -4315,6 +4486,18 @@ def track_ip_activity():
             ip TEXT,
             last_seen TEXT
         )''')
+        c.execute('''CREATE TABLE IF NOT EXISTS active_sessions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            session_id TEXT NOT NULL,
+            ip_address TEXT NOT NULL,
+            user_agent TEXT,
+            created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+            last_activity TEXT DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(user_id)
+        )''')
+        conn.commit()
+        conn.close()
         # Insert IP log
         c.execute('INSERT INTO ip_logs (ip, user_id, path, user_agent, visited_at) VALUES (?, ?, ?, ?, ?)',
                   (ip, user_id, path, ua, now_str))
@@ -5354,6 +5537,60 @@ def api_search_users_for_mentions():
         })
     
     return jsonify(results)
+
+@app.route('/api/admin/sessions')
+def api_admin_sessions():
+    """Get all active sessions (admin only)"""
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+    
+    try:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        
+        c.execute('''
+            SELECT s.user_id, u.username, s.session_id, s.ip_address, s.user_agent, 
+                   s.created_at, s.last_activity
+            FROM active_sessions s
+            JOIN users u ON s.user_id = u.id
+            ORDER BY s.last_activity DESC
+        ''')
+        
+        rows = c.fetchall()
+        conn.close()
+        
+        sessions = []
+        for row in rows:
+            sessions.append({
+                'user_id': row[0],
+                'username': row[1],
+                'session_id': row[2],
+                'ip_address': row[3],
+                'user_agent': row[4],
+                'created_at': row[5],
+                'last_activity': row[6]
+            })
+        
+        return jsonify({
+            'success': True,
+            'data': sessions
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/admin/sessions/force-logout/<int:user_id>', methods=['POST'])
+def api_admin_force_logout(user_id):
+    """Force logout a specific user (admin only)"""
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+    
+    try:
+        if remove_user_session(user_id):
+            return jsonify({'success': True, 'message': f'User {user_id} has been force logged out'})
+        else:
+            return jsonify({'success': False, 'error': 'Failed to force logout user'}), 500
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
