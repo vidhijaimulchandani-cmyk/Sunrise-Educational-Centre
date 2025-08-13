@@ -76,7 +76,7 @@ os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'recordings', 'temp'), exi
 
 DATABASE = 'users.db'
 
-def generate_complex_password(length=8):
+def generate_complex_password(length=12):
     """Generate a complex password with mixed characters"""
     import string
     import random
@@ -104,6 +104,55 @@ def generate_complex_password(length=8):
     random.shuffle(password)
     
     return ''.join(password)
+
+def generate_login_username(student_name, dob):
+    """Generate login username: full_name@first4letters_of_dob"""
+    try:
+        # Parse the date of birth
+        from datetime import datetime
+        # Try different date formats
+        date_formats = ['%Y-%m-%d', '%d/%m/%Y', '%d-%m-%Y', '%d %b %Y', '%d %B %Y']
+        dob_date = None
+        
+        for fmt in date_formats:
+            try:
+                dob_date = datetime.strptime(dob, fmt)
+                break
+            except ValueError:
+                continue
+        
+        if not dob_date:
+            # If parsing fails, use the original string and take first 4 chars
+            dob_part = dob.replace(' ', '').replace('-', '').replace('/', '')[:4]
+        else:
+            # Extract day and month, format as DDMM
+            dob_part = f"{dob_date.day:02d}{dob_date.month:02d}"
+        
+        # Clean the student name (remove special characters, spaces become underscores)
+        clean_name = ''.join(c for c in student_name if c.isalnum() or c.isspace()).strip()
+        clean_name = clean_name.replace(' ', '_')
+        
+        # Create username: clean_name@dob_part
+        username = f"{clean_name}@{dob_part}"
+        
+        return username.lower()
+    except Exception as e:
+        print(f"Error generating login username: {e}")
+        # Fallback: use original logic
+        return student_name.replace(' ', '').lower()
+
+def generate_admission_username(admission_id, student_name):
+    """Generate unique admission username to avoid conflicts"""
+    import random
+    import string
+    
+    # Create a unique identifier
+    random_suffix = ''.join(random.choices(string.ascii_uppercase + string.digits, k=4))
+    
+    # Format: ADM{id}_{random_suffix}
+    admission_username = f"ADM{admission_id:06d}_{random_suffix}"
+    
+    return admission_username
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -1909,16 +1958,25 @@ def approve_admission(admission_id):
             try:
                 from auth_handler import register_user, get_class_id_by_name
                 
-                # Get student name and create username
+                # Get student name and contact info
                 student_name = admission_data[0]
                 student_phone = admission_data[2]
                 student_email = admission_data[3]
                 
-                # Create username from student name (remove spaces, make lowercase)
-                username = student_name.replace(' ', '').lower()
+                # Get the pre-generated login username from admission_access_plain
+                c = conn.cursor()
+                c.execute('SELECT login_username FROM admission_access_plain WHERE admission_id = ?', (admission_id,))
+                login_username_row = c.fetchone()
                 
-                # Generate a simple password (student's phone number)
-                password = student_phone
+                if login_username_row and login_username_row[0]:
+                    # Use the pre-generated login username
+                    username = login_username_row[0]
+                else:
+                    # Fallback: create username from student name (remove spaces, make lowercase)
+                    username = student_name.replace(' ', '').lower()
+                
+                # Generate a complex password (12 characters for better security)
+                password = generate_complex_password(12)
                 
                 # Get class_id from class name
                 class_name = admission_data[4]
@@ -2450,30 +2508,50 @@ def admission():
         # Generate admission portal credentials immediately
         new_admission_id = c.lastrowid
         try:
-            access_username = f"ADM{new_admission_id:06d}"
-            access_password = generate_complex_password(8)
+            # Generate unique admission username (for admission portal access)
+            admission_username = generate_admission_username(new_admission_id, request.form['student_name'])
+            
+            # Generate login username (for system login after approval)
+            login_username = generate_login_username(request.form['student_name'], request.form['dob'])
+            
+            # Generate complex password (12 characters for better security)
+            access_password = generate_complex_password(12)
             hashed_pw = generate_password_hash(access_password)
+            
+            # Store admission portal credentials
             c.execute('''INSERT OR IGNORE INTO admission_access (admission_id, access_username, access_password)
-                         VALUES (?, ?, ?)''', (new_admission_id, access_username, hashed_pw))
+                         VALUES (?, ?, ?)''', (new_admission_id, admission_username, hashed_pw))
+            
             # Also store plain password for admin viewing
             c.execute('''CREATE TABLE IF NOT EXISTS admission_access_plain (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 admission_id INTEGER NOT NULL UNIQUE,
                 access_username TEXT UNIQUE,
                 access_password_plain TEXT NOT NULL,
+                login_username TEXT,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP
             )''')
-            c.execute('''INSERT OR REPLACE INTO admission_access_plain (admission_id, access_username, access_password_plain)
-                         VALUES (?, ?, ?)''', (new_admission_id, access_username, access_password))
-            # Store plain password temporarily in session to display once (not persisted)
-            session['last_admission_creds'] = {'username': access_username, 'password': access_password}
-            print(f'Generated credentials: {access_username} / {access_password}')
+            c.execute('''INSERT OR REPLACE INTO admission_access_plain (admission_id, access_username, access_password_plain, login_username)
+                         VALUES (?, ?, ?, ?)''', (new_admission_id, admission_username, access_password, login_username))
+            
+            # Store credentials temporarily in session to display once (not persisted)
+            session['last_admission_creds'] = {
+                'admission_username': admission_username, 
+                'password': access_password,
+                'login_username': login_username
+            }
+            print(f'Generated credentials: Admission: {admission_username} / Login: {login_username} / Password: {access_password}')
         except Exception as _e:
             # Non-fatal: continue even if credential generation fails
             print(f'Warning: Credential generation failed: {_e}')
-            access_username = f"ADM{new_admission_id:06d}"
-            access_password = generate_complex_password(8)
-            session['last_admission_creds'] = {'username': access_username, 'password': access_password}
+            admission_username = f"ADM{new_admission_id:06d}"
+            login_username = request.form['student_name'].replace(' ', '').lower()
+            access_password = generate_complex_password(12)
+            session['last_admission_creds'] = {
+                'admission_username': admission_username, 
+                'password': access_password,
+                'login_username': login_username
+            }
         conn.commit()
         print('Admission saved successfully!')
         conn.close()
@@ -2496,7 +2574,11 @@ def admission():
             'parent_phone': request.form['parent_phone'],
             'submitted_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
-        creds = session.get('last_admission_creds') or {'username': access_username, 'password': access_password}
+        creds = session.get('last_admission_creds') or {
+            'admission_username': admission_username, 
+            'password': access_password,
+            'login_username': login_username
+        }
         try:
             return render_template('admission_success.html', student=student, creds=creds)
         except Exception as template_error:
@@ -2514,7 +2596,9 @@ def check_admission():
     # Prefill with freshly generated credentials if available (single-use display)
     last_creds = session.pop('last_admission_creds', None)
     if last_creds:
-        return render_template('check_admission.html', from_submission=True, access_username=last_creds.get('username'), access_password=last_creds.get('password'))
+        return render_template('check_admission.html', from_submission=True, 
+                             access_username=last_creds.get('admission_username'), 
+                             access_password=last_creds.get('password'))
     # Show last status result if available (single-use)
     last_status = session.pop('last_admission_status', None)
     if last_status:
