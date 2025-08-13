@@ -68,55 +68,59 @@
             </a>
           </div>
         </li>
-          <!-- Notification Bell (rebuilt, now before login/logout) -->
+          <!-- Notification Bell - Always visible for all users -->
           <li id="notifBellContainer" style="position:relative; z-index:9999;">
             <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative; z-index:10000; padding:0;">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
-              {% if user_notifications and user_notifications|length > 0 %}
-              <span id="notificationCount" style="position:absolute;top:-5px;right:-5px;min-width:20px;height:20px;background:#fc5c7d;border-radius:50%;color:white;font-size:0.75rem;font-weight:600;display:flex;align-items:center;justify-content:center;padding:2px;border:2px solid white;">{{ user_notifications|length }}</span>
-              {% endif %}
+              <span id="notificationCount" style="position:absolute;top:-5px;right:-5px;min-width:20px;height:20px;background:#fc5c7d;border-radius:50%;color:white;font-size:0.75rem;font-weight:600;display:none;align-items:center;justify-content:center;padding:2px;border:2px solid white;">0</span>
             </button>
             <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:#fff; min-width:320px; box-shadow:0 4px 24px rgba(100,100,255,0.13); border-radius:12px; z-index:10001; padding:1rem;">
               <strong style="color:#6a82fb; font-size:1.15rem;">Notifications & Messages</strong>
               <ul style="list-style:none; padding:0; margin:0; max-height:320px; overflow-y:auto;">
-                {% if user_notifications and user_notifications|length > 0 %}
-                  {% for notification in user_notifications %}
-                    {% if notification|length >= 7 %}
-                      {% set id, message, created_at, status, notification_type, scheduled_time, item_type = notification %}
-                      {% if item_type == 'personal_chat' %}
-                        {% set sender_name = notification[7] if notification|length > 7 else 'User' %}
-                        <li class="notification-item personal-chat-item" data-notification-id="{{ id }}" data-type="personal_chat" style="padding:0.9rem 1.2rem; border-bottom:1px solid #eee; font-size:1.05rem; color:#232946; background:#fff3e0; border-radius:10px; margin-bottom:0.7rem; cursor:pointer; transition:all 0.2s ease; border-left:4px solid #fc5c7d;" onmouseover="this.style.background='#ffe6cc'" onmouseout="this.style.background='#fff3e0'">
-                          <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
-                            <span style="background:#fc5c7d; color:white; padding:0.2rem 0.5rem; border-radius:12px; font-size:0.8rem; font-weight:600;">💬 Personal</span>
-                            <span style="color:#fc5c7d; font-size:0.9rem; font-weight:600;">@{{ sender_name }}</span>
+                <li style="padding:1.1rem 1.2rem; color:#888; text-align:center; background:#f8fafc; border-radius:10px;">
+                  {% if username %}
+                    {% if user_notifications and user_notifications|length > 0 %}
+                      {% for notification in user_notifications %}
+                        {% if notification|length >= 7 %}
+                          {% set id, message, created_at, status, notification_type, scheduled_time, item_type = notification %}
+                          {% if item_type == 'personal_chat' %}
+                            {% set sender_name = notification[7] if notification|length > 7 else 'User' %}
+                            <div class="notification-item personal-chat-item" data-notification-id="{{ id }}" data-type="personal_chat" style="padding:0.9rem 1.2rem; border-bottom:1px solid #eee; font-size:1.05rem; color:#232946; background:#fff3e0; border-radius:10px; margin-bottom:0.7rem; cursor:pointer; transition:all 0.2s ease; border-left:4px solid #fc5c7d;" onmouseover="this.style.background='#ffe6cc'" onmouseout="this.style.background='#fff3e0'">
+                              <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
+                                <span style="background:#fc5c7d; color:white; padding:0.2rem 0.5rem; border-radius:12px; font-size:0.8rem; font-weight:600;">💬 Personal</span>
+                                <span style="color:#fc5c7d; font-size:0.9rem; font-weight:600;">@{{ sender_name }}</span>
+                              </div>
+                              <strong>{{ message }}</strong><br>
+                              <span style="font-size:0.92rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                            </div>
+                          {% else %}
+                            <div class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.9rem 1.2rem; border-bottom:1px solid #eee; font-size:1.05rem; color:#232946; background:#f8fafc; border-radius:10px; margin-bottom:0.7rem; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='#f8fafc'">
+                              <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
+                                <span style="background:#6a82fb; color:white; padding:0.2rem 0.5rem; border-radius:12px; font-size:0.8rem; font-weight:600;">📢 Notification</span>
+                              </div>
+                              <strong>{{ message }}</strong><br>
+                              <span style="font-size:0.92rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                            </div>
+                          {% endif %}
+                        {% else %}
+                          <!-- Fallback for old notification format -->
+                          {% set id, message, created_at, status, notification_type, scheduled_time = notification %}
+                          <div class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.9rem 1.2rem; border-bottom:1px solid #eee; font-size:1.05rem; color:#232946; background:#f8fafc; border-radius:10px; margin-bottom:0.7rem; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='#f8fafc'">
+                            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
+                              <span style="background:#6a82fb; color:white; padding:0.2rem 0.5rem; border-radius:12px; font-size:0.8rem; font-weight:600;">📢 Notification</span>
+                            </div>
+                            <strong>{{ message }}</strong><br>
+                            <span style="font-size:0.92rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
                           </div>
-                          <strong>{{ message }}</strong><br>
-                          <span style="font-size:0.92rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
-                        </li>
-                      {% else %}
-                        <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.9rem 1.2rem; border-bottom:1px solid #eee; font-size:1.05rem; color:#232946; background:#f8fafc; border-radius:10px; margin-bottom:0.7rem; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='#f8fafc'">
-                          <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
-                            <span style="background:#6a82fb; color:white; padding:0.2rem 0.5rem; border-radius:12px; font-size:0.8rem; font-weight:600;">📢 Notification</span>
-                          </div>
-                          <strong>{{ message }}</strong><br>
-                          <span style="font-size:0.92rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
-                        </li>
-                      {% endif %}
+                        {% endif %}
+                      {% endfor %}
                     {% else %}
-                      <!-- Fallback for old notification format -->
-                      {% set id, message, created_at, status, notification_type, scheduled_time = notification %}
-                      <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.9rem 1.2rem; border-bottom:1px solid #eee; font-size:1.05rem; color:#232946; background:#f8fafc; border-radius:10px; margin-bottom:0.7rem; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='#f8fafc'">
-                        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
-                          <span style="background:#6a82fb; color:white; padding:0.2rem 0.5rem; border-radius:12px; font-size:0.8rem; font-weight:600;">📢 Notification</span>
-                        </div>
-                        <strong>{{ message }}</strong><br>
-                        <span style="font-size:0.92rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
-                      </li>
+                      No new notifications or messages.
                     {% endif %}
-                  {% endfor %}
-                {% else %}
-                  <li style="padding:1.1rem 1.2rem; color:#888; text-align:center; background:#f8fafc; border-radius:10px;">No new notifications or messages.</li>
-                {% endif %}
+                  {% else %}
+                    Please login to view notifications.
+                  {% endif %}
+                </li>
               </ul>
             </div>
           </li>
@@ -639,182 +643,7 @@
         <div style="font-size:1.1rem; color:#232946; margin-top:0.5rem;">Topper Results</div>
       </div>
     </section>
-    <!-- Wall of Fame Section -->
-    <section id="wall-of-fame" style="margin:3rem 0;">
-      <h2 style="text-align:center; margin-bottom:1rem; color:#6a82fb; font-size:2.2rem;">SUNRISE EDUCATION CENTRE SCHOLARS - 2024-25</h2>
-      <p style="text-align:center; margin-bottom:2rem; color:#6a82fb; font-size:1.1rem; font-weight:600;">Er. Mohit Nariyani</p>
-      <div class="fame-slider-container">
-        <button class="fame-arrow fame-arrow-left" onclick="slideFame(-1)">&#8592;</button>
-        <div class="fame-slider" id="fameSlider">
-          <div class="fame-card">
-            <div class="fame-image-wrapper">
-              <img src="student_achievements/2024_2025_achievements.jpeg" alt="JIYA MENGHANI" class="fame-photo">
-              <div class="fame-overlay">
-                <div class="fame-name">JIYA MENGHANI</div>
-                <div class="fame-meta"><span>100/100</span><span>X-Standard MATHS</span><span>2024-25</span></div>
-              </div>
-            </div>
-          </div>
-          <div class="fame-card">
-            <div class="fame-image-wrapper">
-              <img src="img/yash.jpg" alt="MAYUR SABNANI" class="fame-photo">
-              <div class="fame-overlay">
-                <div class="fame-name">MAYUR SABNANI</div>
-                <div class="fame-meta"><span>97/100</span><span>X-Standard MATHS</span><span>2024-25</span></div>
-              </div>
-            </div>
-          </div>
-          <div class="fame-card">
-            <div class="fame-image-wrapper">
-              <img src="img/IMG-20250706-WA0000.jpg" alt="RITIK MOTWANI" class="fame-photo">
-              <div class="fame-overlay">
-                <div class="fame-name">RITIK MOTWANI</div>
-                <div class="fame-meta"><span>93/100</span><span>X-Standard MATHS</span><span>2024-25</span></div>
-              </div>
-            </div>
-          </div>
-          <div class="fame-card">
-            <div class="fame-image-wrapper">
-              <img src="img/yash.jpg" alt="UDAY POPTANI" class="fame-photo">
-              <div class="fame-overlay">
-                <div class="fame-name">UDAY POPTANI</div>
-                <div class="fame-meta"><span>87/100</span><span>X-Standard MATHS</span><span>2024-25</span></div>
-              </div>
-            </div>
-          </div>
-          <div class="fame-card">
-            <div class="fame-image-wrapper">
-              <img src="img/IMG-20250706-WA0000.jpg" alt="YATHARTH VERMA" class="fame-photo">
-              <div class="fame-overlay">
-                <div class="fame-name">YATHARTH VERMA</div>
-                <div class="fame-meta"><span>85/100</span><span>X-Standard MATHS</span><span>2024-25</span></div>
-              </div>
-            </div>
-          </div>
-          <div class="fame-card">
-            <div class="fame-image-wrapper">
-              <img src="img/yash.jpg" alt="PRANAV LALWANI" class="fame-photo">
-              <div class="fame-overlay">
-                <div class="fame-name">PRANAV LALWANI</div>
-                <div class="fame-meta"><span>85/100</span><span>X-Basic MATHS</span><span>2024-25</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <button class="fame-arrow fame-arrow-right" onclick="slideFame(1)">&#8594;</button>
-      </div>
-      <style>
-        .fame-slider-container {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.5rem;
-          max-width: 100vw;
-          overflow: hidden;
-        }
-        .fame-slider {
-          display: flex;
-          gap: 2rem;
-          overflow-x: auto;
-          scroll-behavior: smooth;
-          padding: 1rem 0.5rem 2rem 0.5rem;
-          scroll-snap-type: x mandatory;
-          max-width: 900px;
-        }
-        .fame-card {
-          min-width: 220px;
-          max-width: 220px;
-          background: #fff;
-          border-radius: 18px;
-          box-shadow: 0 4px 24px rgba(100,100,255,0.10);
-          padding: 1.5rem 1.2rem 1.2rem 1.2rem;
-          text-align: center;
-          scroll-snap-align: center;
-          transition: box-shadow 0.2s, background 0.2s;
-        }
-        .fame-image-wrapper { position: relative; }
-        .fame-photo {
-          width: 100%;
-          height: 240px;
-          object-fit: cover;
-          border-radius: 14px;
-        }
-        .fame-overlay {
-          position: absolute;
-          left: 10px;
-          right: 10px;
-          bottom: 10px;
-          background: rgba(35,41,70,0.85);
-          color: #ffffff;
-          padding: 0.6rem 0.8rem;
-          border-radius: 10px;
-          text-align: left;
-        }
-        .fame-overlay .fame-name {
-          font-size: 1rem;
-          font-weight: 700;
-          color: #ffffff;
-          margin: 0 0 0.25rem 0;
-        }
-        .fame-meta {
-          display: flex;
-          gap: 0.6rem;
-          flex-wrap: wrap;
-          font-size: 0.85rem;
-          opacity: 0.9;
-        }
-        .fame-arrow {
-          background: #6a82fb;
-          color: #fff;
-          border: none;
-          border-radius: 50%;
-          width: 38px;
-          height: 38px;
-          font-size: 1.5rem;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: background 0.2s;
-        }
-        .fame-arrow:hover {
-          background: #5a6fd8;
-        }
-        @media (max-width: 700px) {
-          .fame-slider { gap: 1rem; }
-          .fame-card { min-width: 170px; max-width: 170px; padding: 1rem 0.7rem; }
-          .fame-photo { height: 200px; }
-        }
-        body.dark-mode .fame-card {
-          background: #232946;
-          color: #fff;
-          box-shadow: 0 4px 24px rgba(40,40,80,0.18);
-          border: 2px solid #6a82fb;
-          margin-right: 8px;
-        }
-        body.dark-mode .fame-overlay { background: rgba(0,0,0,0.68); }
-        body.dark-mode .fame-name { color: #fff; }
-        body.dark-mode .fame-meta { color: #aabfff; }
-        body.dark-mode .fame-slider { gap: 2.5rem; }
-      </style>
-      <script>
-        function slideFame(dir) {
-          const slider = document.getElementById('fameSlider');
-          const card = slider.querySelector('.fame-card');
-          if (!card) return;
-          const scrollAmount = card.offsetWidth + 32; // card width + gap
-          slider.scrollBy({ left: dir * scrollAmount, behavior: 'smooth' });
-        }
-        
-        function slideFame2023(dir) {
-          const slider = document.getElementById('fameSlider2023');
-          const card = slider.querySelector('.fame-card');
-          if (!card) return;
-          const scrollAmount = card.offsetWidth + 32; // card width + gap
-          slider.scrollBy({ left: dir * scrollAmount, behavior: 'smooth' });
-        }
-      </script>
-    </section>
+    
     <main class="container main-content">
       <!-- Topper Student Review Card -->
       <!-- (Removed old Wall of Fame/Topper section; only new slider remains) -->
@@ -1151,12 +980,20 @@
             }
           });
           
-          // Handle notification clicks to mark as seen
+          // Handle notification clicks to mark as seen (only for logged-in users)
           document.addEventListener('click', function(e) {
             if (e.target.closest('.notification-item')) {
               const notificationItem = e.target.closest('.notification-item');
               const notificationId = notificationItem.getAttribute('data-notification-id');
               const notificationType = notificationItem.getAttribute('data-type') || 'notification';
+              
+              // Check if user is logged in before making API call
+              const logoutLink = document.querySelector('a[href="/logout"]');
+              if (!logoutLink) {
+                // User not logged in, show login message
+                alert('Please login to interact with notifications.');
+                return;
+              }
               
               // Mark notification as seen using new API
               fetch(`/api/mark-notification-seen/${notificationId}`, {
