@@ -365,6 +365,82 @@ def preview_xlsx_file():
     except Exception as e:
         return jsonify({'success': False, 'error': f'Error reading Excel file: {str(e)}'})
 
+@bulk_upload_bp.route('/check-duplicates', methods=['POST'])
+def check_duplicates():
+    """Check for potential duplicates and file existence before confirming upload"""
+    try:
+        data = request.get_json(force=True)
+        excel_path = data.get('excel_path') or data.get('file_path')
+        if not excel_path or not os.path.exists(excel_path):
+            return jsonify({'success': False, 'error': 'Excel file path invalid'}), 400
+
+        import pandas as pd
+        df = pd.read_excel(excel_path, sheet_name='Study Resources Upload')
+
+        # Open DB connection
+        import sqlite3
+        conn = sqlite3.connect(study_resources_handler.db_path)
+        c = conn.cursor()
+
+        # Build class name -> id map without creating new classes
+        classes = {}
+        c.execute('SELECT id, name FROM classes')
+        for row in c.fetchall():
+            classes[row[1]] = row[0]
+
+        results = []
+        for idx, row in df.iterrows():
+            title = str(row.get('Title') or '').strip()
+            class_name = str(row.get('Class') or '').strip()
+            category = str(row.get('Category') or '').strip()
+            file_path = str(row.get('File Path') or '').strip()
+
+            class_id = classes.get(class_name)
+
+            is_duplicate = False
+            duplicate_reason = ''
+            if class_id and title:
+                # Check duplicate by title+class (and optionally category)
+                try:
+                    c.execute('SELECT COUNT(1) FROM resources WHERE title = ? AND class_id = ?', (title, class_id))
+                    count = c.fetchone()[0] or 0
+                    if count > 0:
+                        is_duplicate = True
+                        duplicate_reason = f"Title already exists in class '{class_name}'"
+                except Exception:
+                    pass
+
+            file_exists = bool(file_path) and os.path.exists(file_path) and os.path.isfile(file_path)
+
+            results.append({
+                'index': int(idx),
+                'title': title,
+                'class': class_name,
+                'category': category,
+                'file_path': file_path,
+                'file_exists': file_exists,
+                'is_duplicate': is_duplicate,
+                'duplicate_reason': duplicate_reason
+            })
+
+        conn.close()
+        total = len(results)
+        dup_count = sum(1 for r in results if r['is_duplicate'])
+        missing_count = sum(1 for r in results if not r['file_exists'])
+
+        return jsonify({
+            'success': True,
+            'summary': {
+                'total_rows': total,
+                'duplicates': dup_count,
+                'missing_files': missing_count
+            },
+            'rows': results
+        })
+    except Exception as e:
+        logger.error(f"Error checking duplicates: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 # Error handlers
 @bulk_upload_bp.errorhandler(413)
 def too_large(e):

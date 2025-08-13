@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let excelFilePath = null;
     let previewData = [];
+    let rowChecks = {}; // index -> {is_duplicate, file_exists, duplicate_reason}
 
     // Drag and drop functionality for Excel file
     excelUploadArea.addEventListener('dragover', (e) => {
@@ -89,26 +90,92 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p><strong>Total files to upload:</strong> ${data.total_files}</p>
                     <p><strong>Preview showing:</strong> First ${data.preview_data.length} files</p>
                     <p><strong>Columns found:</strong> ${data.columns.join(', ')}</p>
+                    <div id="dup-summary" style="margin-top:0.5rem;color:#475569;"></div>
                 </div>
             `;
             
-            // Display preview table
-            previewTbody.innerHTML = '';
-            
-            data.preview_data.forEach((file, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${file['File Name'] || '-'}</td>
-                    <td>${file['Title'] || '-'}</td>
-                    <td>${file['Class'] || '-'}</td>
-                    <td>${file['Category'] || '-'}</td>
-                    <td>${file['Description'] || '-'}</td>
-                    <td><span class="status-pending">Pending</span></td>
-                `;
-                previewTbody.appendChild(row);
-            });
+            previewData = data.preview_data;
+            renderPreviewTable();
+
+            // Trigger duplicate/missing check if we have excel path
+            if (excelFilePath) {
+                runDuplicateCheck(excelFilePath);
+            }
         }
     }
+
+    function renderPreviewTable() {
+        previewTbody.innerHTML = '';
+        const search = (document.getElementById('filter-search')?.value || '').toLowerCase();
+        const onlyDup = document.getElementById('filter-duplicates')?.checked;
+        const onlyMissing = document.getElementById('filter-missing')?.checked;
+
+        previewData.forEach((file, index) => {
+            const title = (file['Title'] || '').toString();
+            const klass = (file['Class'] || '').toString();
+            const category = (file['Category'] || '').toString();
+            const desc = (file['Description'] || '').toString();
+            const fname = (file['File Name'] || '').toString();
+
+            const checks = rowChecks[index] || {is_duplicate:false, file_exists:true, duplicate_reason:''};
+
+            // Filters
+            const hay = `${title} ${klass}`.toLowerCase();
+            if (search && !hay.includes(search)) return;
+            if (onlyDup && !checks.is_duplicate) return;
+            if (onlyMissing && checks.file_exists) return;
+
+            const row = document.createElement('tr');
+            const dupBadge = checks.is_duplicate ? '<span class="badge badge-dup" title="'+(checks.duplicate_reason||'Duplicate')+'">Duplicate</span>' : '';
+            const missBadge = !checks.file_exists ? '<span class="badge badge-missing" title="File missing on disk">Missing</span>' : '';
+
+            row.innerHTML = `
+                <td>${fname}</td>
+                <td>${title} ${dupBadge}</td>
+                <td>${klass} ${missBadge}</td>
+                <td>${category}</td>
+                <td>${desc}</td>
+                <td><span class="status-pending">Pending</span></td>
+            `;
+            previewTbody.appendChild(row);
+        });
+    }
+
+    function runDuplicateCheck(path) {
+        fetch('/bulk-upload/check-duplicates', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({ file_path: path })
+        })
+        .then(r=>r.json())
+        .then(json => {
+            if (!json.success) return;
+            // Update rowChecks
+            rowChecks = {};
+            (json.rows||[]).forEach(r => {
+                rowChecks[r.index] = {is_duplicate: !!r.is_duplicate, file_exists: !!r.file_exists, duplicate_reason: r.duplicate_reason||''};
+            });
+            // Update summary
+            const s = json.summary || {};
+            const dupSummary = document.getElementById('dup-summary');
+            if (dupSummary) {
+                dupSummary.innerHTML = `Duplicates: <strong>${s.duplicates||0}</strong> • Missing files: <strong>${s.missing_files||0}</strong>`;
+            }
+            renderPreviewTable();
+        })
+        .catch(()=>{});
+    }
+
+    // Filters wiring
+    document.addEventListener('input', e => {
+        if (['filter-search'].includes(e.target.id)) renderPreviewTable();
+    });
+    document.addEventListener('change', e => {
+        if (['filter-duplicates','filter-missing'].includes(e.target.id)) renderPreviewTable();
+        if (e.target.id === 'recheck-duplicates-btn') {
+            if (excelFilePath) runDuplicateCheck(excelFilePath);
+        }
+    });
 
     // Download template functionality
     downloadTemplateBtn.addEventListener('click', () => {

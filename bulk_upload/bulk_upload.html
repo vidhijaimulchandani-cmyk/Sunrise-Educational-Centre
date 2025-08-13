@@ -764,7 +764,13 @@
           <div class="file-preview" id="file-preview" style="display: none;">
             <h4>Study Resources to Upload</h4>
             <div class="preview-info" id="preview-info"></div>
-              <div class="preview-table-container">
+            <div class="preview-filters" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center; margin: 0 0 1rem 0;">
+              <input id="filter-search" type="text" placeholder="Search title or class..." style="flex:1; min-width:220px; padding:0.6rem 0.8rem; border:1px solid #e2e8f0; border-radius:8px;" />
+              <label style="display:flex; gap:0.4rem; align-items:center;"><input type="checkbox" id="filter-duplicates"> Show duplicates only</label>
+              <label style="display:flex; gap:0.4rem; align-items:center;"><input type="checkbox" id="filter-missing"> Show missing files only</label>
+              <button class="btn btn-secondary" id="recheck-duplicates-btn">Recheck</button>
+            </div>
+            <div class="preview-table-container">
               <table class="preview-table" id="preview-table">
                 <thead>
                   <tr>
@@ -778,7 +784,7 @@
                 </thead>
                 <tbody id="preview-tbody"></tbody>
               </table>
-              </div>
+            </div>
               <div class="upload-actions">
               <button class="btn btn-primary" id="confirm-upload-btn">✅ Confirm & Upload</button>
               <button class="btn btn-outline" id="cancel-upload-btn">❌ Cancel</button>
@@ -824,8 +830,14 @@
     </div>
   </footer>
 
-  <script src="bulk_upload.js"></script>
-  <script>
+     <script src="bulk_upload.js"></script>
+   <script>
+     // Badges styles injection for duplicates/missing
+     const style = document.createElement('style');
+     style.textContent = `.badge {display:inline-block;padding:0.2rem 0.5rem;border-radius:999px;font-size:0.75rem;font-weight:600;margin-left:6px}
+     .badge-dup{background:#fee2e2;color:#b91c1c;border:1px solid #fecaca}
+     .badge-missing{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa}`;
+     document.head.appendChild(style);
     // Mobile menu toggle
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
     const navMenu = document.getElementById('nav-menu');
