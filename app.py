@@ -41,7 +41,7 @@ from auth_handler import (
     create_topic, delete_topic, get_all_topics, get_topics_for_user, can_user_access_topic,
     update_user_with_password, add_personal_notification, get_forum_messages,
     format_datetime_for_display, get_categories_for_class, mark_messages_as_read,
-    get_user_by_username, create_notification, mark_notification_as_seen_for_user
+    get_user_by_username
 )
 import csv
 from io import StringIO
