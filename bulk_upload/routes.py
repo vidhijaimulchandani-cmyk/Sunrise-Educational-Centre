@@ -117,7 +117,8 @@ def confirm_upload():
             }), 400
         
         # Process the Excel file
-        results = study_resources_handler.process_study_resources_excel(excel_path, uploaded_by)
+        options = data.get('options') or {}
+        results = study_resources_handler.process_study_resources_excel(excel_path, uploaded_by, options)
         
         # Only delete the file if it is a temp file (not in xlsx folder)
         xlsx_folder = os.path.join(os.getcwd(), 'xlsx')

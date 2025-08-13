@@ -785,10 +785,14 @@
                 <tbody id="preview-tbody"></tbody>
               </table>
             </div>
-              <div class="upload-actions">
-              <button class="btn btn-primary" id="confirm-upload-btn">✅ Confirm & Upload</button>
-              <button class="btn btn-outline" id="cancel-upload-btn">❌ Cancel</button>
-          </div>
+              <div class="upload-actions" style="flex-wrap:wrap;">
+                <label style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="opt-skip-duplicates" checked> Skip duplicates</label>
+                <label style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="opt-skip-missing" checked> Skip missing files</label>
+                <label style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="opt-dry-run"> Dry run (no save)</label>
+                <button class="btn btn-secondary" id="export-errors-btn">⬇️ Export Errors CSV</button>
+                <button class="btn btn-primary" id="confirm-upload-btn">✅ Confirm & Upload</button>
+                <button class="btn btn-outline" id="cancel-upload-btn">❌ Cancel</button>
+              </div>
         </div>
 
         <!-- Progress Section -->

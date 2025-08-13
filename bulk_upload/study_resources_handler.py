@@ -213,15 +213,43 @@ class StudyResourcesBulkUploadHandler:
             logger.error(f"Error saving to study resources: {str(e)}")
             return False
     
-    def process_study_resources_excel(self, excel_file_path, uploaded_by='admin'):
-        """Process Excel file for bulk study resources upload"""
+    def is_duplicate_resource(self, title, class_name):
+        """Return True if a resource with same title exists in the class"""
+        try:
+            if not title or not class_name:
+                return False
+            class_id = self.get_class_id(class_name)
+            if class_id is None:
+                return False
+            conn = sqlite3.connect(self.db_path)
+            cursor = conn.cursor()
+            cursor.execute('SELECT COUNT(1) FROM resources WHERE title = ? AND class_id = ?', (title, class_id))
+            count = cursor.fetchone()[0] or 0
+            conn.close()
+            return count > 0
+        except Exception as e:
+            logger.error(f"Error checking duplicate resource: {str(e)}")
+            return False
+    
+    def process_study_resources_excel(self, excel_file_path, uploaded_by='admin', options=None):
+        """Process Excel file for bulk study resources upload with options"""
         results = {
             'success': [],
             'errors': [],
+            'skipped': [],
             'total_files': 0,
             'successful_uploads': 0,
-            'failed_uploads': 0
+            'failed_uploads': 0,
+            'skipped_duplicates': 0,
+            'skipped_missing': 0,
+            'dry_run': False
         }
+        
+        opts = options or {}
+        skip_duplicates = bool(opts.get('skip_duplicates'))
+        skip_missing = bool(opts.get('skip_missing'))
+        dry_run = bool(opts.get('dry_run'))
+        results['dry_run'] = dry_run
         
         try:
             # Validate Excel file
@@ -234,7 +262,7 @@ class StudyResourcesBulkUploadHandler:
             df = pd.read_excel(excel_file_path, sheet_name='Study Resources Upload')
             results['total_files'] = len(df)
             
-            logger.info(f"Processing {results['total_files']} study resources from Excel")
+            logger.info(f"Processing {results['total_files']} study resources from Excel (dry_run={dry_run})")
             
             # Process each row
             for index, row in df.iterrows():
@@ -248,10 +276,16 @@ class StudyResourcesBulkUploadHandler:
                     
                     # Validate file exists
                     if not self.validate_file_exists(file_path):
-                        error_msg = f"Row {index + 2}: File not found at {file_path}"
-                        results['errors'].append(error_msg)
-                        results['failed_uploads'] += 1
-                        continue
+                        if skip_missing:
+                            msg = f"Row {index + 2}: Skipped missing file at {file_path}"
+                            results['skipped'].append(msg)
+                            results['skipped_missing'] += 1
+                            continue
+                        else:
+                            error_msg = f"Row {index + 2}: File not found at {file_path}"
+                            results['errors'].append(error_msg)
+                            results['failed_uploads'] += 1
+                            continue
                     
                     # Validate file extension
                     if not self.validate_file_extension(file_path):
@@ -260,17 +294,36 @@ class StudyResourcesBulkUploadHandler:
                         results['failed_uploads'] += 1
                         continue
                     
+                    # Duplicate check
+                    if self.is_duplicate_resource(title, class_name):
+                        if skip_duplicates:
+                            msg = f"Row {index + 2}: Skipped duplicate '{title}' in class {class_name}"
+                            results['skipped'].append(msg)
+                            results['skipped_duplicates'] += 1
+                            continue
+                        else:
+                            # Treat as error
+                            error_msg = f"Row {index + 2}: Duplicate resource '{title}' already exists in class {class_name}"
+                            results['errors'].append(error_msg)
+                            results['failed_uploads'] += 1
+                            continue
+                    
                     # Get file size
                     file_size = os.path.getsize(file_path)
                     
-                    # Copy file to uploads folder
-                    new_filename, new_path = self.copy_file_to_uploads(file_path, category, file_name)
-                    
-                    if new_filename is None:
-                        error_msg = f"Row {index + 2}: Failed to copy file {file_name}"
-                        results['errors'].append(error_msg)
-                        results['failed_uploads'] += 1
-                        continue
+                    # Copy file to uploads folder (unless dry run)
+                    if not dry_run:
+                        new_filename, new_path = self.copy_file_to_uploads(file_path, category, file_name)
+                        if new_filename is None:
+                            error_msg = f"Row {index + 2}: Failed to copy file {file_name}"
+                            results['errors'].append(error_msg)
+                            results['failed_uploads'] += 1
+                            continue
+                    else:
+                        # Simulate destination path
+                        category_folder = self.get_category_folder(category)
+                        new_filename = file_name
+                        new_path = os.path.join(self.upload_folder, category_folder, file_name)
                     
                     # Prepare file data for database
                     file_data = {
@@ -282,24 +335,31 @@ class StudyResourcesBulkUploadHandler:
                         'class': class_name
                     }
                     
-                    # Save to study resources database
-                    if self.save_to_study_resources(file_data):
-                        success_msg = f"Successfully uploaded: {file_name} to {class_name} class"
-                        results['success'].append(success_msg)
-                        results['successful_uploads'] += 1
-                        logger.info(success_msg)
+                    if not dry_run:
+                        # Save to study resources database
+                        if self.save_to_study_resources(file_data):
+                            success_msg = f"Successfully uploaded: {file_name} to {class_name} class"
+                            results['success'].append(success_msg)
+                            results['successful_uploads'] += 1
+                            logger.info(success_msg)
+                        else:
+                            error_msg = f"Row {index + 2}: Failed to save {file_name} to database"
+                            results['errors'].append(error_msg)
+                            results['failed_uploads'] += 1
                     else:
-                        error_msg = f"Row {index + 2}: Failed to save {file_name} to database"
-                        results['errors'].append(error_msg)
-                        results['failed_uploads'] += 1
-                    
+                        success_msg = f"DRY RUN: Would upload {file_name} to {class_name} class"
+                        results['success'].append(success_msg)
+                
                 except Exception as e:
                     error_msg = f"Row {index + 2}: Error processing {row.get('File Name', 'Unknown')}: {str(e)}"
                     results['errors'].append(error_msg)
                     results['failed_uploads'] += 1
                     logger.error(error_msg)
             
-            logger.info(f"Study resources bulk upload completed: {results['successful_uploads']} successful, {results['failed_uploads']} failed")
+            logger.info(
+                f"Study resources bulk upload completed: {results['successful_uploads']} successful, {results['failed_uploads']} failed, "
+                f"{results['skipped_duplicates']} duplicates skipped, {results['skipped_missing']} missing skipped (dry_run={dry_run})"
+            )
             
         except Exception as e:
             error_msg = f"Error processing Excel file: {str(e)}"

@@ -230,7 +230,13 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmUploadBtn.textContent = 'Processing...';
 
         // Send confirmation request
-        const payload = excelFilePath.startsWith('/home') ? { file_path: excelFilePath, uploaded_by: 'admin' } : { excel_path: excelFilePath, uploaded_by: 'admin' };
+        const options = {
+            skip_duplicates: document.getElementById('opt-skip-duplicates')?.checked,
+            skip_missing: document.getElementById('opt-skip-missing')?.checked,
+            dry_run: document.getElementById('opt-dry-run')?.checked,
+        };
+        const base = excelFilePath.startsWith('/home') ? { file_path: excelFilePath } : { excel_path: excelFilePath };
+        const payload = Object.assign({ uploaded_by: 'admin', options }, base);
         fetch('/bulk-upload/confirm-upload', {
             method: 'POST',
             headers: {
@@ -241,13 +247,14 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                showProgress('Uploading study resources...', 3000);
+                const dryRun = data.results?.dry_run;
+                showProgress(dryRun ? 'Simulating upload (dry run)...' : 'Uploading study resources...', 3000);
                 
                 // Simulate progress updates
                 let progress = 0;
                 const interval = setInterval(() => {
                     progress += 10;
-                    updateProgress(progress, `Uploading... ${progress}%`);
+                    updateProgress(progress, `${dryRun ? 'Simulating' : 'Uploading'}... ${progress}%`);
                     
                     if (progress >= 100) {
                         clearInterval(interval);
@@ -286,18 +293,28 @@ document.addEventListener('DOMContentLoaded', function() {
         
         let resultsHTML = `
             <div class="results-summary">
-                <h5>Upload Summary</h5>
+                <h5>${results.dry_run ? 'Dry Run Summary' : 'Upload Summary'}</h5>
                 <p><strong>Total files processed:</strong> ${results.total_files}</p>
-                <p><strong>Successfully uploaded:</strong> ${results.successful_uploads}</p>
+                <p><strong>Successfully ${results.dry_run ? 'would be ' : ''}uploaded:</strong> ${results.successful_uploads}</p>
                 <p><strong>Failed uploads:</strong> ${results.failed_uploads}</p>
+                <p><strong>Duplicates skipped:</strong> ${results.skipped_duplicates}</p>
+                <p><strong>Missing files skipped:</strong> ${results.skipped_missing}</p>
             </div>
         `;
         
         // Show successful uploads
         if (results.success && results.success.length > 0) {
-            resultsHTML += '<h6>✅ Successful Uploads:</h6>';
+            resultsHTML += `<h6>${results.dry_run ? '🧪 Would Upload:' : '✅ Successful Uploads:'}</h6>`;
             results.success.forEach(success => {
                 resultsHTML += `<div class="success-item">${success}</div>`;
+            });
+        }
+        
+        // Show skipped
+        if (results.skipped && results.skipped.length > 0) {
+            resultsHTML += '<h6>⏭️ Skipped:</h6>';
+            results.skipped.forEach(msg => {
+                resultsHTML += `<div class="success-item" style="background:#fff7ed;border-color:#fed7aa;color:#92400e;">${msg}</div>`;
             });
         }
         
@@ -310,6 +327,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         resultsContent.innerHTML = resultsHTML;
+    }
+
+    // CSV export of errors
+    const exportErrorsBtn = document.getElementById('export-errors-btn');
+    if (exportErrorsBtn) {
+        exportErrorsBtn.addEventListener('click', () => {
+            if (!resultsContent || !resultsContent.innerText) return;
+            // Extract error and skipped lines from last results rendering
+            const items = Array.from(resultsContent.querySelectorAll('.error-item, .success-item'))
+                .map(el => el.textContent.trim());
+            if (items.length === 0) {
+                alert('No results to export yet. Run upload or dry run first.');
+                return;
+            }
+            const csv = '"Message"\n' + items.map(t => '"' + t.replace(/"/g,'""') + '"').join('\n');
+            const blob = new Blob([csv], {type:'text/csv'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'bulk_upload_report.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
     }
 
     // Progress and Results Functions
