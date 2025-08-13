@@ -105,8 +105,8 @@ def generate_complex_password(length=12):
     
     return ''.join(password)
 
-def generate_login_username(student_name, dob):
-    """Generate login username: full_name@first4letters_of_dob"""
+def generate_login_password(student_name, dob):
+    """Generate login password: full_name@first4letters_of_dob"""
     try:
         # Parse the date of birth
         from datetime import datetime
@@ -132,12 +132,12 @@ def generate_login_username(student_name, dob):
         clean_name = ''.join(c for c in student_name if c.isalnum() or c.isspace()).strip()
         clean_name = clean_name.replace(' ', '_')
         
-        # Create username: clean_name@dob_part
-        username = f"{clean_name}@{dob_part}"
+        # Create password: clean_name@dob_part
+        password = f"{clean_name}@{dob_part}"
         
-        return username.lower()
+        return password.lower()
     except Exception as e:
-        print(f"Error generating login username: {e}")
+        print(f"Error generating login password: {e}")
         # Fallback: use original logic
         return student_name.replace(' ', '').lower()
 
@@ -1963,20 +1963,11 @@ def approve_admission(admission_id):
                 student_phone = admission_data[2]
                 student_email = admission_data[3]
                 
-                # Get the pre-generated login username from admission_access_plain
-                c = conn.cursor()
-                c.execute('SELECT login_username FROM admission_access_plain WHERE admission_id = ?', (admission_id,))
-                login_username_row = c.fetchone()
+                # Use student's full name as username (as they filled in the form)
+                username = student_name.strip()
                 
-                if login_username_row and login_username_row[0]:
-                    # Use the pre-generated login username
-                    username = login_username_row[0]
-                else:
-                    # Fallback: create username from student name (remove spaces, make lowercase)
-                    username = student_name.replace(' ', '').lower()
-                
-                # Generate a complex password (12 characters for better security)
-                password = generate_complex_password(12)
+                # Generate password from student name and DOB (like yash@0111)
+                password = generate_login_password(student_name, admission_data[1])  # admission_data[1] is DOB
                 
                 # Get class_id from class name
                 class_name = admission_data[4]
@@ -2511,8 +2502,8 @@ def admission():
             # Generate unique admission username (for admission portal access)
             admission_username = generate_admission_username(new_admission_id, request.form['student_name'])
             
-            # Generate login username (for system login after approval)
-            login_username = generate_login_username(request.form['student_name'], request.form['dob'])
+            # Use student's full name as login username (for system login after approval)
+            login_username = request.form['student_name'].strip()
             
             # Generate complex password (12 characters for better security)
             access_password = generate_complex_password(12)
@@ -2545,7 +2536,7 @@ def admission():
             # Non-fatal: continue even if credential generation fails
             print(f'Warning: Credential generation failed: {_e}')
             admission_username = f"ADM{new_admission_id:06d}"
-            login_username = request.form['student_name'].replace(' ', '').lower()
+            login_username = request.form['student_name'].strip()
             access_password = generate_complex_password(12)
             session['last_admission_creds'] = {
                 'admission_username': admission_username, 
