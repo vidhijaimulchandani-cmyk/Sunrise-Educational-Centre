@@ -4,6 +4,15 @@ import pandas as pd
 from datetime import datetime
 import shutil
 import logging
+from typing import Optional, Tuple, List, Dict
+
+try:
+    from google.oauth2 import service_account  # type: ignore
+    from googleapiclient.discovery import build  # type: ignore
+    from googleapiclient.errors import HttpError  # type: ignore
+    _GOOGLE_AVAILABLE = True
+except Exception:
+    _GOOGLE_AVAILABLE = False
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -168,3 +177,135 @@ class UnifiedBulkUploadHandler:
         except Exception as e:
             logger.error(f"Failed to export master excel: {e}")
             return False
+
+    # =====================
+    # Google Drive Utilities
+    # =====================
+    def get_drive_service(self):
+        if not _GOOGLE_AVAILABLE:
+            logger.warning('Google Drive libraries not available; Drive ops in dry-run mode')
+            return None
+        try:
+            creds = None
+            cred_path = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+            if cred_path and os.path.exists(cred_path):
+                scopes = ['https://www.googleapis.com/auth/drive']
+                creds = service_account.Credentials.from_service_account_file(cred_path, scopes=scopes)
+            if not creds:
+                from google.auth import default  # type: ignore
+                creds, _ = default(scopes=['https://www.googleapis.com/auth/drive'])
+            service = build('drive', 'v3', credentials=creds, cache_discovery=False)
+            return service
+        except Exception as e:
+            logger.warning(f'Google Drive service init failed: {e}. Drive ops in dry-run mode')
+            return None
+
+    def drive_find_folder(self, service, name: str, parent_id: str) -> Optional[str]:
+        if not service:
+            return None
+        try:
+            query = f"name = '{name}' and mimeType = 'application/vnd.google-apps.folder' and '{parent_id}' in parents and trashed = false"
+            resp = service.files().list(q=query, spaces='drive', fields='files(id, name)', pageSize=1).execute()
+            files = resp.get('files', [])
+            if files:
+                return files[0]['id']
+            return None
+        except Exception as e:
+            logger.error(f'drive_find_folder error: {e}')
+            return None
+
+    def drive_create_folder(self, service, name: str, parent_id: str) -> Optional[str]:
+        if not service:
+            return None
+        try:
+            file_metadata = {'name': name, 'mimeType': 'application/vnd.google-apps.folder', 'parents': [parent_id]}
+            f = service.files().create(body=file_metadata, fields='id').execute()
+            return f.get('id')
+        except Exception as e:
+            logger.error(f'drive_create_folder error: {e}')
+            return None
+
+    def ensure_drive_folder(self, service, name: str, parent_id: str, dry_run: bool) -> Tuple[str, bool]:
+        name = (name or '').strip().replace('/', '-')
+        if dry_run or not service:
+            logger.info(f"[DRY] Ensure folder '{name}' under {parent_id}")
+            return '', True
+        found = self.drive_find_folder(service, name, parent_id)
+        if found:
+            return found, False
+        created = self.drive_create_folder(service, name, parent_id)
+        return created or '', True
+
+    def sync_drive_structure(self, root_folder_id: str) -> Dict[str, int]:
+        """Ensure class folders and category subfolders under a Drive root."""
+        if not root_folder_id:
+            raise ValueError('root_folder_id required')
+        # Build class->categories from DB
+        import sqlite3
+        mapping: Dict[str, List[str]] = {}
+        conn = sqlite3.connect(self.db_path)
+        c = conn.cursor()
+        c.execute('SELECT id, name FROM classes')
+        classes = c.fetchall()
+        for class_id, class_name in classes:
+            try:
+                c2 = conn.cursor()
+                c2.execute('SELECT DISTINCT category FROM resources WHERE class_id=?', (class_id,))
+                cats = [row[0] for row in c2.fetchall() if row and row[0]] or ['Study Material','Assignments','Notes','Practice Tests','Reference Books','Videos']
+                mapping[str(class_name)] = cats
+            except Exception:
+                mapping[str(class_name)] = ['Study Material','Assignments','Notes','Practice Tests','Reference Books','Videos']
+        conn.close()
+        service = self.get_drive_service()
+        dry = service is None
+        created_count = 0
+        for class_name, categories in mapping.items():
+            class_id_drive, created = self.ensure_drive_folder(service, class_name, root_folder_id, dry)
+            if created:
+                created_count += 1
+                logger.info(f'Ensured class folder: {class_name}')
+            parent = class_id_drive if class_id_drive else root_folder_id
+            for cat in categories:
+                _, created2 = self.ensure_drive_folder(service, cat, parent, dry)
+                if created2:
+                    created_count += 1
+                    logger.info(f'Ensured category folder: {class_name}/{cat}')
+        return {'created_or_ensured': created_count}
+
+    def scan_drive_new_files(self, root_folder_id: str, since_token: Optional[str]=None) -> Dict:
+        """Scan for new files under root. If Google API unavailable, returns empty list.
+        For production, implement changes feed or search by modifiedTime.
+        """
+        service = self.get_drive_service()
+        if not service:
+            logger.info('Drive scan in dry-run (no Google API). Returning empty result.')
+            return {'files': [], 'next_token': since_token}
+        try:
+            # Simplified: list files directly under root (non-recursive)
+            resp = service.files().list(q=f"'{root_folder_id}' in parents and trashed=false and mimeType!='application/vnd.google-apps.folder'",
+                                        spaces='drive', fields='files(id, name, mimeType, modifiedTime)', pageSize=100).execute()
+            files = resp.get('files', [])
+            return {'files': files, 'next_token': since_token}
+        except Exception as e:
+            logger.error(f'Drive scan error: {e}')
+            return {'files': [], 'next_token': since_token}
+
+    def import_drive_files_via_excel(self, file_entries: List[Dict], class_hint: Optional[str]=None, category_hint: Optional[str]=None) -> Dict:
+        """Given Drive file entries (with 'name' and 'local_path' provided), build an Excel and process via study resources."""
+        import pandas as pd, tempfile
+        rows = []
+        for fe in file_entries:
+            rows.append({
+                'File Name': fe.get('name'),
+                'File Path': fe.get('local_path'),
+                'Title': fe.get('title') or fe.get('name'),
+                'Description': fe.get('description',''),
+                'Category': fe.get('category') or category_hint or 'Study Material',
+                'Class': fe.get('class') or class_hint or ''
+            })
+        if not rows:
+            return {'success': True, 'message': 'No files to import', 'results': {}}
+        tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.xlsx')
+        pd.DataFrame(rows).to_excel(tmp.name, index=False, sheet_name='Study Resources Upload')
+        results = self.process_excel(tmp.name, uploaded_by='drive_auto', options={'skip_duplicates': True, 'skip_missing': True})
+        return {'success': True, 'results': results}

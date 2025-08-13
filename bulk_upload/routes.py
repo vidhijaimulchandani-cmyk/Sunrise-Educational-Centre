@@ -537,6 +537,34 @@ def export_master_records():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
+@bulk_upload_bp.route('/drive/sync', methods=['POST'])
+def drive_sync():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+    try:
+        data = request.get_json(force=True) if request.is_json else {}
+        root_id = data.get('root_folder_id') or os.environ.get('GDRIVE_ROOT_FOLDER')
+        if not root_id:
+            return jsonify({'success': False, 'error': 'root_folder_id required'}), 400
+        summary = unified.sync_drive_structure(root_id)
+        return jsonify({'success': True, 'summary': summary})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@bulk_upload_bp.route('/drive/scan', methods=['POST'])
+def drive_scan():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+    try:
+        data = request.get_json(force=True) if request.is_json else {}
+        root_id = data.get('root_folder_id') or os.environ.get('GDRIVE_ROOT_FOLDER')
+        if not root_id:
+            return jsonify({'success': False, 'error': 'root_folder_id required'}), 400
+        scan = unified.scan_drive_new_files(root_id)
+        return jsonify({'success': True, 'scan': scan})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 # Error handlers
 @bulk_upload_bp.errorhandler(413)
 def too_large(e):
