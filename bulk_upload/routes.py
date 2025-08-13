@@ -537,49 +537,6 @@ def export_master_records():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
-@bulk_upload_bp.route('/drive/sync', methods=['POST'])
-def drive_sync():
-    if session.get('role') not in ['admin', 'teacher']:
-        return jsonify({'success': False, 'error': 'Unauthorized'}), 401
-    try:
-        data = request.get_json(force=True) if request.is_json else {}
-        root_id = data.get('root_folder_id') or os.environ.get('GDRIVE_ROOT_FOLDER')
-        if not root_id:
-            return jsonify({'success': False, 'error': 'root_folder_id required'}), 400
-        summary = unified.sync_drive_structure(root_id)
-        return jsonify({'success': True, 'summary': summary})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-@bulk_upload_bp.route('/drive/scan', methods=['POST'])
-def drive_scan():
-    if session.get('role') not in ['admin', 'teacher']:
-        return jsonify({'success': False, 'error': 'Unauthorized'}), 401
-    try:
-        data = request.get_json(force=True) if request.is_json else {}
-        root_id = data.get('root_folder_id') or os.environ.get('GDRIVE_ROOT_FOLDER')
-        if not root_id:
-            return jsonify({'success': False, 'error': 'root_folder_id required'}), 400
-        scan = unified.scan_drive_new_files(root_id)
-        return jsonify({'success': True, 'scan': scan})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-@bulk_upload_bp.route('/drive/set-api-key', methods=['POST'])
-def drive_set_api_key():
-    if session.get('role') not in ['admin', 'teacher']:
-        return jsonify({'success': False, 'error': 'Unauthorized'}), 401
-    try:
-        data = request.get_json(force=True)
-        key = data.get('api_key')
-        if not key:
-            return jsonify({'success': False, 'error': 'api_key required'}), 400
-        os.environ['GOOGLE_API_KEY'] = key
-        # Reload in handler module variable if needed
-        from .unified_bulk_upload_handler import GOOGLE_API_KEY as HANDLER_KEY  # noqa: F401
-        return jsonify({'success': True})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
 
 # Error handlers
 @bulk_upload_bp.errorhandler(413)
