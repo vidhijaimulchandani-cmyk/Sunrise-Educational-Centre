@@ -401,7 +401,10 @@
           <button id="forumEmojiBtn" type="button" class="btn btn-secondary" aria-label="Insert emoji" style="padding:0; width:44px; height:44px; border-radius:50%; display:flex;align-items:center;justify-content:center;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fc5c7d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 15s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
           </button>
-          <textarea id="forumInput" placeholder="Type your message... Use @ to mention users" rows="1" style="flex:1;resize:none;padding:0.7rem 1rem;border-radius:16px;min-height:44px;"></textarea>
+          <div style="flex:1; position:relative;">
+            <textarea id="forumInput" placeholder="Type your message... Use @ to mention users" rows="1" style="width:100%; resize:none;padding:0.7rem 1rem;border-radius:16px;min-height:44px;border:1px solid #e5e7eb; transition:border-color 0.2s ease;"></textarea>
+            <div id="mentionIndicator" style="position:absolute; top:0.5rem; right:0.5rem; background:#6a82fb; color:white; padding:0.2rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600; display:none;">@</div>
+          </div>
           <button id="forumUploadBtn" type="button" class="btn btn-secondary" aria-label="Attach media" style="padding:0; width:44px; height:44px; border-radius:50%; display:flex;align-items:center;justify-content:center;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6a82fb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a5.5 5.5 0 0 1-7.78-7.78l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.2 9.19a1.5 1.5 0 0 1-2.12-2.12l8.49-8.49"/></svg>
           </button>
@@ -409,6 +412,11 @@
           <button id="forumSendBtn" class="btn btn-primary" style="padding:0.5rem 1.2rem;display:flex;align-items:center;gap:0.3rem;">
             <span style="font-size:1.3rem;">&#10148;</span>
           </button>
+        </div>
+        
+        <!-- Mention Help Text -->
+        <div id="mentionHelp" style="display:none; margin-top:0.5rem; padding:0.5rem; background:#f0f4ff; border:1px solid #6a82fb; border-radius:8px; font-size:0.8rem; color:#6a82fb;">
+          <strong>💡 Mention Tips:</strong> Type @ to mention users. You can search by username, class, email, or mobile number. Use ↑↓ arrows to navigate, Enter to select, or click on a user.
         </div>
         
         <!-- Mention Suggestions Dropdown -->
@@ -443,33 +451,54 @@
     <script src="script.js"></script>
     <script src="forum.js"></script>
     <script>
-      // Theme switching functionality
+      // Theme switching functionality with sync to other pages
       const darkModeToggle = document.getElementById('darkModeToggle');
       
+      // Function to apply theme
+      function applyTheme(theme) {
+        if (theme === 'dark') {
+          document.body.classList.add('dark-mode');
+          darkModeToggle.textContent = '☀️ Light Mode';
+        } else {
+          document.body.classList.remove('dark-mode');
+          darkModeToggle.textContent = '🌙 Dark Mode';
+        }
+        localStorage.setItem('theme', theme);
+        
+        // Sync theme to other pages via localStorage
+        localStorage.setItem('globalTheme', theme);
+      }
+      
       // Check for saved theme preference or default to light mode
-      const currentTheme = localStorage.getItem('theme') || 'light';
+      const currentTheme = localStorage.getItem('theme') || localStorage.getItem('globalTheme') || 'light';
       
       // Apply theme on page load
-      if (currentTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-        darkModeToggle.textContent = '☀️ Light Mode';
-      } else {
-        document.body.classList.remove('dark-mode');
-        darkModeToggle.textContent = '🌙 Dark Mode';
-      }
+      applyTheme(currentTheme);
+      
+      // Listen for theme changes from other pages
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'globalTheme') {
+          applyTheme(e.newValue);
+        }
+      });
       
       // Theme toggle functionality
       darkModeToggle.addEventListener('click', function() {
-        if (document.body.classList.contains('dark-mode')) {
-          // Switch to light mode
-          document.body.classList.remove('dark-mode');
-          localStorage.setItem('theme', 'light');
-          darkModeToggle.textContent = '🌙 Dark Mode';
-        } else {
-          // Switch to dark mode
-          document.body.classList.add('dark-mode');
-          localStorage.setItem('theme', 'dark');
-          darkModeToggle.textContent = '☀️ Light Mode';
+        const newTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
+        applyTheme(newTheme);
+      });
+      
+      // Check for system theme preference
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        if (!localStorage.getItem('theme') && !localStorage.getItem('globalTheme')) {
+          applyTheme('dark');
+        }
+      }
+      
+      // Listen for system theme changes
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+        if (!localStorage.getItem('theme') && !localStorage.getItem('globalTheme')) {
+          applyTheme(e.matches ? 'dark' : 'light');
         }
       });
       

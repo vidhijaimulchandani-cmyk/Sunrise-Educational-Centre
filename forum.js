@@ -702,8 +702,20 @@ function setupMentionSystem() {
                 selectMentionSuggestion();
             } else if (e.key === 'Escape') {
                 hideMentionSuggestions();
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                selectMentionSuggestion();
             }
         }
+    });
+    
+    // Handle cursor position changes
+    forumInput.addEventListener('click', function() {
+        setTimeout(() => checkForMentions(), 10);
+    });
+    
+    forumInput.addEventListener('keyup', function() {
+        setTimeout(() => checkForMentions(), 10);
     });
     
     // Hide suggestions when clicking outside
@@ -712,6 +724,33 @@ function setupMentionSystem() {
             hideMentionSuggestions();
         }
     });
+}
+
+// Check for mentions at current cursor position
+function checkForMentions() {
+    const forumInput = document.getElementById('forumInput');
+    if (!forumInput) return;
+    
+    const cursorPos = forumInput.selectionStart;
+    const text = forumInput.value;
+    
+    // Check if cursor is after a @ symbol
+    const beforeCursor = text.substring(0, cursorPos);
+    const mentionMatch = beforeCursor.match(/@(\w*)$/);
+    
+    if (mentionMatch) {
+        const query = mentionMatch[1];
+        if (query.length >= 2) {
+            currentMentionQuery = query;
+            searchUsersForMentions(query);
+            showMentionSuggestions();
+        } else if (query.length === 0) {
+            searchUsersForMentions('');
+            showMentionSuggestions();
+        }
+    } else {
+        hideMentionSuggestions();
+    }
 }
 
 // Search users for mentions
@@ -746,15 +785,32 @@ function renderMentionSuggestions() {
         userDiv.setAttribute('data-username', user.username);
         userDiv.setAttribute('data-index', index);
         
+        // Create user info display
+        let userInfo = user.username;
+        if (user.class_name && user.class_name !== 'No Class') {
+            userInfo += ` (${user.class_name})`;
+        }
+        
+        // Add contact info if available
+        let contactInfo = '';
+        if (user.mobile_no) {
+            contactInfo += `📱 ${user.mobile_no}`;
+        }
+        if (user.email_address) {
+            if (contactInfo) contactInfo += ' • ';
+            contactInfo += `📧 ${user.email_address}`;
+        }
+        
         userDiv.innerHTML = `
-            <div style="display:flex; align-items:center; gap:0.5rem; padding:0.7rem; cursor:pointer; border-bottom:1px solid #f3f4f6;">
-                <div style="width:32px; height:32px; background:${getUserColor(user.username)}; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:600; font-size:0.8rem;">
+            <div style="display:flex; align-items:center; gap:0.5rem; padding:0.8rem; cursor:pointer; border-bottom:1px solid #f3f4f6;">
+                <div style="width:36px; height:36px; background:${getUserColor(user.username)}; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:600; font-size:0.9rem; flex-shrink:0;">
                     ${user.username.charAt(0).toUpperCase()}
                 </div>
-                <div style="flex:1;">
-                    <div style="font-weight:600; color:#232946;">${user.username}</div>
-                    <div style="font-size:0.8rem; color:#6b7280;">${user.class_name}</div>
+                <div style="flex:1; min-width:0;">
+                    <div style="font-weight:600; color:#232946; margin-bottom:0.2rem;">${userInfo}</div>
+                    ${contactInfo ? `<div style="font-size:0.75rem; color:#6b7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${contactInfo}</div>` : ''}
                 </div>
+                <div style="color:#6a82fb; font-size:0.8rem; font-weight:500; flex-shrink:0;">@${user.username}</div>
             </div>
         `;
         
@@ -778,6 +834,9 @@ function getUserColor(username) {
 // Show mention suggestions
 function showMentionSuggestions() {
     const mentionSuggestionsDiv = document.getElementById('mentionSuggestions');
+    const mentionIndicator = document.getElementById('mentionIndicator');
+    const mentionHelp = document.getElementById('mentionHelp');
+    
     if (mentionSuggestionsDiv) {
         mentionSuggestionsDiv.style.display = 'block';
         
@@ -791,14 +850,25 @@ function showMentionSuggestions() {
             mentionSuggestionsDiv.style.width = Math.max(rect.width, 250) + 'px';
         }
     }
+    
+    // Show mention indicator and help
+    if (mentionIndicator) mentionIndicator.style.display = 'block';
+    if (mentionHelp) mentionHelp.style.display = 'block';
 }
 
 // Hide mention suggestions
 function hideMentionSuggestions() {
     const mentionSuggestionsDiv = document.getElementById('mentionSuggestions');
+    const mentionIndicator = document.getElementById('mentionIndicator');
+    const mentionHelp = document.getElementById('mentionHelp');
+    
     if (mentionSuggestionsDiv) {
         mentionSuggestionsDiv.style.display = 'none';
     }
+    
+    // Hide mention indicator and help
+    if (mentionIndicator) mentionIndicator.style.display = 'none';
+    if (mentionHelp) mentionHelp.style.display = 'none';
 }
 
 // Navigate through mention suggestions
@@ -849,16 +919,29 @@ function selectMentionSuggestion(username = null) {
         const cursorPos = forumInput.selectionStart;
         
         // Find the @ symbol position
-        const atPos = text.lastIndexOf('@', cursorPos - 1);
+        const beforeCursor = text.substring(0, cursorPos);
+        const atPos = beforeCursor.lastIndexOf('@');
+        
         if (atPos !== -1) {
+            // Find the end of the current mention query
+            let endPos = cursorPos;
+            const afterAt = text.substring(atPos + 1, cursorPos);
+            const wordMatch = afterAt.match(/^(\w*)/);
+            if (wordMatch) {
+                endPos = atPos + 1 + wordMatch[0].length;
+            }
+            
             // Replace the @query with @username
-            const newText = text.substring(0, atPos) + '@' + username + ' ' + text.substring(cursorPos);
+            const newText = text.substring(0, atPos) + '@' + username + ' ' + text.substring(endPos);
             forumInput.value = newText;
             
-            // Set cursor position after the username
+            // Set cursor position after the username and space
             const newCursorPos = atPos + username.length + 2; // +2 for @ and space
             forumInput.setSelectionRange(newCursorPos, newCursorPos);
             forumInput.focus();
+            
+            // Trigger input event to update any other listeners
+            forumInput.dispatchEvent(new Event('input'));
         }
     }
     

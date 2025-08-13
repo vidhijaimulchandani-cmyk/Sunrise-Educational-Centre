@@ -2531,6 +2531,25 @@ body.dark-mode .topic-badge.unpaid {
   border-bottom: none !important;
 }
 
+/* Mention indicator and help */
+#mentionIndicator {
+  animation: pulse 2s infinite;
+}
+
+#mentionHelp {
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Dark mode support for mention suggestions */
 body.dark-mode #mentionSuggestions {
   background: #2a2a3a;
@@ -2549,4 +2568,10 @@ body.dark-mode .mention-suggestion div div:first-child {
 
 body.dark-mode .mention-suggestion div div:last-child {
   color: #b8c5d6;
+}
+
+body.dark-mode #mentionHelp {
+  background: #1a1a2e;
+  border-color: #6a82fb;
+  color: #6a82fb;
 }
