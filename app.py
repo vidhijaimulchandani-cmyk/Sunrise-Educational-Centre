@@ -996,7 +996,7 @@ def extract_mentions(message):
 
 def create_mention_notifications(sender_id, sender_username, mentioned_usernames, topic_id, message_preview):
     """Create notifications for mentioned users"""
-    from auth_handler import get_user_by_username, create_notification
+    from auth_handler import get_user_by_username, add_personal_notification
     
     for username in mentioned_usernames:
         # Get the mentioned user
@@ -1007,14 +1007,8 @@ def create_mention_notifications(sender_id, sender_username, mentioned_usernames
             # Create notification message
             notification_message = f"@{sender_username} mentioned you in a forum post: {message_preview}..."
             
-            # Create the notification
-            create_notification(
-                message=notification_message,
-                class_id=None,  # Personal notification
-                target_paid_status='all',
-                notification_type='forum_mention',
-                scheduled_time=None
-            )
+            # Create the notification (personal)
+            add_personal_notification(notification_message, mentioned_user_id)
             
             # Mark as seen for the mentioned user
             mark_notification_as_seen_for_user(mentioned_user_id, notification_message)
