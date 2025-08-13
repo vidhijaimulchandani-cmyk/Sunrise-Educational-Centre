@@ -681,13 +681,13 @@ def get_all_notifications():
     conn.close()
     return notifications
 
-def add_personal_notification(message, user_id):
+def add_personal_notification(message, user_id, notification_type='personal'):
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
     # Insert notification with class_id as NULL and target_paid_status as 'personal'
     c.execute(
         'INSERT INTO notifications (message, class_id, created_at, target_paid_status, status, notification_type) VALUES (?, NULL, ?, ?, ?, ?)',
-        (message, get_ist_timestamp(), 'personal', 'active', 'personal')
+        (message, get_ist_timestamp(), 'personal', 'active', notification_type)
     )
     notification_id = c.lastrowid
     

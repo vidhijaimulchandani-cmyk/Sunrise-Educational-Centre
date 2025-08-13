@@ -1005,10 +1005,10 @@ def create_mention_notifications(sender_id, sender_username, mentioned_usernames
             mentioned_user_id = mentioned_user[0]
             
             # Create notification message
-            notification_message = f"@{sender_username} mentioned you in a forum post: {message_preview}..."
+            notification_message = f"There is a mention message for you by @{sender_username}."
             
-            # Create the notification (personal)
-            add_personal_notification(notification_message, mentioned_user_id)
+            # Create the notification (personal) with proper type
+            add_personal_notification(notification_message, mentioned_user_id, notification_type='forum_mention')
             
             # Mark as seen for the mentioned user
             mark_notification_as_seen_for_user(mentioned_user_id, notification_message)
@@ -4491,7 +4491,6 @@ def track_ip_activity():
             UNIQUE(user_id)
         )''')
         conn.commit()
-        conn.close()
         # Insert IP log
         c.execute('INSERT INTO ip_logs (ip, user_id, path, user_agent, visited_at) VALUES (?, ?, ?, ?, ?)',
                   (ip, user_id, path, ua, now_str))
