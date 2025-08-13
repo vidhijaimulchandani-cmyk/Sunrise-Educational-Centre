@@ -664,7 +664,20 @@ def home():
         c = conn.cursor()
         c.execute('SELECT name, email, message, submitted_at FROM queries ORDER BY id DESC LIMIT 10')
         queries = c.fetchall()
-    return render_template('index.html', queries=queries)
+    
+    # Get user info for notification bell
+    username = session.get('username')
+    user_id = session.get('user_id')
+    user_notifications = []
+    
+    # Fetch notifications if user is logged in
+    if user_id:
+        user_notifications = get_unread_notifications_for_user(user_id)
+    
+    return render_template('index.html', 
+                         queries=queries, 
+                         username=username, 
+                         user_notifications=user_notifications)
 
 # Route for study resources
 @app.route('/study-resources')
