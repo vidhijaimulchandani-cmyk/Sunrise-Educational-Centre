@@ -160,12 +160,19 @@
         {% endif %}
       {% endwith %}
       <form method="POST" action="/send-notification" class="login-form">
-        <div class="form-group">
+        <div class="form-group" style="position:relative;">
           <label for="message">Notification Message *</label>
-          <textarea id="message" name="message" required placeholder="Type your notification..." maxlength="500" rows="4"></textarea>
+          <div style="position:relative;">
+            <textarea id="message" name="message" required placeholder="Type your notification... Use @ to mention users" maxlength="500" rows="4" style="width:100%; resize:vertical;"></textarea>
+            <div id="mentionIndicator" style="position:absolute; top:0.5rem; right:0.5rem; background:#6a82fb; color:white; padding:0.2rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600; display:none;">@</div>
+            <div id="mentionSuggestions" style="display:none; position:absolute; background:white; border:1px solid #e5e7eb; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); max-height:220px; overflow-y:auto; z-index:1000; min-width:260px; margin-top:6px;"></div>
+          </div>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
             <small style="color: #666;">Maximum 500 characters</small>
             <small id="charCount" style="color: #6a82fb; font-weight: 500;">0/500</small>
+          </div>
+          <div id="mentionHelp" style="display:none; margin-top:0.5rem; padding:0.5rem; background:#f0f4ff; border:1px solid #6a82fb; border-radius:8px; font-size:0.8rem; color:#6a82fb;">
+            <strong>Tip:</strong> Type @ to mention users by username, class, email, or mobile. Use arrow keys and Enter to select.
           </div>
         </div>
         <div class="form-group">
@@ -531,6 +538,173 @@
         }
       });
     }
+
+    // Mention system for admin send notification page
+    (function setupAdminMentions(){
+      const textarea = document.getElementById('message');
+      const suggestions = document.getElementById('mentionSuggestions');
+      const indicator = document.getElementById('mentionIndicator');
+      const help = document.getElementById('mentionHelp');
+      if (!textarea || !suggestions) return;
+
+      let isMentionMode = false;
+      let mentionStartIndex = -1;
+      let currentSelectionIndex = -1;
+
+      textarea.addEventListener('input', onInput);
+      textarea.addEventListener('keydown', onKeyDown);
+      textarea.addEventListener('click', onCaretMove);
+      textarea.addEventListener('keyup', onCaretMove);
+
+      document.addEventListener('click', (e) => {
+        if (!suggestions.contains(e.target) && e.target !== textarea) hideSuggestions();
+      });
+
+      function onInput(e){
+        const value = textarea.value;
+        const caret = textarea.selectionStart;
+
+        // Detect @ start
+        if (!isMentionMode) {
+          const atIndex = value.lastIndexOf('@', caret - 1);
+          if (atIndex !== -1 && (atIndex === 0 || /\s/.test(value[atIndex - 1]))) {
+            isMentionMode = true;
+            mentionStartIndex = atIndex;
+            currentSelectionIndex = -1;
+            showIndicator();
+            help && (help.style.display = 'block');
+          }
+        }
+
+        if (isMentionMode) {
+          // Extract query after @
+          const afterAt = value.slice(mentionStartIndex + 1, caret);
+          if (afterAt.length >= 1) {
+            queryMentions(afterAt);
+          } else {
+            // If @ removed or empty, maybe keep suggestions minimal
+            if (value[mentionStartIndex] !== '@') {
+              // @ deleted
+              cancelMentionMode();
+            } else {
+              showSuggestions([]);
+            }
+          }
+        }
+      }
+
+      function onCaretMove(){
+        if (!isMentionMode) return;
+        const caret = textarea.selectionStart;
+        if (caret < mentionStartIndex) cancelMentionMode();
+      }
+
+      function onKeyDown(e){
+        if (!isMentionMode || suggestions.style.display === 'none') return;
+        const items = suggestions.querySelectorAll('.mention-item');
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          currentSelectionIndex = (currentSelectionIndex + 1) % Math.max(items.length, 1);
+          updateActiveItem(items);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          currentSelectionIndex = (currentSelectionIndex - 1 + Math.max(items.length, 1)) % Math.max(items.length, 1);
+          updateActiveItem(items);
+        } else if (e.key === 'Enter') {
+          if (currentSelectionIndex >= 0 && items[currentSelectionIndex]) {
+            e.preventDefault();
+            items[currentSelectionIndex].click();
+          }
+        } else if (e.key === 'Escape') {
+          hideSuggestions();
+        }
+      }
+
+      function updateActiveItem(items){
+        items.forEach((el, i) => {
+          el.style.background = i === currentSelectionIndex ? '#f0f4ff' : 'transparent';
+        });
+      }
+
+      function queryMentions(q){
+        fetch(`/api/forum/search-users?q=${encodeURIComponent(q)}`)
+          .then(r => r.json())
+          .then(results => {
+            showSuggestions(results || []);
+          })
+          .catch(() => showSuggestions([]));
+      }
+
+      function showSuggestions(users){
+        suggestions.innerHTML = '';
+        suggestions.style.display = 'block';
+        const list = document.createElement('div');
+        list.style.maxHeight = '200px';
+        list.style.overflowY = 'auto';
+
+        if (!users.length) {
+          const empty = document.createElement('div');
+          empty.style.cssText = 'padding:0.6rem 0.8rem; color:#666;';
+          empty.textContent = 'No users found';
+          list.appendChild(empty);
+        } else {
+          users.forEach((u, idx) => {
+            const item = document.createElement('div');
+            item.className = 'mention-item';
+            item.style.cssText = 'padding:0.6rem 0.8rem; cursor:pointer; display:flex; flex-direction:column; border-bottom:1px solid #f1f5f9;';
+            item.innerHTML = `
+              <strong style="color:#111827">@${u.username}</strong>
+              <small style="color:#6b7280">${u.class_name || ''} ${u.email_address ? '• ' + u.email_address : ''} ${u.mobile_no ? '• ' + u.mobile_no : ''}</small>
+            `;
+            item.onmouseover = () => item.style.background = '#f8fafc';
+            item.onmouseout = () => item.style.background = 'transparent';
+            item.onclick = () => insertMention(u.username);
+            list.appendChild(item);
+            if (idx === 0) currentSelectionIndex = 0;
+          });
+        }
+
+        suggestions.appendChild(list);
+        positionSuggestions();
+      }
+
+      function positionSuggestions(){
+        const rect = textarea.getBoundingClientRect();
+        suggestions.style.left = '0px';
+        // Place below the textarea
+      }
+
+      function insertMention(username){
+        const before = textarea.value.slice(0, mentionStartIndex);
+        const caret = textarea.selectionStart;
+        const after = textarea.value.slice(caret);
+        const mentionText = '@' + username + ' ';
+        textarea.value = before + mentionText + after;
+        // Move caret after inserted mention
+        const newPos = (before + mentionText).length;
+        textarea.setSelectionRange(newPos, newPos);
+        cancelMentionMode();
+        textarea.focus();
+      }
+
+      function showIndicator(){
+        indicator && (indicator.style.display = 'block');
+      }
+
+      function hideSuggestions(){
+        suggestions.style.display = 'none';
+        suggestions.innerHTML = '';
+        indicator && (indicator.style.display = 'none');
+        help && (help.style.display = 'none');
+      }
+
+      function cancelMentionMode(){
+        isMentionMode = false;
+        mentionStartIndex = -1;
+        currentSelectionIndex = -1;
+        hideSuggestions();
+      }
+    })();
   </script>
   
   <style>
