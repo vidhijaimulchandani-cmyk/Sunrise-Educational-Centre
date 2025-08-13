@@ -141,6 +141,173 @@ function setupNotificationDropdown() {
             }
         });
     });
+    
+    // Start real-time notification updates
+    startNotificationUpdates();
+}
+
+// Real-time notification updates
+function startNotificationUpdates() {
+    // Update notifications every 30 seconds
+    setInterval(refreshNotifications, 30000);
+    
+    // Also refresh when the notification bell is clicked
+    const bell = document.getElementById('notifBell');
+    if (bell) {
+        bell.addEventListener('click', refreshNotifications);
+    }
+}
+
+// Refresh notifications from the server
+function refreshNotifications() {
+    fetch('/api/notifications')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateNotificationDropdown(data.notifications);
+                updateNotificationCount(data.count);
+            }
+        })
+        .catch(error => {
+            console.error('Error refreshing notifications:', error);
+        });
+}
+
+// Update the notification dropdown with new data
+function updateNotificationDropdown(notifications) {
+    const dropdown = document.getElementById('notifDropdown');
+    if (!dropdown) return;
+    
+    const ul = dropdown.querySelector('ul');
+    if (!ul) return;
+    
+    // Clear existing notifications
+    ul.innerHTML = '';
+    
+    if (notifications && notifications.length > 0) {
+        notifications.forEach(notification => {
+            const li = createNotificationElement(notification);
+            ul.appendChild(li);
+        });
+        
+        // Re-setup click handlers for new notification items
+        setupNotificationItemHandlers();
+    } else {
+        ul.innerHTML = '<li style="padding:0.7rem 0; color:#888; text-align:center;">No new notifications.</li>';
+    }
+}
+
+// Create a notification element
+function createNotificationElement(notification) {
+    const li = document.createElement('li');
+    
+    if (notification.length >= 7) {
+        const [id, message, created_at, status, notification_type, scheduled_time, item_type, sender_name] = notification;
+        
+        if (item_type === 'personal_chat') {
+            li.className = 'notification-item personal-chat-item';
+            li.setAttribute('data-notification-id', id);
+            li.setAttribute('data-type', 'personal_chat');
+            li.style.cssText = 'padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease; border-left:3px solid #fc5c7d; padding-left:0.5rem;';
+            li.innerHTML = `
+                <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
+                    <span style="background:#fc5c7d; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">💬</span>
+                    <span style="color:#fc5c7d; font-size:0.8rem; font-weight:600;">@${sender_name || 'User'}</span>
+                </div>
+                ${message}<br><span style="font-size:0.85rem; color:#888;">${formatDateTime(created_at)}</span>
+            `;
+        } else if (notification_type === 'forum_mention') {
+            li.className = 'notification-item';
+            li.setAttribute('data-notification-id', id);
+            li.setAttribute('data-type', 'notification');
+            li.style.cssText = 'padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease; border-left:3px solid #ff6b6b; padding-left:0.5rem;';
+            li.innerHTML = `
+                <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
+                    <span style="background:#ff6b6b; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">@</span>
+                </div>
+                ${message}<br><span style="font-size:0.85rem; color:#888;">${formatDateTime(created_at)}</span>
+            `;
+        } else {
+            li.className = 'notification-item';
+            li.setAttribute('data-notification-id', id);
+            li.setAttribute('data-type', 'notification');
+            li.style.cssText = 'padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease;';
+            li.innerHTML = `
+                <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
+                    <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
+                </div>
+                ${message}<br><span style="font-size:0.85rem; color:#888;">${formatDateTime(created_at)}</span>
+            `;
+        }
+    } else {
+        // Fallback for old notification format
+        const [id, message, created_at, status, notification_type, scheduled_time] = notification;
+        li.className = 'notification-item';
+        li.setAttribute('data-notification-id', id);
+        li.setAttribute('data-type', 'notification');
+        li.style.cssText = 'padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease;';
+        li.innerHTML = `
+            <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
+                <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
+            </div>
+            ${message}<br><span style="font-size:0.85rem; color:#888;">${formatDateTime(created_at)}</span>
+        `;
+    }
+    
+    // Add hover effects
+    li.addEventListener('mouseover', function() {
+        if (li.classList.contains('personal-chat-item')) {
+            this.style.background = '#ffe6cc';
+        } else {
+            this.style.background = '#f0f4ff';
+        }
+    });
+    
+    li.addEventListener('mouseout', function() {
+        this.style.background = 'transparent';
+    });
+    
+    return li;
+}
+
+// Setup click handlers for notification items
+function setupNotificationItemHandlers() {
+    const notificationItems = document.querySelectorAll('.notification-item');
+    
+    notificationItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const notificationType = this.getAttribute('data-type');
+            const notificationId = this.getAttribute('data-notification-id');
+            
+            if (notificationType === 'personal_chat') {
+                markNotificationAsSeen(notificationId, 'personal_chat');
+                window.location.href = '/personal-chat';
+            } else {
+                markNotificationAsSeen(notificationId, 'notification');
+            }
+        });
+    });
+}
+
+// Format datetime for display
+function formatDateTime(dateString) {
+    try {
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+        
+        if (diffMins < 1) return 'Just now';
+        if (diffMins < 60) return `${diffMins}m ago`;
+        if (diffHours < 24) return `${diffHours}h ago`;
+        if (diffDays < 7) return `${diffDays}d ago`;
+        
+        return date.toLocaleDateString();
+    } catch (e) {
+        return dateString;
+    }
 }
 
 // Mark notification as seen
@@ -187,13 +354,12 @@ function markNotificationAsSeen(notificationId, notificationType = 'notification
 }
 
 // Update notification count
-function updateNotificationCount() {
-    const remainingNotifications = document.querySelectorAll('.notification-item');
+function updateNotificationCount(count) {
     const notificationCount = document.getElementById('notificationCount');
     
     if (notificationCount) {
-        if (remainingNotifications.length > 0) {
-            notificationCount.textContent = remainingNotifications.length;
+        if (count > 0) {
+            notificationCount.textContent = count;
             notificationCount.style.display = 'flex';
         } else {
             notificationCount.style.display = 'none';

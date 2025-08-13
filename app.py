@@ -5585,6 +5585,23 @@ def api_admin_force_logout(user_id):
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
+# API route for fetching user notifications
+@app.route('/api/notifications', methods=['GET'])
+def api_get_user_notifications():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'success': False, 'error': 'Not logged in'})
+    
+    try:
+        notifications = get_unread_notifications_for_user(user_id)
+        return jsonify({
+            'success': True, 
+            'notifications': notifications,
+            'count': len(notifications)
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     
