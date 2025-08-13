@@ -7,6 +7,7 @@ from .bulk_upload_handler import BulkUploadHandler
 from .study_resources_handler import StudyResourcesBulkUploadHandler
 import logging
 import glob
+from .unified_bulk_upload_handler import UnifiedBulkUploadHandler
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -18,6 +19,7 @@ bulk_upload_bp = Blueprint('bulk_upload', __name__, url_prefix='/bulk-upload')
 # Initialize handlers
 bulk_handler = BulkUploadHandler()
 study_resources_handler = StudyResourcesBulkUploadHandler()
+unified = UnifiedBulkUploadHandler()
 
 @bulk_upload_bp.route('/')
 def bulk_upload_page():
@@ -440,6 +442,99 @@ def check_duplicates():
         })
     except Exception as e:
         logger.error(f"Error checking duplicates: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@bulk_upload_bp.route('/unified/validate', methods=['POST'])
+def unified_validate():
+    try:
+        if 'excel_file' not in request.files:
+            return jsonify({'success': False, 'error': 'No file uploaded'}), 400
+        f = request.files['excel_file']
+        if f.filename == '':
+            return jsonify({'success': False, 'error': 'No file selected'}), 400
+        import tempfile
+        from werkzeug.utils import secure_filename
+        temp_dir = tempfile.mkdtemp()
+        excel_path = os.path.join(temp_dir, secure_filename(f.filename))
+        f.save(excel_path)
+        ok, msg = unified.validate_excel_file(excel_path)
+        try:
+            os.remove(excel_path)
+            os.rmdir(temp_dir)
+        except Exception:
+            pass
+        return jsonify({'success': ok, 'message': msg})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@bulk_upload_bp.route('/unified/preview', methods=['POST'])
+def unified_preview():
+    try:
+        if 'excel_file' not in request.files:
+            return jsonify({'success': False, 'error': 'No file uploaded'}), 400
+        f = request.files['excel_file']
+        if f.filename == '':
+            return jsonify({'success': False, 'error': 'No file selected'}), 400
+        import tempfile, pandas as pd
+        from werkzeug.utils import secure_filename
+        temp_dir = tempfile.mkdtemp()
+        excel_path = os.path.join(temp_dir, secure_filename(f.filename))
+        f.save(excel_path)
+        kind, sheet = unified.detect_sheet_type(excel_path)
+        if not kind:
+            return jsonify({'success': False, 'error': 'Unsupported Excel format'}), 400
+        df = pd.read_excel(excel_path, sheet_name=sheet)
+        preview_data = df.head(10).to_dict('records')
+        return jsonify({'success': True, 'kind': kind, 'sheet': sheet, 'columns': list(df.columns), 'total_rows': len(df), 'preview_data': preview_data, 'excel_path': excel_path})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@bulk_upload_bp.route('/unified/confirm', methods=['POST'])
+def unified_confirm():
+    try:
+        data = request.get_json(force=True)
+        excel_path = data.get('excel_path') or data.get('file_path')
+        if not excel_path or not os.path.exists(excel_path):
+            return jsonify({'success': False, 'error': 'Excel file not found'}), 400
+        uploaded_by = data.get('uploaded_by', 'admin')
+        options = data.get('options') or {}
+        results = unified.process_excel(excel_path, uploaded_by, options)
+        # Clean temp if not xlsx folder
+        xlsx_folder = os.path.join(os.getcwd(), 'xlsx')
+        try:
+            if not excel_path.startswith(xlsx_folder):
+                os.remove(excel_path)
+                temp_dir = os.path.dirname(excel_path)
+                if os.path.exists(temp_dir):
+                    os.rmdir(temp_dir)
+        except Exception:
+            pass
+        return jsonify({'success': True, 'results': results})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@bulk_upload_bp.route('/unified/template')
+def download_master_template():
+    try:
+        import tempfile
+        temp_dir = tempfile.mkdtemp()
+        out = os.path.join(temp_dir, 'bulk_master_template.xlsx')
+        if unified.create_master_template(out):
+            return send_file(out, as_attachment=True, download_name='bulk_master_template.xlsx')
+        return jsonify({'success': False, 'error': 'Failed to create template'}), 500
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@bulk_upload_bp.route('/unified/export')
+def export_master_records():
+    try:
+        import tempfile
+        temp_dir = tempfile.mkdtemp()
+        out = os.path.join(temp_dir, 'bulk_master_export.xlsx')
+        if unified.export_master_excel(out):
+            return send_file(out, as_attachment=True, download_name='bulk_master_export.xlsx')
+        return jsonify({'success': False, 'error': 'Failed to export'}), 500
+    except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
 # Error handlers
