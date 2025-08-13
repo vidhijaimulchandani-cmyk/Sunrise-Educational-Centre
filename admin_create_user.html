@@ -114,6 +114,14 @@
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(252,92,125,0.3);
     }
+    .btn-warning {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #fff;
+    }
+    .btn-warning:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(245,158,11,0.3);
+    }
     .users-section {
       background: #fff;
       border-radius: 16px;
@@ -394,6 +402,7 @@
     <div class="tab-container">
       <button class="tab-btn active" onclick="showTab('users')">User Management</button>
       <button class="tab-btn" onclick="showTab('admissions')">Admissions</button>
+      <button class="tab-btn" onclick="showTab('blocked')">Blocked Users</button>
       <button class="tab-btn" onclick="showTab('ip')">IP Tracker</button>
     </div>
     
@@ -519,6 +528,7 @@
                   <td>
                     <div class="action-buttons">
                       <a href="/user-info/{{ id }}" class="btn btn-primary btn-small">Edit</a>
+                      <button class="btn btn-warning btn-small" onclick="blockUser({{ id }}, '{{ username }}')">Block</button>
                       <button class="btn btn-danger btn-small" onclick="deleteUser({{ id }})">Delete</button>
                     </div>
                   </td>
@@ -771,6 +781,115 @@
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Blocked Users Tab -->
+    <div id="blocked-tab" class="tab-content">
+      <div class="users-section">
+        <div class="section-header">
+          <h2>🚫 Blocked Users Management</h2>
+          <div class="section-actions">
+            <button class="btn btn-primary" onclick="refreshBlockedUsers()">Refresh</button>
+            <button class="btn btn-success" onclick="unblockSelectedUsers()">Unblock Selected</button>
+          </div>
+        </div>
+        
+        <!-- Blocked Users Statistics -->
+        <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+          <div class="stat-card" style="background: #fff3cd; padding: 1rem; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold; color: #f57c00;">{{ blocked_users|default([])|length }}</div>
+            <div style="color: #666;">Total Blocked</div>
+          </div>
+          <div class="stat-card" style="background: #ffe6cc; padding: 1rem; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold; color: #e67e22;">{{ warning_users|default([])|length }}</div>
+            <div style="color: #666;">Warning Period</div>
+          </div>
+          <div class="stat-card" style="background: #fce4ec; padding: 1rem; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold; color: #c2185b;">{{ banned_users|default([])|length }}</div>
+            <div style="color: #666;">Banned (24h+)</div>
+          </div>
+        </div>
+        
+        <!-- Blocked Users Table -->
+        <div class="table-container">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAllBlocked" onchange="toggleSelectAllBlocked()"></th>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Block Reason</th>
+                <th>Block Status</th>
+                <th>Blocked At</th>
+                <th>Time Remaining</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="blockedUsersTableBody">
+              {% for blocked_user in blocked_users %}
+              <tr data-userid="{{ blocked_user[0] }}" data-status="{{ blocked_user[6] }}">
+                <td><input type="checkbox" class="blocked-checkbox" value="{{ blocked_user[0] }}"></td>
+                <td>{{ blocked_user[0] }}</td>
+                <td><strong>{{ blocked_user[1] }}</strong></td>
+                <td>{{ blocked_user[2] }}</td>
+                <td>{{ blocked_user[3] }}</td>
+                <td>
+                  <span class="status-badge 
+                    {% if blocked_user[6] == 'warning' %}status-pending
+                    {% else %}status-rejected{% endif %}">
+                    {{ "Warning Period" if blocked_user[6] == 'warning' else "Banned" }}
+                  </span>
+                </td>
+                <td>{{ blocked_user[4] }}</td>
+                <td id="timeRemaining-{{ blocked_user[0] }}">
+                  {% if blocked_user[6] == 'warning' %}
+                    <span style="color: #f57c00;">Calculating...</span>
+                  {% else %}
+                    <span style="color: #c2185b;">Permanently Banned</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn btn-success btn-small" onclick="unblockUser({{ blocked_user[0] }})">Unblock</button>
+                    <button class="btn btn-primary btn-small" onclick="viewBlockDetails({{ blocked_user[0] }})">Details</button>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Block User Section -->
+        <div style="margin-top: 3rem; background: #fff; border-radius: 16px; box-shadow: 0 2px 8px rgba(100,100,255,0.07); padding: 2rem;">
+          <h3 style="color: #232946; margin-bottom: 1.5rem;">🔒 Block New User</h3>
+          <form id="blockUserForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <label for="blockUsername">Username to Block</label>
+              <input type="text" id="blockUsername" placeholder="Enter username" required style="width: 100%; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; box-sizing: border-box;">
+            </div>
+            <div>
+              <label for="blockReason">Block Reason</label>
+              <select id="blockReason" required style="width: 100%; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; box-sizing: border-box;">
+                <option value="">Select reason</option>
+                <option value="Inappropriate behavior">Inappropriate behavior</option>
+                <option value="Violation of rules">Violation of rules</option>
+                <option value="Spam/Abuse">Spam/Abuse</option>
+                <option value="Security concern">Security concern</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <label for="customBlockReason">Custom Reason (Optional)</label>
+              <textarea id="customBlockReason" placeholder="Provide additional details..." rows="3" style="width: 100%; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; box-sizing: border-box; resize: vertical;"></textarea>
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <button type="submit" class="btn btn-danger">Block User</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -1210,12 +1329,201 @@
       }
     }
     
+    // Blocked Users Management Functions
+    function blockUser(userId, username) {
+      const reason = prompt(`Enter reason for blocking ${username}:`);
+      if (!reason) return;
+      
+      if (confirm(`Are you sure you want to block ${username}? This will put them in a 24-hour warning period.`)) {
+        fetch('/admin/block-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            reason: reason
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert(`User ${username} has been blocked successfully.`);
+            location.reload();
+          } else {
+            alert('Error blocking user: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error blocking user: ' + error.message);
+        });
+      }
+    }
+    
+    function unblockUser(userId) {
+      if (confirm('Are you sure you want to unblock this user?')) {
+        fetch('/admin/unblock-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user_id: userId
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('User has been unblocked successfully.');
+            location.reload();
+          } else {
+            alert('Error unblocking user: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error unblocking user: ' + error.message);
+        });
+      }
+    }
+    
+    function unblockSelectedUsers() {
+      const selectedUsers = document.querySelectorAll('.blocked-checkbox:checked');
+      if (selectedUsers.length === 0) {
+        alert('Please select users to unblock.');
+        return;
+      }
+      
+      if (confirm(`Are you sure you want to unblock ${selectedUsers.length} selected users?`)) {
+        const userIds = Array.from(selectedUsers).map(cb => cb.value);
+        
+        fetch('/admin/unblock-users-bulk', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user_ids: userIds
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert(`${selectedUsers.length} users have been unblocked successfully.`);
+            location.reload();
+          } else {
+            alert('Error unblocking users: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error unblocking users: ' + error.message);
+        });
+      }
+    }
+    
+    function toggleSelectAllBlocked() {
+      const selectAll = document.getElementById('selectAllBlocked');
+      const checkboxes = document.querySelectorAll('.blocked-checkbox');
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+      });
+    }
+    
+    function refreshBlockedUsers() {
+      location.reload();
+    }
+    
+    function viewBlockDetails(userId) {
+      // Implementation for viewing block details
+      alert('Block details functionality will be implemented soon.');
+    }
+    
+    // Block User Form Handler
+    document.addEventListener('DOMContentLoaded', function() {
+      const blockUserForm = document.getElementById('blockUserForm');
+      if (blockUserForm) {
+        blockUserForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const username = document.getElementById('blockUsername').value;
+          const reason = document.getElementById('blockReason').value;
+          const customReason = document.getElementById('customBlockReason').value;
+          
+          if (!username || !reason) {
+            alert('Please fill in all required fields.');
+            return;
+          }
+          
+          const finalReason = customReason ? `${reason}: ${customReason}` : reason;
+          
+          if (confirm(`Are you sure you want to block user "${username}"?`)) {
+            fetch('/admin/block-user-by-username', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                username: username,
+                reason: finalReason
+              })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                alert(`User ${username} has been blocked successfully.`);
+                blockUserForm.reset();
+                location.reload();
+              } else {
+                alert('Error blocking user: ' + data.message);
+              }
+            })
+            .catch(error => {
+              alert('Error blocking user: ' + error.message);
+            });
+          }
+        });
+      }
+    });
+    
+    // Time remaining calculation for warning period
+    function updateTimeRemaining() {
+      const warningRows = document.querySelectorAll('[data-status="warning"]');
+      warningRows.forEach(row => {
+        const userId = row.getAttribute('data-userid');
+        const blockedAt = row.querySelector('td:nth-child(7)').textContent;
+        const timeRemainingCell = document.getElementById(`timeRemaining-${userId}`);
+        
+        if (timeRemainingCell && blockedAt) {
+          try {
+            const blockedTime = new Date(blockedAt);
+            const now = new Date();
+            const timeDiff = blockedTime.getTime() + (24 * 60 * 60 * 1000) - now.getTime();
+            
+            if (timeDiff > 0) {
+              const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+              const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+              timeRemainingCell.innerHTML = `<span style="color: #f57c00;">${hours}h ${minutes}m remaining</span>`;
+            } else {
+              timeRemainingCell.innerHTML = '<span style="color: #c2185b;">Time expired - Banned</span>';
+              // Auto-refresh to update status
+              setTimeout(() => location.reload(), 5000);
+            }
+          } catch (e) {
+            timeRemainingCell.innerHTML = '<span style="color: #999;">Invalid date</span>';
+          }
+        }
+      });
+    }
+    
     // Initial refresh + interval updates for metrics
     document.addEventListener('DOMContentLoaded', function(){
       fetchTrafficSummary();
       setInterval(fetchTrafficSummary, 30000);
       refreshLastOnline();
       setInterval(refreshLastOnline, 60000);
+      
+      // Update time remaining for blocked users
+      updateTimeRemaining();
+      setInterval(updateTimeRemaining, 60000); // Update every minute
     });
   </script>
   <script src="script.js"></script>

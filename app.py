@@ -1962,6 +1962,34 @@ def admin_create_user_page():
     # Calculate admission statistics
     pending_admissions = sum(1 for admission in admissions if admission[13] == 'pending')
     
+    # Get blocked users data
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+    
+    # Create blocked_users table if it doesn't exist
+    c.execute('''CREATE TABLE IF NOT EXISTS blocked_users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        username TEXT NOT NULL,
+        role TEXT NOT NULL,
+        reason TEXT NOT NULL,
+        blocked_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        status TEXT DEFAULT 'warning',
+        FOREIGN KEY (user_id) REFERENCES users (id)
+    )''')
+    
+    # Get all blocked users
+    c.execute('''SELECT user_id, username, role, reason, blocked_at, id, status
+                 FROM blocked_users 
+                 ORDER BY blocked_at DESC''')
+    blocked_users = c.fetchall()
+    
+    # Separate warning and banned users
+    warning_users = [u for u in blocked_users if u[6] == 'warning']
+    banned_users = [u for u in blocked_users if u[6] == 'banned']
+    
+    conn.close()
+    
     return render_template('admin_create_user.html', 
                            all_classes=all_classes,
                            users=users,
@@ -1972,7 +2000,10 @@ def admin_create_user_page():
                            admission_access_map=admission_access_map,
                            pending_admissions=pending_admissions,
                            approved_admissions=approved_admissions,
-                           disapproved_admissions=disapproved_admissions)
+                           disapproved_admissions=disapproved_admissions,
+                           blocked_users=blocked_users,
+                           warning_users=warning_users,
+                           banned_users=banned_users)
 
 @app.route('/admin/create-user', methods=['POST'])
 def admin_create_user_submit():
@@ -2045,6 +2076,262 @@ def admin_ban_user(user_id):
     
     flash(f'User {user[1]} will be banned in 24 hours and has been personally notified.', 'success')
     return redirect(url_for('admin_panel', _anchor='users'))
+
+# New Block System Routes
+@app.route('/admin/block-user', methods=['POST'])
+def admin_block_user():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+    
+    data = request.get_json()
+    user_id = data.get('user_id')
+    reason = data.get('reason')
+    
+    if not user_id or not reason:
+        return jsonify({'success': False, 'message': 'User ID and reason are required'})
+    
+    try:
+        from auth_handler import get_user_by_id, add_personal_notification
+        user = get_user_by_id(user_id)
+        if not user:
+            return jsonify({'success': False, 'message': 'User not found'})
+        
+        # Prevent blocking admin or teacher
+        if user[4] in ['admin', 'teacher']:
+            return jsonify({'success': False, 'message': 'You cannot block an admin or teacher'})
+        
+        # Check if user is already blocked
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        
+        # Create blocked_users table if it doesn't exist
+        c.execute('''CREATE TABLE IF NOT EXISTS blocked_users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            username TEXT NOT NULL,
+            role TEXT NOT NULL,
+            reason TEXT NOT NULL,
+            blocked_at TEXT DEFAULT CURRENT_TIMESTAMP,
+            status TEXT DEFAULT 'warning',
+            FOREIGN KEY (user_id) REFERENCES users (id)
+        )''')
+        
+        # Check if user is already blocked
+        c.execute('SELECT id FROM blocked_users WHERE user_id = ?', (user_id,))
+        if c.fetchone():
+            conn.close()
+            return jsonify({'success': False, 'message': 'User is already blocked'})
+        
+        # Insert blocked user
+        c.execute('''INSERT INTO blocked_users (user_id, username, role, reason, blocked_at, status)
+                     VALUES (?, ?, ?, ?, ?, ?)''',
+                  (user_id, user[1], user[4], reason, datetime.now().isoformat(), 'warning'))
+        
+        # Send notification to blocked user
+        notification_message = f"You have been blocked for: {reason}. This is a 24-hour warning period. Contact admin or the institute to resolve this issue."
+        add_personal_notification(notification_message, user_id, 'block_warning')
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({'success': True, 'message': 'User blocked successfully'})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Error blocking user: {str(e)}'})
+
+@app.route('/admin/block-user-by-username', methods=['POST'])
+def admin_block_user_by_username():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+    
+    data = request.get_json()
+    username = data.get('username')
+    reason = data.get('reason')
+    
+    if not username or not reason:
+        return jsonify({'success': False, 'message': 'Username and reason are required'})
+    
+    try:
+        from auth_handler import get_user_by_username, add_personal_notification
+        user = get_user_by_username(username)
+        if not user:
+            return jsonify({'success': False, 'message': 'User not found'})
+        
+        # Prevent blocking admin or teacher
+        if user[4] in ['admin', 'teacher']:
+            return jsonify({'success': False, 'message': 'You cannot block an admin or teacher'})
+        
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        
+        # Create blocked_users table if it doesn't exist
+        c.execute('''CREATE TABLE IF NOT EXISTS blocked_users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            username TEXT NOT NULL,
+            role TEXT NOT NULL,
+            reason TEXT NOT NULL,
+            blocked_at TEXT DEFAULT CURRENT_TIMESTAMP,
+            status TEXT DEFAULT 'warning',
+            FOREIGN KEY (user_id) REFERENCES users (id)
+        )''')
+        
+        # Check if user is already blocked
+        c.execute('SELECT id FROM blocked_users WHERE user_id = ?', (user[0],))
+        if c.fetchone():
+            conn.close()
+            return jsonify({'success': False, 'message': 'User is already blocked'})
+        
+        # Insert blocked user
+        c.execute('''INSERT INTO blocked_users (user_id, username, role, reason, blocked_at, status)
+                     VALUES (?, ?, ?, ?, ?, ?)''',
+                  (user[0], user[1], user[4], reason, datetime.now().isoformat(), 'warning'))
+        
+        # Send notification to blocked user
+        notification_message = f"You have been blocked for: {reason}. This is a 24-hour warning period. Contact admin or the institute to resolve this issue."
+        add_personal_notification(notification_message, user[0], 'block_warning')
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({'success': True, 'message': 'User blocked successfully'})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Error blocking user: {str(e)}'})
+
+@app.route('/admin/unblock-user', methods=['POST'])
+def admin_unblock_user():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+    
+    data = request.get_json()
+    user_id = data.get('user_id')
+    
+    if not user_id:
+        return jsonify({'success': False, 'message': 'User ID is required'})
+    
+    try:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        
+        # Remove user from blocked_users table
+        c.execute('DELETE FROM blocked_users WHERE user_id = ?', (user_id,))
+        
+        if c.rowcount == 0:
+            conn.close()
+            return jsonify({'success': False, 'message': 'User is not blocked'})
+        
+        # Send unblock notification
+        from auth_handler import add_personal_notification
+        notification_message = "Your account has been unblocked. You can now access the platform normally."
+        add_personal_notification(notification_message, user_id, 'block_removed')
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({'success': True, 'message': 'User unblocked successfully'})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Error unblocking user: {str(e)}'})
+
+@app.route('/admin/unblock-users-bulk', methods=['POST'])
+def admin_unblock_users_bulk():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'message': 'Unauthorized'}), 401
+    
+    data = request.get_json()
+    user_ids = data.get('user_ids', [])
+    
+    if not user_ids:
+        return jsonify({'success': False, 'message': 'No user IDs provided'})
+    
+    try:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        
+        # Remove users from blocked_users table
+        c.execute('DELETE FROM blocked_users WHERE user_id IN ({})'.format(','.join('?' * len(user_ids))), user_ids)
+        
+        # Send unblock notifications
+        from auth_handler import add_personal_notification
+        for user_id in user_ids:
+            notification_message = "Your account has been unblocked. You can now access the platform normally."
+            add_personal_notification(notification_message, user_id, 'block_removed')
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({'success': True, 'message': f'{len(user_ids)} users unblocked successfully'})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Error unblocking users: {str(e)}'})
+
+# Function to check and update blocked user statuses
+def update_blocked_user_statuses():
+    """Check blocked users and update their status after 24 hours"""
+    try:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        
+        # Create blocked_users table if it doesn't exist
+        c.execute('''CREATE TABLE IF NOT EXISTS blocked_users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            username TEXT NOT NULL,
+            role TEXT NOT NULL,
+            reason TEXT NOT NULL,
+            blocked_at TEXT DEFAULT CURRENT_TIMESTAMP,
+            status TEXT DEFAULT 'warning',
+            FOREIGN KEY (user_id) REFERENCES users (id)
+        )''')
+        
+        # Get users in warning period
+        c.execute('''SELECT user_id, username, blocked_at FROM blocked_users 
+                     WHERE status = 'warning' AND blocked_at IS NOT NULL''')
+        warning_users = c.fetchall()
+        
+        now = datetime.now()
+        for user_id, username, blocked_at in warning_users:
+            try:
+                blocked_time = datetime.fromisoformat(blocked_at)
+                time_diff = now - blocked_time
+                
+                # If more than 24 hours have passed, update status to banned
+                if time_diff.total_seconds() > 24 * 60 * 60:
+                    c.execute('UPDATE blocked_users SET status = ? WHERE user_id = ?', ('banned', user_id))
+                    
+                    # Send final notification
+                    from auth_handler import add_personal_notification
+                    notification_message = "Your 24-hour warning period has expired. Your account is now permanently banned. Contact admin or the institute to appeal this decision."
+                    add_personal_notification(notification_message, user_id, 'block_banned')
+                    
+            except Exception as e:
+                print(f"Error processing blocked user {username}: {e}")
+                continue
+        
+        conn.commit()
+        conn.close()
+        
+    except Exception as e:
+        print(f"Error updating blocked user statuses: {e}")
+
+# Schedule the status update function to run periodically
+import threading
+import time
+
+def run_blocked_user_status_checker():
+    """Run the blocked user status checker in a separate thread"""
+    while True:
+        try:
+            update_blocked_user_statuses()
+            time.sleep(300)  # Check every 5 minutes
+        except Exception as e:
+            print(f"Error in blocked user status checker: {e}")
+            time.sleep(300)
+
+# Start the status checker thread
+blocked_user_checker_thread = threading.Thread(target=run_blocked_user_status_checker, daemon=True)
+blocked_user_checker_thread.start()
 
 @app.route('/admin/create-topic', methods=['GET'])
 @admin_required
@@ -4455,8 +4742,48 @@ def before_request_handler():
         
         # Update session activity
         update_session_activity(user_id)
+        
+        # 3. Check if user is blocked
+        try:
+            conn = sqlite3.connect(DATABASE)
+            c = conn.cursor()
+            
+            # Create blocked_users table if it doesn't exist
+            c.execute('''CREATE TABLE IF NOT EXISTS blocked_users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                username TEXT NOT NULL,
+                role TEXT NOT NULL,
+                reason TEXT NOT NULL,
+                blocked_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                status TEXT DEFAULT 'warning',
+                FOREIGN KEY (user_id) REFERENCES users (id)
+            )''')
+            
+            # Check if user is blocked
+            c.execute('SELECT status, reason FROM blocked_users WHERE user_id = ?', (user_id,))
+            blocked_info = c.fetchone()
+            
+            if blocked_info:
+                status, reason = blocked_info
+                conn.close()
+                
+                if status == 'banned':
+                    # User is permanently banned
+                    session.clear()
+                    flash('Your account has been permanently banned. Contact admin or the institute to appeal this decision.', 'error')
+                    return redirect(url_for('auth'))
+                elif status == 'warning':
+                    # User is in warning period - allow access but show warning
+                    if not session.get('block_warning_shown'):
+                        flash(f'⚠️ WARNING: Your account is in a 24-hour warning period for: {reason}. Contact admin or the institute to resolve this issue.', 'warning')
+                        session['block_warning_shown'] = True
+                
+        except Exception as e:
+            print(f"Error checking blocked user status: {e}")
+            conn.close()
     
-    # 3. IP tracking
+    # 4. IP tracking
     try:
         # Determine client IP (respect X-Forwarded-For if present)
         xff = request.headers.get('X-Forwarded-For', '')
