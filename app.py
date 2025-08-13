@@ -40,7 +40,8 @@ from auth_handler import (
     save_forum_message, get_live_class_messages, save_live_class_message,
     create_topic, delete_topic, get_all_topics, get_topics_for_user, can_user_access_topic,
     update_user_with_password, add_personal_notification, get_forum_messages,
-    format_datetime_for_display, get_categories_for_class, mark_messages_as_read
+    format_datetime_for_display, get_categories_for_class, mark_messages_as_read,
+    get_user_by_username, create_notification, mark_notification_as_seen_for_user
 )
 import csv
 from io import StringIO
@@ -839,11 +840,79 @@ def api_post_forum_message():
             if not can_user_access_topic(user_class_name, user_paid_status, topic_id):
                 return jsonify({'error': 'Access denied to this topic'}), 403
 
+    # Save the forum message
     success = save_forum_message(user_id, username, message, parent_id, topic_id, media_url)
     if success:
+        # Handle mentions in the message
+        if message:
+            mentioned_users = extract_mentions(message)
+            if mentioned_users:
+                create_mention_notifications(user_id, username, mentioned_users, topic_id, message[:100])
+        
         return jsonify({'success': True}), 201
     else:
         return jsonify({'error': 'Access denied or invalid topic'}), 403
+
+def extract_mentions(message):
+    """Extract mentioned usernames from message text"""
+    import re
+    # Find all @username patterns
+    mentions = re.findall(r'@(\w+)', message)
+    return list(set(mentions))  # Remove duplicates
+
+def create_mention_notifications(sender_id, sender_username, mentioned_usernames, topic_id, message_preview):
+    """Create notifications for mentioned users"""
+    from auth_handler import get_user_by_username, create_notification
+    
+    for username in mentioned_usernames:
+        # Get the mentioned user
+        mentioned_user = get_user_by_username(username)
+        if mentioned_user and mentioned_user[0] != sender_id:  # Don't notify self
+            mentioned_user_id = mentioned_user[0]
+            
+            # Create notification message
+            notification_message = f"@{sender_username} mentioned you in a forum post: {message_preview}..."
+            
+            # Create the notification
+            create_notification(
+                message=notification_message,
+                class_id=None,  # Personal notification
+                target_paid_status='all',
+                notification_type='forum_mention',
+                scheduled_time=None
+            )
+            
+            # Mark as seen for the mentioned user
+            mark_notification_as_seen_for_user(mentioned_user_id, notification_message)
+
+def mark_notification_as_seen_for_user(user_id, notification_message):
+    """Mark a specific notification as seen for a user"""
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+    
+    try:
+        # Find the notification by message content
+        c.execute('''
+            SELECT id FROM notifications 
+            WHERE message = ? AND notification_type = 'forum_mention'
+            ORDER BY created_at DESC LIMIT 1
+        ''', (notification_message,))
+        
+        notification = c.fetchone()
+        if notification:
+            notification_id = notification[0]
+            
+            # Mark as seen for the specific user
+            c.execute('''
+                INSERT OR REPLACE INTO user_notification_status (user_id, notification_id, seen_at)
+                VALUES (?, ?, datetime('now'))
+            ''', (user_id, notification_id))
+            
+            conn.commit()
+    except Exception as e:
+        print(f"Error marking notification as seen: {e}")
+    finally:
+        conn.close()
 
 @app.route('/api/forum/messages/<int:message_id>/replies', methods=['GET'])
 def api_get_message_replies(message_id):
@@ -5230,6 +5299,61 @@ def handle_request_host_stream(data):
     except Exception as e:
         print(f"Error in request_host_stream: {e}")
         emit('error', {'message': 'Failed to request host stream'})
+
+# API route for searching users for mentions
+@app.route('/api/forum/search-users', methods=['GET'])
+def api_search_users_for_mentions():
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    query = request.args.get('q', '').strip()
+    if len(query) < 2:
+        return jsonify([])
+    
+    # Get current user's class to prioritize same-class users
+    current_user = get_user_by_id(user_id)
+    current_user_class = current_user[2] if current_user else None
+    
+    # Search users by username, email, mobile, or class
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+    
+    # Search query with multiple fields
+    search_query = f'%{query}%'
+    c.execute('''
+        SELECT u.id, u.username, c.name as class_name, u.mobile_no, u.email_address 
+        FROM users u
+        LEFT JOIN classes c ON u.class_id = c.id
+        WHERE (u.username LIKE ? OR u.mobile_no LIKE ? OR u.email_address LIKE ? OR c.name LIKE ?)
+        AND u.id != ?  -- Exclude current user
+        ORDER BY 
+            CASE WHEN u.class_id = ? THEN 1 ELSE 2 END,  -- Same class first
+            u.username
+        LIMIT 10
+    ''', (search_query, search_query, search_query, search_query, user_id, current_user_class))
+    
+    users = c.fetchall()
+    conn.close()
+    
+    # Format results for frontend
+    results = []
+    for user in users:
+        user_id, username, class_name, mobile_no, email_address = user
+        display_name = username
+        if class_name:
+            display_name += f" ({class_name})"
+        
+        results.append({
+            'id': user_id,
+            'username': username,
+            'display_name': display_name,
+            'class_name': class_name or 'No Class',
+            'mobile_no': mobile_no or '',
+            'email_address': email_address or ''
+        })
+    
+    return jsonify(results)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))

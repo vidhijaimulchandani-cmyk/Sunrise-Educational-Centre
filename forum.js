@@ -6,6 +6,8 @@ let replyToMessageId = null;
 let replyToUsername = '';
 let replyToMessage = '';
 let mediaFile = null;
+let mentionSuggestions = []; // Store mention suggestions
+let currentMentionQuery = ''; // Current mention search query
 
 // Initialize forum when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
@@ -13,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
     setupDarkMode();
     setupDragAndDrop();
+    setupMentionSystem(); // Add mention system setup
     
     // Auto-select first topic if user is not admin/teacher
     setTimeout(() => {
@@ -654,3 +657,210 @@ setInterval(() => {
         fetchMessages(currentTopic);
     }
 }, 30000); 
+
+// Setup mention system
+function setupMentionSystem() {
+    const forumInput = document.getElementById('forumInput');
+    const mentionSuggestionsDiv = document.getElementById('mentionSuggestions');
+    
+    if (!forumInput || !mentionSuggestionsDiv) return;
+    
+    // Handle input for mentions
+    forumInput.addEventListener('input', function(e) {
+        const cursorPos = this.selectionStart;
+        const text = this.value;
+        
+        // Check if we're typing a mention
+        const mentionMatch = text.substring(0, cursorPos).match(/@(\w*)$/);
+        
+        if (mentionMatch) {
+            const query = mentionMatch[1];
+            if (query.length >= 2) {
+                currentMentionQuery = query;
+                searchUsersForMentions(query);
+                showMentionSuggestions();
+            } else if (query.length === 0) {
+                // Show all users when just @ is typed
+                searchUsersForMentions('');
+                showMentionSuggestions();
+            } else {
+                hideMentionSuggestions();
+            }
+        } else {
+            hideMentionSuggestions();
+        }
+    });
+    
+    // Handle keydown for mention navigation
+    forumInput.addEventListener('keydown', function(e) {
+        if (mentionSuggestions.length > 0) {
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                navigateMentionSuggestions(e.key === 'ArrowDown' ? 1 : -1);
+            } else if (e.key === 'Enter' && document.querySelector('.mention-suggestion.selected')) {
+                e.preventDefault();
+                selectMentionSuggestion();
+            } else if (e.key === 'Escape') {
+                hideMentionSuggestions();
+            }
+        }
+    });
+    
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!forumInput.contains(e.target) && !mentionSuggestionsDiv.contains(e.target)) {
+            hideMentionSuggestions();
+        }
+    });
+}
+
+// Search users for mentions
+async function searchUsersForMentions(query) {
+    try {
+        const response = await fetch(`/api/forum/search-users?q=${encodeURIComponent(query)}`);
+        if (response.ok) {
+            mentionSuggestions = await response.json();
+            renderMentionSuggestions();
+        }
+    } catch (error) {
+        console.error('Error searching users for mentions:', error);
+        mentionSuggestions = [];
+    }
+}
+
+// Render mention suggestions
+function renderMentionSuggestions() {
+    const suggestionsList = document.getElementById('mentionSuggestionsList');
+    if (!suggestionsList) return;
+    
+    suggestionsList.innerHTML = '';
+    
+    if (mentionSuggestions.length === 0) {
+        suggestionsList.innerHTML = '<div style="padding:1rem; text-align:center; color:#6b7280;">No users found</div>';
+        return;
+    }
+    
+    mentionSuggestions.forEach((user, index) => {
+        const userDiv = document.createElement('div');
+        userDiv.className = 'mention-suggestion';
+        userDiv.setAttribute('data-username', user.username);
+        userDiv.setAttribute('data-index', index);
+        
+        userDiv.innerHTML = `
+            <div style="display:flex; align-items:center; gap:0.5rem; padding:0.7rem; cursor:pointer; border-bottom:1px solid #f3f4f6;">
+                <div style="width:32px; height:32px; background:${getUserColor(user.username)}; border-radius:50%; display:flex; align-items:center; justify-content:center; color:white; font-weight:600; font-size:0.8rem;">
+                    ${user.username.charAt(0).toUpperCase()}
+                </div>
+                <div style="flex:1;">
+                    <div style="font-weight:600; color:#232946;">${user.username}</div>
+                    <div style="font-size:0.8rem; color:#6b7280;">${user.class_name}</div>
+                </div>
+            </div>
+        `;
+        
+        userDiv.addEventListener('click', () => selectMentionSuggestion(user.username));
+        userDiv.addEventListener('mouseenter', () => selectMentionSuggestionByIndex(index));
+        
+        suggestionsList.appendChild(userDiv);
+    });
+}
+
+// Get user color based on username
+function getUserColor(username) {
+    const colors = ['#6a82fb', '#fc5c7d', '#64c864', '#ffc107', '#9c27b0', '#ff5722'];
+    let hash = 0;
+    for (let i = 0; i < username.length; i++) {
+        hash = username.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash) % colors.length];
+}
+
+// Show mention suggestions
+function showMentionSuggestions() {
+    const mentionSuggestionsDiv = document.getElementById('mentionSuggestions');
+    if (mentionSuggestionsDiv) {
+        mentionSuggestionsDiv.style.display = 'block';
+        
+        // Position the dropdown below the input
+        const forumInput = document.getElementById('forumInput');
+        if (forumInput) {
+            const rect = forumInput.getBoundingClientRect();
+            mentionSuggestionsDiv.style.position = 'fixed';
+            mentionSuggestionsDiv.style.top = (rect.bottom + 5) + 'px';
+            mentionSuggestionsDiv.style.left = rect.left + 'px';
+            mentionSuggestionsDiv.style.width = Math.max(rect.width, 250) + 'px';
+        }
+    }
+}
+
+// Hide mention suggestions
+function hideMentionSuggestions() {
+    const mentionSuggestionsDiv = document.getElementById('mentionSuggestions');
+    if (mentionSuggestionsDiv) {
+        mentionSuggestionsDiv.style.display = 'none';
+    }
+}
+
+// Navigate through mention suggestions
+function navigateMentionSuggestions(direction) {
+    const suggestions = document.querySelectorAll('.mention-suggestion');
+    const currentSelected = document.querySelector('.mention-suggestion.selected');
+    
+    // Remove current selection
+    if (currentSelected) {
+        currentSelected.classList.remove('selected');
+    }
+    
+    let nextIndex = 0;
+    if (currentSelected) {
+        const currentIndex = parseInt(currentSelected.getAttribute('data-index'));
+        nextIndex = (currentIndex + direction + suggestions.length) % suggestions.length;
+    }
+    
+    // Select next suggestion
+    if (suggestions[nextIndex]) {
+        suggestions[nextIndex].classList.add('selected');
+        suggestions[nextIndex].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+
+// Select mention suggestion by index
+function selectMentionSuggestionByIndex(index) {
+    const suggestions = document.querySelectorAll('.mention-suggestion');
+    suggestions.forEach(s => s.classList.remove('selected'));
+    
+    if (suggestions[index]) {
+        suggestions[index].classList.add('selected');
+    }
+}
+
+// Select a mention suggestion
+function selectMentionSuggestion(username = null) {
+    if (!username) {
+        const selected = document.querySelector('.mention-suggestion.selected');
+        if (selected) {
+            username = selected.getAttribute('data-username');
+        }
+    }
+    
+    if (username) {
+        const forumInput = document.getElementById('forumInput');
+        const text = forumInput.value;
+        const cursorPos = forumInput.selectionStart;
+        
+        // Find the @ symbol position
+        const atPos = text.lastIndexOf('@', cursorPos - 1);
+        if (atPos !== -1) {
+            // Replace the @query with @username
+            const newText = text.substring(0, atPos) + '@' + username + ' ' + text.substring(cursorPos);
+            forumInput.value = newText;
+            
+            // Set cursor position after the username
+            const newCursorPos = atPos + username.length + 2; // +2 for @ and space
+            forumInput.setSelectionRange(newCursorPos, newCursorPos);
+            forumInput.focus();
+        }
+    }
+    
+    hideMentionSuggestions();
+} 

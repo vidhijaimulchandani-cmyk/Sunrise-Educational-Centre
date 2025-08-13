@@ -246,6 +246,25 @@
         margin-top: 0.5rem;
       }
 
+      /* Mention suggestions dropdown */
+      #mentionSuggestions {
+        position: absolute;
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+        min-width: 250px;
+        margin-top: -10px;
+      }
+
+      #mentionSuggestionsList {
+        max-height: 150px;
+        overflow-y: auto;
+      }
+
       /* Responsive design */
       @media (max-width: 768px) {
         .tabs {
@@ -382,7 +401,7 @@
           <button id="forumEmojiBtn" type="button" class="btn btn-secondary" aria-label="Insert emoji" style="padding:0; width:44px; height:44px; border-radius:50%; display:flex;align-items:center;justify-content:center;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fc5c7d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 15s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
           </button>
-          <textarea id="forumInput" placeholder="Type your message..." rows="1" style="flex:1;resize:none;padding:0.7rem 1rem;border-radius:16px;min-height:44px;"></textarea>
+          <textarea id="forumInput" placeholder="Type your message... Use @ to mention users" rows="1" style="flex:1;resize:none;padding:0.7rem 1rem;border-radius:16px;min-height:44px;"></textarea>
           <button id="forumUploadBtn" type="button" class="btn btn-secondary" aria-label="Attach media" style="padding:0; width:44px; height:44px; border-radius:50%; display:flex;align-items:center;justify-content:center;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6a82fb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a5.5 5.5 0 0 1-7.78-7.78l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.2 9.19a1.5 1.5 0 0 1-2.12-2.12l8.49-8.49"/></svg>
           </button>
@@ -391,6 +410,17 @@
             <span style="font-size:1.3rem;">&#10148;</span>
           </button>
         </div>
+        
+        <!-- Mention Suggestions Dropdown -->
+        <div id="mentionSuggestions" style="display:none; position:absolute; background:white; border:1px solid #e5e7eb; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); max-height:200px; overflow-y:auto; z-index:1000; min-width:250px; margin-top:-10px;">
+          <div style="padding:0.5rem; border-bottom:1px solid #e5e7eb; background:#f8fafc; border-radius:8px 8px 0 0;">
+            <small style="color:#6b7280; font-weight:500;">💬 Mention a user</small>
+          </div>
+          <div id="mentionSuggestionsList" style="max-height:150px; overflow-y:auto;">
+            <!-- User suggestions will be populated here -->
+          </div>
+        </div>
+        
         <div id="forumMediaPreview" style="margin-top:0.5rem;"></div>
       </section>
       <div style="text-align:center; margin: 1.5rem 0 2rem 0;">

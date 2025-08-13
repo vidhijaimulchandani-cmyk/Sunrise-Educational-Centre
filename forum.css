@@ -2498,3 +2498,55 @@ body.dark-mode .topic-badge.unpaid {
   background: #6b7280;
   color: white;
 }
+
+/* Mention suggestions dropdown */
+#mentionSuggestions {
+  position: absolute;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  min-width: 250px;
+  margin-top: -10px;
+}
+
+#mentionSuggestionsList {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.mention-suggestion {
+  transition: background-color 0.2s ease;
+}
+
+.mention-suggestion:hover,
+.mention-suggestion.selected {
+  background-color: #f3f4f6;
+}
+
+.mention-suggestion:last-child {
+  border-bottom: none !important;
+}
+
+/* Dark mode support for mention suggestions */
+body.dark-mode #mentionSuggestions {
+  background: #2a2a3a;
+  border-color: #3a3a4a;
+  color: #f4f4f4;
+}
+
+body.dark-mode .mention-suggestion:hover,
+body.dark-mode .mention-suggestion.selected {
+  background-color: #3a3a4a;
+}
+
+body.dark-mode .mention-suggestion div div:first-child {
+  color: #f4f4f4;
+}
+
+body.dark-mode .mention-suggestion div div:last-child {
+  color: #b8c5d6;
+}
