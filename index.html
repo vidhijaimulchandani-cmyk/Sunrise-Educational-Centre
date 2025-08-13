@@ -68,56 +68,51 @@
             </a>
           </div>
         </li>
-          <!-- Notification Bell - Always visible for all users -->
-          <li id="notifBellContainer" style="position:relative; z-index:9999;">
-            <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative; z-index:10000; padding:0;">
+          <!-- Notification Bell - Standard implementation like other pages -->
+          <li style="position:relative;">
+            <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative;">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
-              <span id="notificationCount" style="position:absolute;top:-5px;right:-5px;min-width:20px;height:20px;background:#fc5c7d;border-radius:50%;color:white;font-size:0.75rem;font-weight:600;display:none;align-items:center;justify-content:center;padding:2px;border:2px solid white;">0</span>
+              {% if user_notifications and user_notifications|length > 0 %}
+              <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
+              {% endif %}
             </button>
-            <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:#fff; min-width:320px; box-shadow:0 4px 24px rgba(100,100,255,0.13); border-radius:12px; z-index:10001; padding:1rem; border:1px solid #e5e7eb;">
-              <strong style="color:#6a82fb; font-size:1.15rem;">Notifications & Messages</strong>
-              <ul style="list-style:none; padding:0; margin:0; max-height:320px; overflow-y:auto;">
-                {% if username %}
-                  {% if user_notifications and user_notifications|length > 0 %}
-                    {% for notification in user_notifications %}
-                      {% if notification|length >= 7 %}
-                        {% set id, message, created_at, status, notification_type, scheduled_time, item_type = notification %}
-                        {% if item_type == 'personal_chat' %}
-                          {% set sender_name = notification[7] if notification|length > 7 else 'User' %}
-                          <li class="notification-item personal-chat-item" data-notification-id="{{ id }}" data-type="personal_chat" style="padding:0.9rem 1.2rem; border-bottom:1px solid #eee; font-size:1.05rem; color:#232946; background:#fff3e0; border-radius:10px; margin-bottom:0.7rem; cursor:pointer; transition:all 0.2s ease; border-left:4px solid #fc5c7d;" onmouseover="this.style.background='#ffe6cc'" onmouseout="this.style.background='#fff3e0'">
-                            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
-                              <span style="background:#fc5c7d; color:white; padding:0.2rem 0.5rem; border-radius:12px; font-size:0.8rem; font-weight:600;">💬 Personal</span>
-                              <span style="color:#fc5c7d; font-size:0.9rem; font-weight:600;">@{{ sender_name }}</span>
-                            </div>
-                            <strong>{{ message }}</strong><br>
-                            <span style="font-size:0.92rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
-                          </li>
-                        {% else %}
-                          <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.9rem 1.2rem; border-bottom:1px solid #eee; font-size:1.05rem; color:#232946; background:#f8fafc; border-radius:10px; margin-bottom:0.7rem; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='#f8fafc'">
-                            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
-                              <span style="background:#6a82fb; color:white; padding:0.2rem 0.5rem; border-radius:12px; font-size:0.8rem; font-weight:600;">📢 Notification</span>
-                            </div>
-                            <strong>{{ message }}</strong><br>
-                            <span style="font-size:0.92rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
-                          </li>
-                        {% endif %}
-                      {% else %}
-                        <!-- Fallback for old notification format -->
-                        {% set id, message, created_at, status, notification_type, scheduled_time = notification %}
-                        <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.9rem 1.2rem; border-bottom:1px solid #eee; font-size:1.05rem; color:#232946; background:#f8fafc; border-radius:10px; margin-bottom:0.7rem; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='#f8fafc'">
-                          <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
-                            <span style="background:#6a82fb; color:white; padding:0.2rem 0.5rem; border-radius:12px; font-size:0.8rem; font-weight:600;">📢 Notification</span>
-                          </div>
-                          <strong>{{ message }}</strong><br>
-                          <span style="font-size:0.92rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
-                        </li>
-                      {% endif %}
-                    {% endfor %}
+            <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:#fff; min-width:320px; box-shadow:0 4px 24px rgba(100,100,255,0.13); border-radius:12px; z-index:100; padding:1rem;">
+              <strong style="color:#6a82fb;">Notifications</strong>
+              <ul style="list-style:none; padding:0; margin:0;">
+                {% if user_notifications and user_notifications|length > 0 %}
+                {% for notification in user_notifications %}
+                  {% if notification|length >= 7 %}
+                    {% set id, message, created_at, status, notification_type, scheduled_time, item_type = notification %}
+                    {% if item_type == 'personal_chat' %}
+                      {% set sender_name = notification[7] if notification|length > 7 else 'User' %}
+                      <li class="notification-item personal-chat-item" data-notification-id="{{ id }}" data-type="personal_chat" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease; border-left:3px solid #fc5c7d; padding-left:0.5rem;" onmouseover="this.style.background='#ffe6cc'" onmouseout="this.style.background='transparent'">
+                        <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
+                          <span style="background:#fc5c7d; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">💬</span>
+                          <span style="color:#fc5c7d; font-size:0.8rem; font-weight:600;">@{{ sender_name }}</span>
+                        </div>
+                        {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                      </li>
+                    {% else %}
+                      <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='transparent'">
+                        <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
+                          <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
+                        </div>
+                        {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                      </li>
+                    {% endif %}
                   {% else %}
-                    <li style="padding:1.1rem 1.2rem; color:#888; text-align:center; background:#f8fafc; border-radius:10px;">No new notifications or messages.</li>
+                    <!-- Fallback for old notification format -->
+                    {% set id, message, created_at, status, notification_type, scheduled_time = notification %}
+                    <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='transparent'">
+                      <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
+                        <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
+                      </div>
+                      {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                    </li>
                   {% endif %}
+                {% endfor %}
                 {% else %}
-                  <li style="padding:1.1rem 1.2rem; color:#888; text-align:center; background:#f8fafc; border-radius:10px;">Please login to view notifications.</li>
+                  <li style="padding:0.7rem 0; color:#888; text-align:center;">No new notifications.</li>
                 {% endif %}
               </ul>
             </div>
@@ -1133,121 +1128,14 @@
       </div>
     </footer>
     <script src="script.js"></script>
-    <!-- Notification Bell Script -->
+    <!-- Notification Bell Script - Standard implementation like other pages -->
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        var notifBell = document.getElementById('notifBell');
-        var notifDropdown = document.getElementById('notifDropdown');
-        var notifContainer = document.getElementById('notifBellContainer');
-        
+        const notifBell = document.getElementById('notifBell');
+        const notifDropdown = document.getElementById('notifDropdown');
         if (notifBell && notifDropdown) {
-          // Toggle dropdown on bell click
-          notifBell.addEventListener('click', function(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            console.log('Notification bell clicked!');
-            const isVisible = notifDropdown.style.display === 'block';
-            const newDisplay = isVisible ? 'none' : 'block';
-            notifDropdown.style.display = newDisplay;
-            console.log('Dropdown display changed to:', newDisplay);
-          });
-          
-          // Close dropdown when clicking outside
-          document.addEventListener('click', function(e) {
-            if (!notifContainer.contains(e.target)) {
-              notifDropdown.style.display = 'none';
-            }
-          });
-          
-          // Handle notification clicks to mark as seen (only for logged-in users)
-          document.addEventListener('click', function(e) {
-            if (e.target.closest('.notification-item')) {
-              const notificationItem = e.target.closest('.notification-item');
-              const notificationId = notificationItem.getAttribute('data-notification-id');
-              const notificationType = notificationItem.getAttribute('data-type') || 'notification';
-              
-              // Check if user is logged in before making API call
-              const logoutLink = document.querySelector('a[href="/logout"]');
-              if (!logoutLink) {
-                // User not logged in, show login message
-                alert('Please login to interact with notifications.');
-                return;
-              }
-              
-              // Mark notification as seen using new API
-              fetch(`/api/mark-notification-seen/${notificationId}`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  type: notificationType
-                })
-              })
-              .then(response => response.json())
-              .then(data => {
-                if (data.success) {
-                  // Remove the notification item
-                  notificationItem.remove();
-                  
-                  // Update notification count
-                  updateNotificationCount();
-                  
-                  // Check if no notifications left
-                  const remainingNotifications = document.querySelectorAll('.notification-item');
-                  if (remainingNotifications.length === 0) {
-                    const noNotificationsLi = document.createElement('li');
-                    noNotificationsLi.style.cssText = 'padding:1.1rem 1.2rem; color:#888; text-align:center; background:#f8fafc; border-radius:10px;';
-                    noNotificationsLi.textContent = 'No new notifications or messages.';
-                    notifDropdown.querySelector('ul').appendChild(noNotificationsLi);
-                  }
-                }
-              })
-              .catch(error => {
-                console.error('Error marking notification as seen:', error);
-              });
-            }
-          });
+          // Handled globally in script.js. Keep only page-specific logic below.
         }
-        
-        // Function to update notification count
-        function updateNotificationCount() {
-          const remainingNotifications = document.querySelectorAll('.notification-item');
-          const notificationCount = document.getElementById('notificationCount');
-          if (notificationCount) {
-            if (remainingNotifications.length > 0) {
-              notificationCount.textContent = remainingNotifications.length;
-              notificationCount.style.display = 'flex';
-            } else {
-              notificationCount.style.display = 'none';
-            }
-          }
-        }
-        
-        // Initialize notification count on page load
-        updateNotificationCount();
-        
-        // Debug: Log to console to verify elements are found
-        console.log('Notification Bell Elements:', {
-          bell: notifBell,
-          dropdown: notifDropdown,
-          container: notifContainer
-        });
-        
-        // Test function to manually show/hide dropdown
-        window.testNotificationDropdown = function() {
-          const currentDisplay = notifDropdown.style.display;
-          const newDisplay = currentDisplay === 'block' ? 'none' : 'block';
-          notifDropdown.style.display = newDisplay;
-          console.log('Manual test: Dropdown display changed to:', newDisplay);
-        };
-        
-        // Add test button to page for debugging
-        const testButton = document.createElement('button');
-        testButton.textContent = 'Test Notification Dropdown';
-        testButton.style.cssText = 'position:fixed; top:10px; left:10px; z-index:10000; padding:10px; background:red; color:white; border:none; border-radius:5px; cursor:pointer;';
-        testButton.onclick = window.testNotificationDropdown;
-        document.body.appendChild(testButton);
       });
     </script>
     <script src="script.js"></script>
