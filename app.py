@@ -2563,11 +2563,7 @@ def get_recent_queries():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
 
-@app.before_request
-def require_login():
-    allowed_routes = ['home', 'auth', 'register', 'static_files', 'submit_admission', 'admission', 'check_admission_status', 'check_admission', 'submit_query', 'get_recent_queries', 'api_get_categories_for_class', 'api_get_categories_by_class_name']
-    if request.endpoint not in allowed_routes and not session.get('user_id'):
-        return redirect(url_for('auth'))
+# This function is now consolidated into the main before_request function below
 
 @app.route('/check-admission-status')
 def check_admission_status():
@@ -4435,8 +4431,15 @@ def api_get_categories_for_class(class_id):
         return jsonify({'success': False, 'error': str(e)})
 
 @app.before_request
-def validate_session():
-    """Validate user session and update activity"""
+def before_request_handler():
+    """Consolidated before_request handler for login, session validation, and IP tracking"""
+    
+    # 1. Login requirement check
+    allowed_routes = ['home', 'auth', 'register', 'static_files', 'submit_admission', 'admission', 'check_admission_status', 'check_admission', 'submit_query', 'get_recent_queries', 'api_get_categories_for_class', 'api_get_categories_by_class_name']
+    if request.endpoint not in allowed_routes and not session.get('user_id'):
+        return redirect(url_for('auth'))
+    
+    # 2. Session validation and activity update
     user_id = session.get('user_id')
     session_id = session.get('session_id')
     
@@ -4452,14 +4455,12 @@ def validate_session():
         
         # Update session activity
         update_session_activity(user_id)
-
-@app.before_request
-def track_ip_activity():
+    
+    # 3. IP tracking
     try:
         # Determine client IP (respect X-Forwarded-For if present)
         xff = request.headers.get('X-Forwarded-For', '')
         ip = (xff.split(',')[0].strip() if xff else request.remote_addr) or 'unknown'
-        user_id = session.get('user_id')
         path = request.path
         ua = request.headers.get('User-Agent', '')[:300]
         now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
