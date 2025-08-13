@@ -140,15 +140,21 @@ class StudyResourcesBulkUploadHandler:
             logger.error(f"Error getting class ID: {str(e)}")
             return None
     
-    def copy_file_to_uploads(self, source_path, category, filename):
-        """Copy file to appropriate upload folder"""
+    def copy_file_to_uploads(self, source_path, category, filename, class_name=None):
+        """Copy file to appropriate upload folder; nest by class/category if class_name provided"""
         try:
             category_folder = self.get_category_folder(category)
-            destination_folder = os.path.join(self.upload_folder, category_folder)
+            safe_class = None
+            if class_name:
+                safe_class = ''.join(c for c in class_name if c.isalnum() or c in (' ', '_', '-')).strip().replace(' ', '_')
+            # Build nested path uploads/<class>/<category> if class provided else uploads/<category>
+            if safe_class:
+                destination_folder = os.path.join(self.upload_folder, safe_class, category_folder)
+            else:
+                destination_folder = os.path.join(self.upload_folder, category_folder)
             
-            # Create category folder if it doesn't exist
-            if not os.path.exists(destination_folder):
-                os.makedirs(destination_folder)
+            # Create folder if it doesn't exist
+            os.makedirs(destination_folder, exist_ok=True)
             
             # Generate unique filename if needed
             base_name, extension = os.path.splitext(filename)
@@ -313,7 +319,7 @@ class StudyResourcesBulkUploadHandler:
                     
                     # Copy file to uploads folder (unless dry run)
                     if not dry_run:
-                        new_filename, new_path = self.copy_file_to_uploads(file_path, category, file_name)
+                        new_filename, new_path = self.copy_file_to_uploads(file_path, category, file_name, class_name)
                         if new_filename is None:
                             error_msg = f"Row {index + 2}: Failed to copy file {file_name}"
                             results['errors'].append(error_msg)
@@ -322,8 +328,12 @@ class StudyResourcesBulkUploadHandler:
                     else:
                         # Simulate destination path
                         category_folder = self.get_category_folder(category)
+                        safe_class = ''.join(c for c in class_name if c.isalnum() or c in (' ', '_', '-')).strip().replace(' ', '_') if class_name else None
+                        if safe_class:
+                            new_path = os.path.join(self.upload_folder, safe_class, category_folder, file_name)
+                        else:
+                            new_path = os.path.join(self.upload_folder, category_folder, file_name)
                         new_filename = file_name
-                        new_path = os.path.join(self.upload_folder, category_folder, file_name)
                     
                     # Prepare file data for database
                     file_data = {
