@@ -360,37 +360,62 @@
             </div>
           </div>
           
-          <!-- 2023-24 Outstanding Performers Section -->
-          <div class="outstanding-performers" style="background: rgba(255,255,255,0.9); border-radius: 20px; padding: 2rem; margin-top: 2rem;">
+          <!-- 2023-24 Outstanding Performers Section - Horizontal Cards -->
+          <div class="outstanding-performers" style="background: rgba(255,255,255,0.9); border-radius: 20px; padding: 2rem; margin-top: 2rem; position: relative;">
             <h3 style="text-align: center; color: #232946; font-size: 1.8rem; margin-bottom: 1.5rem;">🌟 2023-24 Outstanding Performers</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem;">
+            
+            <!-- Navigation Arrows -->
+            <button class="scroll-nav scroll-left" onclick="scrollPerformers('left')" style="position: absolute; left: -10px; top: 50%; transform: translateY(-50%); background: rgba(102,126,234,0.9); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">‹</button>
+            <button class="scroll-nav scroll-right" onclick="scrollPerformers('right')" style="position: absolute; right: -10px; top: 50%; transform: translateY(-50%); background: rgba(102,126,234,0.9); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">›</button>
+            
+            <div class="horizontal-scroll-container" style="display: flex; gap: 1.5rem; overflow-x: auto; padding: 0.5rem 0; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: #667eea #f0f0f0; margin: 0 20px;">
               
-              <div class="performer-card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(102,126,234,0.3);">
-                <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">Arnav Sharma</div>
-                <div style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem;">98/100</div>
-                <div style="font-size: 0.9rem; margin-bottom: 0.2rem;">Standard Mathematics</div>
-                <div style="font-size: 0.8rem; opacity: 0.9;">Class X - 2024 • District Topper</div>
+              <div class="performer-card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.5rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(102,126,234,0.3); min-width: 280px; flex-shrink: 0;">
+                <div style="font-weight: 700; font-size: 1.2rem; margin-bottom: 0.8rem;">Arnav Sharma</div>
+                <div style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem;">98/100</div>
+                <div style="font-size: 1rem; margin-bottom: 0.3rem;">Standard Mathematics</div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">Class X - 2024 • District Topper</div>
+                <div style="background: rgba(255,255,255,0.2); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">🏆 CBSE Board</div>
               </div>
               
-              <div class="performer-card" style="background: linear-gradient(135deg, #764ba2, #667eea); color: white; padding: 1.2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(118,75,162,0.3);">
-                <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">Priya Patel</div>
-                <div style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem;">96/100</div>
-                <div style="font-size: 0.9rem; margin-bottom: 0.2rem;">Standard Mathematics</div>
-                <div style="font-size: 0.8rem; opacity: 0.9;">Class X - 2024 • School Topper</div>
+              <div class="performer-card" style="background: linear-gradient(135deg, #764ba2, #667eea); color: white; padding: 1.5rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(118,75,162,0.3); min-width: 280px; flex-shrink: 0;">
+                <div style="font-weight: 700; font-size: 1.2rem; margin-bottom: 0.8rem;">Priya Patel</div>
+                <div style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem;">96/100</div>
+                <div style="font-size: 1rem; margin-bottom: 0.3rem;">Standard Mathematics</div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">Class X - 2024 • School Topper</div>
+                <div style="background: rgba(255,255,255,0.2); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">🥈 CBSE Board</div>
               </div>
               
-              <div class="performer-card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(102,126,234,0.3);">
-                <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">Aditya Verma</div>
-                <div style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem;">94/100</div>
-                <div style="font-size: 0.9rem; margin-bottom: 0.2rem;">Standard Mathematics</div>
-                <div style="font-size: 0.8rem; opacity: 0.9;">Class X - 2024</div>
+              <div class="performer-card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.5rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(102,126,234,0.3); min-width: 280px; flex-shrink: 0;">
+                <div style="font-weight: 700; font-size: 1.2rem; margin-bottom: 0.8rem;">Aditya Verma</div>
+                <div style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem;">94/100</div>
+                <div style="font-size: 1rem; margin-bottom: 0.3rem;">Standard Mathematics</div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">Class X - 2024 • Subject Topper</div>
+                <div style="background: rgba(255,255,255,0.2); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">🥉 CBSE Board</div>
               </div>
               
-              <div class="performer-card" style="background: linear-gradient(135deg, #764ba2, #667eea); color: white; padding: 1.2rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(118,75,162,0.3);">
-                <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">Neha Singh</div>
-                <div style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.3rem;">92/100</div>
-                <div style="color: #232946; font-size: 0.9rem; margin-bottom: 0.2rem;">Basic Mathematics</div>
-                <div style="font-size: 0.8rem; opacity: 0.9;">Class X - 2024</div>
+              <div class="performer-card" style="background: linear-gradient(135deg, #764ba2, #667eea); color: white; padding: 1.5rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(118,75,162,0.3); min-width: 280px; flex-shrink: 0;">
+                <div style="font-weight: 700; font-size: 1.2rem; margin-bottom: 0.8rem;">Neha Singh</div>
+                <div style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem;">92/100</div>
+                <div style="font-size: 1rem; margin-bottom: 0.3rem;">Basic Mathematics</div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">Class X - 2024 • Merit Holder</div>
+                <div style="background: rgba(255,255,255,0.2); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">🎯 CBSE Board</div>
+              </div>
+              
+              <div class="performer-card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1.5rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(102,126,234,0.3); min-width: 280px; flex-shrink: 0;">
+                <div style="font-weight: 700; font-size: 1.2rem; margin-bottom: 0.8rem;">Rahul Kumar</div>
+                <div style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem;">90/100</div>
+                <div style="font-size: 1rem; margin-bottom: 0.3rem;">Basic Mathematics</div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">Class X - 2024 • Merit Holder</div>
+                <div style="background: rgba(255,255,255,0.2); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">🎯 CBSE Board</div>
+              </div>
+              
+              <div class="performer-card" style="background: linear-gradient(135deg, #764ba2, #667eea); color: white; padding: 1.5rem; border-radius: 15px; text-align: center; box-shadow: 0 4px 16px rgba(118,75,162,0.3); min-width: 280px; flex-shrink: 0;">
+                <div style="font-weight: 700; font-size: 1.2rem; margin-bottom: 0.8rem;">Kavya Sharma</div>
+                <div style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem;">88/100</div>
+                <div style="font-size: 1rem; margin-bottom: 0.3rem;">Basic Mathematics</div>
+                <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 0.5rem;">Class X - 2024 • Merit Holder</div>
+                <div style="background: rgba(255,255,255,0.2); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">🎯 CBSE Board</div>
               </div>
             </div>
           </div>
@@ -1072,6 +1097,19 @@
          sidePanel.style.right = '-380px';
          setTimeout(() => { overlay.style.display = 'none'; }, 250);
        }
+       
+       // Function to scroll performers horizontally
+       function scrollPerformers(direction) {
+         const container = document.querySelector('.horizontal-scroll-container');
+         if (!container) return;
+         
+         const scrollAmount = 300; // Scroll by 300px
+         if (direction === 'left') {
+           container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+         } else {
+           container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+         }
+       }
 
        // Function to close the categories modal
        function closeCategoriesModal() {
@@ -1530,6 +1568,39 @@
       
       .subject-btn:hover::before {
         left: 100%;
+      }
+      
+      /* Horizontal scroll styling for performers */
+      .horizontal-scroll-container::-webkit-scrollbar {
+        height: 8px;
+      }
+      
+      .horizontal-scroll-container::-webkit-scrollbar-track {
+        background: #f0f0f0;
+        border-radius: 4px;
+      }
+      
+      .horizontal-scroll-container::-webkit-scrollbar-thumb {
+        background: #667eea;
+        border-radius: 4px;
+      }
+      
+      .horizontal-scroll-container::-webkit-scrollbar-thumb:hover {
+        background: #5a6fd8;
+      }
+      
+      .scroll-nav:hover {
+        background: rgba(102,126,234,1) !important;
+        transform: translateY(-50%) scale(1.1) !important;
+      }
+      
+      .performer-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      
+      .performer-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(102,126,234,0.4) !important;
       }
     </style>
     
