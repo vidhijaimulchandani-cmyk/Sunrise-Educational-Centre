@@ -565,6 +565,22 @@ def drive_scan():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
+@bulk_upload_bp.route('/drive/set-api-key', methods=['POST'])
+def drive_set_api_key():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'success': False, 'error': 'Unauthorized'}), 401
+    try:
+        data = request.get_json(force=True)
+        key = data.get('api_key')
+        if not key:
+            return jsonify({'success': False, 'error': 'api_key required'}), 400
+        os.environ['GOOGLE_API_KEY'] = key
+        # Reload in handler module variable if needed
+        from .unified_bulk_upload_handler import GOOGLE_API_KEY as HANDLER_KEY  # noqa: F401
+        return jsonify({'success': True})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 # Error handlers
 @bulk_upload_bp.errorhandler(413)
 def too_large(e):

@@ -5,6 +5,7 @@ from datetime import datetime
 import shutil
 import logging
 from typing import Optional, Tuple, List, Dict
+import requests
 
 try:
     from google.oauth2 import service_account  # type: ignore
@@ -16,6 +17,8 @@ except Exception:
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
 
 class UnifiedBulkUploadHandler:
     """
@@ -278,6 +281,23 @@ class UnifiedBulkUploadHandler:
         """
         service = self.get_drive_service()
         if not service:
+            # Fallback: API key for PUBLIC folders/files only
+            if GOOGLE_API_KEY:
+                try:
+                    resp = requests.get(
+                        'https://www.googleapis.com/drive/v3/files',
+                        params={
+                            'q': f"'{root_folder_id}' in parents and trashed=false and mimeType!='application/vnd.google-apps.folder'",
+                            'fields': 'files(id,name,mimeType,modifiedTime)',
+                            'key': GOOGLE_API_KEY
+                        }, timeout=20
+                    )
+                    data = resp.json()
+                    files = data.get('files', []) if resp.ok else []
+                    return {'files': files, 'next_token': since_token, 'mode': 'api_key'}
+                except Exception as e:
+                    logger.error(f'API key scan error: {e}')
+                    return {'files': [], 'next_token': since_token, 'mode': 'api_key'}
             logger.info('Drive scan in dry-run (no Google API). Returning empty result.')
             return {'files': [], 'next_token': since_token}
         try:
@@ -285,7 +305,7 @@ class UnifiedBulkUploadHandler:
             resp = service.files().list(q=f"'{root_folder_id}' in parents and trashed=false and mimeType!='application/vnd.google-apps.folder'",
                                         spaces='drive', fields='files(id, name, mimeType, modifiedTime)', pageSize=100).execute()
             files = resp.get('files', [])
-            return {'files': files, 'next_token': since_token}
+            return {'files': files, 'next_token': since_token, 'mode': 'oauth'}
         except Exception as e:
             logger.error(f'Drive scan error: {e}')
             return {'files': [], 'next_token': since_token}
