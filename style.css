@@ -1952,3 +1952,68 @@ body.dark-mode q::before, body.dark-mode q::after {
     gap: 0.5rem;
   }
 }
+
+/* Additional dark mode overrides for home page light sections */
+body.dark-mode .fame-card {
+  background: #232946 !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.35) !important;
+}
+
+body.dark-mode .outstanding-performers {
+  background: rgba(35,41,70,0.9) !important;
+  color: #f4f4f4 !important;
+  border-color: #444a6d !important;
+}
+
+/* Common light tiles and panels used across home sections */
+body.dark-mode div[style*="background:#fff8e1"],
+body.dark-mode div[style*="background: #fff8e1"],
+body.dark-mode div[style*="background:#ffe6e6"],
+body.dark-mode div[style*="background: #ffe6e6"],
+body.dark-mode div[style*="background:#e3f7fc"],
+body.dark-mode div[style*="background: #e3f7fc"],
+body.dark-mode div[style*="background:#ede6ff"],
+body.dark-mode div[style*="background: #ede6ff"],
+body.dark-mode div[style*="background:#fffbe6"],
+body.dark-mode div[style*="background: #fffbe6"],
+body.dark-mode div[style*="background: rgba(255,255,255,0.9)"],
+body.dark-mode div[style*="background: linear-gradient(135deg, #e3f7fc 0%, #e6f9f3 100%)"] {
+  background: #232946 !important;
+  color: #f4f4f4 !important;
+  border-color: #444a6d !important;
+}
+
+/* Subjects We Offer buttons */
+body.dark-mode .subject-btn {
+  background: #232946 !important;
+  color: #f4f4f4 !important;
+  border: 2px solid #444a6d !important;
+}
+
+/* Categories side panel and list in home page */
+body.dark-mode #categoriesSidePanel {
+  background: #232946 !important;
+  color: #f4f4f4 !important;
+  box-shadow: -4px 0 24px rgba(0,0,0,0.35) !important;
+}
+body.dark-mode #panelCategories > div {
+  background: #1e293b !important;
+  border: 1px solid #334155 !important;
+  color: #e2e8f0 !important;
+}
+body.dark-mode #panelCategories a.btn {
+  background: #232946 !important;
+  color: #fff !important;
+  border: 1px solid #6a82fb !important;
+}
+
+/* FAQ section */
+body.dark-mode #faq .faq-item {
+  border-bottom: 1px solid #334155 !important;
+}
+body.dark-mode #faq .faq-question {
+  color: #e2e8f0 !important;
+}
+body.dark-mode #faq .faq-answer {
+  color: #cbd5e1 !important;
+}
