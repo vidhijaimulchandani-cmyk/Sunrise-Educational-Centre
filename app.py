@@ -5812,12 +5812,44 @@ def api_search_users_for_mentions():
         return jsonify({'error': 'Unauthorized'}), 401
     
     query = request.args.get('q', '').strip()
-    if len(query) < 2:
-        return jsonify([])
     
     # Get current user's class to prioritize same-class users
     current_user = get_user_by_id(user_id)
     current_user_class = current_user[2] if current_user else None
+    
+    # If user just typed '@' (empty query), return a default curated list
+    if len(query) == 0:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        c.execute('''
+            SELECT u.id, u.username, c.name as class_name, u.mobile_no, u.email_address 
+            FROM users u
+            LEFT JOIN classes c ON u.class_id = c.id
+            WHERE u.id != ?
+            ORDER BY 
+                CASE WHEN u.class_id = ? THEN 1 ELSE 2 END,
+                u.username
+            LIMIT 20
+        ''', (user_id, current_user_class))
+        users = c.fetchall()
+        conn.close()
+        
+        results = []
+        for user in users:
+            uid, username, class_name, mobile_no, email_address = user
+            results.append({
+                'id': uid,
+                'username': username,
+                'display_name': f"{username}{f' ({class_name})' if class_name else ''}",
+                'class_name': class_name or 'No Class',
+                'mobile_no': mobile_no or '',
+                'email_address': email_address or ''
+            })
+        return jsonify(results)
+    
+    # If query is too short (e.g., one character), return empty to avoid noisy results
+    if len(query) < 2:
+        return jsonify([])
     
     # Search users by username, email, mobile, or class
     conn = sqlite3.connect(DATABASE)
@@ -5843,13 +5875,13 @@ def api_search_users_for_mentions():
     # Format results for frontend
     results = []
     for user in users:
-        user_id, username, class_name, mobile_no, email_address = user
+        user_id_row, username, class_name, mobile_no, email_address = user
         display_name = username
         if class_name:
             display_name += f" ({class_name})"
         
         results.append({
-            'id': user_id,
+            'id': user_id_row,
             'username': username,
             'display_name': display_name,
             'class_name': class_name or 'No Class',

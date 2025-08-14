@@ -440,12 +440,14 @@
                 </div>
             </div>
             
-            <div class="chat-input-container" id="chatInputContainer" style="display: none;">
+            <div class="chat-input-container" id="chatInputContainer" style="display: none; position:relative;">
+                <!-- Mention Suggestions for Personal Chat -->
+                <div id="pcMentionSuggestions" style="display:none; position:absolute; left:10px; bottom:60px; background:#fff; border:1px solid #e5e7eb; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); max-height:220px; overflow:auto; z-index:1000; min-width:260px;"></div>
                 <form class="chat-input-form" id="chatForm">
                     <textarea 
                         class="chat-input" 
                         id="messageInput" 
-                        placeholder="Type your message here..."
+                        placeholder="Type your message here... Use @ to mention"
                         rows="1"
                     ></textarea>
                     <button type="submit" class="send-button" id="sendButton">
@@ -684,6 +686,9 @@
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
         });
+
+        // @mention support (basic) for personal chat
+        setupPersonalChatMentions();
 
         // Close modal when clicking outside
         window.onclick = function(event) {
