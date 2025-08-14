@@ -6,6 +6,7 @@
   <title>Upload Resource - Admin</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="bulk_upload/bulk_upload.css">
   <script src="script.js"></script>
   <style>
     .upload-container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
@@ -293,8 +294,8 @@
       </div>
       
       <div class="tab-container">
-        <button class="tab-btn active" onclick="showTab('upload-tab')">📤 Upload Resources</button>
-        <button class="tab-btn" onclick="showTab('bulk-upload-tab')">🚀 Bulk Upload</button>
+        <button class="tab-btn active" onclick="showTab('upload')">📤 Upload Resources</button>
+        <button class="tab-btn" onclick="showTab('bulk-upload')">🚀 Bulk Upload</button>
         <button class="tab-btn" onclick="showTab('smart-upload-tab')">🤖 Smart Upload</button>
         <button class="tab-btn" onclick="showTab('categories-tab')">📁 Categories</button>
         <button class="tab-btn" onclick="showTab('analytics-tab')">📊 Analytics</button>
@@ -382,6 +383,87 @@
       </form>
       </div>
       
+
+      
+      <!-- Bulk Upload Tab -->
+      <div id="bulk-upload-tab" class="tab-content">
+        <h2>Bulk Upload Study Resources</h2>
+        <div class="bulk-upload-container">
+          <!-- Excel Upload Section -->
+          <div class="excel-upload-section">
+            <div class="upload-area" id="excel-upload-area">
+              <input type="file" id="excel-input" accept=".xlsx,.xls" style="display:none">
+              <div class="upload-icon" style="font-size:2rem;margin-bottom:0.5rem;">📄</div>
+              <h3>Bulk Upload from xlsx Folder or Drag & Drop Excel</h3>
+              <p>Place your Excel file in the <b>xlsx</b> folder in the project directory, or drag and drop it here.</p>
+              <button class="btn btn-secondary" id="scan-xlsx-btn">Scan xlsx Folder</button>
+              <div id="xlsx-file-list" style="margin-top:1rem;"></div>
+            </div>
+
+            <div class="template-download" style="margin-top:1rem;">
+              <h4>Download Template</h4>
+              <p>Use our Excel template to ensure correct format for study resources</p>
+              <button class="btn btn-outline" id="download-template-btn">Download Study Resources Template</button>
+            </div>
+          </div>
+
+          <!-- File Preview Section -->
+          <div class="file-preview" id="file-preview" style="display: none;">
+            <h4>Study Resources to Upload</h4>
+            <div class="preview-info" id="preview-info"></div>
+            <div class="preview-filters" style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center; margin: 0 0 1rem 0;">
+              <input id="filter-search" type="text" placeholder="Search title or class..." style="flex:1; min-width:220px; padding:0.6rem 0.8rem; border:1px solid #e2e8f0; border-radius:8px;" />
+              <label style="display:flex; gap:0.4rem; align-items:center;"><input type="checkbox" id="filter-duplicates"> Show duplicates only</label>
+              <label style="display:flex; gap:0.4rem; align-items:center;"><input type="checkbox" id="filter-missing"> Show missing files only</label>
+              <button class="btn btn-secondary" id="recheck-duplicates-btn">Recheck</button>
+            </div>
+            <div class="preview-table-container">
+              <table class="preview-table" id="preview-table">
+                <thead>
+                  <tr>
+                    <th>File Name</th>
+                    <th>Title</th>
+                    <th>Class</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="preview-tbody"></tbody>
+              </table>
+            </div>
+            <div class="upload-actions" style="flex-wrap:wrap;">
+              <label style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="opt-skip-duplicates" checked> Skip duplicates</label>
+              <label style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="opt-skip-missing" checked> Skip missing files</label>
+              <label style="display:flex;align-items:center;gap:6px;"><input type="checkbox" id="opt-dry-run"> Dry run (no save)</label>
+              <button class="btn btn-secondary" id="export-errors-btn">⬇️ Export Errors CSV</button>
+              <button class="btn btn-primary" id="confirm-upload-btn">✅ Confirm & Upload</button>
+              <button class="btn btn-outline" id="cancel-upload-btn">❌ Cancel</button>
+            </div>
+          </div>
+
+          <!-- Progress Section -->
+          <div class="upload-progress" id="upload-progress" style="display: none;">
+            <div class="progress-header">
+              <h4>Upload Progress</h4>
+              <span class="progress-text" id="progress-text">0%</span>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-details" id="progress-details"></div>
+          </div>
+
+          <!-- Results Section -->
+          <div class="upload-results" id="upload-results" style="display: none;">
+            <div class="results-header">
+              <h4>Upload Results</h4>
+              <button class="btn btn-outline" id="close-results-btn">Close</button>
+            </div>
+            <div class="results-content" id="results-content"></div>
+          </div>
+        </div>
+      </div>
 
       
       <!-- Manage Categories Tab -->
@@ -722,15 +804,20 @@
   </footer>
 
   <script src="script.js"></script>
+  <script src="bulk_upload/bulk_upload.js"></script>
   <script>
     function showTab(tabName) {
       // Hide all tab contents
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       
-      // Show selected tab
-      document.getElementById(tabName + '-tab').classList.add('active');
-      event.target.classList.add('active');
+      // Resolve id: accept both 'upload' and 'upload-tab'
+      const targetId = tabName.endsWith('-tab') ? tabName : (tabName + '-tab');
+      const target = document.getElementById(targetId);
+      if (target) target.classList.add('active');
+      if (window.event && window.event.target) {
+        window.event.target.classList.add('active');
+      }
     }
     
     // File upload handling
