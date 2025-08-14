@@ -679,10 +679,6 @@ function setupMentionSystem() {
                 currentMentionQuery = query;
                 searchUsersForMentions(query);
                 showMentionSuggestions();
-            } else if (query.length === 0) {
-                // Show all users when just @ is typed
-                searchUsersForMentions('');
-                showMentionSuggestions();
             } else {
                 hideMentionSuggestions();
             }
@@ -744,9 +740,8 @@ function checkForMentions() {
             currentMentionQuery = query;
             searchUsersForMentions(query);
             showMentionSuggestions();
-        } else if (query.length === 0) {
-            searchUsersForMentions('');
-            showMentionSuggestions();
+        } else {
+            hideMentionSuggestions();
         }
     } else {
         hideMentionSuggestions();
