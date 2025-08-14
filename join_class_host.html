@@ -575,17 +575,29 @@
             <div style="margin-bottom: 0.8rem;">
               <input type="text" id="recordingNameInput" placeholder="Recording Name (optional)" 
                      style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 0.5rem;">
-              <div style="display: flex; gap: 0.5rem;">
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                 <button id="startRecordingBtn" class="control-btn" style="background: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;" onclick="startRecording()">
                   🔴 Start Recording
                 </button>
                 <button id="stopRecordingBtn" class="control-btn" style="background: #dc3545; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; display: none;" onclick="stopRecording()">
                   ⏹️ Stop Recording
                 </button>
+                <button id="autoRecordBtn" class="control-btn" style="background: #17a2b8; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;" onclick="toggleAutoRecording()">
+                  🔄 Auto Record
+                </button>
+                <button id="voiceBtn" class="control-btn" style="background: #6f42c1; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;" onclick="toggleVoice()">
+                  🎤 Voice
+                </button>
+                <button id="playbackBtn" class="control-btn" style="background: #fd7e14; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;" onclick="togglePlayback()">
+                  ▶️ Playback
+                </button>
               </div>
             </div>
             <div id="recordingStatus" style="font-size: 0.9rem; color: #666;">
               Recording not started
+            </div>
+            <div id="autoRecordStatus" style="font-size: 0.9rem; color: #17a2b8; display: none;">
+              🔄 Auto-recording enabled - will start automatically when class begins
             </div>
           </div>
           
@@ -780,12 +792,15 @@
           message: 'Host camera is now live!'
         });
         
+        // Trigger class started event for auto-recording
+        onClassStarted();
+        
         console.log('Camera started successfully');
       } catch (error) {
         console.error('Error accessing camera:', error);
         statusText.textContent = 'Camera Access Error - Check Permissions';
         deviceStatus.innerHTML = '❌ Failed to access selected devices';
-        alert('Could not access camera. Please check permissions and selected devices.');
+        showNotification('Could not access camera. Please check permissions and selected devices.', 'error');
       }
     }
 
@@ -1495,6 +1510,11 @@
           stopCamera();
         }
         
+        // Stop recording if active
+        if (isRecording) {
+          stopRecording();
+        }
+        
         // End all active polls
         activePollTimers.forEach((timeLeft, pollId) => {
           endPoll(pollId);
@@ -1509,14 +1529,17 @@
         .then(response => response.json())
         .then(data => {
           if (data.success) {
-            alert('Class ended successfully!');
-            window.location.href = '/live-class-management';
+            // Show success message and redirect to dashboard
+            showNotification('Class ended successfully! Redirecting to dashboard...', 'success');
+            setTimeout(() => {
+              window.location.href = '/dashboard';
+            }, 2000);
           } else {
-            alert('Error ending class: ' + data.message);
+            showNotification('Error ending class: ' + data.message, 'error');
           }
         })
         .catch(error => {
-          alert('Error ending class: ' + error.message);
+          showNotification('Error ending class: ' + error.message, 'error');
         });
       }
     }
@@ -1771,147 +1794,168 @@
     // --- Recording Functions ---
     let isRecording = false;
     let currentRecordingId = null;
-    
-    function startRecording() {
-      const recordingName = document.getElementById('recordingNameInput').value.trim() || 
-                           `Live Class ${classId} - ${new Date().toLocaleString()}`;
+    let autoRecordingEnabled = false;
+    let voiceEnabled = false;
+    let playbackEnabled = false;
+    let mediaRecorder = null;
+    let recordedChunks = [];
+
+    // Auto-recording functionality
+    function toggleAutoRecording() {
+      autoRecordingEnabled = !autoRecordingEnabled;
+      const autoRecordBtn = document.getElementById('autoRecordBtn');
+      const autoRecordStatus = document.getElementById('autoRecordStatus');
       
-      if (!isConnected) {
-        alert('Not connected to server. Please wait for connection.');
-        return;
-      }
-      
-      socket.emit('start_recording', {
-        class_id: classId,
-        recording_name: recordingName,
-        created_by: 'host'
-      });
-    }
-    
-    function stopRecording() {
-      if (!isConnected) {
-        alert('Not connected to server. Please wait for connection.');
-        return;
-      }
-      
-      socket.emit('stop_recording', {
-        class_id: classId
-      });
-    }
-    
-    function updateRecordingStatus(message, status) {
-      const statusEl = document.getElementById('recordingStatus');
-      const startBtn = document.getElementById('startRecordingBtn');
-      const stopBtn = document.getElementById('stopRecordingBtn');
-      
-      statusEl.textContent = message;
-      
-      if (status === 'recording') {
-        isRecording = true;
-        statusEl.style.color = '#dc3545';
-        startBtn.style.display = 'none';
-        stopBtn.style.display = 'inline-block';
-      } else {
-        isRecording = false;
-        statusEl.style.color = '#666';
-        startBtn.style.display = 'inline-block';
-        stopBtn.style.display = 'none';
-      }
-    }
-    
-    function updateRecordingUI(activeRecording, allRecordings) {
-      // Update recording status
-      if (activeRecording) {
-        updateRecordingStatus('Recording in progress...', 'recording');
-        currentRecordingId = activeRecording.recording_id;
-      } else {
-        updateRecordingStatus('Recording not started', 'stopped');
-        currentRecordingId = null;
-      }
-      
-      // Update recordings list
-      renderRecordingsList(allRecordings || []);
-    }
-    
-    function renderRecordingsList(recordings) {
-      const recordingsList = document.getElementById('recordingsList');
-      
-      if (recordings.length === 0) {
-        recordingsList.innerHTML = '<div style="color: #666; font-style: italic;">No recordings found</div>';
-        return;
-      }
-      
-      recordingsList.innerHTML = recordings.map(recording => {
-        const startedAt = new Date(recording.started_at).toLocaleString();
-        const duration = recording.duration ? formatDuration(recording.duration) : 'Unknown';
-        const fileSize = recording.file_size ? formatFileSize(recording.file_size) : 'Unknown';
-        const status = recording.status;
+      if (autoRecordingEnabled) {
+        autoRecordBtn.style.background = '#dc3545';
+        autoRecordBtn.textContent = '🔄 Disable Auto';
+        autoRecordStatus.style.display = 'block';
+        showNotification('Auto-recording enabled! Recording will start automatically when class begins.', 'success');
         
-        let statusColor = '#666';
-        let statusText = status;
-        
-        if (status === 'recording') {
-          statusColor = '#dc3545';
-          statusText = '🔴 Recording...';
-        } else if (status === 'completed') {
-          statusColor = '#28a745';
-          statusText = '✅ Completed';
-        } else if (status === 'failed') {
-          statusColor = '#dc3545';
-          statusText = '❌ Failed';
+        // Start recording automatically if class is already active
+        if (isStreaming && !isRecording) {
+          startRecording();
         }
-        
-        return `
-          <div style="border: 1px solid #ddd; border-radius: 4px; padding: 0.8rem; margin-bottom: 0.5rem; background: white;">
-            <div style="font-weight: 600; color: #232946; margin-bottom: 0.3rem;">${recording.recording_name}</div>
-            <div style="font-size: 0.8rem; color: #666; margin-bottom: 0.3rem;">
-              Started: ${startedAt} | Duration: ${duration} | Size: ${fileSize}
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="color: ${statusColor}; font-size: 0.8rem; font-weight: 600;">${statusText}</span>
-              ${status === 'completed' ? 
-                `<a href="/download-recording/${recording.id}" class="control-btn" style="background: #6a82fb; color: white; text-decoration: none; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem;">📥 Download</a>` : 
-                ''
-              }
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-    
-    function formatDuration(seconds) {
-      const hours = Math.floor(seconds / 3600);
-      const minutes = Math.floor((seconds % 3600) / 60);
-      const secs = seconds % 60;
-      
-      if (hours > 0) {
-        return `${hours}h ${minutes}m ${secs}s`;
-      } else if (minutes > 0) {
-        return `${minutes}m ${secs}s`;
       } else {
-        return `${secs}s`;
+        autoRecordBtn.style.background = '#17a2b8';
+        autoRecordBtn.textContent = '🔄 Auto Record';
+        autoRecordStatus.style.display = 'none';
+        showNotification('Auto-recording disabled.', 'info');
       }
     }
-    
-    function formatFileSize(bytes) {
-      if (bytes === 0) return '0 Bytes';
+
+    // Voice control functionality
+    function toggleVoice() {
+      voiceEnabled = !voiceEnabled;
+      const voiceBtn = document.getElementById('voiceBtn');
       
-      const k = 1024;
-      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-      const i = Math.floor(Math.log(bytes) / Math.log(k));
-      
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    }
-    
-    function loadRecordings() {
-      if (isConnected) {
-        socket.emit('get_recording_status', { class_id: classId });
+      if (voiceEnabled) {
+        voiceBtn.style.background = '#dc3545';
+        voiceBtn.textContent = '🎤 Disable Voice';
+        showNotification('Voice enabled! Microphone is now active.', 'success');
+        
+        // Enable microphone if not already enabled
+        if (localStream && localStream.getAudioTracks().length > 0) {
+          localStream.getAudioTracks().forEach(track => track.enabled = true);
+        }
+      } else {
+        voiceBtn.style.background = '#6f42c1';
+        voiceBtn.textContent = '🎤 Voice';
+        showNotification('Voice disabled! Microphone is now muted.', 'warning');
+        
+        // Disable microphone
+        if (localStream && localStream.getAudioTracks().length > 0) {
+          localStream.getAudioTracks().forEach(track => track.enabled = false);
+        }
       }
     }
-    
-    // Load recordings on page load
-    loadRecordings();
-    
+
+    // Playback functionality
+    function togglePlayback() {
+      playbackEnabled = !playbackEnabled;
+      const playbackBtn = document.getElementById('playbackBtn');
+      
+      if (playbackEnabled) {
+        playbackBtn.style.background = '#dc3545';
+        playbackBtn.textContent = '⏸️ Disable Playback';
+        showNotification('Playback enabled! Students can now replay class content.', 'success');
+        
+        // Enable playback for students
+        socket.emit('toggle_playback', {
+          class_id: classId,
+          enabled: true
+        });
+      } else {
+        playbackBtn.style.background = '#fd7e14';
+        playbackBtn.textContent = '▶️ Playback';
+        showNotification('Playback disabled.', 'info');
+        
+        // Disable playback for students
+        socket.emit('toggle_playback', {
+          class_id: classId,
+          enabled: false
+        });
+      }
+    }
+
+    // Enhanced start recording function
+    function startRecording() {
+      if (!localStream) {
+        showNotification('Please start your camera first before recording.', 'warning');
+        return;
+      }
+      
+      try {
+        recordedChunks = [];
+        mediaRecorder = new MediaRecorder(localStream, {
+          mimeType: 'video/webm;codecs=vp9'
+        });
+        
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            recordedChunks.push(event.data);
+          }
+        };
+        
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(recordedChunks, { type: 'video/webm' });
+          saveRecording(blob);
+        };
+        
+        mediaRecorder.start();
+        isRecording = true;
+        
+        // Update UI
+        document.getElementById('startRecordingBtn').style.display = 'none';
+        document.getElementById('stopRecordingBtn').style.display = 'inline-block';
+        document.getElementById('recordingStatus').textContent = '🔴 Recording in progress...';
+        document.getElementById('recordingStatus').style.color = '#dc3545';
+        
+        // Notify students
+        socket.emit('recording_started', {
+          class_id: classId,
+          message: 'Host has started recording this class'
+        });
+        
+        showNotification('Recording started successfully!', 'success');
+        
+      } catch (error) {
+        console.error('Error starting recording:', error);
+        showNotification('Failed to start recording: ' + error.message, 'error');
+      }
+    }
+
+    // Enhanced stop recording function
+    function stopRecording() {
+      if (mediaRecorder && isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+        
+        // Update UI
+        document.getElementById('startRecordingBtn').style.display = 'inline-block';
+        document.getElementById('stopRecordingBtn').style.display = 'none';
+        document.getElementById('recordingStatus').textContent = 'Recording stopped';
+        document.getElementById('recordingStatus').style.color = '#666';
+        
+        // Notify students
+        socket.emit('recording_stopped', {
+          class_id: classId,
+          message: 'Host has stopped recording this class'
+        });
+        
+        showNotification('Recording stopped successfully!', 'info');
+      }
+    }
+
+    // Auto-start recording when class begins
+    function onClassStarted() {
+      if (autoRecordingEnabled && !isRecording) {
+        setTimeout(() => {
+          startRecording();
+        }, 2000); // Start recording 2 seconds after class begins
+      }
+    }
+
     // --- Chat Control Functions ---
     let isChatLocked = false;
     let isChatPrivate = false;
@@ -2166,6 +2210,138 @@
       
       showChatNotification('Chat exported successfully', 'success');
     }
+
+    // Save recording to server
+    function saveRecording(blob) {
+      const recordingName = document.getElementById('recordingNameInput').value.trim() || 
+                           `Live Class ${classId} - ${new Date().toLocaleString()}`;
+      
+      const formData = new FormData();
+      formData.append('recording', blob, `${recordingName}.webm`);
+      formData.append('class_id', classId);
+      formData.append('recording_name', recordingName);
+      formData.append('created_by', 'host');
+      
+      fetch('/api/live-classes/save-recording', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          showNotification('Recording saved successfully!', 'success');
+          // Refresh recordings list
+          loadRecordings();
+        } else {
+          showNotification('Failed to save recording: ' + data.message, 'error');
+        }
+      })
+      .catch(error => {
+        console.error('Error saving recording:', error);
+        showNotification('Failed to save recording: ' + error.message, 'error');
+      });
+    }
+
+    // Load recordings function
+    function loadRecordings() {
+      if (isConnected) {
+        socket.emit('get_recording_status', { class_id: classId });
+      }
+    }
+
+    // Update recording UI
+    function updateRecordingUI(activeRecording, allRecordings) {
+      // Update recording status
+      if (activeRecording) {
+        document.getElementById('recordingStatus').textContent = '🔴 Recording in progress...';
+        document.getElementById('recordingStatus').style.color = '#dc3545';
+        currentRecordingId = activeRecording.recording_id;
+      } else {
+        document.getElementById('recordingStatus').textContent = 'Recording not started';
+        document.getElementById('recordingStatus').style.color = '#666';
+        currentRecordingId = null;
+      }
+      
+      // Update recordings list
+      renderRecordingsList(allRecordings || []);
+    }
+
+    // Render recordings list
+    function renderRecordingsList(recordings) {
+      const recordingsList = document.getElementById('recordingsList');
+      
+      if (recordings.length === 0) {
+        recordingsList.innerHTML = '<div style="color: #666; font-style: italic;">No recordings found</div>';
+        return;
+      }
+      
+      recordingsList.innerHTML = recordings.map(recording => {
+        const startedAt = new Date(recording.started_at).toLocaleString();
+        const duration = recording.duration ? formatDuration(recording.duration) : 'Unknown';
+        const fileSize = recording.file_size ? formatFileSize(recording.file_size) : 'Unknown';
+        const status = recording.status;
+        
+        let statusColor = '#666';
+        let statusText = status;
+        
+        if (status === 'recording') {
+          statusColor = '#dc3545';
+          statusText = '🔴 Recording...';
+        } else if (status === 'completed') {
+          statusColor = '#28a745';
+          statusText = '✅ Completed';
+        } else if (status === 'failed') {
+          statusColor = '#dc3545';
+          statusText = '❌ Failed';
+        }
+        
+        return `
+          <div style="border: 1px solid #ddd; border-radius: 4px; padding: 0.8rem; margin-bottom: 0.5rem; background: white;">
+            <div style="font-weight: 600; color: #232946; margin-bottom: 0.3rem;">${recording.recording_name}</div>
+            <div style="font-size: 0.8rem; color: #666; margin-bottom: 0.3rem;">
+              Started: ${startedAt} | Duration: ${duration} | Size: ${fileSize}
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color: ${statusColor}; font-size: 0.8rem; font-weight: 600;">${statusText}</span>
+              ${status === 'completed' ? 
+                `<a href="/download-recording/${recording.id}" class="control-btn" style="background: #6a82fb; color: white; text-decoration: none; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem;">📥 Download</a>` : 
+                ''
+              }
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Utility functions for formatting
+    function formatDuration(seconds) {
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+      
+      if (hours > 0) {
+        return `${hours}h ${minutes}m ${secs}s`;
+      } else if (minutes > 0) {
+        return `${minutes}m ${secs}s`;
+      } else {
+        return `${secs}s`;
+      }
+    }
+    
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Load recordings on page load
+    loadRecordings();
+    
+    // --- Chat Control Functions ---
   </script>
 </body>
 </html> 
