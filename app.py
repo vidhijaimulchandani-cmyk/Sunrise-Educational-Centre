@@ -159,7 +159,7 @@ def generate_admission_username(admission_id, student_name):
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
+        db = g._database = sqlite3.connect(DATABASE, timeout=30)
         db.row_factory = sqlite3.Row
     return db
 
@@ -1964,6 +1964,8 @@ def admin_create_user_page():
     
     # Get blocked users data
     conn = sqlite3.connect(DATABASE)
+    conn.execute('PRAGMA journal_mode=WAL')
+    conn.execute('PRAGMA busy_timeout=30000')
     c = conn.cursor()
     
     # Create blocked_users table if it doesn't exist
@@ -2102,6 +2104,8 @@ def admin_block_user():
         
         # Check if user is already blocked
         conn = sqlite3.connect(DATABASE)
+        conn.execute('PRAGMA journal_mode=WAL')
+        conn.execute('PRAGMA busy_timeout=30000')
         c = conn.cursor()
         
         # Create blocked_users table if it doesn't exist
@@ -2127,12 +2131,13 @@ def admin_block_user():
                      VALUES (?, ?, ?, ?, ?, ?)''',
                   (user_id, user[1], user[4], reason, datetime.now().isoformat(), 'warning'))
         
-        # Send notification to blocked user
-        notification_message = f"You have been blocked for: {reason}. This is a 24-hour warning period. Contact admin or the institute to resolve this issue."
-        add_personal_notification(notification_message, user_id, 'block_warning')
-        
+        # Commit and close before sending notification to avoid nested write locks
         conn.commit()
         conn.close()
+        
+        # Send notification to blocked user (opens its own connection)
+        notification_message = f"You have been blocked for: {reason}. This is a 24-hour warning period. Contact admin or the institute to resolve this issue."
+        add_personal_notification(notification_message, user_id, 'block_warning')
         
         return jsonify({'success': True, 'message': 'User blocked successfully'})
         
@@ -2162,6 +2167,8 @@ def admin_block_user_by_username():
             return jsonify({'success': False, 'message': 'You cannot block an admin or teacher'})
         
         conn = sqlite3.connect(DATABASE)
+        conn.execute('PRAGMA journal_mode=WAL')
+        conn.execute('PRAGMA busy_timeout=30000')
         c = conn.cursor()
         
         # Create blocked_users table if it doesn't exist
@@ -2187,12 +2194,13 @@ def admin_block_user_by_username():
                      VALUES (?, ?, ?, ?, ?, ?)''',
                   (user[0], user[1], user[4], reason, datetime.now().isoformat(), 'warning'))
         
+        # Commit/close before sending notification to avoid nested write locks
+        conn.commit()
+        conn.close()
+        
         # Send notification to blocked user
         notification_message = f"You have been blocked for: {reason}. This is a 24-hour warning period. Contact admin or the institute to resolve this issue."
         add_personal_notification(notification_message, user[0], 'block_warning')
-        
-        conn.commit()
-        conn.close()
         
         return jsonify({'success': True, 'message': 'User blocked successfully'})
         
@@ -2212,6 +2220,8 @@ def admin_unblock_user():
     
     try:
         conn = sqlite3.connect(DATABASE)
+        conn.execute('PRAGMA journal_mode=WAL')
+        conn.execute('PRAGMA busy_timeout=30000')
         c = conn.cursor()
         
         # Remove user from blocked_users table
@@ -2221,13 +2231,14 @@ def admin_unblock_user():
             conn.close()
             return jsonify({'success': False, 'message': 'User is not blocked'})
         
+        # Commit and close before sending notification to avoid nested write locks
+        conn.commit()
+        conn.close()
+        
         # Send unblock notification
         from auth_handler import add_personal_notification
         notification_message = "Your account has been unblocked. You can now access the platform normally."
         add_personal_notification(notification_message, user_id, 'block_removed')
-        
-        conn.commit()
-        conn.close()
         
         return jsonify({'success': True, 'message': 'User unblocked successfully'})
         
@@ -2247,19 +2258,22 @@ def admin_unblock_users_bulk():
     
     try:
         conn = sqlite3.connect(DATABASE)
+        conn.execute('PRAGMA journal_mode=WAL')
+        conn.execute('PRAGMA busy_timeout=30000')
         c = conn.cursor()
         
         # Remove users from blocked_users table
         c.execute('DELETE FROM blocked_users WHERE user_id IN ({})'.format(','.join('?' * len(user_ids))), user_ids)
+        
+        # Commit/close before sending unblock notifications to avoid nested write locks
+        conn.commit()
+        conn.close()
         
         # Send unblock notifications
         from auth_handler import add_personal_notification
         for user_id in user_ids:
             notification_message = "Your account has been unblocked. You can now access the platform normally."
             add_personal_notification(notification_message, user_id, 'block_removed')
-        
-        conn.commit()
-        conn.close()
         
         return jsonify({'success': True, 'message': f'{len(user_ids)} users unblocked successfully'})
         
@@ -2271,6 +2285,8 @@ def update_blocked_user_statuses():
     """Check blocked users and update their status after 24 hours"""
     try:
         conn = sqlite3.connect(DATABASE)
+        conn.execute('PRAGMA journal_mode=WAL')
+        conn.execute('PRAGMA busy_timeout=30000')
         c = conn.cursor()
         
         # Create blocked_users table if it doesn't exist
@@ -2300,7 +2316,10 @@ def update_blocked_user_statuses():
                 if time_diff.total_seconds() > 24 * 60 * 60:
                     c.execute('UPDATE blocked_users SET status = ? WHERE user_id = ?', ('banned', user_id))
                     
-                    # Send final notification
+                    # Commit before notification to avoid nested write locks
+                    conn.commit()
+                    
+                    # Send final notification (separate connection)
                     from auth_handler import add_personal_notification
                     notification_message = "Your 24-hour warning period has expired. Your account is now permanently banned. Contact admin or the institute to appeal this decision."
                     add_personal_notification(notification_message, user_id, 'block_banned')

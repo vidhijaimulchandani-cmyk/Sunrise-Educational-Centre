@@ -7,8 +7,8 @@ from time_config import get_current_ist_time, format_ist_time, get_ist_timestamp
 # Standard database path constant
 DATABASE = 'users.db'
 
-def get_connection():
-    return sqlite3.connect(DATABASE)
+def get_connection(timeout_seconds: int = 30):
+    return sqlite3.connect(DATABASE, timeout=timeout_seconds)
 
 # ==============================================================================
 # Database Initialization and Migration
@@ -17,6 +17,8 @@ def get_connection():
 def init_db():
     init_classes_db()  # Ensure classes table is ready first
     conn = sqlite3.connect(DATABASE)
+    conn.execute('PRAGMA journal_mode=WAL')
+    conn.execute('PRAGMA busy_timeout=30000')
     c = conn.cursor()
 
     # --- Schema Definitions ---
