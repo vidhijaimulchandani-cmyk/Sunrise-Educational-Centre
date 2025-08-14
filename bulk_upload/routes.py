@@ -7,6 +7,7 @@ from .bulk_upload_handler import BulkUploadHandler
 from .study_resources_handler import StudyResourcesBulkUploadHandler
 import logging
 import glob
+import pandas as pd
 from .unified_bulk_upload_handler import UnifiedBulkUploadHandler
 
 # Configure logging
