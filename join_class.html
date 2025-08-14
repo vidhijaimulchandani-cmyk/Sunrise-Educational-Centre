@@ -1327,13 +1327,23 @@ socket.on('host_mic_status', (data) => {
 // Student Device Management Functions
 async function enumerateStudentDevices() {
   try {
+    console.log('Requesting camera permissions...');
+    
     // Request permission first
-    await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-      .then(stream => {
-        stream.getTracks().forEach(track => track.stop());
-      });
+    const stream = await navigator.mediaDevices.getUserMedia({ 
+      video: { width: { ideal: 640 }, height: { ideal: 360 } }, 
+      audio: true 
+    });
+    
+    console.log('Camera permission granted, stream obtained:', stream);
+    
+    // Stop the test stream
+    stream.getTracks().forEach(track => track.stop());
+    console.log('Test stream stopped');
 
     const devices = await navigator.mediaDevices.enumerateDevices();
+    console.log('Devices enumerated:', devices);
+    
     studentDevices.videoInputs = devices.filter(device => device.kind === 'videoinput');
     studentDevices.audioInputs = devices.filter(device => device.kind === 'audioinput');
     
@@ -1348,7 +1358,16 @@ async function enumerateStudentDevices() {
     console.log('Student devices enumerated:', studentDevices);
   } catch (error) {
     console.error('Error enumerating student devices:', error);
-    studentDeviceStatus.innerHTML = '❌ Could not access media devices. Check permissions to participate.';
+    
+    if (error.name === 'NotAllowedError') {
+      studentDeviceStatus.innerHTML = '❌ Camera permission denied. Please allow camera access and refresh the page.';
+    } else if (error.name === 'NotFoundError') {
+      studentDeviceStatus.innerHTML = '❌ No camera found. Please connect a camera and refresh the page.';
+    } else if (error.name === 'NotReadableError') {
+      studentDeviceStatus.innerHTML = '❌ Camera is busy or in use by another application.';
+    } else {
+      studentDeviceStatus.innerHTML = `❌ Camera error: ${error.message}. Check permissions to participate.`;
+    }
   }
 }
 

@@ -1004,30 +1004,72 @@
     }
 
     async function startCameraWithSelectedDevices() {
-      const constraints = {
-        video: selectedVideoDevice ? { 
-          deviceId: { exact: selectedVideoDevice },
-          width: { ideal: 640 },
-          height: { ideal: 360 },
-          frameRate: { ideal: 30 }
-        } : {
-          width: { ideal: 640 },
-          height: { ideal: 360 },
-          frameRate: { ideal: 30 }
-        },
-        audio: selectedAudioDevice ? { 
-          deviceId: { exact: selectedAudioDevice }
-        } : true
-      };
+      try {
+        const constraints = {
+          video: selectedVideoDevice ? { 
+            deviceId: { exact: selectedVideoDevice },
+            width: { ideal: 640 },
+            height: { ideal: 360 },
+            frameRate: { ideal: 30 }
+          } : {
+            width: { ideal: 640 },
+            height: { ideal: 360 },
+            frameRate: { ideal: 30 }
+          },
+          audio: selectedAudioDevice ? { 
+            deviceId: { exact: selectedAudioDevice }
+          } : true
+        };
 
-      localStream = await navigator.mediaDevices.getUserMedia(constraints);
-      hostCamera.srcObject = localStream;
-      isStreaming = true;
-      
-      // Initialize WebRTC for streaming to students
-      await initializeWebRTC();
-      
-      return localStream;
+        console.log('Starting camera with constraints:', constraints);
+        
+        // Request camera permissions
+        localStream = await navigator.mediaDevices.getUserMedia(constraints);
+        console.log('Camera stream obtained:', localStream);
+        
+        if (localStream && localStream.getVideoTracks().length > 0) {
+          hostCamera.srcObject = localStream;
+          isStreaming = true;
+          
+          // Wait for video to load
+          hostCamera.onloadedmetadata = () => {
+            console.log('Video metadata loaded, dimensions:', hostCamera.videoWidth, 'x', hostCamera.videoHeight);
+            deviceStatus.innerHTML = '✅ Camera started successfully';
+          };
+          
+          // Initialize WebRTC for streaming to students
+          await initializeWebRTC();
+          
+          return localStream;
+        } else {
+          throw new Error('No video tracks in stream');
+        }
+      } catch (error) {
+        console.error('Error starting camera:', error);
+        deviceStatus.innerHTML = `❌ Camera error: ${error.message}`;
+        
+        // Try fallback constraints
+        try {
+          console.log('Trying fallback camera constraints...');
+          const fallbackConstraints = {
+            video: { width: { ideal: 640 }, height: { ideal: 360 } },
+            audio: true
+          };
+          
+          localStream = await navigator.mediaDevices.getUserMedia(fallbackConstraints);
+          hostCamera.srcObject = localStream;
+          isStreaming = true;
+          
+          deviceStatus.innerHTML = '✅ Camera started with fallback settings';
+          await initializeWebRTC();
+          
+          return localStream;
+        } catch (fallbackError) {
+          console.error('Fallback camera also failed:', fallbackError);
+          deviceStatus.innerHTML = `❌ Camera failed: ${fallbackError.message}`;
+          throw fallbackError;
+        }
+      }
     }
     
     // WebRTC Functions

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .camera-container {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        video {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎥 Camera Test Page</h1>
+    
+    <div class="camera-container">
+        <h3>Camera Test</h3>
+        <button onclick="startCamera()">Start Camera</button>
+        <button onclick="stopCamera()">Stop Camera</button>
+        <button onclick="enumerateDevices()">List Devices</button>
+        <button onclick="clearLog()">Clear Log</button>
+        
+        <div id="status" class="status info">Ready to test camera</div>
+        
+        <video id="camera" autoplay muted playsinline></video>
+        
+        <div class="log" id="log"></div>
+    </div>
+
+    <script>
+        let localStream = null;
+        const camera = document.getElementById('camera');
+        const status = document.getElementById('status');
+        const log = document.getElementById('log');
+
+        function logMessage(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logEntry.style.color = type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : '#007bff';
+            log.appendChild(logEntry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function updateStatus(message, type = 'info') {
+            status.textContent = message;
+            status.className = `status ${type}`;
+        }
+
+        async function startCamera() {
+            try {
+                logMessage('Requesting camera permissions...');
+                updateStatus('Requesting camera access...', 'info');
+                
+                const constraints = {
+                    video: {
+                        width: { ideal: 640 },
+                        height: { ideal: 360 },
+                        frameRate: { ideal: 30 }
+                    },
+                    audio: true
+                };
+                
+                logMessage(`Using constraints: ${JSON.stringify(constraints)}`);
+                
+                localStream = await navigator.mediaDevices.getUserMedia(constraints);
+                logMessage('Camera stream obtained successfully', 'success');
+                
+                if (localStream.getVideoTracks().length > 0) {
+                    const videoTrack = localStream.getVideoTracks()[0];
+                    logMessage(`Video track: ${videoTrack.label || 'Unknown'}`);
+                    logMessage(`Video settings: ${JSON.stringify(videoTrack.getSettings())}`);
+                }
+                
+                if (localStream.getAudioTracks().length > 0) {
+                    const audioTrack = localStream.getAudioTracks()[0];
+                    logMessage(`Audio track: ${audioTrack.label || 'Unknown'}`);
+                }
+                
+                camera.srcObject = localStream;
+                
+                camera.onloadedmetadata = () => {
+                    logMessage(`Video loaded: ${camera.videoWidth}x${camera.videoHeight}`, 'success');
+                    updateStatus(`Camera active: ${camera.videoWidth}x${camera.videoHeight}`, 'success');
+                };
+                
+                camera.onerror = (error) => {
+                    logMessage(`Video error: ${error}`, 'error');
+                    updateStatus('Video error occurred', 'error');
+                };
+                
+            } catch (error) {
+                logMessage(`Camera error: ${error.name}: ${error.message}`, 'error');
+                updateStatus(`Camera error: ${error.message}`, 'error');
+                
+                // Try fallback
+                try {
+                    logMessage('Trying fallback constraints...');
+                    const fallbackConstraints = {
+                        video: true,
+                        audio: true
+                    };
+                    
+                    localStream = await navigator.mediaDevices.getUserMedia(fallbackConstraints);
+                    logMessage('Fallback camera successful', 'success');
+                    
+                    camera.srcObject = localStream;
+                    updateStatus('Camera active (fallback)', 'success');
+                    
+                } catch (fallbackError) {
+                    logMessage(`Fallback also failed: ${fallbackError.message}`, 'error');
+                    updateStatus(`Camera failed: ${fallbackError.message}`, 'error');
+                }
+            }
+        }
+
+        function stopCamera() {
+            if (localStream) {
+                localStream.getTracks().forEach(track => {
+                    track.stop();
+                    logMessage(`Stopped track: ${track.kind}`);
+                });
+                localStream = null;
+                camera.srcObject = null;
+                updateStatus('Camera stopped', 'info');
+                logMessage('Camera stopped', 'info');
+            }
+        }
+
+        async function enumerateDevices() {
+            try {
+                logMessage('Enumerating devices...');
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
+                const audioDevices = devices.filter(device => device.kind === 'audioinput');
+                
+                logMessage(`Found ${videoDevices.length} video devices and ${audioDevices.length} audio devices`);
+                
+                videoDevices.forEach((device, index) => {
+                    logMessage(`Video ${index + 1}: ${device.label || 'Unknown'} (${device.deviceId})`);
+                });
+                
+                audioDevices.forEach((device, index) => {
+                    logMessage(`Audio ${index + 1}: ${device.label || 'Unknown'} (${device.deviceId})`);
+                });
+                
+            } catch (error) {
+                logMessage(`Error enumerating devices: ${error.message}`, 'error');
+            }
+        }
+
+        function clearLog() {
+            log.innerHTML = '';
+        }
+
+        // Check if getUserMedia is supported
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            updateStatus('getUserMedia not supported in this browser', 'error');
+            logMessage('getUserMedia not supported', 'error');
+        } else {
+            logMessage('getUserMedia is supported', 'success');
+        }
+
+        // Check permissions
+        if (navigator.permissions) {
+            navigator.permissions.query({ name: 'camera' }).then(result => {
+                logMessage(`Camera permission: ${result.state}`);
+            });
+            
+            navigator.permissions.query({ name: 'microphone' }).then(result => {
+                logMessage(`Microphone permission: ${result.state}`);
+            });
+        }
+    </script>
+</body>
+</html>

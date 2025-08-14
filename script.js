@@ -268,9 +268,26 @@ function refreshNotifications() {
     fetch('/api/notifications')
         .then(response => response.json())
         .then(data => {
+            console.log('Received notification data:', data);
             if (data.success) {
+                // Log each notification for debugging
+                if (data.notifications && data.notifications.length > 0) {
+                    console.log('Processing notifications:');
+                    data.notifications.forEach((notification, index) => {
+                        console.log(`Notification ${index + 1}:`, {
+                            id: notification[0],
+                            message: notification[1],
+                            messageLength: notification[1] ? notification[1].length : 0,
+                            type: notification[4],
+                            itemType: notification[6]
+                        });
+                    });
+                }
+                
                 updateNotificationDropdown(data.notifications);
                 updateNotificationCount(data.count);
+            } else {
+                console.error('Notification API returned error:', data.error);
             }
         })
         .catch(error => {
@@ -309,6 +326,10 @@ function createNotificationElement(notification) {
     if (notification.length >= 7) {
         const [id, message, created_at, status, notification_type, scheduled_time, item_type, sender_name] = notification;
         
+        // Ensure message is properly displayed and not truncated
+        const displayMessage = message || 'No message content';
+        console.log('Creating notification element:', { id, message: displayMessage, type: notification_type, item_type });
+        
         if (item_type === 'personal_chat') {
             li.className = 'notification-item personal-chat-item';
             li.setAttribute('data-notification-id', id);
@@ -319,7 +340,8 @@ function createNotificationElement(notification) {
                     <span style="background:#fc5c7d; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">💬</span>
                     <span style="color:#fc5c7d; font-size:0.8rem; font-weight:600;">@${sender_name || 'User'}</span>
                 </div>
-                ${message}<br><span style="font-size:0.85rem; color:#888;">${formatDateTime(created_at)}</span>
+                <div style="word-wrap: break-word; max-width: 100%;">${displayMessage}</div>
+                <span style="font-size:0.85rem; color:#888;">${formatDateTime(created_at)}</span>
             `;
         } else if (notification_type === 'forum_mention') {
             li.className = 'notification-item';
@@ -330,7 +352,22 @@ function createNotificationElement(notification) {
                 <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
                     <span style="background:#ff6b6b; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">@</span>
                 </div>
-                ${message}<br><span style="font-size:0.85rem; color:#888;">${formatDateTime(created_at)}</span>
+                <div style="word-wrap: break-word; max-width: 100%;">${displayMessage}</div>
+                <span style="font-size:0.85rem; color:#888;">${formatDateTime(created_at)}</span>
+            `;
+        } else if (notification_type === 'block_warning' || notification_type === 'ban_warning') {
+            // Special handling for block/ban notifications
+            li.className = 'notification-item block-notification';
+            li.setAttribute('data-notification-id', id);
+            li.setAttribute('data-type', 'notification');
+            li.style.cssText = 'padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#dc3545; cursor:pointer; transition:all 0.2s ease; border-left:3px solid #dc3545; padding-left:0.5rem; background: #fff5f5;';
+            li.innerHTML = `
+                <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
+                    <span style="background:#dc3545; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">🚫</span>
+                    <span style="color:#dc3545; font-size:0.8rem; font-weight:600;">${notification_type === 'block_warning' ? 'Block Warning' : 'Ban Warning'}</span>
+                </div>
+                <div style="word-wrap: break-word; max-width: 100%; color: #721c24;">${displayMessage}</div>
+                <span style="font-size:0.85rem; color:#888;">${formatDateTime(created_at)}</span>
             `;
         } else {
             li.className = 'notification-item';
@@ -341,12 +378,15 @@ function createNotificationElement(notification) {
                 <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
                     <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
                 </div>
-                ${message}<br><span style="font-size:0.85rem; color:#888;">${formatDateTime(created_at)}</span>
+                <div style="word-wrap: break-word; max-width: 100%;">${displayMessage}</div>
+                <span style="font-size:0.85rem; color:#888;">${formatDateTime(created_at)}</span>
             `;
         }
     } else {
         // Fallback for old notification format
         const [id, message, created_at, status, notification_type, scheduled_time] = notification;
+        const displayMessage = message || 'No message content';
+        
         li.className = 'notification-item';
         li.setAttribute('data-notification-id', id);
         li.setAttribute('data-type', 'notification');
@@ -355,7 +395,8 @@ function createNotificationElement(notification) {
             <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
                 <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
             </div>
-            ${message}<br><span style="font-size:0.85rem; color:#888;">${formatDateTime(created_at)}</span>
+            <div style="word-wrap: break-word; max-width: 100%;">${displayMessage}</div>
+            <span style="font-size:0.85rem; color:#888;">${formatDateTime(created_at)}</span>
         `;
     }
     
@@ -363,13 +404,19 @@ function createNotificationElement(notification) {
     li.addEventListener('mouseover', function() {
         if (li.classList.contains('personal-chat-item')) {
             this.style.background = '#ffe6cc';
+        } else if (li.classList.contains('block-notification')) {
+            this.style.background = '#ffe6e6';
         } else {
             this.style.background = '#f0f4ff';
         }
     });
     
     li.addEventListener('mouseout', function() {
-        this.style.background = 'transparent';
+        if (li.classList.contains('block-notification')) {
+            this.style.background = '#fff5f5';
+        } else {
+            this.style.background = 'transparent';
+        }
     });
     
     return li;
