@@ -125,6 +125,130 @@
     body.dark-mode .device-select { background: #232946; border-color: #3a3a4a; color: #fff; }
     body.dark-mode .device-select:focus { border-color: #6a82fb; }
     body.dark-mode .device-status { color: #b8c5d6; }
+    
+    /* Enhanced Camera View Styles */
+    .camera-controls button {
+      transition: all 0.2s ease;
+    }
+    
+    .camera-controls button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    
+    .camera-controls button:active {
+      transform: translateY(0);
+    }
+    
+    #hostCameraContainer {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(106,130,251,0.2);
+    }
+    
+    #hostCameraFeed {
+      transition: all 0.3s ease;
+    }
+    
+    #hostCameraFeed:hover {
+      transform: scale(1.02);
+    }
+    
+    #connectionStatus {
+      transition: all 0.3s ease;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    
+    #cameraControls {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    #hostCameraContainer:hover #cameraControls {
+      opacity: 1;
+    }
+    
+    /* Loading Animation for Camera */
+    .camera-loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(106,130,251,0.3);
+      border-radius: 50%;
+      border-top-color: #6a82fb;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Camera Quality Indicator */
+    .camera-quality {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    
+    /* Responsive Camera Controls */
+    @media (max-width: 768px) {
+      #cameraControls {
+        flex-direction: column;
+        gap: 8px;
+        padding: 12px;
+      }
+      
+      #cameraControls button {
+        font-size: 11px;
+        padding: 8px 12px;
+      }
+      
+      #connectionStatus, .camera-quality {
+        font-size: 10px;
+        padding: 3px 6px;
+      }
+    }
+    
+    /* Dark Mode Camera Enhancements */
+    body.dark-mode #hostCameraContainer {
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    
+    body.dark-mode #cameraControls {
+      background: rgba(0,0,0,0.8);
+    }
+    
+    body.dark-mode #cameraControls button {
+      background: rgba(255,255,255,0.15);
+    }
+    
+    body.dark-mode #cameraControls button:hover {
+      background: rgba(255,255,255,0.25);
+    }
+    
+    /* Dark Mode Help Section */
+    body.dark-mode #cameraHelp {
+      background: rgba(35,41,70,0.2);
+      border-color: rgba(106,130,251,0.2);
+    }
+    
+    body.dark-mode #cameraHelp .kbd {
+      background: #2a2a3a;
+      color: #e0e7ff;
+      border: 1px solid #3a3a4a;
+    }
+    
+    body.dark-mode #cameraHelp div:last-child {
+      color: #b8c5d6;
+    }
   </style>
 </head>
 <body>
@@ -191,7 +315,41 @@
       <div class="live-watch-container">
         <!-- Host Live Camera Feed (when available) -->
         <div id="hostCameraContainer" style="display: none; margin-bottom: 1rem;">
-          <video id="hostCameraFeed" class="video-player" autoplay playsinline style="width: 100%; max-width: 640px; height: auto;"></video>
+          <div style="position: relative; width: 100%; max-width: 640px; margin: 0 auto;">
+            <video id="hostCameraFeed" class="video-player" autoplay playsinline style="width: 100%; height: auto; border-radius: 12px;"></video>
+            
+            <!-- Camera Quality Indicator -->
+            <div id="cameraQuality" class="camera-quality" style="display: none;">
+              <span id="qualityText">HD</span>
+            </div>
+            
+            <!-- Camera Controls Overlay -->
+            <div id="cameraControls" style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; background: rgba(0,0,0,0.7); padding: 8px 16px; border-radius: 20px; backdrop-filter: blur(10px);">
+              <button id="fullscreenBtn" onclick="toggleFullscreen()" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 12px; border-radius: 16px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 4px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                </svg>
+                Fullscreen
+              </button>
+              <button id="switchToContentBtn" onclick="switchToContent()" style="background: rgba(106,130,251,0.8); border: none; color: white; padding: 6px 12px; border-radius: 16px; cursor: pointer; font-size: 12px; display: flex; align-items: center; gap: 4px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+                </svg>
+                Switch to Content
+              </button>
+            </div>
+            
+            <!-- Connection Status Indicator -->
+            <div id="connectionStatus" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 500;">
+              🔴 Live
+            </div>
+            
+            <!-- Loading Indicator -->
+            <div id="cameraLoading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.8); color: white; padding: 20px; border-radius: 16px; display: none; text-align: center;">
+              <div class="camera-loading" style="margin: 0 auto 10px;"></div>
+              <div>Connecting to host camera...</div>
+            </div>
+          </div>
           <div style="text-align: center; margin-top: 0.5rem; color: #6a82fb; font-weight: 600;">
             🔴 Live Host Camera
           </div>
@@ -232,9 +390,30 @@
             <button id="requestHostStreamBtn" onclick="requestHostStream()" style="background: #6a82fb; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; margin-right: 0.5rem;">
               📹 Request Host Camera
             </button>
-            <a href="/host-stream/{{ class_id }}" target="_blank" style="background: #28a745; color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.9rem; display: inline-block;">
-              🎥 View Host Stream
-            </a>
+            <button id="switchToCameraBtn" onclick="switchToHostCamera()" style="background: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; margin-right: 0.5rem; display: none;">
+              🎥 Switch to Host Camera
+            </button>
+            <button id="switchToContentBtn2" onclick="switchToContent()" style="background: #6c757d; color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; display: none;">
+              📺 Switch to Content
+            </button>
+          </div>
+          
+          <!-- Camera Help Section -->
+          <div id="cameraHelp" style="margin-top: 1rem; padding: 1rem; background: rgba(106,130,251,0.03); border-radius: 8px; border: 1px solid rgba(106,130,251,0.1); text-align: left; font-size: 0.9rem;">
+            <div style="color: #6a82fb; font-weight: 600; margin-bottom: 0.5rem;">
+              🎥 Camera Controls Help:
+            </div>
+            <div style="color: #666; line-height: 1.4;">
+              <strong>Keyboard Shortcuts:</strong><br>
+              • <kbd style="background: #f1f3f4; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">Ctrl/Cmd + 1</kbd> - Switch to Content<br>
+              • <kbd style="background: #f1f3f4; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">Ctrl/Cmd + 2</kbd> - Switch to Host Camera<br>
+              • <kbd style="background: #f1f3f4; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">F</kbd> - Toggle Fullscreen<br><br>
+              <strong>Features:</strong><br>
+              • Hover over camera to see controls<br>
+              • Quality indicator shows stream resolution<br>
+              • Automatic reconnection on disconnection<br>
+              • Smooth switching between camera and content
+            </div>
           </div>
         </div>
         
@@ -488,7 +667,10 @@ async function initializeWebRTC() {
     const configuration = {
       iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'stun:stun1.l.google.com:19302' }
+        { urls: 'stun:stun1.l.google.com:19302' },
+        { urls: 'stun:stun2.l.google.com:19302' },
+        { urls: 'stun:stun3.l.google.com:19302' },
+        { urls: 'stun:stun4.l.google.com:19302' }
       ]
     };
     
@@ -502,12 +684,36 @@ async function initializeWebRTC() {
       const hostCameraContainer = document.getElementById('hostCameraContainer');
       const hostCameraFeed = document.getElementById('hostCameraFeed');
       const contentVideo = document.getElementById('contentVideo');
+      const switchToCameraBtn = document.getElementById('switchToCameraBtn');
+      const switchToContentBtn2 = document.getElementById('switchToContentBtn2');
+      const requestBtn = document.getElementById('requestHostStreamBtn');
       
+      // Set up the video element
       hostCameraFeed.srcObject = hostStream;
+      hostCameraFeed.onloadedmetadata = () => {
+        hostCameraFeed.play().catch(e => console.log('Auto-play prevented:', e));
+        
+        // Setup quality monitoring after video loads
+        setupVideoQualityMonitoring();
+        
+        // Hide loading indicator
+        showCameraLoading(false);
+      };
+      
+      // Show loading indicator while connecting
+      showCameraLoading(true);
+      
+      // Show host camera container
       hostCameraContainer.style.display = 'block';
       contentVideo.style.display = 'none';
       isHostStreamConnected = true;
       
+      // Update button states
+      if (requestBtn) requestBtn.style.display = 'none';
+      if (switchToCameraBtn) switchToCameraBtn.style.display = 'none';
+      if (switchToContentBtn2) switchToContentBtn2.style.display = 'inline-block';
+      
+      // Update status
       liveStatusText.innerHTML = `
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
           <circle cx="12" cy="12" r="8" fill="#ff4444"/>
@@ -517,11 +723,10 @@ async function initializeWebRTC() {
       `;
       liveStatusText.style.color = '#48bb78';
       
-      // Hide the request button when connected
-      const requestBtn = document.getElementById('requestHostStreamBtn');
-      if (requestBtn) {
-        requestBtn.style.display = 'none';
-      }
+      // Show success notification
+      showNotification('🎥 Connected to host camera!', 'success');
+      
+      console.log('Host camera stream connected successfully');
     };
     
     // Handle ICE candidates
@@ -539,30 +744,69 @@ async function initializeWebRTC() {
     // Handle connection state changes
     peerConnection.onconnectionstatechange = () => {
       console.log('Connection state:', peerConnection.connectionState);
-      if (peerConnection.connectionState === 'connected') {
-        console.log('Connected to host stream!');
-      } else if (peerConnection.connectionState === 'disconnected' || 
-                 peerConnection.connectionState === 'failed') {
-        console.log('Disconnected from host stream');
-        
-        const hostCameraContainer = document.getElementById('hostCameraContainer');
-        const contentVideo = document.getElementById('contentVideo');
-        
-        hostCameraContainer.style.display = 'none';
-        contentVideo.style.display = 'block';
-        isHostStreamConnected = false;
-        
-        // Show the request button again
-        const requestBtn = document.getElementById('requestHostStreamBtn');
-        if (requestBtn) {
-          requestBtn.style.display = 'inline-block';
-        }
+      const connectionStatus = document.getElementById('connectionStatus');
+      
+      switch (peerConnection.connectionState) {
+        case 'connected':
+          console.log('Connected to host stream!');
+          if (connectionStatus) {
+            connectionStatus.textContent = '🔴 Live';
+            connectionStatus.style.background = 'rgba(72,187,120,0.9)';
+          }
+          break;
+          
+        case 'connecting':
+          console.log('Connecting to host stream...');
+          if (connectionStatus) {
+            connectionStatus.textContent = '🔄 Connecting...';
+            connectionStatus.style.background = 'rgba(255,167,38,0.9)';
+          }
+          break;
+          
+        case 'disconnected':
+        case 'failed':
+          console.log('Disconnected from host stream');
+          
+          const hostCameraContainer = document.getElementById('hostCameraContainer');
+          const contentVideo = document.getElementById('contentVideo');
+          const switchToCameraBtn = document.getElementById('switchToCameraBtn');
+          const switchToContentBtn2 = document.getElementById('switchToContentBtn2');
+          const requestBtn = document.getElementById('requestHostStreamBtn');
+          
+          // Hide host camera and show content
+          hostCameraContainer.style.display = 'none';
+          contentVideo.style.display = 'block';
+          isHostStreamConnected = false;
+          
+          // Update button states
+          if (requestBtn) requestBtn.style.display = 'inline-block';
+          if (switchToCameraBtn) switchToCameraBtn.style.display = 'none';
+          if (switchToContentBtn2) switchToContentBtn2.style.display = 'none';
+          
+          // Update status
+          liveStatusText.innerHTML = `
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+            </svg>
+            Watching content video
+          `;
+          liveStatusText.style.color = '#6a82fb';
+          
+          // Show reconnection notification
+          showNotification('📡 Host camera disconnected. Click "Request Host Camera" to reconnect.', 'warning');
+          break;
       }
+    };
+    
+    // Handle ICE connection state changes
+    peerConnection.oniceconnectionstatechange = () => {
+      console.log('ICE connection state:', peerConnection.iceConnectionState);
     };
     
     console.log('WebRTC initialized for receiving host stream');
   } catch (error) {
     console.error('Error initializing WebRTC:', error);
+    showNotification('❌ Failed to initialize camera connection', 'error');
   }
 }
 
@@ -571,6 +815,18 @@ async function requestHostStream() {
     if (!peerConnection) {
       await initializeWebRTC();
     }
+    
+    // Show loading indicator
+    showCameraLoading(true);
+    
+    // Show connecting status
+    liveStatusText.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+      </svg>
+      🔄 Requesting Host Camera...
+    `;
+    liveStatusText.style.color = '#fc5c7d';
     
     // Create offer to request host stream
     const offer = await peerConnection.createOffer();
@@ -584,8 +840,40 @@ async function requestHostStream() {
     });
     
     console.log('Requested host stream');
+    showNotification('📡 Requesting host camera...', 'info');
+    
+    // Set a timeout for the request
+    setTimeout(() => {
+      if (!isHostStreamConnected) {
+        showNotification('⏰ Host camera request timed out. Please try again.', 'warning');
+        liveStatusText.innerHTML = `
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+          </svg>
+          Watching content video
+        `;
+        liveStatusText.style.color = '#6a82fb';
+        
+        // Hide loading indicator
+        showCameraLoading(false);
+      }
+    }, 15000); // 15 second timeout
+    
   } catch (error) {
     console.error('Error requesting host stream:', error);
+    showNotification('❌ Failed to request host camera', 'error');
+    
+    // Hide loading indicator
+    showCameraLoading(false);
+    
+    // Reset status
+    liveStatusText.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+      </svg>
+      Watching content video
+    `;
+    liveStatusText.style.color = '#6a82fb';
   }
 }
 
@@ -626,9 +914,30 @@ socket.on('host_video_mode', (data) => {
         🔴 Connecting to Host Camera...
       `;
       liveStatusText.style.color = '#fc5c7d';
+      
+      // Show notification
+      showNotification('🎥 Host switched to camera mode!', 'info');
+      
+      // Update button states
+      const switchToCameraBtn = document.getElementById('switchToCameraBtn');
+      if (switchToCameraBtn) {
+        switchToCameraBtn.style.display = 'inline-block';
+      }
     } else {
-      hostCameraFeed.style.display = 'none';
+      // Host switched to content mode
+      const hostCameraContainer = document.getElementById('hostCameraContainer');
+      const contentVideo = document.getElementById('contentVideo');
+      const switchToCameraBtn = document.getElementById('switchToCameraBtn');
+      const switchToContentBtn2 = document.getElementById('switchToContentBtn2');
+      
+      // Hide host camera and show content
+      hostCameraContainer.style.display = 'none';
       contentVideo.style.display = 'block';
+      
+      // Update button states
+      if (switchToCameraBtn) switchToCameraBtn.style.display = 'none';
+      if (switchToContentBtn2) switchToContentBtn2.style.display = 'none';
+      
       liveStatusText.innerHTML = `
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
           <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
@@ -636,6 +945,9 @@ socket.on('host_video_mode', (data) => {
         ${data.message}
       `;
       liveStatusText.style.color = '#6a82fb';
+      
+      // Show notification
+      showNotification('📺 Host switched to content mode', 'info');
     }
   }
 });
@@ -954,20 +1266,27 @@ function showChatNotification(message, type) {
   }, 3000);
 }
 
-// WebRTC Event Listeners for receiving host stream
+// Enhanced host stream ready handling
 socket.on('host_stream_ready', (data) => {
   if (data.class_id === classId) {
     console.log('Host stream is ready, requesting connection...');
-    requestHostStream();
+    showNotification('🎥 Host camera is ready!', 'success');
+    
+    // If not already connected, request the stream
+    if (!isHostStreamConnected) {
+      requestHostStream();
+    }
   }
 });
 
+// Handle WebRTC answers from host
 socket.on('webrtc_answer', (data) => {
   if (data.from_user === 'host') {
     handleHostAnswer(data.answer);
   }
 });
 
+// Handle WebRTC ICE candidates from host
 socket.on('webrtc_ice_candidate', (data) => {
   if (data.from_user === 'host') {
     handleHostICECandidate(data.candidate);
@@ -1029,6 +1348,194 @@ function showTab(tabName) {
   document.getElementById(tabName + '-tab').classList.add('active');
   event.target.classList.add('active');
 }
+
+// Auto-initialize WebRTC when page loads
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize WebRTC after a short delay to ensure everything is loaded
+  setTimeout(() => {
+    initializeWebRTC();
+  }, 1000);
+  
+  // Check if host is already streaming
+  socket.emit('request_host_stream', { class_id: classId });
+});
+
+// Enhanced camera switching functions
+function switchToHostCamera() {
+  if (isHostStreamConnected) {
+    const hostCameraContainer = document.getElementById('hostCameraContainer');
+    const contentVideo = document.getElementById('contentVideo');
+    const switchToCameraBtn = document.getElementById('switchToCameraBtn');
+    const switchToContentBtn2 = document.getElementById('switchToContentBtn2');
+    
+    hostCameraContainer.style.display = 'block';
+    contentVideo.style.display = 'none';
+    switchToCameraBtn.style.display = 'none';
+    switchToContentBtn2.style.display = 'inline-block';
+    
+    // Update status
+    liveStatusText.innerHTML = `
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <circle cx="12" cy="12" r="8" fill="#ff4444"/>
+        <circle cx="12" cy="12" r="4" fill="#fff"/>
+      </svg>
+      🔴 Live Host Camera
+    `;
+    liveStatusText.style.color = '#48bb78';
+    
+    showNotification('🎥 Switched to host camera view', 'success');
+  } else {
+    showNotification('📡 Host camera not available. Click "Request Host Camera" first.', 'warning');
+  }
+}
+
+function switchToContent() {
+  const hostCameraContainer = document.getElementById('hostCameraContainer');
+  const contentVideo = document.getElementById('contentVideo');
+  const switchToCameraBtn = document.getElementById('switchToCameraBtn');
+  const switchToContentBtn2 = document.getElementById('switchToContentBtn2');
+  
+  hostCameraContainer.style.display = 'none';
+  contentVideo.style.display = 'block';
+  
+  if (isHostStreamConnected) {
+    switchToCameraBtn.style.display = 'inline-block';
+    switchToContentBtn2.style.display = 'none';
+  } else {
+    switchToCameraBtn.style.display = 'none';
+    switchToContentBtn2.style.display = 'none';
+  }
+  
+  // Update status
+  liveStatusText.innerHTML = `
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+    </svg>
+    Watching content video
+  `;
+  liveStatusText.style.color = '#6a82fb';
+  
+  showNotification('📺 Switched to content view', 'info');
+}
+
+// Camera quality detection
+function detectCameraQuality(videoElement) {
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  
+  // Set canvas size to video dimensions
+  canvas.width = videoElement.videoWidth;
+  canvas.height = videoElement.videoHeight;
+  
+  // Draw video frame to canvas
+  ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+  
+  // Get image data for quality analysis
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imageData.data;
+  
+  // Simple quality detection based on resolution
+  let quality = 'SD';
+  if (canvas.width >= 1280 && canvas.height >= 720) {
+    quality = 'HD';
+  } else if (canvas.width >= 1920 && canvas.height >= 1080) {
+    quality = 'Full HD';
+  } else if (canvas.width >= 2560 && canvas.height >= 1440) {
+    quality = '2K';
+  } else if (canvas.width >= 3840 && canvas.height >= 2160) {
+    quality = '4K';
+  }
+  
+  return quality;
+}
+
+// Update camera quality display
+function updateCameraQuality() {
+  const video = document.getElementById('hostCameraFeed');
+  const qualityDiv = document.getElementById('cameraQuality');
+  const qualityText = document.getElementById('qualityText');
+  
+  if (video && video.videoWidth > 0) {
+    const quality = detectCameraQuality(video);
+    qualityText.textContent = quality;
+    qualityDiv.style.display = 'block';
+  }
+}
+
+// Show/hide loading indicator
+function showCameraLoading(show) {
+  const loadingDiv = document.getElementById('cameraLoading');
+  if (loadingDiv) {
+    loadingDiv.style.display = show ? 'block' : 'none';
+  }
+}
+
+// Enhanced WebRTC track handling
+function setupVideoQualityMonitoring() {
+  const video = document.getElementById('hostCameraFeed');
+  if (video && hostStream) {
+    // Monitor video quality changes
+    video.addEventListener('loadedmetadata', () => {
+      updateCameraQuality();
+    });
+    
+    video.addEventListener('resize', () => {
+      updateCameraQuality();
+    });
+    
+    // Update quality every 5 seconds
+    setInterval(() => {
+      if (isHostStreamConnected && video.videoWidth > 0) {
+        updateCameraQuality();
+      }
+    }, 5000);
+  }
+}
+
+// Fullscreen functionality
+function toggleFullscreen() {
+  const video = document.getElementById('hostCameraFeed');
+  if (!document.fullscreenElement) {
+    if (video.requestFullscreen) {
+      video.requestFullscreen();
+    } else if (video.mozRequestFullScreen) { // Firefox
+      video.mozRequestFullScreen();
+    } else if (video.webkitRequestFullscreen) { // Chrome, Safari and Opera
+      video.webkitRequestFullscreen();
+    } else if (video.msRequestFullscreen) { // IE/Edge
+      video.msRequestFullscreen();
+    }
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) { // Firefox
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) { // Chrome, Safari and Opera
+      document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { // IE/Edge
+      document.msExitFullscreen();
+    }
+  }
+}
+
+// Add keyboard shortcuts for camera switching
+document.addEventListener('keydown', function(event) {
+  // Ctrl/Cmd + 1: Switch to content
+  if ((event.ctrlKey || event.metaKey) && event.key === '1') {
+    event.preventDefault();
+    switchToContent();
+  }
+  // Ctrl/Cmd + 2: Switch to host camera
+  if ((event.ctrlKey || event.metaKey) && event.key === '2') {
+    event.preventDefault();
+    switchToHostCamera();
+  }
+  // F: Toggle fullscreen
+  if (event.key === 'f' || event.key === 'F') {
+    event.preventDefault();
+    toggleFullscreen();
+  }
+});
 </script>
 </body>
 </html> 
