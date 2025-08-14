@@ -106,7 +106,13 @@ body.dark-mode .login-error {
   overflow: hidden;
 }
 
+/* Remove hover-only behavior for better mobile support */
 .profile-dropdown:hover .profile-dropdown-menu {
+  display: none; /* Disable hover-only behavior */
+}
+
+/* Show dropdown when active class is added */
+.profile-dropdown-menu.active {
   display: block;
 }
 
@@ -216,11 +222,33 @@ body.dark-mode #notificationCount {
   background: #f0f4ff !important;
 }
 
+@media (max-width: 768px) {
+  #notifDropdown {
+    position: fixed !important;
+    top: auto !important;
+    right: 12px !important;
+    left: 12px !important;
+    width: auto !important;
+    min-width: auto !important;
+    max-width: calc(100vw - 24px) !important;
+    max-height: 70vh !important;
+    border-radius: 8px !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important;
+    z-index: 10001 !important;
+  }
+}
+
 @media (max-width: 480px) {
   #notifDropdown {
-    right: 0 !important;
-    left: auto !important;
-    width: min(92vw, 360px) !important;
+    right: 8px !important;
+    left: 8px !important;
+    max-width: calc(100vw - 16px) !important;
+    padding: 0.8rem !important;
+  }
+  
+  .notification-item {
+    padding: 1rem 0 !important; /* Larger touch targets */
+    font-size: 16px !important; /* Prevent zoom on iOS */
   }
 }
 
@@ -2016,4 +2044,164 @@ body.dark-mode #faq .faq-question {
 }
 body.dark-mode #faq .faq-answer {
   color: #cbd5e1 !important;
+}
+
+/* Mobile-responsive dropdown adjustments */
+@media (max-width: 768px) {
+  .profile-dropdown-menu {
+    position: fixed;
+    top: auto;
+    right: 12px;
+    left: 12px;
+    width: auto;
+    min-width: auto;
+    max-width: calc(100vw - 24px);
+    margin-top: 0;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+  
+  .profile-dropdown-menu.active {
+    display: block;
+  }
+  
+  /* Ensure dropdown is above other elements on mobile */
+  .profile-dropdown-menu {
+    z-index: 10001;
+  }
+  
+  /* Add backdrop for mobile dropdowns */
+  .profile-dropdown-menu::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: -1;
+  }
+  
+  /* Ensure dropdown items are properly sized for touch */
+  .dropdown-item {
+    min-height: 44px; /* iOS recommended touch target size */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-dropdown-menu {
+    right: 8px;
+    left: 8px;
+    max-width: calc(100vw - 16px);
+  }
+  
+  .dropdown-item {
+    padding: 16px 20px; /* Larger touch targets on mobile */
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  /* Ensure proper spacing on very small screens */
+  .profile-dropdown-menu {
+    margin: 8px;
+    max-width: calc(100vw - 16px);
+  }
+}
+
+/* Additional mobile optimizations for all dropdowns */
+@media (max-width: 768px) {
+  /* Prevent body scroll when dropdown is open */
+  body.dropdown-open {
+    overflow: hidden;
+  }
+  
+  /* Ensure dropdowns are always visible on mobile */
+  .profile-dropdown-menu.active,
+  #notifDropdown[style*="display: block"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* Better mobile shadows and borders */
+  .profile-dropdown-menu,
+  #notifDropdown {
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  }
+  
+  /* Ensure proper mobile positioning */
+  .profile-dropdown-menu.active {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: calc(100vw - 32px) !important;
+    max-width: 400px !important;
+    max-height: 80vh !important;
+    overflow-y: auto !important;
+  }
+  
+  /* Mobile notification dropdown positioning */
+  #notifDropdown[style*="display: block"] {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: calc(100vw - 32px) !important;
+    max-width: 400px !important;
+    max-height: 80vh !important;
+    overflow-y: auto !important;
+  }
+  
+  /* Better mobile backdrop */
+  .profile-dropdown-menu.active::before,
+  #notifDropdown[style*="display: block"]::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: -1;
+  }
+  
+  /* Mobile-specific dropdown item styles */
+  .dropdown-item,
+  .notification-item {
+    font-size: 16px !important; /* Prevent zoom on iOS */
+    padding: 16px 20px !important;
+    min-height: 48px !important; /* Better touch targets */
+    border-radius: 8px !important;
+    margin: 4px 8px !important;
+    background: #fff !important;
+    border: 1px solid #f1f5f9 !important;
+  }
+  
+  .dropdown-item:hover,
+  .notification-item:hover {
+    background: #f8fafc !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+  }
+  
+  /* Dark mode mobile adjustments */
+  body.dark-mode .dropdown-item,
+  body.dark-mode .notification-item {
+    background: #232946 !important;
+    border-color: #44476a !important;
+    color: #f4f4f4 !important;
+  }
+  
+  body.dark-mode .dropdown-item:hover,
+  body.dark-mode .notification-item:hover {
+    background: #44476a !important;
+  }
 }
