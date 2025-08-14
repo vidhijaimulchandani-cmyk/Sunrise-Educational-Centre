@@ -78,6 +78,93 @@ os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'recordings', 'temp'), exi
 
 DATABASE = 'users.db'
 
+def get_db_connection():
+    """Get a database connection with proper settings to prevent locks"""
+    conn = sqlite3.connect(DATABASE, timeout=30.0)
+    conn.execute('PRAGMA journal_mode=WAL')  # Use WAL mode for better concurrency
+    conn.execute('PRAGMA busy_timeout=30000')  # 30 second busy timeout
+    conn.execute('PRAGMA synchronous=NORMAL')  # Balance between safety and performance
+    conn.execute('PRAGMA cache_size=10000')  # Increase cache size
+    conn.execute('PRAGMA temp_store=MEMORY')  # Store temp tables in memory
+    return conn
+
+def safe_db_operation(operation_func, *args, **kwargs):
+    """Safely execute database operations with retry logic for database locks"""
+    max_retries = 2
+    retry_delay = 0.1
+    
+    for attempt in range(max_retries):
+        conn = None
+        try:
+            conn = get_db_connection()
+            result = operation_func(conn, *args, **kwargs)
+            conn.commit()
+            return result
+        except sqlite3.OperationalError as e:
+            if "database is locked" in str(e).lower() and attempt < max_retries - 1:
+                print(f"Database locked on attempt {attempt + 1}, retrying in {retry_delay}s: {e}")
+                if conn:
+                    conn.close()
+                time.sleep(retry_delay)
+                retry_delay *= 2  # Exponential backoff
+                continue
+            else:
+                print(f"Database operational error: {e}")
+                raise
+        except Exception as e:
+            print(f"Database error: {e}")
+            raise
+        finally:
+            if conn:
+                conn.close()
+    
+    raise Exception("Max retries exceeded for database operation")
+
+def cleanup_stale_sessions():
+    """Clean up stale sessions to prevent database locks"""
+    try:
+        conn = get_db_connection()
+        c = conn.cursor()
+        
+        # Remove sessions older than 24 hours
+        cutoff_time = (datetime.now() - timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S')
+        c.execute('DELETE FROM active_sessions WHERE last_activity < ?', (cutoff_time,))
+        
+        # Remove old IP logs (older than 30 days)
+        cutoff_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d %H:%M:%S')
+        c.execute('DELETE FROM ip_logs WHERE visited_at < ?', (cutoff_date,))
+        
+        # Remove old user activity records (older than 7 days)
+        cutoff_activity = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')
+        c.execute('DELETE FROM user_activity WHERE last_seen < ?', (cutoff_activity,))
+        
+        deleted_sessions = c.rowcount
+        conn.commit()
+        conn.close()
+        
+        if deleted_sessions > 0:
+            print(f"🧹 Cleaned up {deleted_sessions} stale sessions and old records")
+        
+        return deleted_sessions
+    except Exception as e:
+        print(f"Error cleaning up stale sessions: {e}")
+        return 0
+
+def start_session_cleanup_service():
+    """Start a background service to periodically clean up stale sessions"""
+    def cleanup_worker():
+        while True:
+            try:
+                cleanup_stale_sessions()
+                time.sleep(3600)  # Run every hour
+            except Exception as e:
+                print(f"Session cleanup service error: {e}")
+                time.sleep(3600)  # Wait an hour before retrying
+    
+    cleanup_thread = threading.Thread(target=cleanup_worker, daemon=True)
+    cleanup_thread.start()
+    print("🚀 Session cleanup service started")
+
 def generate_complex_password(length=12):
     """Generate a complex password with mixed characters"""
     import string
@@ -302,8 +389,11 @@ def init_admission_access_table():
 
 def create_user_session(user_id, session_id, ip_address, user_agent):
     """Create a new session for a user, invalidating any existing sessions"""
+    conn = None
     try:
-        conn = sqlite3.connect(DATABASE)
+        conn = sqlite3.connect(DATABASE, timeout=30.0)
+        conn.execute('PRAGMA journal_mode=WAL')
+        conn.execute('PRAGMA busy_timeout=30000')
         c = conn.cursor()
         
         # First, invalidate any existing sessions for this user
@@ -317,16 +407,51 @@ def create_user_session(user_id, session_id, ip_address, user_agent):
         ''', (user_id, session_id, ip_address, user_agent, now, now))
         
         conn.commit()
-        conn.close()
         return True
+    except sqlite3.OperationalError as e:
+        if "database is locked" in str(e).lower():
+            print(f"Session creation database locked, retrying once: {e}")
+            # Try one more time after a short delay
+            import time
+            time.sleep(0.1)
+            try:
+                if conn:
+                    conn.close()
+                conn = sqlite3.connect(DATABASE, timeout=30.0)
+                conn.execute('PRAGMA journal_mode=WAL')
+                conn.execute('PRAGMA busy_timeout=30000')
+                c = conn.cursor()
+                
+                c.execute('DELETE FROM active_sessions WHERE user_id = ?', (user_id,))
+                now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                c.execute('''
+                    INSERT INTO active_sessions (user_id, session_id, ip_address, user_agent, created_at, last_activity)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                ''', (user_id, session_id, ip_address, user_agent, now, now))
+                
+                conn.commit()
+                print("Session creation retry successful")
+                return True
+            except Exception as retry_e:
+                print(f"Session creation retry failed: {retry_e}")
+                return False
+        else:
+            print(f"Session creation operational error: {e}")
+            return False
     except Exception as e:
         print(f"Error creating user session: {e}")
         return False
+    finally:
+        if conn:
+            conn.close()
 
 def validate_user_session(user_id, session_id):
     """Validate if a user's session is still active"""
+    conn = None
     try:
-        conn = sqlite3.connect(DATABASE)
+        conn = sqlite3.connect(DATABASE, timeout=30.0)
+        conn.execute('PRAGMA journal_mode=WAL')
+        conn.execute('PRAGMA busy_timeout=30000')
         c = conn.cursor()
         
         c.execute('''
@@ -336,7 +461,6 @@ def validate_user_session(user_id, session_id):
         ''', (user_id,))
         
         result = c.fetchone()
-        conn.close()
         
         if not result:
             return False, "No active session found"
@@ -347,23 +471,79 @@ def validate_user_session(user_id, session_id):
         if stored_session_id != session_id:
             return False, "Session ID mismatch"
         
-        # Check if session is not too old (optional: 24 hours)
+        # Check if session is not too old (e.g., 24 hours)
         try:
             last_activity_dt = datetime.strptime(last_activity, '%Y-%m-%d %H:%M:%S')
-            if (datetime.now() - last_activity_dt).total_seconds() > 86400:  # 24 hours
+            now = datetime.now()
+            if (now - last_activity_dt).total_seconds() > 86400:  # 24 hours
                 return False, "Session expired"
-        except:
+        except ValueError:
+            # If date parsing fails, assume session is valid
             pass
         
         return True, ip_address
+        
+    except sqlite3.OperationalError as e:
+        if "database is locked" in str(e).lower():
+            print(f"Session validation database locked, retrying once: {e}")
+            # Try one more time after a short delay
+            import time
+            time.sleep(0.1)
+            try:
+                if conn:
+                    conn.close()
+                conn = sqlite3.connect(DATABASE, timeout=30.0)
+                conn.execute('PRAGMA journal_mode=WAL')
+                conn.execute('PRAGMA busy_timeout=30000')
+                c = conn.cursor()
+                
+                c.execute('''
+                    SELECT session_id, ip_address, last_activity 
+                    FROM active_sessions 
+                    WHERE user_id = ?
+                ''', (user_id,))
+                
+                result = c.fetchone()
+                
+                if not result:
+                    return False, "No active session found"
+                
+                stored_session_id, ip_address, last_activity = result
+                
+                if stored_session_id != session_id:
+                    return False, "Session ID mismatch"
+                
+                try:
+                    last_activity_dt = datetime.strptime(last_activity, '%Y-%m-%d %H:%M:%S')
+                    now = datetime.now()
+                    if (now - last_activity_dt).total_seconds() > 86400:
+                        return False, "Session expired"
+                except ValueError:
+                    pass
+                
+                print("Session validation retry successful")
+                return True, ip_address
+                
+            except Exception as retry_e:
+                print(f"Session validation retry failed: {retry_e}")
+                return False, "Database error during validation"
+        else:
+            print(f"Session validation operational error: {e}")
+            return False, "Database error during validation"
     except Exception as e:
         print(f"Error validating user session: {e}")
-        return False, "Session validation error"
+        return False, "Error during validation"
+    finally:
+        if conn:
+            conn.close()
 
 def update_session_activity(user_id):
     """Update the last activity timestamp for a user's session"""
+    conn = None
     try:
-        conn = sqlite3.connect(DATABASE)
+        conn = sqlite3.connect(DATABASE, timeout=30.0)
+        conn.execute('PRAGMA journal_mode=WAL')
+        conn.execute('PRAGMA busy_timeout=30000')
         c = conn.cursor()
         
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -374,31 +554,96 @@ def update_session_activity(user_id):
         ''', (now, user_id))
         
         conn.commit()
-        conn.close()
         return True
+    except sqlite3.OperationalError as e:
+        if "database is locked" in str(e).lower():
+            print(f"Session activity update database locked, retrying once: {e}")
+            # Try one more time after a short delay
+            import time
+            time.sleep(0.1)
+            try:
+                if conn:
+                    conn.close()
+                conn = sqlite3.connect(DATABASE, timeout=30.0)
+                conn.execute('PRAGMA journal_mode=WAL')
+                conn.execute('PRAGMA busy_timeout=30000')
+                c = conn.cursor()
+                
+                now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                c.execute('''
+                    UPDATE active_sessions 
+                    SET last_activity = ? 
+                    WHERE user_id = ?
+                ''', (now, user_id))
+                
+                conn.commit()
+                print("Session activity update retry successful")
+                return True
+            except Exception as retry_e:
+                print(f"Session activity update retry failed: {retry_e}")
+                return False
+        else:
+            print(f"Session activity update operational error: {e}")
+            return False
     except Exception as e:
         print(f"Error updating session activity: {e}")
         return False
+    finally:
+        if conn:
+            conn.close()
 
 def remove_user_session(user_id):
     """Remove a user's active session (logout)"""
+    conn = None
     try:
-        conn = sqlite3.connect(DATABASE)
+        conn = sqlite3.connect(DATABASE, timeout=30.0)
+        conn.execute('PRAGMA journal_mode=WAL')
+        conn.execute('PRAGMA busy_timeout=30000')
         c = conn.cursor()
         
         c.execute('DELETE FROM active_sessions WHERE user_id = ?', (user_id,))
         
         conn.commit()
-        conn.close()
         return True
+    except sqlite3.OperationalError as e:
+        if "database is locked" in str(e).lower():
+            print(f"Session removal database locked, retrying once: {e}")
+            # Try one more time after a short delay
+            import time
+            time.sleep(0.1)
+            try:
+                if conn:
+                    conn.close()
+                conn = sqlite3.connect(DATABASE, timeout=30.0)
+                conn.execute('PRAGMA journal_mode=WAL')
+                conn.execute('PRAGMA busy_timeout=30000')
+                c = conn.cursor()
+                
+                c.execute('DELETE FROM active_sessions WHERE user_id = ?', (user_id,))
+                
+                conn.commit()
+                print("Session removal retry successful")
+                return True
+            except Exception as retry_e:
+                print(f"Session removal retry failed: {retry_e}")
+                return False
+        else:
+            print(f"Session removal operational error: {e}")
+            return False
     except Exception as e:
         print(f"Error removing user session: {e}")
         return False
+    finally:
+        if conn:
+            conn.close()
 
 def get_user_session_info(user_id):
     """Get information about a user's current session"""
+    conn = None
     try:
-        conn = sqlite3.connect(DATABASE)
+        conn = sqlite3.connect(DATABASE, timeout=30.0)
+        conn.execute('PRAGMA journal_mode=WAL')
+        conn.execute('PRAGMA busy_timeout=30000')
         c = conn.cursor()
         
         c.execute('''
@@ -408,7 +653,6 @@ def get_user_session_info(user_id):
         ''', (user_id,))
         
         result = c.fetchone()
-        conn.close()
         
         if result:
             return {
@@ -419,9 +663,51 @@ def get_user_session_info(user_id):
                 'last_activity': result[4]
             }
         return None
+    except sqlite3.OperationalError as e:
+        if "database is locked" in str(e).lower():
+            print(f"Session info retrieval database locked, retrying once: {e}")
+            # Try one more time after a short delay
+            import time
+            time.sleep(0.1)
+            try:
+                if conn:
+                    conn.close()
+                conn = sqlite3.connect(DATABASE, timeout=30.0)
+                conn.execute('PRAGMA journal_mode=WAL')
+                conn.execute('PRAGMA busy_timeout=30000')
+                c = conn.cursor()
+                
+                c.execute('''
+                    SELECT session_id, ip_address, user_agent, created_at, last_activity
+                    FROM active_sessions 
+                    WHERE user_id = ?
+                ''', (user_id,))
+                
+                result = c.fetchone()
+                
+                if result:
+                    print("Session info retrieval retry successful")
+                    return {
+                        'session_id': result[0],
+                        'ip_address': result[1],
+                        'user_agent': result[2],
+                        'created_at': result[3],
+                        'last_activity': result[4]
+                    }
+                return None
+                
+            except Exception as retry_e:
+                print(f"Session info retrieval retry failed: {retry_e}")
+                return None
+        else:
+            print(f"Session info retrieval operational error: {e}")
+            return None
     except Exception as e:
         print(f"Error getting user session info: {e}")
         return None
+    finally:
+        if conn:
+            conn.close()
 
 def ensure_admissions_submit_ip_column():
     try:
@@ -4811,46 +5097,92 @@ def before_request_handler():
         ua = request.headers.get('User-Agent', '')[:300]
         now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        conn = sqlite3.connect(DATABASE)
-        c = conn.cursor()
-        # Ensure tables exist (in case of reload)
-        c.execute('''CREATE TABLE IF NOT EXISTS ip_logs (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            ip TEXT,
-            user_id INTEGER,
-            path TEXT,
-            user_agent TEXT,
-            visited_at TEXT
-        )''')
-        c.execute('''CREATE TABLE IF NOT EXISTS user_activity (
-            user_id INTEGER PRIMARY KEY,
-            ip TEXT,
-            last_seen TEXT
-        )''')
-        c.execute('''CREATE TABLE IF NOT EXISTS active_sessions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
-            session_id TEXT NOT NULL,
-            ip_address TEXT NOT NULL,
-            user_agent TEXT,
-            created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-            last_activity TEXT DEFAULT CURRENT_TIMESTAMP,
-            UNIQUE(user_id)
-        )''')
-        conn.commit()
-        # Insert IP log
-        c.execute('INSERT INTO ip_logs (ip, user_id, path, user_agent, visited_at) VALUES (?, ?, ?, ?, ?)',
-                  (ip, user_id, path, ua, now_str))
-        # Update user activity if logged in
-        if user_id:
-            c.execute("""
-                INSERT INTO user_activity (user_id, ip, last_seen)
-                VALUES (?, ?, ?)
-                ON CONFLICT(user_id)
-                DO UPDATE SET ip=excluded.ip, last_seen=excluded.last_seen
-            """, (user_id, ip, now_str))
-        conn.commit()
-        conn.close()
+        # Use a separate connection for IP tracking to avoid conflicts
+        conn = None
+        try:
+            conn = sqlite3.connect(DATABASE, timeout=30.0)  # 30 second timeout
+            conn.execute('PRAGMA journal_mode=WAL')  # Use WAL mode for better concurrency
+            conn.execute('PRAGMA busy_timeout=30000')  # 30 second busy timeout
+            c = conn.cursor()
+            
+            # Ensure tables exist (in case of reload)
+            c.execute('''CREATE TABLE IF NOT EXISTS ip_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ip TEXT,
+                user_id INTEGER,
+                path TEXT,
+                user_agent TEXT,
+                visited_at TEXT
+            )''')
+            c.execute('''CREATE TABLE IF NOT EXISTS user_activity (
+                user_id INTEGER PRIMARY KEY,
+                ip TEXT,
+                last_seen TEXT
+            )''')
+            c.execute('''CREATE TABLE IF NOT EXISTS active_sessions (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                session_id TEXT NOT NULL,
+                ip_address TEXT NOT NULL,
+                user_agent TEXT,
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                last_activity TEXT DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(user_id)
+            )''')
+            
+            # Insert IP log
+            c.execute('INSERT INTO ip_logs (ip, user_id, path, user_agent, visited_at) VALUES (?, ?, ?, ?, ?)',
+                      (ip, user_id, path, ua, now_str))
+            
+            # Update user activity if logged in
+            if user_id:
+                c.execute("""
+                    INSERT INTO user_activity (user_id, ip, last_seen)
+                    VALUES (?, ?, ?)
+                    ON CONFLICT(user_id)
+                    DO UPDATE SET ip=excluded.ip, last_seen=excluded.last_seen
+                """, (user_id, ip, now_str))
+            
+            conn.commit()
+            
+        except sqlite3.OperationalError as e:
+            if "database is locked" in str(e).lower():
+                print(f"IP tracking database locked, retrying once: {e}")
+                # Try one more time after a short delay
+                import time
+                time.sleep(0.1)
+                try:
+                    if conn:
+                        conn.close()
+                    conn = sqlite3.connect(DATABASE, timeout=30.0)
+                    conn.execute('PRAGMA journal_mode=WAL')
+                    conn.execute('PRAGMA busy_timeout=30000')
+                    c = conn.cursor()
+                    
+                    # Just insert the IP log without table creation (tables should exist by now)
+                    c.execute('INSERT INTO ip_logs (ip, user_id, path, user_agent, visited_at) VALUES (?, ?, ?, ?, ?)',
+                              (ip, user_id, path, ua, now_str))
+                    
+                    if user_id:
+                        c.execute("""
+                            INSERT INTO user_activity (user_id, ip, last_seen)
+                            VALUES (?, ?, ?)
+                            ON CONFLICT(user_id)
+                            DO UPDATE SET ip=excluded.ip, last_seen=excluded.last_seen
+                        """, (user_id, ip, now_str))
+                    
+                    conn.commit()
+                    print("IP tracking retry successful")
+                except Exception as retry_e:
+                    print(f"IP tracking retry failed: {retry_e}")
+            else:
+                print(f"IP tracking operational error: {e}")
+        except Exception as e:
+            print(f"IP tracking error: {e}")
+        finally:
+            if conn:
+                conn.close()
+                
     except Exception as e:
         # Fail silently to not block requests
         print(f"IP tracking error: {e}")
@@ -5986,11 +6318,13 @@ if __name__ == '__main__':
     
     # Start session cleanup service
     cleanup_stale_sessions()
+    start_session_cleanup_service()
     
     # Default to HTTP mode to avoid SSL issues
     print("🚀 Starting server with HTTP...")
     print("🌐 Access your app at: http://localhost:10000")
     print("⚠️  Note: WebRTC features will not work without HTTPS!")
+    print("🧹 Session cleanup service started - will clean stale sessions every hour")
     
     try:
         socketio.run(app, host='0.0.0.0', port=port, debug=False, log_output=False)
