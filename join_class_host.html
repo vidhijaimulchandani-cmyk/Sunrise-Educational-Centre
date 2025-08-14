@@ -1520,6 +1520,12 @@
           endPoll(pollId);
         });
         
+        // Emit class ended event to all students
+        socket.emit('class_ended', {
+          class_id: classId,
+          message: 'Class ended by host'
+        });
+        
         // Notify server to end class
         fetch('/api/live-classes/end', {
           method: 'POST',

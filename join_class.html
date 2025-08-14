@@ -527,6 +527,7 @@
         <button class="tab-btn active" onclick="showTab('chat')">Chat</button>
         <button class="tab-btn" onclick="showTab('polls')">Polls</button>
         <button class="tab-btn" onclick="showTab('doubts')">Doubts</button>
+        <button class="tab-btn" onclick="showTab('benchmark')" id="benchmarkTab" style="display: none;">Benchmark</button>
         <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
       </div>
       <!-- Chat Tab -->
@@ -583,6 +584,68 @@
           <div style="margin-top:1rem; color:#888; font-size:0.95rem;">Your doubts will be visible to the host.</div>
         </div>
       </div>
+      
+      <!-- Benchmark Tab -->
+      <div id="benchmark-tab" class="tab-content">
+        <div class="benchmark-section">
+          <h3 style="margin-bottom: 1rem; color: #9c27b0;">📊 Class Benchmark</h3>
+          
+          <!-- Create Section Form -->
+          <div style="background: #f8f9fa; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; border: 1px solid #e9ecef;">
+            <h4 style="margin-bottom: 0.8rem; color: #232946;">➕ Create New Section</h4>
+            <form id="sectionForm">
+              <div style="margin-bottom: 0.8rem;">
+                <label style="display: block; margin-bottom: 0.3rem; font-weight: 600; color: #232946;">Section Title:</label>
+                <input type="text" id="sectionTitle" placeholder="Enter section title..." class="poll-input" required style="width: 100%;" />
+              </div>
+              <div style="margin-bottom: 0.8rem;">
+                <label style="display: block; margin-bottom: 0.3rem; font-weight: 600; color: #232946;">Section Type:</label>
+                <select id="sectionType" class="poll-input" style="width: 100%;">
+                  <option value="notes">📝 Notes</option>
+                  <option value="questions">❓ Questions</option>
+                  <option value="examples">💡 Examples</option>
+                  <option value="formulas">🧮 Formulas</option>
+                  <option value="summary">📋 Summary</option>
+                </select>
+              </div>
+              <div style="margin-bottom: 0.8rem;">
+                <label style="display: block; margin-bottom: 0.3rem; font-weight: 600; color: #232946;">Content:</label>
+                <textarea id="sectionContent" placeholder="Enter section content..." class="poll-input" required style="width: 100%; min-height: 80px; resize: vertical;"></textarea>
+              </div>
+              <button type="submit" class="poll-btn" style="background: #9c27b0; color: white; border: none;">Create Section</button>
+            </form>
+          </div>
+          
+          <!-- Completed Sections -->
+          <div style="background: #f8f9fa; border-radius: 8px; padding: 1rem; border: 1px solid #e9ecef;">
+            <h4 style="margin-bottom: 0.8rem; color: #232946;">📚 Completed Sections</h4>
+            <div id="completedSections">
+              <div style="color: #666; font-style: italic; text-align: center; padding: 1rem;">
+                No sections created yet. Create your first section above!
+              </div>
+            </div>
+          </div>
+          
+          <!-- Class Summary -->
+          <div style="background: #e8f5e8; border-radius: 8px; padding: 1rem; margin-top: 1rem; border: 1px solid #c8e6c9;">
+            <h4 style="margin-bottom: 0.8rem; color: #2e7d32;">📈 Class Progress Summary</h4>
+            <div id="classSummary">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span>Total Sections Created:</span>
+                <span id="totalSections" style="font-weight: 600; color: #2e7d32;">0</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span>Class Duration:</span>
+                <span id="classDuration" style="font-weight: 600; color: #2e7d32;">00:00:00</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span>Topics Covered:</span>
+                <span id="topicsCovered" style="font-weight: 600; color: #2e7d32;">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
@@ -603,6 +666,249 @@ const socket = io({
 const room = 'liveclass_' + classId;
 let isConnected = false;
 let reconnectAttempts = 0;
+let classStartTime = Date.now();
+let isClassEnded = false;
+let sections = [];
+let classDuration = 0;
+
+// Load sections from localStorage
+function loadSections() {
+  const savedSections = localStorage.getItem(`class_sections_${classId}`);
+  if (savedSections) {
+    sections = JSON.parse(savedSections);
+    renderSections();
+    updateClassSummary();
+  }
+}
+
+// Save sections to localStorage
+function saveSections() {
+  localStorage.setItem(`class_sections_${classId}`, JSON.stringify(sections));
+}
+
+// Create new section
+function createSection(title, type, content) {
+  const section = {
+    id: Date.now(),
+    title: title,
+    type: type,
+    content: content,
+    created_at: new Date().toISOString(),
+    class_id: classId
+  };
+  
+  sections.push(section);
+  saveSections();
+  renderSections();
+  updateClassSummary();
+  
+  // Emit to server
+  socket.emit('create_section', section);
+  
+  return section;
+}
+
+// Render sections
+function renderSections() {
+  const completedSections = document.getElementById('completedSections');
+  
+  if (sections.length === 0) {
+    completedSections.innerHTML = `
+      <div style="color: #666; font-style: italic; text-align: center; padding: 1rem;">
+        No sections created yet. Create your first section above!
+      </div>
+    `;
+    return;
+  }
+  
+  completedSections.innerHTML = sections.map(section => {
+    const typeIcon = {
+      'notes': '📝',
+      'questions': '❓',
+      'examples': '💡',
+      'formulas': '🧮',
+      'summary': '📋'
+    }[section.type] || '📄';
+    
+    const createdAt = new Date(section.created_at).toLocaleTimeString();
+    
+    return `
+      <div class="section-item" style="background: white; border-radius: 8px; padding: 1rem; margin-bottom: 0.8rem; border: 1px solid #e9ecef; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+          <h5 style="margin: 0; color: #232946; display: flex; align-items: center; gap: 0.5rem;">
+            ${typeIcon} ${section.title}
+          </h5>
+          <span style="font-size: 0.8rem; color: #666;">${createdAt}</span>
+        </div>
+        <div style="color: #555; line-height: 1.5; margin-bottom: 0.5rem;">${section.content}</div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button onclick="editSection(${section.id})" class="poll-btn" style="background: #17a2b8; color: white; border: none; padding: 0.3rem 0.6rem; font-size: 0.8rem;">Edit</button>
+          <button onclick="deleteSection(${section.id})" class="poll-btn" style="background: #dc3545; color: white; border: none; padding: 0.3rem 0.6rem; font-size: 0.8rem;">Delete</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// Update class summary
+function updateClassSummary() {
+  document.getElementById('totalSections').textContent = sections.length;
+  
+  const duration = Math.floor((Date.now() - classStartTime) / 1000);
+  const hours = Math.floor(duration / 3600);
+  const minutes = Math.floor((duration % 3600) / 60);
+  const seconds = duration % 60;
+  
+  document.getElementById('classDuration').textContent = 
+    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  
+  // Count unique topics (based on section titles)
+  const uniqueTopics = new Set(sections.map(s => s.title.toLowerCase()));
+  document.getElementById('topicsCovered').textContent = uniqueTopics.size;
+}
+
+// Edit section
+function editSection(sectionId) {
+  const section = sections.find(s => s.id === sectionId);
+  if (section) {
+    document.getElementById('sectionTitle').value = section.title;
+    document.getElementById('sectionType').value = section.type;
+    document.getElementById('sectionContent').value = section.content;
+    
+    // Change form to update mode
+    const form = document.getElementById('sectionForm');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.textContent = 'Update Section';
+    submitBtn.onclick = (e) => {
+      e.preventDefault();
+      updateSection(sectionId);
+    };
+  }
+}
+
+// Update section
+function updateSection(sectionId) {
+  const title = document.getElementById('sectionTitle').value.trim();
+  const type = document.getElementById('sectionType').value;
+  const content = document.getElementById('sectionContent').value.trim();
+  
+  if (!title || !content) return;
+  
+  const sectionIndex = sections.findIndex(s => s.id === sectionId);
+  if (sectionIndex !== -1) {
+    sections[sectionIndex] = {
+      ...sections[sectionIndex],
+      title,
+      type,
+      content,
+      updated_at: new Date().toISOString()
+    };
+    
+    saveSections();
+    renderSections();
+    updateClassSummary();
+    
+    // Reset form
+    document.getElementById('sectionForm').reset();
+    const submitBtn = document.querySelector('#sectionForm button[type="submit"]');
+    submitBtn.textContent = 'Create Section';
+    submitBtn.onclick = null;
+    
+    showNotification('Section updated successfully!', 'success');
+  }
+}
+
+// Delete section
+function deleteSection(sectionId) {
+  if (confirm('Are you sure you want to delete this section?')) {
+    sections = sections.filter(s => s.id !== sectionId);
+    saveSections();
+    renderSections();
+    updateClassSummary();
+    showNotification('Section deleted successfully!', 'success');
+  }
+}
+
+// Handle class end
+function handleClassEnd() {
+  isClassEnded = true;
+  classDuration = Math.floor((Date.now() - classStartTime) / 1000);
+  
+  // Hide chat, polls, and doubts tabs
+  document.querySelectorAll('.tab-btn:not(#benchmarkTab)').forEach(btn => {
+    if (!btn.id.includes('darkModeToggle')) {
+      btn.style.display = 'none';
+    }
+  });
+  
+  // Show benchmark tab
+  document.getElementById('benchmarkTab').style.display = 'inline-block';
+  
+  // Switch to benchmark tab
+  showTab('benchmark');
+  
+  // Update final summary
+  updateClassSummary();
+  
+  // Save class completion data
+  const classData = {
+    class_id: classId,
+    duration: classDuration,
+    sections_count: sections.length,
+    completed_at: new Date().toISOString(),
+    sections: sections
+  };
+  
+  localStorage.setItem(`class_completion_${classId}`, JSON.stringify(classData));
+  
+  showNotification('Class has ended! You can now create benchmark sections.', 'info');
+}
+
+// Daily reset function
+function checkDailyReset() {
+  const now = new Date();
+  const lastReset = localStorage.getItem('last_daily_reset');
+  
+  if (!lastReset || new Date(lastReset).getDate() !== now.getDate()) {
+    // It's a new day, reset completed classes
+    const keys = Object.keys(localStorage);
+    keys.forEach(key => {
+      if (key.startsWith('class_completion_')) {
+        localStorage.removeItem(key);
+      }
+    });
+    
+    localStorage.setItem('last_daily_reset', now.toISOString());
+    console.log('Daily reset completed at', now.toLocaleString());
+  }
+}
+
+// Check for daily reset every minute
+setInterval(checkDailyReset, 60000);
+checkDailyReset(); // Initial check
+
+// Load sections on page load
+loadSections();
+
+// Form submission handler
+document.getElementById('sectionForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const title = document.getElementById('sectionTitle').value.trim();
+  const type = document.getElementById('sectionType').value;
+  const content = document.getElementById('sectionContent').value.trim();
+  
+  if (!title || !content) {
+    showNotification('Please fill in all fields', 'warning');
+    return;
+  }
+  
+  createSection(title, type, content);
+  
+  // Reset form
+  this.reset();
+  showNotification('Section created successfully!', 'success');
+});
 
 // Connection management
 socket.on('connect', () => {
@@ -1661,6 +1967,144 @@ document.addEventListener('keydown', function(event) {
     toggleFullscreen();
   }
 });
+
+// Chat Event Listeners
+socket.on('new_chat_message', (data) => {
+  if (data.class_id === classId && data.username !== 'You') {
+    console.log('New chat message received:', data);
+    renderChatMessage(data);
+    showNotification(`New message from ${data.username}`, 'info');
+  }
+});
+
+socket.on('chat_messages_history', (data) => {
+  if (data.class_id === classId) {
+    console.log('Chat history received:', data);
+    if (data.messages.length === 0) {
+      const chatMessages = document.getElementById('chatMessages');
+      chatMessages.innerHTML = `
+        <div style="text-align: center; color: #666; font-style: italic; padding: 1rem;">
+          Welcome to the live class! Start chatting with your classmates and host.
+        </div>
+      `;
+    } else {
+      data.messages.forEach(message => renderChatMessage(message));
+    }
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+});
+
+// Class End Detection
+socket.on('class_ended', (data) => {
+  if (data.class_id === classId) {
+    console.log('Class ended by host:', data);
+    handleClassEnd();
+  }
+});
+
+socket.on('host_disconnected', (data) => {
+  if (data.class_id === classId) {
+    console.log('Host disconnected:', data);
+    showNotification('Host has disconnected. Class may be ending soon.', 'warning');
+    
+    // Wait a bit then check if class is really ended
+    setTimeout(() => {
+      if (!isConnected) {
+        handleClassEnd();
+      }
+    }, 10000);
+  }
+});
+
+// Benchmark Event Listeners
+socket.on('section_created', (data) => {
+  if (data.class_id === classId) {
+    console.log('Section created by another student:', data);
+    // Add to local sections if not already present
+    if (!sections.find(s => s.id === data.id)) {
+      sections.push(data);
+      saveSections();
+      renderSections();
+      updateClassSummary();
+    }
+  }
+});
+
+socket.on('section_updated', (data) => {
+  if (data.class_id === classId) {
+    console.log('Section updated by another student:', data);
+    const sectionIndex = sections.findIndex(s => s.id === data.id);
+    if (sectionIndex !== -1) {
+      sections[sectionIndex] = data;
+      saveSections();
+      renderSections();
+      updateClassSummary();
+    }
+  }
+});
+
+socket.on('section_deleted', (data) => {
+  if (data.class_id === classId) {
+    console.log('Section deleted by another student:', data);
+    sections = sections.filter(s => s.id !== data.id);
+    saveSections();
+    renderSections();
+    updateClassSummary();
+  }
+});
+
+// Show notification function
+function showNotification(message, type = 'info') {
+  const notification = document.createElement('div');
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: 500;
+    z-index: 10000;
+    max-width: 300px;
+    word-wrap: break-word;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  `;
+  
+  // Set background based on type
+  switch(type) {
+    case 'success':
+      notification.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+      break;
+    case 'error':
+      notification.style.background = 'linear-gradient(135deg, #dc3545, #e74c3c)';
+      break;
+    case 'warning':
+      notification.style.background = 'linear-gradient(135deg, #ffc107, #fd7e14)';
+      break;
+    default:
+      notification.style.background = 'linear-gradient(135deg, #17a2b8, #6f42c1)';
+  }
+  
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  
+  // Animate in
+  setTimeout(() => {
+    notification.style.transform = 'translateX(0)';
+  }, 100);
+  
+  // Auto remove after 5 seconds
+  setTimeout(() => {
+    notification.style.transform = 'translateX(100%)';
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.parentNode.removeChild(notification);
+      }
+    }, 300);
+  }, 5000);
+}
 </script>
 </body>
 </html> 

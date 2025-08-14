@@ -6341,33 +6341,196 @@ def handle_chat_status_change(data):
 
 @socketio.on('chat_cleared')
 def handle_chat_cleared(data):
-    """Handle chat clearing by host"""
+    class_id = data.get('class_id')
+    message = data.get('message', 'Chat has been cleared by host')
+    
     try:
-        class_id = data.get('class_id')
-        message = data.get('message', 'Chat has been cleared by host')
+        # Delete chat messages from database
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM chat_messages WHERE class_id = ?', (class_id,))
+        conn.commit()
+        conn.close()
         
-        if not class_id:
-            emit('error', {'message': 'Class ID required'})
-            return
-        
-        # Clear messages from database
-        db = get_db()
-        c = db.cursor()
-        c.execute('DELETE FROM live_class_messages WHERE class_id = ?', (class_id,))
-        db.commit()
-        
-        # Broadcast chat cleared event to all users in the room
+        # Broadcast to all clients in the room
         cleared_data = {
             'class_id': class_id,
-            'message': message
+            'message': message,
+            'timestamp': datetime.now().isoformat()
         }
-        
-        socketio.emit('chat_cleared', cleared_data, room=f'liveclass_{class_id}')
-        print(f"Chat cleared in class {class_id}")
+        emit('chat_cleared', cleared_data, room=f'liveclass_{class_id}')
         
     except Exception as e:
-        print(f"Error handling chat cleared: {e}")
+        print(f"Error clearing chat: {e}")
         emit('error', {'message': 'Failed to clear chat'})
+
+# Benchmark System Socket Events
+@socketio.on('create_section')
+def handle_create_section(data):
+    """Handle creation of benchmark sections by students"""
+    try:
+        section_data = {
+            'id': data.get('id'),
+            'title': data.get('title'),
+            'type': data.get('type'),
+            'content': data.get('content'),
+            'created_at': data.get('created_at'),
+            'class_id': data.get('class_id'),
+            'user_id': request.sid
+        }
+        
+        # Store section in database
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO benchmark_sections (id, title, type, content, created_at, class_id, user_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            section_data['id'],
+            section_data['title'],
+            section_data['type'],
+            section_data['content'],
+            section_data['created_at'],
+            section_data['class_id'],
+            section_data['user_id']
+        ))
+        conn.commit()
+        conn.close()
+        
+        # Broadcast to all clients in the room
+        emit('section_created', section_data, room=f'liveclass_{section_data["class_id"]}')
+        
+    except Exception as e:
+        print(f"Error creating section: {e}")
+        emit('error', {'message': 'Failed to create section'})
+
+@socketio.on('update_section')
+def handle_update_section(data):
+    """Handle updates to benchmark sections"""
+    try:
+        section_data = {
+            'id': data.get('id'),
+            'title': data.get('title'),
+            'type': data.get('type'),
+            'content': data.get('content'),
+            'updated_at': data.get('updated_at'),
+            'class_id': data.get('class_id'),
+            'user_id': request.sid
+        }
+        
+        # Update section in database
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            UPDATE benchmark_sections 
+            SET title = ?, type = ?, content = ?, updated_at = ?
+            WHERE id = ? AND class_id = ?
+        ''', (
+            section_data['title'],
+            section_data['type'],
+            section_data['content'],
+            section_data['updated_at'],
+            section_data['id'],
+            section_data['class_id']
+        ))
+        conn.commit()
+        conn.close()
+        
+        # Broadcast to all clients in the room
+        emit('section_updated', section_data, room=f'liveclass_{section_data["class_id"]}')
+        
+    except Exception as e:
+        print(f"Error updating section: {e}")
+        emit('error', {'message': 'Failed to update section'})
+
+@socketio.on('delete_section')
+def handle_delete_section(data):
+    """Handle deletion of benchmark sections"""
+    try:
+        section_id = data.get('id')
+        class_id = data.get('class_id')
+        
+        # Delete section from database
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('DELETE FROM benchmark_sections WHERE id = ? AND class_id = ?', (section_id, class_id))
+        conn.commit()
+        conn.close()
+        
+        # Broadcast to all clients in the room
+        emit('section_deleted', {'id': section_id, 'class_id': class_id}, room=f'liveclass_{class_id}')
+        
+    except Exception as e:
+        print(f"Error deleting section: {e}")
+        emit('error', {'message': 'Failed to delete section'})
+
+@socketio.on('class_ended')
+def handle_class_ended(data):
+    """Handle class end event from host"""
+    try:
+        class_id = data.get('class_id')
+        
+        # Update class status in database
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            UPDATE live_classes 
+            SET status = 'completed', ended_at = ? 
+            WHERE id = ?
+        ''', (datetime.now().isoformat(), class_id))
+        conn.commit()
+        conn.close()
+        
+        # Broadcast to all clients in the room
+        emit('class_ended', {
+            'class_id': class_id,
+            'ended_at': datetime.now().isoformat(),
+            'message': 'Class has ended by host'
+        }, room=f'liveclass_{class_id}')
+        
+    except Exception as e:
+        print(f"Error ending class: {e}")
+        emit('error', {'message': 'Failed to end class'})
+
+@socketio.on('get_benchmark_sections')
+def handle_get_benchmark_sections(data):
+    """Handle request for benchmark sections"""
+    try:
+        class_id = data.get('class_id')
+        
+        # Get sections from database
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT id, title, type, content, created_at, updated_at, user_id
+            FROM benchmark_sections 
+            WHERE class_id = ?
+            ORDER BY created_at ASC
+        ''', (class_id,))
+        
+        sections = []
+        for row in cursor.fetchall():
+            sections.append({
+                'id': row[0],
+                'title': row[1],
+                'type': row[2],
+                'content': row[3],
+                'created_at': row[4],
+                'updated_at': row[5],
+                'user_id': row[6]
+            })
+        
+        conn.close()
+        
+        # Send sections to requesting client
+        emit('benchmark_sections_response', {
+            'class_id': class_id,
+            'sections': sections
+        })
+        
+    except Exception as e:
+        print(f"Error getting benchmark sections: {e}")
+        emit('error', {'message': 'Failed to get benchmark sections'})
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))

@@ -2205,3 +2205,196 @@ body.dark-mode #faq .faq-answer {
     background: #44476a !important;
   }
 }
+
+/* Dark Mode for New Styles */
+body.dark-mode #cameraHelp div:last-child {
+  color: #b8c5d6;
+}
+
+/* Dark Mode Chat Message Types */
+body.dark-mode .chat-message.host-message {
+  border-left-color: #fc5c7d;
+}
+
+body.dark-mode .chat-message.own-message {
+  border-left-color: #48bb78;
+}
+
+body.dark-mode .typing-indicator {
+  background: #2a2a3a;
+  color: #b8c5d6;
+}
+
+/* Benchmark System Styles */
+.benchmark-section {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.section-item {
+  transition: all 0.3s ease;
+  border-left: 4px solid #9c27b0 !important;
+}
+
+.section-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15) !important;
+}
+
+.section-item h5 {
+  color: #9c27b0 !important;
+  font-weight: 600;
+}
+
+.section-item .poll-btn {
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+  padding: 0.3rem 0.6rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.section-item .poll-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+#sectionForm {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#sectionForm label {
+  color: #232946;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+#sectionForm input,
+#sectionForm select,
+#sectionForm textarea {
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  padding: 0.8rem;
+  font-size: 0.95rem;
+  transition: border-color 0.3s ease;
+}
+
+#sectionForm input:focus,
+#sectionForm select:focus,
+#sectionForm textarea:focus {
+  outline: none;
+  border-color: #9c27b0;
+  box-shadow: 0 0 0 3px rgba(156, 39, 176, 0.1);
+}
+
+#sectionForm button[type="submit"] {
+  background: linear-gradient(135deg, #9c27b0, #673ab7);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#sectionForm button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+}
+
+/* Dark Mode for Benchmark */
+body.dark-mode .benchmark-section {
+  color: #b8c5d6;
+}
+
+body.dark-mode .section-item {
+  background: #2a2a3a !important;
+  border-color: #9c27b0 !important;
+  color: #b8c5d6;
+}
+
+body.dark-mode #sectionForm {
+  background: #2a2a3a;
+  color: #b8c5d6;
+}
+
+body.dark-mode #sectionForm label {
+  color: #b8c5d6;
+}
+
+body.dark-mode #sectionForm input,
+body.dark-mode #sectionForm select,
+body.dark-mode #sectionForm textarea {
+  background: #1a1a2a;
+  border-color: #444;
+  color: #b8c5d6;
+}
+
+body.dark-mode #sectionForm input:focus,
+body.dark-mode #sectionForm select:focus,
+body.dark-mode #sectionForm textarea:focus {
+  border-color: #9c27b0;
+}
+
+body.dark-mode .section-item h5 {
+  color: #bb86fc !important;
+}
+
+/* Tab Button Styles for Benchmark */
+#benchmarkTab {
+  background: linear-gradient(135deg, #9c27b0, #673ab7);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#benchmarkTab:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(156, 39, 176, 0.3);
+}
+
+/* Class Summary Styling */
+#classSummary {
+  background: rgba(46, 125, 50, 0.1);
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+#classSummary > div {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(46, 125, 50, 0.2);
+}
+
+#classSummary > div:last-child {
+  border-bottom: none;
+}
+
+/* Responsive Design for Benchmark */
+@media (max-width: 768px) {
+  .benchmark-section {
+    padding: 0 1rem;
+  }
+  
+  #sectionForm {
+    padding: 1rem;
+  }
+  
+  .section-item {
+    margin-bottom: 1rem;
+  }
+  
+  .section-item .poll-btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
