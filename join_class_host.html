@@ -36,6 +36,63 @@
     .chat-control-btn.private { background: #e6f7ff; border-color: #38b2ac; color: #38b2ac; }
     .chat-control-btn svg { width: 18px; height: 18px; }
     
+    /* Enhanced Chat Control Buttons */
+    .chat-control-btn.clear-chat { 
+      background: #fff3cd; 
+      border-color: #ffeaa7; 
+      color: #856404; 
+    }
+    .chat-control-btn.clear-chat:hover { 
+      background: #ffeaa7; 
+      border-color: #fdcb6e; 
+      transform: translateY(-1px); 
+    }
+    
+    .chat-control-btn.export-chat { 
+      background: #d1ecf1; 
+      border-color: #bee5eb; 
+      color: #0c5460; 
+    }
+    .chat-control-btn.export-chat:hover { 
+      background: #bee5eb; 
+      border-color: #86cfda; 
+      transform: translateY(-1px); 
+    }
+    
+    /* Chat Message Animations */
+    .chat-message {
+      transition: all 0.3s ease;
+      animation: slideInMessage 0.3s ease-out;
+    }
+    
+    @keyframes slideInMessage {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Typing Indicator */
+    .typing-indicator {
+      opacity: 0.7;
+      font-style: italic;
+      color: #666;
+      padding: 0.5rem;
+      background: #f8f9ff;
+      border-radius: 8px;
+      margin: 0.5rem 0;
+      animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 0.4; }
+    }
+    
     .poll-section { background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%); border-radius:12px; padding:1.2rem; border: 1px solid #e0e7ff; margin-bottom: 1rem; }
     .poll-input { width: 100%; border-radius:8px; border:1px solid #e0e7ff; padding:0.5rem 0.8rem; background: #fff; margin-bottom: 0.5rem; }
     .poll-option { display: flex; align-items: center; margin-bottom: 0.5rem; }
@@ -206,6 +263,32 @@
     body.dark-mode .device-select { background: #232946; border-color: #3a3a4a; color: #fff; }
     body.dark-mode .device-select:focus { border-color: #6a82fb; }
     body.dark-mode .device-status { color: #b8c5d6; }
+    
+    /* Dark Mode Chat Controls */
+    body.dark-mode .chat-control-btn.clear-chat { 
+      background: #2d1b0e; 
+      border-color: #4a2c0f; 
+      color: #fdcb6e; 
+    }
+    body.dark-mode .chat-control-btn.clear-chat:hover { 
+      background: #4a2c0f; 
+      border-color: #fdcb6e; 
+    }
+    
+    body.dark-mode .chat-control-btn.export-chat { 
+      background: #0c2b2e; 
+      border-color: #1a4a4e; 
+      color: #86cfda; 
+    }
+    body.dark-mode .chat-control-btn.export-chat:hover { 
+      background: #1a4a4e; 
+      border-color: #86cfda; 
+    }
+    
+    body.dark-mode .typing-indicator {
+      background: #2a2a3a;
+      color: #b8c5d6;
+    }
   </style>
 </head>
 <body>
@@ -381,11 +464,11 @@
         <div class="chat-card">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
             <h3 style="color: #6a82fb; margin: 0;">Live Chat</h3>
-            <div style="display: flex; gap: 0.5rem;">
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
               <!-- Chat Lock Toggle -->
               <button id="chatLockBtn" class="chat-control-btn" title="Lock/Unlock Chat" onclick="toggleChatLock()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10z"/>
+                  <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S2 3.24 2 6v2H1c-.55 0-1 .45-1 1v12c0 .55.45 1 1 1h16c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1zM4 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H4V6zm12 14H2V9h16v11z"/>
                 </svg>
                 <span id="chatLockText">Lock Chat</span>
               </button>
@@ -395,6 +478,20 @@
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                 </svg>
                 <span id="chatPrivateText">Public</span>
+              </button>
+              <!-- Clear Chat -->
+              <button class="chat-control-btn clear-chat" title="Clear All Chat Messages" onclick="clearChat()" style="background: #fff3cd; border-color: #ffeaa7; color: #856404;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 13H5v-2h14v2z"/>
+                </svg>
+                <span>Clear Chat</span>
+              </button>
+              <!-- Export Chat -->
+              <button class="chat-control-btn export-chat" title="Export Chat to File" onclick="exportChat()" style="background: #d1ecf1; border-color: #bee5eb; color: #0c5460;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                </svg>
+                <span>Export</span>
               </button>
             </div>
           </div>
@@ -1430,14 +1527,24 @@
       const message = chatInput.value.trim();
       
       if (message && isConnected) {
-        socket.emit('chat_message', {
+        const messageData = {
           class_id: classId,
           user_id: 'host',
           username: 'Host',
           message: message,
           type: 'chat'
-        });
+        };
+        
+        // Emit the message
+        socket.emit('chat_message', messageData);
+        
+        // Clear input
         chatInput.value = '';
+        
+        // Show typing indicator
+        showTypingIndicator('Host');
+        
+        console.log('Host sent message:', messageData);
       }
     }
 
@@ -1445,33 +1552,77 @@
       const chatMessages = document.getElementById('chatMessages');
       const messageDiv = document.createElement('div');
       messageDiv.className = 'chat-message';
+      messageDiv.id = `msg-${messageData.id || Date.now()}`;
       
       const timestamp = new Date(messageData.created_at).toLocaleTimeString();
       const isHost = messageData.username === 'Host';
       const usernameColor = isHost ? '#fc5c7d' : '#6a82fb';
+      const messageStyle = isHost ? 'border-left-color: #fc5c7d;' : 'border-left-color: #6a82fb;';
       
       messageDiv.innerHTML = `
         <div style="font-weight: 600; color: ${usernameColor}; font-size: 0.9rem;">
           ${messageData.username} <span style="color: #888; font-weight: 400; font-size: 0.8rem;">${timestamp}</span>
+          ${isHost ? '<span style="color: #fc5c7d; font-size: 0.8rem;"> 👑</span>' : ''}
         </div>
         <div style="margin-top: 0.2rem;">${messageData.message}</div>
       `;
       
-      chatMessages.appendChild(messageDiv);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+      // Apply message style
+      messageDiv.style.borderLeftColor = isHost ? '#fc5c7d' : '#6a82fb';
+      
+      // Check if message already exists to prevent duplicates
+      const existingMessage = document.getElementById(`msg-${messageData.id || Date.now()}`);
+      if (!existingMessage) {
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Add message animation
+        messageDiv.style.opacity = '0';
+        messageDiv.style.transform = 'translateY(10px)';
+        messageDiv.style.transition = 'all 0.3s ease';
+        
+        setTimeout(() => {
+          messageDiv.style.opacity = '1';
+          messageDiv.style.transform = 'translateY(0)';
+        }, 100);
+      }
     }
 
-    // Chat event listeners
+    // Enhanced chat event listeners
     socket.on('new_chat_message', (messageData) => {
-      renderChatMessage(messageData);
+      console.log('Received new chat message:', messageData);
+      
+      // Don't render if it's our own message (host messages)
+      if (messageData.username !== 'Host') {
+        renderChatMessage(messageData);
+        
+        // Show notification for new student messages
+        showChatNotification(`New message from ${messageData.username}`, 'info');
+      }
     });
 
     socket.on('chat_messages_history', (data) => {
+      console.log('Received chat history:', data);
       const chatMessages = document.getElementById('chatMessages');
       chatMessages.innerHTML = '';
-      data.messages.forEach(message => {
-        renderChatMessage(message);
-      });
+      
+      if (data.messages && data.messages.length > 0) {
+        data.messages.forEach(message => {
+          renderChatMessage(message);
+        });
+        
+        // Scroll to bottom
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      } else {
+        // Show welcome message
+        const welcomeDiv = document.createElement('div');
+        welcomeDiv.className = 'chat-message';
+        welcomeDiv.style.textAlign = 'center';
+        welcomeDiv.style.color = '#666';
+        welcomeDiv.style.fontStyle = 'italic';
+        welcomeDiv.innerHTML = 'Welcome to the live class! Start chatting below.';
+        chatMessages.appendChild(welcomeDiv);
+      }
     });
 
     // Chat form submission
@@ -1487,50 +1638,135 @@
     socket.on('error', (data) => {
       console.error('Chat error:', data);
       if (data.message) {
-        alert('Chat error: ' + data.message);
+        showChatNotification('Chat error: ' + data.message, 'error');
       }
     });
-    
-    // WebRTC Event Listeners
-    socket.on('webrtc_offer', (data) => {
-      if (data.from_user !== 'host') {
-        handleStudentOffer(data.from_user, data.offer);
-      }
-    });
-    
-    socket.on('webrtc_answer', (data) => {
-      if (data.from_user !== 'host') {
-        handleStudentAnswer(data.from_user, data.answer);
-      }
-    });
-    
-    socket.on('webrtc_ice_candidate', (data) => {
-      if (data.from_user !== 'host') {
-        handleStudentICECandidate(data.from_user, data.candidate);
-      }
-    });
-    
-    // Recording Event Listeners
-    socket.on('recording_started', (data) => {
+
+    // Chat status change handling
+    socket.on('chat_status_change', (data) => {
       if (data.class_id === classId) {
-        updateRecordingStatus('Recording started', 'recording');
-        console.log('Recording started:', data);
+        updateChatStatus(data.status, data.message);
       }
     });
-    
-    socket.on('recording_stopped', (data) => {
-      if (data.class_id === classId) {
-        updateRecordingStatus('Recording stopped', 'stopped');
-        loadRecordings();
-        console.log('Recording stopped:', data);
+
+    function updateChatStatus(status, message) {
+      const statusText = document.getElementById('chatStatusText');
+      const chatForm = document.getElementById('chatForm');
+      const chatInput = document.getElementById('chatInput');
+      
+      // Remove all status classes
+      statusText.classList.remove('locked', 'private', 'public');
+      
+      if (status === 'locked') {
+        statusText.textContent = '🔒 Locked';
+        statusText.classList.add('locked');
+        chatForm.style.opacity = '0.5';
+        chatInput.disabled = true;
+        chatInput.placeholder = 'Chat is locked by host';
+        
+        showChatNotification(message, 'warning');
+      } else if (status === 'private') {
+        statusText.textContent = '🔒 Private';
+        statusText.classList.add('private');
+        chatForm.style.opacity = '0.5';
+        chatInput.disabled = true;
+        chatInput.placeholder = 'Chat is private - only host can see messages';
+        
+        showChatNotification(message, 'info');
+      } else if (status === 'public') {
+        statusText.textContent = '● Public';
+        statusText.classList.add('public');
+        chatForm.style.opacity = '1';
+        chatInput.disabled = false;
+        chatInput.placeholder = 'Type a message...';
+        
+        showChatNotification(message, 'success');
+      } else if (status === 'unlocked') {
+        statusText.textContent = '● Public';
+        statusText.classList.add('public');
+        chatForm.style.opacity = '1';
+        chatInput.disabled = false;
+        chatInput.placeholder = 'Type a message...';
+        
+        showChatNotification(message, 'success');
       }
-    });
-    
-    socket.on('recording_status_response', (data) => {
-      if (data.class_id === classId) {
-        updateRecordingUI(data.active_recording, data.all_recordings);
+    }
+
+    function showChatNotification(message, type) {
+      // Create a temporary notification
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        color: white;
+        font-weight: 500;
+        z-index: 10000;
+        max-width: 350px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        backdrop-filter: blur(10px);
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+        font-size: 14px;
+      `;
+      
+      // Set background color based on type
+      switch (type) {
+        case 'success':
+          notification.style.background = 'linear-gradient(135deg, #48bb78, #38a169)';
+          break;
+        case 'warning':
+          notification.style.background = 'linear-gradient(135deg, #fc5c7d, #e53e3e)';
+          break;
+        case 'error':
+          notification.style.background = 'linear-gradient(135deg, #e53e3e, #c53030)';
+          break;
+        case 'info':
+        default:
+          notification.style.background = 'linear-gradient(135deg, #6a82fb, #5a6fd8)';
       }
-    });
+      
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      // Animate in
+      setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+      }, 100);
+      
+      // Auto remove after 4 seconds
+      setTimeout(() => {
+        notification.style.transform = 'translateX(400px)';
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+          }
+        }, 300);
+      }, 4000);
+    }
+
+    function showTypingIndicator(username) {
+      // Show typing indicator
+      const chatMessages = document.getElementById('chatMessages');
+      const typingDiv = document.createElement('div');
+      typingDiv.id = 'typing-indicator';
+      typingDiv.className = 'chat-message';
+      typingDiv.style.opacity = '0.7';
+      typingDiv.style.fontStyle = 'italic';
+      typingDiv.innerHTML = `${username} is typing...`;
+      
+      chatMessages.appendChild(typingDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      
+      // Remove typing indicator after 2 seconds
+      setTimeout(() => {
+        if (typingDiv.parentNode) {
+          typingDiv.parentNode.removeChild(typingDiv);
+        }
+      }, 2000);
+    }
 
     // --- Recording Functions ---
     let isRecording = false;
@@ -1756,6 +1992,180 @@
         message: 'Host has left the class'
       });
     });
+
+    // WebRTC Event Listeners
+    socket.on('webrtc_offer', (data) => {
+      if (data.from_user !== 'host') {
+        handleStudentOffer(data.from_user, data.offer);
+      }
+    });
+    
+    socket.on('webrtc_answer', (data) => {
+      if (data.from_user !== 'host') {
+        handleStudentAnswer(data.from_user, data.offer);
+      }
+    });
+    
+    socket.on('webrtc_ice_candidate', (data) => {
+      if (data.from_user !== 'host') {
+        handleStudentICECandidate(data.from_user, data.candidate);
+      }
+    });
+    
+    // Recording Event Listeners
+    socket.on('recording_started', (data) => {
+      if (data.class_id === classId) {
+        updateRecordingStatus('Recording started', 'recording');
+        console.log('Recording started:', data);
+      }
+    });
+    
+    socket.on('recording_stopped', (data) => {
+      if (data.class_id === classId) {
+        updateRecordingStatus('Recording stopped', 'stopped');
+        loadRecordings();
+        console.log('Recording stopped:', data);
+      }
+    });
+    
+    socket.on('recording_status_response', (data) => {
+      if (data.class_id === classId) {
+        updateRecordingUI(data.active_recording, data.all_recordings);
+      }
+    });
+
+    // Chat Control Functions
+    function toggleChatLock() {
+      const lockBtn = document.getElementById('chatLockBtn');
+      const lockText = document.getElementById('chatLockText');
+      const isLocked = lockBtn.classList.contains('locked');
+      
+      if (isLocked) {
+        // Unlock chat
+        lockBtn.classList.remove('locked');
+        lockText.textContent = 'Lock Chat';
+        lockBtn.style.background = '#fff';
+        lockBtn.style.borderColor = '#e0e7ff';
+        lockBtn.style.color = '#6a82fb';
+        
+        // Notify all students
+        socket.emit('chat_status_change', {
+          class_id: classId,
+          status: 'unlocked',
+          message: 'Chat is now unlocked - students can send messages'
+        });
+        
+        showChatNotification('Chat unlocked - students can now send messages', 'success');
+      } else {
+        // Lock chat
+        lockBtn.classList.add('locked');
+        lockText.textContent = 'Unlock Chat';
+        lockBtn.style.background = '#ffe6e6';
+        lockBtn.style.borderColor = '#fc5c7d';
+        lockBtn.style.color = '#fc5c7d';
+        
+        // Notify all students
+        socket.emit('chat_status_change', {
+          class_id: classId,
+          status: 'locked',
+          message: 'Chat is now locked by host'
+        });
+        
+        showChatNotification('Chat locked - students cannot send messages', 'warning');
+      }
+    }
+
+    function toggleChatPrivate() {
+      const privateBtn = document.getElementById('chatPrivateBtn');
+      const privateText = document.getElementById('chatPrivateText');
+      const isPrivate = privateBtn.classList.contains('private');
+      
+      if (isPrivate) {
+        // Make chat public
+        privateBtn.classList.remove('private');
+        privateText.textContent = 'Public';
+        privateBtn.style.background = '#fff';
+        privateBtn.style.borderColor = '#e0e7ff';
+        privateBtn.style.color = '#6a82fb';
+        
+        // Notify all students
+        socket.emit('chat_status_change', {
+          class_id: classId,
+          status: 'public',
+          message: 'Chat is now public - all students can see messages'
+        });
+        
+        showChatNotification('Chat is now public - all students can see messages', 'success');
+      } else {
+        // Make chat private
+        privateBtn.classList.add('private');
+        privateText.textContent = 'Private';
+        privateBtn.style.background = '#e6f7ff';
+        privateBtn.style.borderColor = '#38b2ac';
+        privateBtn.style.color = '#38b2ac';
+        
+        // Notify all students
+        socket.emit('chat_status_change', {
+          class_id: classId,
+          status: 'private',
+          message: 'Chat is now private - only host can see messages'
+        });
+        
+        showChatNotification('Chat is now private - only you can see messages', 'info');
+      }
+    }
+
+    // Clear all chat messages
+    function clearChat() {
+      if (confirm('Are you sure you want to clear all chat messages? This action cannot be undone.')) {
+        const chatMessages = document.getElementById('chatMessages');
+        chatMessages.innerHTML = '';
+        
+        // Show cleared message
+        const clearedDiv = document.createElement('div');
+        clearedDiv.className = 'chat-message';
+        clearedDiv.style.textAlign = 'center';
+        clearedDiv.style.color = '#666';
+        clearedDiv.style.fontStyle = 'italic';
+        clearedDiv.innerHTML = 'Chat has been cleared by host';
+        chatMessages.appendChild(clearedDiv);
+        
+        // Notify all students
+        socket.emit('chat_cleared', {
+          class_id: classId,
+          message: 'Chat has been cleared by host'
+        });
+        
+        showChatNotification('Chat cleared successfully', 'success');
+      }
+    }
+
+    // Export chat to file
+    function exportChat() {
+      const chatMessages = document.getElementById('chatMessages');
+      const messages = chatMessages.querySelectorAll('.chat-message');
+      let chatText = `Live Class Chat Export - ${new Date().toLocaleString()}\n`;
+      chatText += '='.repeat(50) + '\n\n';
+      
+      messages.forEach(message => {
+        const username = message.querySelector('div:first-child').textContent.split(' ')[0];
+        const messageText = message.querySelector('div:last-child').textContent;
+        const timestamp = message.querySelector('span').textContent;
+        chatText += `[${timestamp}] ${username}: ${messageText}\n`;
+      });
+      
+      const blob = new Blob([chatText], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `chat_export_${classId}_${new Date().toISOString().split('T')[0]}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      showChatNotification('Chat exported successfully', 'success');
+    }
   </script>
 </body>
 </html> 

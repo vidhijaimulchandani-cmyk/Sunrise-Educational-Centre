@@ -6313,6 +6313,62 @@ def api_get_user_notifications():
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
 
+@socketio.on('chat_status_change')
+def handle_chat_status_change(data):
+    """Handle chat status changes (lock/unlock, public/private)"""
+    try:
+        class_id = data.get('class_id')
+        status = data.get('status')
+        message = data.get('message')
+        
+        if not class_id or not status:
+            emit('error', {'message': 'Invalid chat status data'})
+            return
+        
+        # Broadcast status change to all users in the room
+        status_data = {
+            'class_id': class_id,
+            'status': status,
+            'message': message
+        }
+        
+        socketio.emit('chat_status_change', status_data, room=f'liveclass_{class_id}')
+        print(f"Chat status changed to {status} in class {class_id}")
+        
+    except Exception as e:
+        print(f"Error handling chat status change: {e}")
+        emit('error', {'message': 'Failed to change chat status'})
+
+@socketio.on('chat_cleared')
+def handle_chat_cleared(data):
+    """Handle chat clearing by host"""
+    try:
+        class_id = data.get('class_id')
+        message = data.get('message', 'Chat has been cleared by host')
+        
+        if not class_id:
+            emit('error', {'message': 'Class ID required'})
+            return
+        
+        # Clear messages from database
+        db = get_db()
+        c = db.cursor()
+        c.execute('DELETE FROM live_class_messages WHERE class_id = ?', (class_id,))
+        db.commit()
+        
+        # Broadcast chat cleared event to all users in the room
+        cleared_data = {
+            'class_id': class_id,
+            'message': message
+        }
+        
+        socketio.emit('chat_cleared', cleared_data, room=f'liveclass_{class_id}')
+        print(f"Chat cleared in class {class_id}")
+        
+    except Exception as e:
+        print(f"Error handling chat cleared: {e}")
+        emit('error', {'message': 'Failed to clear chat'})
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
     

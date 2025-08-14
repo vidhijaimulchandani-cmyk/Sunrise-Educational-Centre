@@ -22,6 +22,49 @@
     .chat-send-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(106,130,251,0.3); }
     .chat-message { margin: 0.3rem 0; padding: 0.4rem 0.7rem; background: #fff; border-radius: 7px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 3px solid #6a82fb; }
     
+    /* Chat Message Animations */
+    .chat-message {
+      transition: all 0.3s ease;
+      animation: slideInMessage 0.3s ease-out;
+    }
+    
+    @keyframes slideInMessage {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Typing Indicator */
+    .typing-indicator {
+      opacity: 0.7;
+      font-style: italic;
+      color: #666;
+      padding: 0.5rem;
+      background: #f8f9ff;
+      border-radius: 8px;
+      margin: 0.5rem 0;
+      animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 0.4; }
+    }
+    
+    /* Host Message Styling */
+    .chat-message.host-message {
+      border-left-color: #fc5c7d;
+    }
+    
+    .chat-message.own-message {
+      border-left-color: #48bb78;
+    }
+    
     /* Chat Status Indicator */
     #chatStatusIndicator { font-size: 0.9rem; }
     #chatStatusText.locked { color: #fc5c7d; }
@@ -247,6 +290,20 @@
     }
     
     body.dark-mode #cameraHelp div:last-child {
+      color: #b8c5d6;
+    }
+    
+    /* Dark Mode Chat Message Types */
+    body.dark-mode .chat-message.host-message {
+      border-left-color: #fc5c7d;
+    }
+    
+    body.dark-mode .chat-message.own-message {
+      border-left-color: #48bb78;
+    }
+    
+    body.dark-mode .typing-indicator {
+      background: #2a2a3a;
       color: #b8c5d6;
     }
   </style>
@@ -1121,14 +1178,24 @@ function sendChatMessage() {
   const message = chatInput.value.trim();
   
   if (message && isConnected) {
-    socket.emit('chat_message', {
+    const messageData = {
       class_id: classId,
       user_id: getUserId(),
       username: getUsername(),
       message: message,
       type: 'chat'
-    });
+    };
+    
+    // Emit the message
+    socket.emit('chat_message', messageData);
+    
+    // Clear input
     chatInput.value = '';
+    
+    // Show typing indicator
+    showTypingIndicator(getUsername());
+    
+    console.log('Student sent message:', messageData);
   }
 }
 
@@ -1136,30 +1203,81 @@ function renderChatMessage(messageData) {
   const chatMessages = document.getElementById('chatMessages');
   const messageDiv = document.createElement('div');
   messageDiv.className = 'chat-message';
+  messageDiv.id = `msg-${messageData.id || Date.now()}`;
   
   const timestamp = new Date(messageData.created_at).toLocaleTimeString();
+  const isHost = messageData.username === 'Host';
+  const isOwnMessage = messageData.username === getUsername();
+  const usernameColor = isHost ? '#fc5c7d' : (isOwnMessage ? '#48bb78' : '#6a82fb');
+  const messageStyle = isHost ? 'border-left-color: #fc5c7d;' : (isOwnMessage ? 'border-left-color: #48bb78;' : 'border-left-color: #6a82fb;');
+  
   messageDiv.innerHTML = `
-    <div style="font-weight: 600; color: #6a82fb; font-size: 0.9rem;">
+    <div style="font-weight: 600; color: ${usernameColor}; font-size: 0.9rem;">
       ${messageData.username} <span style="color: #888; font-weight: 400; font-size: 0.8rem;">${timestamp}</span>
+      ${isHost ? '<span style="color: #fc5c7d; font-size: 0.8rem;"> 👑</span>' : ''}
+      ${isOwnMessage ? '<span style="color: #48bb78; font-size: 0.8rem;"> (You)</span>' : ''}
     </div>
     <div style="margin-top: 0.2rem;">${messageData.message}</div>
   `;
   
-  chatMessages.appendChild(messageDiv);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
+  // Apply message style
+  messageDiv.style.borderLeftColor = isHost ? '#fc5c7d' : (isOwnMessage ? '#48bb78' : '#6a82fb');
+  
+  // Check if message already exists to prevent duplicates
+  const existingMessage = document.getElementById(`msg-${messageData.id || Date.now()}`);
+  if (!existingMessage) {
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    
+    // Add message animation
+    messageDiv.style.opacity = '0';
+    messageDiv.style.transform = 'translateY(10px)';
+    messageDiv.style.transition = 'all 0.3s ease';
+    
+    setTimeout(() => {
+      messageDiv.style.opacity = '1';
+      messageDiv.style.transform = 'translateY(0)';
+    }, 100);
+    
+    // Show notification for host messages
+    if (isHost) {
+      showNotification(`📢 Message from Host: ${messageData.message}`, 'info');
+    }
+  }
 }
 
-// Chat event listeners
+// Enhanced chat event listeners
 socket.on('new_chat_message', (messageData) => {
-  renderChatMessage(messageData);
+  console.log('Received new chat message:', messageData);
+  
+  // Don't render if it's our own message
+  if (messageData.username !== getUsername()) {
+    renderChatMessage(messageData);
+  }
 });
 
 socket.on('chat_messages_history', (data) => {
+  console.log('Received chat history:', data);
   const chatMessages = document.getElementById('chatMessages');
   chatMessages.innerHTML = '';
-  data.messages.forEach(message => {
-    renderChatMessage(message);
-  });
+  
+  if (data.messages && data.messages.length > 0) {
+    data.messages.forEach(message => {
+      renderChatMessage(message);
+    });
+    
+    // Scroll to bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  } else {
+    // Show welcome message
+    const welcomeDiv = document.createElement('div');
+    welcomeDiv.className = 'chat-message';
+    welcomeDiv.style.textAlign = 'center';
+    welcomeDiv.style.color = '#666';
+    welcomeDiv.style.fontStyle = 'italic';
+    welcomeDiv.innerHTML = 'Welcome to the live class! Start chatting below.';
+    chatMessages.appendChild(welcomeDiv);
+  }
 });
 
 // Chat form submission
@@ -1168,21 +1286,40 @@ document.getElementById('chatForm').addEventListener('submit', function(e) {
   sendChatMessage();
 });
 
+// Load chat history when joining
+socket.emit('get_chat_messages', { class_id: classId, limit: 50 });
+
 // Add error handling for chat
 socket.on('error', (data) => {
   console.error('Chat error:', data);
   if (data.message) {
-    alert('Chat error: ' + data.message);
+    showNotification('Chat error: ' + data.message, 'error');
   }
 });
-
-// Load chat history when joining
-socket.emit('get_chat_messages', { class_id: classId, limit: 50 });
 
 // Chat status change handling
 socket.on('chat_status_change', (data) => {
   if (data.class_id === classId) {
     updateChatStatus(data.status, data.message);
+  }
+});
+
+// Chat cleared event handling
+socket.on('chat_cleared', (data) => {
+  if (data.class_id === classId) {
+    const chatMessages = document.getElementById('chatMessages');
+    chatMessages.innerHTML = '';
+    
+    // Show cleared message
+    const clearedDiv = document.createElement('div');
+    clearedDiv.className = 'chat-message';
+    clearedDiv.style.textAlign = 'center';
+    clearedDiv.style.color = '#666';
+    clearedDiv.style.fontStyle = 'italic';
+    clearedDiv.innerHTML = 'Chat has been cleared by host';
+    chatMessages.appendChild(clearedDiv);
+    
+    showNotification('Chat has been cleared by host', 'info');
   }
 });
 
@@ -1202,7 +1339,7 @@ function updateChatStatus(status, message) {
     chatInput.placeholder = 'Chat is locked by host';
     
     // Show notification
-    showChatNotification(message, 'warning');
+    showNotification(message, 'warning');
   } else if (status === 'private') {
     statusText.textContent = '🔒 Private';
     statusText.classList.add('private');
@@ -1211,7 +1348,7 @@ function updateChatStatus(status, message) {
     chatInput.placeholder = 'Chat is private - only host can see messages';
     
     // Show notification
-    showChatNotification(message, 'info');
+    showNotification(message, 'info');
   } else if (status === 'public') {
     statusText.textContent = '● Public';
     statusText.classList.add('public');
@@ -1220,7 +1357,7 @@ function updateChatStatus(status, message) {
     chatInput.placeholder = 'Type a message...';
     
     // Show notification
-    showChatNotification(message, 'success');
+    showNotification(message, 'success');
   } else if (status === 'unlocked') {
     statusText.textContent = '● Public';
     statusText.classList.add('public');
@@ -1229,41 +1366,29 @@ function updateChatStatus(status, message) {
     chatInput.placeholder = 'Type a message...';
     
     // Show notification
-    showChatNotification(message, 'success');
+    showNotification(message, 'success');
   }
 }
 
-function showChatNotification(message, type) {
-  // Create a temporary notification
-  const notification = document.createElement('div');
-  notification.style.cssText = `
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 1rem;
-    border-radius: 8px;
-    color: white;
-    font-weight: 500;
-    z-index: 10000;
-    max-width: 300px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  `;
+function showTypingIndicator(username) {
+  // Show typing indicator
+  const chatMessages = document.getElementById('chatMessages');
+  const typingDiv = document.createElement('div');
+  typingDiv.id = 'typing-indicator';
+  typingDiv.className = 'chat-message';
+  typingDiv.style.opacity = '0.7';
+  typingDiv.style.fontStyle = 'italic';
+  typingDiv.innerHTML = `${username} is typing...`;
   
-  if (type === 'warning') {
-    notification.style.background = '#fc5c7d';
-  } else if (type === 'info') {
-    notification.style.background = '#38b2ac';
-  } else if (type === 'success') {
-    notification.style.background = '#48bb78';
-  }
+  chatMessages.appendChild(typingDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
   
-  notification.textContent = message;
-  document.body.appendChild(notification);
-  
-  // Remove after 3 seconds
+  // Remove typing indicator after 2 seconds
   setTimeout(() => {
-    notification.remove();
-  }, 3000);
+    if (typingDiv.parentNode) {
+      typingDiv.parentNode.removeChild(typingDiv);
+    }
+  }, 2000);
 }
 
 // Enhanced host stream ready handling
