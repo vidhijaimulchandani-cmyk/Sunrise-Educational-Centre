@@ -1010,8 +1010,8 @@ def create_mention_notifications(sender_id, sender_username, mentioned_usernames
             # Create the notification (personal) with proper type
             add_personal_notification(notification_message, mentioned_user_id, notification_type='forum_mention')
             
-            # Mark as seen for the mentioned user
-            mark_notification_as_seen_for_user(mentioned_user_id, notification_message)
+            # Don't mark as seen immediately - let the user see it as an unread notification
+            # The notification will be marked as seen when the user actually reads it
 
 def mark_notification_as_seen_for_user(user_id, notification_message):
     """Mark a specific notification as seen for a user"""

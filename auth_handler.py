@@ -693,12 +693,9 @@ def add_personal_notification(message, user_id, notification_type='personal'):
     )
     notification_id = c.lastrowid
     
-    # If user_id is provided, mark it as seen for that user
-    if user_id:
-        c.execute(
-            'INSERT INTO user_notification_status (user_id, notification_id, seen_at) VALUES (?, ?, ?)',
-            (user_id, notification_id, get_ist_timestamp())
-        )
+    # Don't mark as seen immediately - let the user see it as an unread notification
+    # The notification will be marked as seen when the user actually reads it
+    # This ensures ban messages and mention messages appear as unread notifications
     
     conn.commit()
     conn.close()
