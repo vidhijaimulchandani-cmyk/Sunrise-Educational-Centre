@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDF Preview - {{ title }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="style.css">
     <style>
@@ -322,7 +324,7 @@
             <iframe 
                 id="pdf-iframe" 
                 class="pdf-iframe" 
-                src="/pdf-content/{{ filename }}"
+                data-src="/pdf-content/{{ filename }}"
                 onload="hideLoading()"
                 onerror="showError()"
                 style="display: none;">
@@ -369,6 +371,15 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize dark mode
             initializeDarkMode();
+            
+            // Defer setting iframe src until DOM is ready
+            const iframe = document.getElementById('pdf-iframe');
+            if (iframe && iframe.dataset.src) {
+                // Yield to allow paint, then set src
+                setTimeout(() => {
+                    iframe.src = iframe.dataset.src;
+                }, 0);
+            }
             
             // Disable right-click
             document.addEventListener('contextmenu', function(e) {

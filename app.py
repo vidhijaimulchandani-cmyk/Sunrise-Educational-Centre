@@ -4882,54 +4882,27 @@ def preview_pdf(filename):
         flash('You must be logged in to view resources.', 'error')
         return redirect(url_for('auth'))
     
-    # Check if file exists and is a PDF
+    # Validate extension early
     if not filename.lower().endswith('.pdf'):
         flash('Invalid file type. Only PDF files can be previewed.', 'error')
         return redirect(url_for('study_resources'))
     
     # Ensure uploads directory exists
-    if not os.path.exists(app.config['UPLOAD_FOLDER']):
-        os.makedirs(app.config['UPLOAD_FOLDER'])
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
     
-    # Check if file exists in uploads directory or subdirectories
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    if not os.path.exists(file_path):
-        # Try to find the file in subdirectories
-        found_path = None
-        for root, dirs, files in os.walk(app.config['UPLOAD_FOLDER']):
-            if filename in files:
-                found_path = os.path.join(root, filename)
-                break
-        
-        if found_path:
-            file_path = found_path
-        else:
-            flash('File not found.', 'error')
-            return redirect(url_for('study_resources'))
+    # Resolve file path quickly (cached)
+    file_path = resolve_uploaded_file_path(filename)
+    if not file_path:
+        flash('File not found.', 'error')
+        return redirect(url_for('study_resources'))
     
-    # Get user's class and check if they have access to this resource
+    # Fast access check
     role = session.get('role')
-    if role in ['admin', 'teacher']:
-        # Admin/teacher can view all resources
-        pass
-    else:
-        # For students, check if the resource belongs to their class
-        all_classes_dict_rev = {c[1]: c[0] for c in get_all_classes()}
-        user_class_id = all_classes_dict_rev.get(role)
-        
-        if user_class_id:
-            # Check if this resource belongs to user's class
-            resources = get_resources_for_class_id(user_class_id)
-            resource_found = False
-            for res_filename, res_class_id, _, _, _, _ in resources:
-                if res_filename == filename and res_class_id == user_class_id:
-                    resource_found = True
-                    break
-            
-            if not resource_found:
-                flash('You do not have access to this resource.', 'error')
-                return redirect(url_for('study_resources'))
+    if not user_has_access_to_resource(filename, role):
+        flash('You do not have access to this resource.', 'error')
+        return redirect(url_for('study_resources'))
     
+    # Render preview shell (actual PDF served by /pdf-content)
     return render_template('pdf_preview.html', filename=filename, title=filename.replace('.pdf', '').replace('_', ' ').title())
 
 # Route for serving PDF content (with security headers)
@@ -4939,45 +4912,20 @@ def pdf_content(filename):
     if not session.get('role'):
         return jsonify({'error': 'Unauthorized'}), 401
     
-    # Check if file exists and is a PDF
+    # Validate extension early
     if not filename.lower().endswith('.pdf'):
         return jsonify({'error': 'Invalid file type'}), 400
     
-    # Ensure uploads directory exists
-    if not os.path.exists(app.config['UPLOAD_FOLDER']):
-        os.makedirs(app.config['UPLOAD_FOLDER'])
+    # Resolve file path via cache helper
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    file_path = resolve_uploaded_file_path(filename)
+    if not file_path:
+        return jsonify({'error': 'File not found'}), 404
     
-    # Check if file exists in uploads directory or subdirectories
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    if not os.path.exists(file_path):
-        # Try to find the file in subdirectories
-        found_path = None
-        for root, dirs, files in os.walk(app.config['UPLOAD_FOLDER']):
-            if filename in files:
-                found_path = os.path.join(root, filename)
-                break
-        
-        if found_path:
-            file_path = found_path
-        else:
-            return jsonify({'error': 'File not found'}), 404
-    
-    # Get user's class and check access
+    # Fast access check
     role = session.get('role')
-    if role not in ['admin', 'teacher']:
-        all_classes_dict_rev = {c[1]: c[0] for c in get_all_classes()}
-        user_class_id = all_classes_dict_rev.get(role)
-        
-        if user_class_id:
-            resources = get_resources_for_class_id(user_class_id)
-            resource_found = False
-            for res_filename, res_class_id, _, _, _, _ in resources:
-                if res_filename == filename and res_class_id == user_class_id:
-                    resource_found = True
-                    break
-            
-            if not resource_found:
-                return jsonify({'error': 'Access denied'}), 403
+    if not user_has_access_to_resource(filename, role):
+        return jsonify({'error': 'Access denied'}), 403
     
     # Serve PDF with security headers
     response = send_file(file_path, mimetype='application/pdf')
@@ -6531,6 +6479,60 @@ def handle_get_benchmark_sections(data):
     except Exception as e:
         print(f"Error getting benchmark sections: {e}")
         emit('error', {'message': 'Failed to get benchmark sections'})
+
+# Simple in-process cache for resolved file paths to speed up preview lookups
+_PREVIEW_PATH_CACHE = {}
+
+
+def resolve_uploaded_file_path(filename: str) -> str | None:
+    """Resolve a filename to an absolute path inside UPLOAD_FOLDER or its subfolders.
+    Results are cached to avoid repeated os.walk scans.
+    """
+    try:
+        key = filename.lower()
+        # Direct path first
+        direct_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        if os.path.exists(direct_path):
+            _PREVIEW_PATH_CACHE[key] = direct_path
+            return direct_path
+        # Cached lookup
+        cached = _PREVIEW_PATH_CACHE.get(key)
+        if cached and os.path.exists(cached):
+            return cached
+        # Scan once and cache
+        for root, dirs, files in os.walk(app.config['UPLOAD_FOLDER']):
+            if filename in files:
+                found_path = os.path.join(root, filename)
+                _PREVIEW_PATH_CACHE[key] = found_path
+                return found_path
+        return None
+    except Exception:
+        return None
+
+
+def user_has_access_to_resource(filename: str, role: str) -> bool:
+    """Fast check via SQL whether the current user role (class name) has access to the filename.
+    Avoids loading all resources into Python.
+    Admin/teacher have access to all.
+    """
+    if role in ['admin', 'teacher']:
+        return True
+    # Map class name (role) to class_id
+    try:
+        classes = get_all_classes()
+        class_name_to_id = {c[1]: c[0] for c in classes}
+        user_class_id = class_name_to_id.get(role)
+        if not user_class_id:
+            return False
+        # Direct SQL check
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        c.execute('SELECT 1 FROM resources WHERE filename = ? AND class_id = ? LIMIT 1', (filename, user_class_id))
+        row = c.fetchone()
+        conn.close()
+        return bool(row)
+    except Exception:
+        return False
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
