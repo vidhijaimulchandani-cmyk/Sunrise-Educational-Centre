@@ -98,27 +98,132 @@ function setupProfileDropdown() {
     const profileLink = document.getElementById('profileLink');
     
     if (profileDropdown && profileLink) {
-        // Show dropdown on click for mobile
+        // Show dropdown on click for all devices (mobile-friendly)
         profileLink.addEventListener('click', function(e) {
-            if (window.innerWidth <= 768) {
-                e.preventDefault();
-                profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Toggle dropdown visibility
+            const isVisible = profileDropdown.classList.contains('active');
+            
+            // Close all other dropdowns first
+            closeAllDropdowns();
+            
+            if (!isVisible) {
+                profileDropdown.classList.add('active');
+                
+                // Position dropdown properly on mobile
+                if (window.innerWidth <= 768) {
+                    positionDropdownForMobile(profileDropdown);
+                    // Prevent body scroll on mobile when dropdown is open
+                    document.body.classList.add('dropdown-open');
+                }
+            } else {
+                // Remove dropdown-open class when closing
+                document.body.classList.remove('dropdown-open');
             }
         });
         
         // Hide dropdown when clicking outside
         document.addEventListener('click', function(e) {
             if (!profileLink.contains(e.target) && !profileDropdown.contains(e.target)) {
-                profileDropdown.style.display = 'none';
+                profileDropdown.classList.remove('active');
             }
         });
         
         // Hide dropdown on window resize
         window.addEventListener('resize', function() {
-            if (window.innerWidth > 768) {
-                profileDropdown.style.display = 'none';
-            }
+            profileDropdown.classList.remove('active');
         });
+        
+        // Hide dropdown on orientation change
+        window.addEventListener('orientationchange', function() {
+            setTimeout(() => {
+                profileDropdown.classList.remove('active');
+            }, 100);
+        });
+    }
+}
+
+// Function to position dropdown properly on mobile
+function positionDropdownForMobile(dropdown) {
+    if (!dropdown) return;
+    
+    // Get the profile link position
+    const profileLink = document.getElementById('profileLink');
+    if (!profileLink) return;
+    
+    const linkRect = profileLink.getBoundingClientRect();
+    const dropdownRect = dropdown.getBoundingClientRect();
+    
+    // Calculate available space
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
+    
+    // Position dropdown below the profile link if there's space
+    if (linkRect.bottom + dropdownRect.height <= viewportHeight) {
+        dropdown.style.top = '100%';
+        dropdown.style.bottom = 'auto';
+    } else {
+        // Position above if not enough space below
+        dropdown.style.top = 'auto';
+        dropdown.style.bottom = '100%';
+    }
+    
+    // Ensure dropdown doesn't go off-screen horizontally
+    if (linkRect.right + dropdownRect.width > viewportWidth) {
+        dropdown.style.right = '0';
+        dropdown.style.left = 'auto';
+    } else {
+        dropdown.style.left = '0';
+        dropdown.style.right = 'auto';
+    }
+}
+
+// Function to close all dropdowns
+function closeAllDropdowns() {
+    const profileDropdown = document.getElementById('profileDropdown');
+    const notifDropdown = document.getElementById('notifDropdown');
+    
+    if (profileDropdown) profileDropdown.classList.remove('active');
+    if (notifDropdown) notifDropdown.style.display = 'none';
+    
+    // Remove dropdown-open class to restore body scroll
+    document.body.classList.remove('dropdown-open');
+}
+
+// Function to position notification dropdown properly on mobile
+function positionNotificationDropdownForMobile(dropdown) {
+    if (!dropdown) return;
+    
+    // Get the notification bell position
+    const bell = document.getElementById('notifBell');
+    if (!bell) return;
+    
+    const bellRect = bell.getBoundingClientRect();
+    const dropdownRect = dropdown.getBoundingClientRect();
+    
+    // Calculate available space
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
+    
+    // Position dropdown below the bell if there's space
+    if (bellRect.bottom + dropdownRect.height <= viewportHeight) {
+        dropdown.style.top = '36px';
+        dropdown.style.bottom = 'auto';
+    } else {
+        // Position above if not enough space below
+        dropdown.style.top = 'auto';
+        dropdown.style.bottom = '36px';
+    }
+    
+    // Ensure dropdown doesn't go off-screen horizontally
+    if (bellRect.right + dropdownRect.width > viewportWidth) {
+        dropdown.style.right = '0';
+        dropdown.style.left = 'auto';
+    } else {
+        dropdown.style.left = '0';
+        dropdown.style.right = 'auto';
     }
 }
 
@@ -397,6 +502,9 @@ function updateToggleButton() {
 // Initialize dark mode on page load
 document.addEventListener('DOMContentLoaded', function() {
     setupDarkMode();
+    
+    // Setup mobile touch handling for dropdowns
+    setupMobileTouchHandling();
 
     // Global notification dropdown behavior
     const bell = document.getElementById('notifBell');
@@ -406,15 +514,22 @@ document.addEventListener('DOMContentLoaded', function() {
         bell.addEventListener('click', function(e) {
             e.stopPropagation();
             const isOpen = dropdown.style.display === 'block';
-            dropdown.style.display = isOpen ? 'none' : 'block';
-
-            // Ensure dropdown stays within viewport on small screens
+            
+            // Close all other dropdowns first
+            closeAllDropdowns();
+            
             if (!isOpen) {
-                const rect = dropdown.getBoundingClientRect();
-                if (rect.right > window.innerWidth) {
-                    dropdown.style.left = `${Math.max(0, window.innerWidth - rect.width - 12)}px`;
-                    dropdown.style.right = 'auto';
+                dropdown.style.display = 'block';
+                
+                // Position dropdown properly on mobile
+                if (window.innerWidth <= 768) {
+                    positionNotificationDropdownForMobile(dropdown);
+                    // Prevent body scroll on mobile when dropdown is open
+                    document.body.classList.add('dropdown-open');
                 }
+            } else {
+                // Remove dropdown-open class when closing
+                document.body.classList.remove('dropdown-open');
             }
         });
 
@@ -434,8 +549,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Adjust on resize/orientation change
-        window.addEventListener('resize', () => dropdown.style.display = 'none');
-        window.addEventListener('orientationchange', () => dropdown.style.display = 'none');
+        window.addEventListener('resize', () => {
+            dropdown.style.display = 'none';
+        });
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                dropdown.style.display = 'none';
+            }, 100);
+        });
     }
     
     // Setup dark mode toggle button if it exists
@@ -444,3 +565,47 @@ document.addEventListener('DOMContentLoaded', function() {
         darkModeToggle.addEventListener('click', toggleDarkMode);
     }
 });
+
+// Setup mobile touch handling for better dropdown experience
+function setupMobileTouchHandling() {
+    // Add touch event listeners for mobile devices
+    if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+        // Prevent double-tap zoom on dropdown items
+        const dropdownItems = document.querySelectorAll('.dropdown-item, .notification-item');
+        dropdownItems.forEach(item => {
+            item.addEventListener('touchend', function(e) {
+                // Small delay to prevent immediate closing
+                setTimeout(() => {
+                    // Handle the action (navigation, etc.)
+                    if (this.href) {
+                        window.location.href = this.href;
+                    }
+                }, 100);
+            });
+        });
+        
+        // Better touch handling for dropdown toggles
+        const profileLink = document.getElementById('profileLink');
+        const notifBell = document.getElementById('notifBell');
+        
+        if (profileLink) {
+            profileLink.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                // Small delay to ensure proper touch handling
+                setTimeout(() => {
+                    this.click();
+                }, 50);
+            });
+        }
+        
+        if (notifBell) {
+            notifBell.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                // Small delay to ensure proper touch handling
+                setTimeout(() => {
+                    this.click();
+                }, 50);
+            });
+        }
+    }
+}

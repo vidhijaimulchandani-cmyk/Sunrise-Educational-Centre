@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Dropdown Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #232946;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-links a:hover {
+            background: #f1f5f9;
+        }
+        
+        /* Profile Dropdown Styles */
+        .profile-dropdown {
+            position: relative;
+        }
+        
+        .profile-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #fff;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 12px;
+            min-width: 200px;
+            z-index: 1000;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        
+        /* Remove hover-only behavior for better mobile support */
+        .profile-dropdown:hover .profile-dropdown-menu {
+            display: none; /* Disable hover-only behavior */
+        }
+        
+        /* Show dropdown when active class is added */
+        .profile-dropdown-menu.active {
+            display: block;
+        }
+        
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: #232946;
+            text-decoration: none;
+            transition: background 0.2s ease;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+        
+        .dropdown-item:hover {
+            background: #f8fafc;
+            color: #6a82fb;
+        }
+        
+        .dropdown-item svg {
+            color: #6a82fb;
+            margin-right: 8px;
+        }
+        
+        /* Notification dropdown styles */
+        #notifDropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 36px;
+            background: #fff;
+            min-width: 320px;
+            box-shadow: 0 4px 24px rgba(100,100,255,0.13);
+            border-radius: 12px;
+            z-index: 100;
+            padding: 1rem;
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+        
+        .notification-item {
+            padding: 0.7rem 0;
+            border-bottom: 1px solid #eee;
+            color: #232946;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .notification-item:hover {
+            background: #f0f4ff;
+        }
+        
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        
+        .btn {
+            background: #6a82fb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: #64748b;
+        }
+        
+        .btn-secondary:hover {
+            background: #475569;
+        }
+        
+        .content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .content h2 {
+            color: #232946;
+            margin-bottom: 20px;
+        }
+        
+        .content p {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        /* Mobile-responsive dropdown adjustments */
+        @media (max-width: 768px) {
+            .profile-dropdown-menu {
+                position: fixed;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                right: auto !important;
+                bottom: auto !important;
+                width: calc(100vw - 32px) !important;
+                max-width: 400px !important;
+                max-height: 80vh !important;
+                overflow-y: auto !important;
+                margin: 0 !important;
+                border-radius: 8px !important;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important;
+                z-index: 10001 !important;
+            }
+            
+            .profile-dropdown-menu.active {
+                display: block !important;
+            }
+            
+            /* Better mobile backdrop */
+            .profile-dropdown-menu.active::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: -1;
+            }
+            
+            /* Mobile-specific dropdown item styles */
+            .dropdown-item {
+                font-size: 16px !important;
+                padding: 16px 20px !important;
+                min-height: 48px !important;
+                border-radius: 8px !important;
+                margin: 4px 8px !important;
+                background: #fff !important;
+                border: 1px solid #f1f5f9 !important;
+            }
+            
+            .dropdown-item:hover {
+                background: #f8fafc !important;
+                transform: translateY(-1px) !important;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+            }
+            
+            /* Mobile notification dropdown positioning */
+            #notifDropdown[style*="display: block"] {
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                right: auto !important;
+                bottom: auto !important;
+                width: calc(100vw - 32px) !important;
+                max-width: 400px !important;
+                max-height: 80vh !important;
+                overflow-y: auto !important;
+            }
+            
+            #notifDropdown[style*="display: block"]::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: -1;
+            }
+            
+            .notification-item {
+                font-size: 16px !important;
+                padding: 1rem 0 !important;
+                min-height: 48px !important;
+                border-radius: 8px !important;
+                margin: 4px 8px !important;
+                background: #fff !important;
+                border: 1px solid #f1f5f9 !important;
+            }
+            
+            .notification-item:hover {
+                background: #f8fafc !important;
+                transform: translateY(-1px) !important;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+            }
+            
+            /* Prevent body scroll when dropdown is open */
+            body.dropdown-open {
+                overflow: hidden;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                align-items: stretch;
+                width: 100%;
+            }
+            
+            .nav-links li {
+                width: 100%;
+            }
+            
+            .nav-links a {
+                display: block;
+                text-align: center;
+                padding: 12px 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .profile-dropdown-menu,
+            #notifDropdown[style*="display: block"] {
+                width: calc(100vw - 16px) !important;
+                max-width: calc(100vw - 16px) !important;
+            }
+            
+            .dropdown-item,
+            .notification-item {
+                padding: 16px 20px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <nav class="nav">
+                <h1>Mobile Dropdown Test</h1>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    
+                    <!-- Profile Dropdown -->
+                    <li class="profile-dropdown">
+                        <a href="#" id="profileLink">Profile</a>
+                        <div class="profile-dropdown-menu" id="profileDropdown">
+                            <a href="/profile" class="dropdown-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>
+                                </svg>
+                                My Profile
+                            </a>
+                            <a href="/settings" class="dropdown-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+                                </svg>
+                                Settings
+                            </a>
+                            <a href="/logout" class="dropdown-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 8v-2H4V5z" fill="currentColor"/>
+                                </svg>
+                                Logout
+                            </a>
+                        </div>
+                    </li>
+                    
+                    <!-- Notification Bell -->
+                    <li style="position:relative;">
+                        <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative;">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;">
+                                <path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/>
+                            </svg>
+                            <span id="notificationCount" style="position:absolute;top:0;right:0;width:18px;height:18px;background:#fc5c7d;border-radius:50%;color:white;font-size:10px;font-weight:bold;display:flex;align-items:center;justify-content:center;">3</span>
+                        </button>
+                        <div id="notifDropdown">
+                            <strong style="color:#6a82fb;">Notifications</strong>
+                            <ul style="list-style:none; padding:0; margin:0;">
+                                <li class="notification-item" data-notification-id="1" data-type="notification">
+                                    <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
+                                        <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
+                                    </div>
+                                    New message received<br><span style="font-size:0.85rem; color:#888;">2 minutes ago</span>
+                                </li>
+                                <li class="notification-item" data-notification-id="2" data-type="personal_chat">
+                                    <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
+                                        <span style="background:#fc5c7d; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">💬</span>
+                                        <span style="color:#fc5c7d; font-size:0.8rem; font-weight:600;">@John</span>
+                                    </div>
+                                    Personal chat message<br><span style="font-size:0.85rem; color:#888;">5 minutes ago</span>
+                                </li>
+                                <li class="notification-item" data-notification-id="3" data-type="notification">
+                                    <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
+                                        <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
+                                    </div>
+                                    System update available<br><span style="font-size:0.85rem; color:#888;">1 hour ago</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        <div class="content">
+            <h2>Mobile-Responsive Dropdown Test</h2>
+            <p>This page demonstrates the mobile-responsive dropdown functionality we've implemented. The dropdowns now work properly on mobile devices with:</p>
+            <ul style="margin-left: 20px; color: #64748b;">
+                <li>Touch-friendly interactions</li>
+                <li>Proper mobile positioning</li>
+                <li>Better touch targets</li>
+                <li>Mobile-optimized styling</li>
+                <li>Proper backdrop and shadows</li>
+            </ul>
+            
+            <p style="margin-top: 20px;"><strong>Test Instructions:</strong></p>
+            <ol style="margin-left: 20px; color: #64748b;">
+                <li>Try opening the Profile dropdown on both desktop and mobile</li>
+                <li>Test the notification dropdown on mobile devices</li>
+                <li>Notice how the dropdowns are centered and properly sized on mobile</li>
+                <li>Check that touch interactions work smoothly</li>
+            </ol>
+            
+            <div style="margin-top: 30px; padding: 20px; background: #f1f5f9; border-radius: 8px;">
+                <h3>Key Mobile Improvements:</h3>
+                <ul style="margin-left: 20px; color: #64748b;">
+                    <li>Removed hover-only behavior for better mobile support</li>
+                    <li>Added click-based dropdown activation</li>
+                    <li>Implemented mobile-specific positioning (centered, fixed)</li>
+                    <li>Added backdrop overlay for better mobile UX</li>
+                    <li>Increased touch target sizes (48px minimum)</li>
+                    <li>Prevented body scroll when dropdowns are open</li>
+                    <li>Added proper touch event handling</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Profile Dropdown Functionality
+        function setupProfileDropdown() {
+            const profileDropdown = document.getElementById('profileDropdown');
+            const profileLink = document.getElementById('profileLink');
+            
+            if (profileDropdown && profileLink) {
+                // Show dropdown on click for all devices (mobile-friendly)
+                profileLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Toggle dropdown visibility
+                    const isVisible = profileDropdown.classList.contains('active');
+                    
+                    // Close all other dropdowns first
+                    closeAllDropdowns();
+                    
+                    if (!isVisible) {
+                        profileDropdown.classList.add('active');
+                        
+                        // Prevent body scroll on mobile when dropdown is open
+                        if (window.innerWidth <= 768) {
+                            document.body.classList.add('dropdown-open');
+                        }
+                    } else {
+                        // Remove dropdown-open class when closing
+                        document.body.classList.remove('dropdown-open');
+                    }
+                });
+                
+                // Hide dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!profileLink.contains(e.target) && !profileDropdown.contains(e.target)) {
+                        profileDropdown.classList.remove('active');
+                        document.body.classList.remove('dropdown-open');
+                    }
+                });
+                
+                // Hide dropdown on window resize
+                window.addEventListener('resize', function() {
+                    profileDropdown.classList.remove('active');
+                    document.body.classList.remove('dropdown-open');
+                });
+                
+                // Hide dropdown on orientation change
+                window.addEventListener('orientationchange', function() {
+                    setTimeout(() => {
+                        profileDropdown.classList.remove('active');
+                        document.body.classList.remove('dropdown-open');
+                    }, 100);
+                });
+            }
+        }
+
+        // Function to close all dropdowns
+        function closeAllDropdowns() {
+            const profileDropdown = document.getElementById('profileDropdown');
+            const notifDropdown = document.getElementById('notifDropdown');
+            
+            if (profileDropdown) profileDropdown.classList.remove('active');
+            if (notifDropdown) notifDropdown.style.display = 'none';
+            
+            // Remove dropdown-open class to restore body scroll
+            document.body.classList.remove('dropdown-open');
+        }
+
+        // Notification Dropdown Functionality
+        function setupNotificationDropdown() {
+            const bell = document.getElementById('notifBell');
+            const dropdown = document.getElementById('notifDropdown');
+            
+            if (bell && dropdown) {
+                // Toggle on bell click
+                bell.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const isOpen = dropdown.style.display === 'block';
+                    
+                    // Close all other dropdowns first
+                    closeAllDropdowns();
+                    
+                    if (!isOpen) {
+                        dropdown.style.display = 'block';
+                        
+                        // Prevent body scroll on mobile when dropdown is open
+                        if (window.innerWidth <= 768) {
+                            document.body.classList.add('dropdown-open');
+                        }
+                    } else {
+                        // Remove dropdown-open class when closing
+                        document.body.classList.remove('dropdown-open');
+                    }
+                });
+
+                // Close when clicking outside
+                document.addEventListener('click', function() {
+                    dropdown.style.display = 'none';
+                    document.body.classList.remove('dropdown-open');
+                });
+
+                // Prevent closing when interacting inside
+                dropdown.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+
+                // Close on ESC
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        dropdown.style.display = 'none';
+                        document.body.classList.remove('dropdown-open');
+                    }
+                });
+
+                // Adjust on resize/orientation change
+                window.addEventListener('resize', () => {
+                    dropdown.style.display = 'none';
+                    document.body.classList.remove('dropdown-open');
+                });
+                window.addEventListener('orientationchange', () => {
+                    setTimeout(() => {
+                        dropdown.style.display = 'none';
+                        document.body.classList.remove('dropdown-open');
+                    }, 100);
+                });
+            }
+        }
+
+        // Setup mobile touch handling for better dropdown experience
+        function setupMobileTouchHandling() {
+            // Add touch event listeners for mobile devices
+            if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+                // Prevent double-tap zoom on dropdown items
+                const dropdownItems = document.querySelectorAll('.dropdown-item, .notification-item');
+                dropdownItems.forEach(item => {
+                    item.addEventListener('touchend', function(e) {
+                        // Small delay to prevent immediate closing
+                        setTimeout(() => {
+                            // Handle the action (navigation, etc.)
+                            if (this.href) {
+                                window.location.href = this.href;
+                            }
+                        }, 100);
+                    });
+                });
+                
+                // Better touch handling for dropdown toggles
+                const profileLink = document.getElementById('profileLink');
+                const notifBell = document.getElementById('notifBell');
+                
+                if (profileLink) {
+                    profileLink.addEventListener('touchend', function(e) {
+                        e.preventDefault();
+                        // Small delay to ensure proper touch handling
+                        setTimeout(() => {
+                            this.click();
+                        }, 50);
+                    });
+                }
+                
+                if (notifBell) {
+                    notifBell.addEventListener('touchend', function(e) {
+                        e.preventDefault();
+                        // Small delay to ensure proper touch handling
+                        setTimeout(() => {
+                            this.click();
+                        }, 50);
+                    });
+                }
+            }
+        }
+
+        // Initialize everything when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            setupProfileDropdown();
+            setupNotificationDropdown();
+            setupMobileTouchHandling();
+        });
+    </script>
+</body>
+</html>
