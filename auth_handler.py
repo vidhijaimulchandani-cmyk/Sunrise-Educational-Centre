@@ -60,6 +60,12 @@ def init_db():
         )
     ''')
     
+    # Ensure recipient_user_id exists to scope personal notifications to a user
+    c.execute("PRAGMA table_info(notifications)")
+    notif_columns = [row[1] for row in c.fetchall()]
+    if 'recipient_user_id' not in notif_columns:
+        c.execute("ALTER TABLE notifications ADD COLUMN recipient_user_id INTEGER")
+    
     c.execute('''
         CREATE TABLE IF NOT EXISTS user_notification_status (
             user_id INTEGER NOT NULL,
@@ -609,9 +615,10 @@ def get_unread_notifications_for_user(user_id):
         FROM notifications n
         LEFT JOIN user_notification_status uns ON n.id = uns.notification_id AND uns.user_id = ?
         WHERE n.class_id IS NULL AND n.target_paid_status = 'personal' AND uns.notification_id IS NULL
+        AND (n.recipient_user_id = ?)
         AND n.status IN ('active', 'scheduled')
         ORDER BY n.created_at DESC
-    ''', (user_id,))
+    ''', (user_id, user_id))
     personal_notifications = c.fetchall()
     
     # Fetch personal chat messages (unread)
@@ -688,8 +695,8 @@ def add_personal_notification(message, user_id, notification_type='personal'):
     c = conn.cursor()
     # Insert notification with class_id as NULL and target_paid_status as 'personal'
     c.execute(
-        'INSERT INTO notifications (message, class_id, created_at, target_paid_status, status, notification_type) VALUES (?, NULL, ?, ?, ?, ?)',
-        (message, get_ist_timestamp(), 'personal', 'active', notification_type)
+        'INSERT INTO notifications (message, class_id, created_at, target_paid_status, status, notification_type, recipient_user_id) VALUES (?, NULL, ?, ?, ?, ?, ?)',
+        (message, get_ist_timestamp(), 'personal', 'active', notification_type, user_id)
     )
     notification_id = c.lastrowid
     
