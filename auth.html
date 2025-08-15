@@ -65,6 +65,7 @@
         align-items: center;
         justify-content: space-between;
         height: 44px;
+        position: relative;
       }
 
       .nav-logo img {
@@ -77,11 +78,30 @@
         opacity: 0.8;
       }
 
+      /* Left: Coaching Logo */
+      .nav-logo {
+        flex-shrink: 0;
+      }
+
+      .nav-logo img {
+        height: 32px;
+        filter: brightness(0) invert(1);
+        transition: var(--apple-transition);
+      }
+
+      .nav-logo img:hover {
+        opacity: 0.8;
+      }
+
+      /* Center: Navigation Links */
       .nav-links {
         display: flex;
         list-style: none;
         gap: 32px;
         align-items: center;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
       }
 
       .nav-links a {
@@ -91,11 +111,88 @@
         font-weight: 400;
         transition: var(--apple-transition);
         opacity: 0.8;
+        padding: 8px 16px;
+        border-radius: 980px;
+        position: relative;
       }
 
       .nav-links a:hover {
         opacity: 1;
         color: var(--apple-accent);
+      }
+
+      .nav-links a.active {
+        background: var(--apple-text);
+        color: var(--apple-bg);
+        opacity: 1;
+      }
+
+      /* Right: Login/Logout Button */
+      .nav-auth {
+        flex-shrink: 0;
+      }
+
+      .nav-auth .btn-primary {
+        background: var(--apple-accent);
+        color: var(--apple-text);
+        padding: 8px 16px;
+        border-radius: 980px;
+        font-size: 12px;
+        font-weight: 500;
+        transition: var(--apple-transition);
+        border: 1px solid var(--apple-text);
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .nav-auth .btn-primary:hover {
+        background: var(--apple-accent-hover);
+        transform: scale(1.02);
+      }
+
+      /* Apple-Style Mobile Navigation */
+      .hamburger {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        transition: var(--apple-transition);
+      }
+
+      .hamburger .bar {
+        width: 20px;
+        height: 2px;
+        background: var(--apple-text);
+        margin: 4px 0;
+        transition: var(--apple-transition);
+      }
+
+      .hamburger.active .bar:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+      }
+
+      .hamburger.active .bar:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger.active .bar:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
+      }
+
+      .nav-links.active {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid var(--apple-border);
+        padding: 20px;
+        gap: 20px;
       }
 
       /* Apple-Style Login Container */
@@ -382,6 +479,14 @@
           display: none;
         }
 
+        .nav-links.active {
+          display: flex;
+        }
+
+        .hamburger {
+          display: block;
+        }
+
         .login-card {
           padding: 32px 24px;
           margin: 0 16px;
@@ -450,14 +555,34 @@
     <!-- Apple-Style Navigation -->
     <nav class="navbar">
       <div class="nav-content">
+        <!-- Left: Coaching Logo -->
         <div class="nav-logo">
           <img src="attached_assets/image_1750584670920.png" alt="Sunrise Education Centre">
         </div>
+        
+        <!-- Center: Navigation Links -->
         <ul class="nav-links">
           <li><a href="/">Home</a></li>
           <li><a href="/online-class">Live Class</a></li>
           <li><a href="/study-resources">Study Resources</a></li>
+          <li><a href="/forum">Forum</a></li>
+          <li><a href="/profile">Profile</a></li>
         </ul>
+        
+        <!-- Right: Login/Logout Button -->
+        <div class="nav-auth">
+          {% if username %}
+            <a href="/logout" class="btn-primary">Logout</a>
+          {% else %}
+            <a href="/auth" class="btn-primary">Login</a>
+          {% endif %}
+        </div>
+        
+        <button class="hamburger">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
       </div>
     </nav>
 

@@ -72,6 +72,12 @@
         align-items: center;
         justify-content: space-between;
         height: 44px;
+        position: relative;
+      }
+
+      /* Left: Coaching Logo */
+      .nav-logo {
+        flex-shrink: 0;
       }
 
       .nav-logo img {
@@ -84,11 +90,15 @@
         opacity: 0.8;
       }
 
+      /* Center: Navigation Links */
       .nav-links {
         display: flex;
         list-style: none;
         gap: 32px;
         align-items: center;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
       }
 
       .nav-links a {
@@ -98,6 +108,9 @@
         font-weight: 400;
         transition: var(--apple-transition);
         opacity: 0.8;
+        padding: 8px 16px;
+        border-radius: 980px;
+        position: relative;
       }
 
       .nav-links a:hover {
@@ -105,7 +118,18 @@
         color: var(--apple-accent);
       }
 
-      .nav-links .btn-primary {
+      .nav-links a.active {
+        background: var(--apple-text);
+        color: var(--apple-bg);
+        opacity: 1;
+      }
+
+      /* Right: Login/Logout Button */
+      .nav-auth {
+        flex-shrink: 0;
+      }
+
+      .nav-auth .btn-primary {
         background: var(--apple-accent);
         color: var(--apple-text);
         padding: 8px 16px;
@@ -114,11 +138,59 @@
         font-weight: 500;
         transition: var(--apple-transition);
         border: 1px solid var(--apple-text);
+        text-decoration: none;
+        display: inline-block;
       }
 
-      .nav-links .btn-primary:hover {
+      .nav-auth .btn-primary:hover {
         background: var(--apple-accent-hover);
         transform: scale(1.02);
+      }
+
+      /* Apple-Style Mobile Navigation */
+      .hamburger {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        transition: var(--apple-transition);
+      }
+
+      .hamburger .bar {
+        width: 20px;
+        height: 2px;
+        background: var(--apple-text);
+        margin: 4px 0;
+        transition: var(--apple-transition);
+      }
+
+      .hamburger.active .bar:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+      }
+
+      .hamburger.active .bar:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger.active .bar:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
+      }
+
+      .nav-links.active {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid var(--apple-border);
+        border-top: 1px solid var(--apple-border);
+        padding: 20px;
+        gap: 20px;
       }
 
       /* Apple-Style Hero Section */
@@ -669,66 +741,23 @@
         <div class="nav-logo">
           <img src="attached_assets/image_1750584670920.png" alt="Sunrise Education Centre">
         </div>
+        <!-- Center: Navigation Links -->
         <ul class="nav-links">
           <li><a href="/">Home</a></li>
+          <li><a href="/online-class">Live Class</a></li>
           <li><a href="/study-resources">Study Resources</a></li>
           <li><a href="/forum">Forum</a></li>
-          {% if username %}
-          <li style="position:relative;">
-            <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative;">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#ffffff"/></svg>
-              {% if user_notifications and user_notifications|length > 0 %}
-              <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
-              {% endif %}
-            </button>
-            <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:var(--apple-gray); min-width:260px; box-shadow:var(--apple-shadow); border-radius:var(--apple-radius); z-index:100; padding:1rem; border:1px solid var(--apple-border);">
-              <strong style="color:var(--apple-text);">Notifications</strong>
-              <ul style="list-style:none; padding:0; margin:0;">
-                {% if user_notifications and user_notifications|length > 0 %}
-                {% for notification in user_notifications %}
-                  {% if notification|length >= 7 %}
-                    {% set id, message, created_at, status, notification_type, scheduled_time, item_type = notification %}
-                    {% if item_type == 'personal_chat' %}
-                      {% set sender_name = notification[7] if notification|length > 7 else 'User' %}
-                      <li class="notification-item personal-chat-item" data-notification-id="{{ id }}" data-type="personal_chat" style="padding:0.5rem 0; border-bottom:1px solid var(--apple-border); font-size:0.98rem; color:var(--apple-text); cursor:pointer; transition:all 0.2s ease; border-left:3px solid #fc5c7d; padding-left:0.5rem;" onmouseover="this.style.background='rgba(252,92,125,0.1)'" onmouseout="this.style.background='transparent'">
-                        <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
-                          <span style="background:#fc5c7d; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">💬</span>
-                          <span style="color:#fc5c7d; font-size:0.8rem; font-weight:600;">@{{ sender_name }}</span>
-                        </div>
-                        {{ message }}<br><span style="font-size:0.85rem; color:var(--apple-text-secondary);">{{ format_datetime_for_display(created_at) }}</span>
-                      </li>
-                    {% else %}
-                      <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid var(--apple-border); font-size:0.98rem; color:var(--apple-text); cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">
-                        <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
-                          <span style="background:var(--apple-accent); color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
-                        </div>
-                        {{ message }}<br><span style="font-size:0.85rem; color:var(--apple-text-secondary);">{{ format_datetime_for_display(created_at) }}</span>
-                      </li>
-                    {% endif %}
-                  {% else %}
-                    <!-- Fallback for old notification format -->
-                    {% set id, message, created_at, status, notification_type, scheduled_time = notification %}
-                    <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid var(--apple-border); font-size:0.98rem; color:var(--apple-text); cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">
-                      <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
-                        <span style="background:var(--apple-accent); color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
-                      </div>
-                      {{ message }}<br><span style="font-size:0.85rem; color:var(--apple-text-secondary);">{{ format_datetime_for_display(created_at) }}</span>
-                    </li>
-                  {% endif %}
-                {% endfor %}
-                {% else %}
-                  <li style="padding:0.7rem 0; color:var(--apple-text-secondary); text-align:center;">No new notifications.</li>
-                {% endif %}
-              </ul>
-            </div>
-          </li>
-          {% endif %}
-          {% if username %}
-            <li><a href="/logout" class="btn-primary">Logout</a></li>
-          {% else %}
-            <li><a href="/auth" class="btn-primary">Login</a></li>
-          {% endif %}
+          <li><a href="/profile">Profile</a></li>
         </ul>
+        
+        <!-- Right: Login/Logout Button -->
+        <div class="nav-auth">
+          {% if username %}
+            <a href="/logout" class="btn-primary">Logout</a>
+          {% else %}
+            <a href="/auth" class="btn-primary">Login</a>
+          {% endif %}
+        </div>
         <button class="hamburger">
           <span class="bar"></span>
           <span class="bar"></span>

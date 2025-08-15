@@ -62,6 +62,12 @@
         align-items: center;
         justify-content: space-between;
         height: 44px;
+        position: relative;
+      }
+
+      /* Left: Coaching Logo */
+      .nav-logo {
+        flex-shrink: 0;
       }
 
       .nav-logo img {
@@ -74,11 +80,15 @@
         opacity: 0.8;
       }
 
+      /* Center: Navigation Links */
       .nav-links {
         display: flex;
         list-style: none;
         gap: 32px;
         align-items: center;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
       }
 
       .nav-links a {
@@ -88,6 +98,9 @@
         font-weight: 400;
         transition: var(--apple-transition);
         opacity: 0.8;
+        padding: 8px 16px;
+        border-radius: 980px;
+        position: relative;
       }
 
       .nav-links a:hover {
@@ -95,7 +108,18 @@
         color: var(--apple-accent);
       }
 
-      .nav-links .btn-primary {
+      .nav-links a.active {
+        background: var(--apple-text);
+        color: var(--apple-bg);
+        opacity: 1;
+      }
+
+      /* Right: Login/Logout Button */
+      .nav-auth {
+        flex-shrink: 0;
+      }
+
+      .nav-auth .btn-primary {
         background: var(--apple-accent);
         color: var(--apple-text);
         padding: 8px 16px;
@@ -104,9 +128,11 @@
         font-weight: 500;
         transition: var(--apple-transition);
         border: 1px solid var(--apple-text);
+        text-decoration: none;
+        display: inline-block;
       }
 
-      .nav-links .btn-primary:hover {
+      .nav-auth .btn-primary:hover {
         background: var(--apple-accent-hover);
         transform: scale(1.02);
       }
@@ -693,21 +719,29 @@
     <!-- Apple-Style Navigation -->
     <nav class="navbar">
       <div class="nav-content">
+        <!-- Left: Coaching Logo -->
         <div class="nav-logo">
           <img src="attached_assets/image_1750584670920.png" alt="Sunrise Education Centre">
         </div>
+        
+        <!-- Center: Navigation Links -->
         <ul class="nav-links">
           <li><a href="#about-us">About</a></li>
           <li><a href="/online-class">Live Class</a></li>
           <li><a href="/study-resources">Study Resources</a></li>
           <li><a href="/forum">Forum</a></li>
           <li><a href="/profile">Profile</a></li>
-          {% if username %}
-            <li><a href="/logout" class="btn-primary">Logout</a></li>
-          {% else %}
-            <li><a href="/auth" class="btn-primary">Login</a></li>
-          {% endif %}
         </ul>
+        
+        <!-- Right: Login/Logout Button -->
+        <div class="nav-auth">
+          {% if username %}
+            <a href="/logout" class="btn-primary">Logout</a>
+          {% else %}
+            <a href="/auth" class="btn-primary">Login</a>
+          {% endif %}
+        </div>
+        
         <button class="hamburger">
           <span class="bar"></span>
           <span class="bar"></span>
@@ -1034,6 +1068,50 @@
             }
           });
         });
+
+        // FAQ functionality
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+          const question = item.querySelector('.faq-question');
+          question.addEventListener('click', function() {
+            const isActive = item.classList.contains('active');
+            
+            // Close all other FAQ items
+            faqItems.forEach(otherItem => {
+              otherItem.classList.remove('active');
+            });
+            
+            // Toggle current item
+            if (!isActive) {
+              item.classList.add('active');
+            }
+          });
+        });
+
+        // Active navigation link highlighting
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const sections = document.querySelectorAll('section[id]');
+        
+        function updateActiveNavLink() {
+          let current = '';
+          sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (window.pageYOffset >= sectionTop - 200) {
+              current = section.getAttribute('id');
+            }
+          });
+          
+          navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+              link.classList.add('active');
+            }
+          });
+        }
+        
+        window.addEventListener('scroll', updateActiveNavLink);
+        updateActiveNavLink();
       });
     </script>
   </body>
