@@ -6,301 +6,611 @@
     <title>Forum - Sunrise Education Centre</title>
     <link rel="icon" type="image/png" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="forum.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap">
     <style>
-      /* Light Theme (Default) */
+      /* Apple-Inspired Design System */
       :root {
-        --bg-primary: #ffffff;
-        --bg-secondary: #f8f9fa;
-        --bg-card: #ffffff;
-        --text-primary: #232946;
-        --text-secondary: #6b7280;
-        --text-muted: #9ca3af;
-        --border-color: #e5e7eb;
-        --border-light: #f3f4f6;
-        --accent-primary: #6a82fb;
-        --accent-secondary: #fc5c7d;
-        --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
-        --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.1);
-        --shadow-heavy: 0 10px 15px rgba(0, 0, 0, 0.1);
+        --apple-bg: #000000;
+        --apple-text: #ffffff;
+        --apple-text-secondary: #86868b;
+        --apple-accent: #000000;
+        --apple-accent-hover: #333333;
+        --apple-gray: #1d1d1f;
+        --apple-gray-light: #2d2d2f;
+        --apple-border: #424245;
+        --apple-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        --apple-radius: 12px;
+        --apple-transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        --apple-card-bg: rgba(255, 255, 255, 0.03);
+        --apple-card-hover: rgba(255, 255, 255, 0.08);
+        --apple-input-bg: rgba(255, 255, 255, 0.05);
+        --apple-input-border: rgba(255, 255, 255, 0.1);
+        --apple-input-focus: rgba(255, 255, 255, 0.15);
+        --apple-success: #34c759;
+        --apple-warning: #ff9f0a;
+        --apple-error: #ff3b30;
       }
 
-      /* Dark Theme */
-      body.dark-mode {
-        --bg-primary: #232946;
-        --bg-secondary: #1a1a2e;
-        --bg-card: #2a2a3a;
-        --text-primary: #f4f4f4;
-        --text-secondary: #b8c5d6;
-        --text-muted: #8b9bb4;
-        --border-color: #3a3a4a;
-        --border-light: #2a2a3a;
-        --accent-primary: #6a82fb;
-        --accent-secondary: #fc5c7d;
-        --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.3);
-        --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.3);
-        --shadow-heavy: 0 10px 15px rgba(0, 0, 0, 0.3);
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
-      /* Apply theme variables */
       body {
-        background-color: var(--bg-primary);
-        color: var(--text-primary);
-        transition: background-color 0.3s ease, color 0.3s ease;
+        font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--apple-bg);
+        color: var(--apple-text);
+        line-height: 1.47059;
+        font-weight: 400;
+        letter-spacing: -0.022em;
+        overflow-x: hidden;
       }
 
-      .hero-section {
-        background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
-        color: white;
+      /* Apple-Style Navigation */
+      .navbar {
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--apple-border);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        transition: var(--apple-transition);
       }
 
-      .card-section {
-        background: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 2rem;
-        box-shadow: var(--shadow-medium);
-      }
-
-      .card-section h2 {
-        color: var(--text-primary);
-        margin-bottom: 1.5rem;
-      }
-
-      /* Tabs styling */
-      .tabs {
+      .nav-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 22px;
         display: flex;
-        gap: 1rem;
-        margin-bottom: 2rem;
-        border-bottom: 2px solid var(--accent-primary);
-        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        height: 44px;
       }
 
-      .tab-button {
-        background: transparent;
-        border: none;
-        padding: 1rem 2rem;
-        cursor: pointer;
-        font-size: 1rem;
+      .nav-logo img {
+        height: 32px;
+        filter: brightness(0) invert(1);
+        transition: var(--apple-transition);
+      }
+
+      .nav-logo img:hover {
+        opacity: 0.8;
+      }
+
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 32px;
+        align-items: center;
+      }
+
+      .nav-links a {
+        color: var(--apple-text);
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 400;
+        transition: var(--apple-transition);
+        opacity: 0.8;
+      }
+
+      .nav-links a:hover {
+        opacity: 1;
+        color: var(--apple-accent);
+      }
+
+      .nav-links .btn-primary {
+        background: var(--apple-accent);
+        color: var(--apple-text);
+        padding: 8px 16px;
+        border-radius: 980px;
+        font-size: 12px;
         font-weight: 500;
-        color: var(--text-secondary);
-        border-bottom: 3px solid transparent;
-        transition: all 0.3s ease;
+        transition: var(--apple-transition);
+        border: 1px solid var(--apple-text);
+      }
+
+      .nav-links .btn-primary:hover {
+        background: var(--apple-accent-hover);
+        transform: scale(1.02);
+      }
+
+      /* Apple-Style Hero Section */
+      .hero-section {
+        background: var(--apple-bg);
+        min-height: 50vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 120px 22px 80px;
         position: relative;
       }
 
-      .tab-button:hover {
-        background-color: rgba(106, 130, 251, 0.1);
-        color: var(--accent-primary);
+      .hero-content {
+        max-width: 800px;
       }
 
-      .tab-button.active {
-        border-bottom-color: var(--accent-primary);
-        color: var(--accent-primary);
-        background-color: rgba(106, 130, 251, 0.1);
+      .hero-content h1 {
+        font-size: 56px;
+        font-weight: 600;
+        line-height: 1.07143;
+        letter-spacing: -0.005em;
+        margin-bottom: 16px;
+        background: linear-gradient(135deg, #ffffff 0%, #86868b 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
 
-      .tab-button.disabled {
-        opacity: 0.6;
+      .hero-content p {
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 1.10722;
+        letter-spacing: .004em;
+        margin-bottom: 24px;
+        color: var(--apple-text-secondary);
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-content .status {
+        font-size: 16px;
+        color: var(--apple-text-secondary);
+        margin-top: 16px;
+        padding: 12px 24px;
+        background: var(--apple-card-bg);
+        border: 1px solid var(--apple-border);
+        border-radius: var(--apple-radius);
+        display: inline-block;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      .hero-content .status .status-text {
+        color: var(--apple-success);
+        font-weight: 600;
+      }
+
+      /* Apple-Style Main Content */
+      .main-content {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 22px 80px;
+      }
+
+      .forum-section {
+        background: var(--apple-card-bg);
+        border: 1px solid var(--apple-border);
+        border-radius: var(--apple-radius);
+        padding: 48px;
+        margin-top: 40px;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: var(--apple-shadow);
+      }
+
+      .forum-section h2 {
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 1.08349;
+        letter-spacing: -.003em;
+        margin-bottom: 32px;
+        text-align: center;
+        color: var(--apple-text);
+      }
+
+      /* Apple-Style Topic Tabs */
+      .topic-tabs {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 16px;
+        margin-bottom: 48px;
+        padding: 0 22px;
+      }
+
+      .topic-tab {
+        background: var(--apple-card-bg);
+        border: 1px solid var(--apple-border);
+        border-radius: var(--apple-radius);
+        padding: 16px 24px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--apple-text);
+        transition: var(--apple-transition);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        position: relative;
+        min-width: 120px;
+        text-align: center;
+      }
+
+      .topic-tab:hover {
+        background: var(--apple-card-hover);
+        border-color: var(--apple-text);
+        transform: translateY(-2px);
+      }
+
+      .topic-tab.active {
+        background: var(--apple-accent);
+        border-color: var(--apple-accent);
+        color: var(--apple-text);
+        box-shadow: var(--apple-shadow);
+      }
+
+      .topic-tab.disabled {
+        opacity: 0.5;
         cursor: not-allowed;
         pointer-events: none;
       }
 
-      /* Forum messages container */
-      #forumMessages {
-        background: var(--bg-secondary);
-        border-radius: 8px;
-        padding: 1rem;
-        min-height: 120px;
-        border: 1px solid var(--border-light);
+      /* Apple-Style Topic Badge */
+      .topic-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: var(--apple-success);
+        color: var(--apple-text);
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
 
-      #emptyForumMsg {
-        color: var(--text-muted);
+      .topic-badge.unpaid {
+        background: var(--apple-text-secondary);
+      }
+
+      /* Apple-Style Forum Messages */
+      .forum-messages {
+        background: var(--apple-gray);
+        border-radius: var(--apple-radius);
+        padding: 32px;
+        min-height: 200px;
+        border: 1px solid var(--apple-border);
+        margin-bottom: 32px;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      .empty-forum-msg {
+        color: var(--apple-text-secondary);
         text-align: center;
         font-style: italic;
+        font-size: 18px;
+        padding: 40px 20px;
       }
 
-      /* Chat input bar */
+      /* Apple-Style Chat Input */
+      .chat-input-container {
+        background: var(--apple-card-bg);
+        border: 1px solid var(--apple-border);
+        border-radius: var(--apple-radius);
+        padding: 24px;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
       .chat-input-bar {
-        background: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: 16px;
-        padding: 0.5rem;
-        box-shadow: var(--shadow-light);
+        display: flex;
+        align-items: flex-end;
+        gap: 16px;
+        position: relative;
       }
 
       .chat-input-bar textarea {
-        background: var(--bg-secondary);
-        color: var(--text-primary);
-        border: 1px solid var(--border-light);
-        border-radius: 12px;
-        padding: 0.7rem 1rem;
-        font-size: 0.95rem;
-        transition: border-color 0.3s ease;
+        flex: 1;
+        background: var(--apple-input-bg);
+        border: 1px solid var(--apple-input-border);
+        border-radius: var(--apple-radius);
+        padding: 16px;
+        font-size: 16px;
+        color: var(--apple-text);
+        transition: var(--apple-transition);
+        font-family: inherit;
+        resize: none;
+        min-height: 56px;
+        max-height: 120px;
       }
 
       .chat-input-bar textarea:focus {
         outline: none;
-        border-color: var(--accent-primary);
-        box-shadow: 0 0 0 3px rgba(106, 130, 251, 0.1);
+        border-color: var(--apple-input-focus);
+        background: var(--apple-input-focus);
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
       }
 
       .chat-input-bar textarea::placeholder {
-        color: var(--text-muted);
+        color: var(--apple-text-secondary);
+        opacity: 0.7;
       }
 
-      /* Buttons */
+      /* Apple-Style Buttons */
       .btn {
-        transition: all 0.3s ease;
+        transition: var(--apple-transition);
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .btn-primary {
-        background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.5rem 1.2rem;
-        font-weight: 600;
-        cursor: pointer;
+        background: var(--apple-accent);
+        color: var(--apple-text);
+        border: 2px solid var(--apple-text);
+        border-radius: 980px;
+        padding: 16px 24px;
+        font-size: 16px;
+        font-weight: 500;
+        transition: var(--apple-transition);
       }
 
       .btn-primary:hover {
-        transform: translateY(-1px);
-        box-shadow: var(--shadow-medium);
+        background: var(--apple-accent-hover);
+        transform: scale(1.02);
       }
 
       .btn-secondary {
-        background: var(--bg-secondary);
-        color: var(--text-secondary);
-        border: 1px solid var(--border-color);
+        background: var(--apple-card-bg);
+        color: var(--apple-text);
+        border: 1px solid var(--apple-border);
         border-radius: 50%;
         padding: 0;
-        width: 44px;
-        height: 44px;
+        width: 56px;
+        height: 56px;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: var(--apple-transition);
       }
 
       .btn-secondary:hover {
-        background: var(--accent-primary);
-        color: white;
-        border-color: var(--accent-primary);
+        background: var(--apple-card-hover);
+        border-color: var(--apple-text);
+        transform: scale(1.05);
       }
 
-      /* Topic badges */
-      .topic-badge {
-        display: inline-block;
-        padding: 0.2rem 0.6rem;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        margin-left: 0.5rem;
-      }
-      
-      .topic-badge.paid {
-        background: #10b981;
-        color: white;
-      }
-      
-      .topic-badge.unpaid {
-        background: #6b7280;
-        color: white;
-      }
-      
-      .topic-name {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+      .btn-secondary svg {
+        width: 24px;
+        height: 24px;
+        stroke: var(--apple-text);
+        transition: var(--apple-transition);
       }
 
-      /* Dark mode toggle button */
-      #darkModeToggle {
-        background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.75rem 1.5rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        min-width: 160px;
+      .btn-secondary:hover svg {
+        stroke: var(--apple-accent);
       }
 
-      #darkModeToggle:hover {
-        transform: translateY(-1px);
-        box-shadow: var(--shadow-medium);
-      }
-
-      /* Media preview */
-      #forumMediaPreview {
-        background: var(--bg-secondary);
-        border: 1px solid var(--border-light);
-        border-radius: 8px;
-        padding: 0.5rem;
-        margin-top: 0.5rem;
-      }
-
-      /* Mention suggestions dropdown */
-      #mentionSuggestions {
+      /* Apple-Style Mention System */
+      .mention-indicator {
         position: absolute;
-        background: white;
-        border: 1px solid #e5e7eb;
+        top: 16px;
+        right: 16px;
+        background: var(--apple-accent);
+        color: var(--apple-text);
+        padding: 4px 8px;
         border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        max-height: 200px;
+        font-size: 12px;
+        font-weight: 600;
+        display: none;
+      }
+
+      .mention-suggestions {
+        position: absolute;
+        background: var(--apple-gray);
+        border: 1px solid var(--apple-border);
+        border-radius: var(--apple-radius);
+        box-shadow: var(--apple-shadow);
+        max-height: 300px;
         overflow-y: auto;
         z-index: 1000;
-        min-width: 250px;
-        margin-top: -10px;
+        min-width: 300px;
+        margin-top: 8px;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
       }
 
-      #mentionSuggestionsList {
-        max-height: 150px;
+      .mention-suggestions-header {
+        padding: 16px;
+        border-bottom: 1px solid var(--apple-border);
+        background: var(--apple-card-bg);
+        border-radius: var(--apple-radius) var(--apple-radius) 0 0;
+      }
+
+      .mention-suggestions-header small {
+        color: var(--apple-text-secondary);
+        font-weight: 500;
+        font-size: 14px;
+      }
+
+      .mention-suggestions-list {
+        max-height: 250px;
         overflow-y: auto;
       }
 
-      /* Responsive design */
+      .mention-suggestion-item {
+        padding: 12px 16px;
+        cursor: pointer;
+        transition: var(--apple-transition);
+        border-bottom: 1px solid var(--apple-border);
+      }
+
+      .mention-suggestion-item:hover {
+        background: var(--apple-card-hover);
+      }
+
+      .mention-suggestion-item:last-child {
+        border-bottom: none;
+      }
+
+      /* Apple-Style Media Preview */
+      .media-preview {
+        margin-top: 16px;
+        padding: 16px;
+        background: var(--apple-card-bg);
+        border: 1px solid var(--apple-border);
+        border-radius: var(--apple-radius);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      .media-preview img,
+      .media-preview video {
+        max-width: 100%;
+        border-radius: var(--apple-radius);
+        box-shadow: var(--apple-shadow);
+      }
+
+      /* Apple-Style Help Text */
+      .mention-help {
+        margin-top: 16px;
+        padding: 16px;
+        background: rgba(52, 199, 89, 0.1);
+        border: 1px solid rgba(52, 199, 89, 0.3);
+        border-radius: var(--apple-radius);
+        font-size: 14px;
+        color: var(--apple-success);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      .mention-help strong {
+        color: var(--apple-success);
+        font-weight: 600;
+      }
+
+      /* Apple-Style Mobile Navigation */
+      .hamburger {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+      }
+
+      .hamburger .bar {
+        width: 20px;
+        height: 2px;
+        background: var(--apple-text);
+        margin: 4px 0;
+        transition: var(--apple-transition);
+      }
+
+      /* Responsive Design */
       @media (max-width: 768px) {
-        .tabs {
-          flex-wrap: wrap;
-          gap: 0.5rem;
+        .nav-links {
+          display: none;
         }
-        
-        .tab-button {
-          padding: 0.8rem 1rem;
-          font-size: 0.9rem;
+
+        .hamburger {
+          display: block;
         }
-        
-        .card-section {
-          padding: 1rem;
+
+        .hero-content h1 {
+          font-size: 40px;
+        }
+
+        .hero-content p {
+          font-size: 21px;
+        }
+
+        .forum-section {
+          padding: 32px 24px;
+        }
+
+        .topic-tabs {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .topic-tab {
+          width: 100%;
+          max-width: 300px;
+          text-align: center;
+        }
+
+        .chat-input-bar {
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .chat-input-bar textarea {
+          min-height: 80px;
         }
       }
 
       @media (max-width: 480px) {
-        .tabs {
-          justify-content: center;
+        .hero-content h1 {
+          font-size: 32px;
         }
-        
-        .tab-button {
-          flex: 1;
-          min-width: 80px;
-          padding: 0.6rem 0.5rem;
-          font-size: 0.8rem;
+
+        .hero-content p {
+          font-size: 18px;
         }
+
+        .forum-section {
+          padding: 24px 20px;
+        }
+
+        .topic-tab {
+          padding: 14px 20px;
+          font-size: 14px;
+        }
+
+        .btn-secondary {
+          width: 48px;
+          height: 48px;
+        }
+
+        .btn-secondary svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      /* Apple-Style Animations */
+      .fade-in-up {
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Apple-Style Focus States */
+      .btn-primary:focus,
+      .btn-secondary:focus,
+      .topic-tab:focus,
+      .chat-input-bar textarea:focus {
+        outline: 2px solid var(--apple-accent);
+        outline-offset: 2px;
       }
     </style>
   </head>
   <body data-user-role="{{ role }}" data-user-paid="{{ user_paid_status or 'unpaid' }}">
-    <nav class="navbar glassmorphic">
-      <div class="container nav-content">
+    <!-- Apple-Style Navigation -->
+    <nav class="navbar">
+      <div class="nav-content">
         <div class="nav-logo">
-          <img src="attached_assets/image_1750584670920.png" alt="Logo">
+          <img src="attached_assets/image_1750584670920.png" alt="Sunrise Education Centre">
         </div>
         <ul class="nav-links">
           <li><a href="/">Home</a></li>
@@ -308,13 +618,13 @@
           <li><a href="/study-resources">Study Resources</a></li>
           <li style="position:relative;">
             <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative;">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#ffffff"/></svg>
               {% if user_notifications and user_notifications|length > 0 %}
               <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
               {% endif %}
             </button>
-            <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:var(--bg-card); min-width:260px; box-shadow:var(--shadow-heavy); border-radius:12px; z-index:100; padding:1rem; border:1px solid var(--border-color);">
-              <strong style="color:var(--accent-primary);">Notifications</strong>
+            <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:var(--apple-gray); min-width:260px; box-shadow:var(--apple-shadow); border-radius:var(--apple-radius); z-index:100; padding:1rem; border:1px solid var(--apple-border);">
+              <strong style="color:var(--apple-text);">Notifications</strong>
               <ul style="list-style:none; padding:0; margin:0;">
                 {% if user_notifications and user_notifications|length > 0 %}
                 {% for notification in user_notifications %}
@@ -322,132 +632,131 @@
                     {% set id, message, created_at, status, notification_type, scheduled_time, item_type = notification %}
                     {% if item_type == 'personal_chat' %}
                       {% set sender_name = notification[7] if notification|length > 7 else 'User' %}
-                      <li class="notification-item personal-chat-item" data-notification-id="{{ id }}" data-type="personal_chat" style="padding:0.5rem 0; border-bottom:1px solid var(--border-light); font-size:0.98rem; color:var(--text-primary); cursor:pointer; transition:all 0.2s ease; border-left:3px solid #fc5c7d; padding-left:0.5rem;" onmouseover="this.style.background='rgba(252,92,125,0.1)'" onmouseout="this.style.background='transparent'">
+                      <li class="notification-item personal-chat-item" data-notification-id="{{ id }}" data-type="personal_chat" style="padding:0.5rem 0; border-bottom:1px solid var(--apple-border); font-size:0.98rem; color:var(--apple-text); cursor:pointer; transition:all 0.2s ease; border-left:3px solid #fc5c7d; padding-left:0.5rem;" onmouseover="this.style.background='rgba(252,92,125,0.1)'" onmouseout="this.style.background='transparent'">
                         <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
                           <span style="background:#fc5c7d; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">💬</span>
                           <span style="color:#fc5c7d; font-size:0.8rem; font-weight:600;">@{{ sender_name }}</span>
                         </div>
-                        {{ message }}<br><span style="font-size:0.85rem; color:var(--text-muted);">{{ format_datetime_for_display(created_at) }}</span>
+                        {{ message }}<br><span style="font-size:0.85rem; color:var(--apple-text-secondary);">{{ format_datetime_for_display(created_at) }}</span>
                       </li>
                     {% else %}
-                      <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid var(--border-light); font-size:0.98rem; color:var(--text-primary); cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='rgba(106,130,251,0.1)'" onmouseout="this.style.background='transparent'">
+                      <li class="notification-item" data-notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid var(--apple-border); font-size:0.98rem; color:var(--apple-text); cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">
                         <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
-                          <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
+                          <span style="background:var(--apple-accent); color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
                         </div>
-                        {{ message }}<br><span style="font-size:0.85rem; color:var(--text-muted);">{{ format_datetime_for_display(created_at) }}</span>
+                        {{ message }}<br><span style="font-size:0.85rem; color:var(--apple-text-secondary);">{{ format_datetime_for_display(created_at) }}</span>
                       </li>
                     {% endif %}
                   {% else %}
                     <!-- Fallback for old notification format -->
                     {% set id, message, created_at, status, notification_type, scheduled_time = notification %}
-                    <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid var(--border-light); font-size:0.98rem; color:var(--text-primary); cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='rgba(106,130,251,0.1)'" onmouseout="this.style.background='transparent'">
+                    <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid var(--apple-border); font-size:0.98rem; color:var(--apple-text); cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">
                       <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
-                        <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
+                        <span style="background:var(--apple-accent); color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
                       </div>
-                      {{ message }}<br><span style="font-size:0.85rem; color:var(--text-muted);">{{ format_datetime_for_display(created_at) }}</span>
+                      {{ message }}<br><span style="font-size:0.85rem; color:var(--apple-text-secondary);">{{ format_datetime_for_display(created_at) }}</span>
                     </li>
                   {% endif %}
                 {% endfor %}
                 {% else %}
-                  <li style="padding:0.7rem 0; color:var(--text-muted); text-align:center;">No new notifications.</li>
+                  <li style="padding:0.7rem 0; color:var(--apple-text-secondary); text-align:center;">No new notifications.</li>
                 {% endif %}
               </ul>
             </div>
           </li>
           {% if username %}
-            <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+            <li><a href="/logout" class="btn-primary">Logout</a></li>
           {% else %}
-            <li><a href="/auth" class="btn btn-primary">Login</a></li>
-                     {% endif %}
-</ul>
+            <li><a href="/auth" class="btn-primary">Login</a></li>
+          {% endif %}
+        </ul>
         <button class="hamburger">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
         </button>
       </div>
     </nav>
+
+    <!-- Apple-Style Hero Section -->
     <header class="hero-section">
-      <div class="container hero-content">
+      <div class="hero-content fade-in-up">
         <h1>Student Forum</h1>
         <p>Ask questions, share ideas, and connect with your peers!</p>
         {% if user_paid_status %}
-        <p style="font-size: 0.9rem; color: #6b7280; margin-top: 0.5rem;">
-          Status: <span style="color: {{ '#10b981' if user_paid_status == 'paid' else '#6b7280' }}; font-weight: 600;">{{ user_paid_status|title }}</span>
-        </p>
+        <div class="status">
+          Status: <span class="status-text">{{ user_paid_status|title }}</span>
+        </div>
         {% endif %}
       </div>
     </header>
-    <main class="container main-content">
-      <section class="card-section" style="max-width:800px;margin:0 auto;">
+
+    <!-- Apple-Style Main Content -->
+    <main class="main-content">
+      <section class="forum-section fade-in-up">
         <h2>Forum Discussions</h2>
         
-        <!-- Topic Selection Tabs (like study-resources) -->
-        <div class="tabs">
+        <!-- Apple-Style Topic Selection Tabs -->
+        <div class="topic-tabs">
           {% for topic in unpaid_topics + paid_topics %}
-            <button class="tab-button" data-topic="{{ topic[0] }}" data-topic-name="{{ topic[1] }}">
-                {{ topic[1] }}
-                {% if topic[4] == 'paid' %}
-                  <span class="topic-badge paid">Premium</span>
-                {% endif %}
+            <button class="topic-tab" data-topic="{{ topic[0] }}" data-topic-name="{{ topic[1] }}">
+              {{ topic[1] }}
+              {% if topic[4] == 'paid' %}
+                <span class="topic-badge">Premium</span>
+              {% endif %}
             </button>
           {% endfor %}
         </div>
         
-        <div id="forumMessages" style="min-height:120px; text-align:left; margin-bottom:2.5rem;">
-          <div id="emptyForumMsg" style="color:#888; text-align:center;">No messages yet. Start the conversation!</div>
+        <!-- Apple-Style Forum Messages -->
+        <div id="forumMessages" class="forum-messages">
+          <div id="emptyForumMsg" class="empty-forum-msg">No messages yet. Start the conversation!</div>
         </div>
-        <div class="chat-input-bar" style="display:flex;align-items:flex-end;gap:0.5rem;position:relative;">
-          <button id="forumEmojiBtn" type="button" class="btn btn-secondary" aria-label="Insert emoji" style="padding:0; width:44px; height:44px; border-radius:50%; display:flex;align-items:center;justify-content:center;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fc5c7d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 15s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-          </button>
-          <div style="flex:1; position:relative;">
-            <textarea id="forumInput" placeholder="Type your message... Use @ to mention users" rows="1" style="width:100%; resize:none;padding:0.7rem 1rem;border-radius:16px;min-height:44px;border:1px solid #e5e7eb; transition:border-color 0.2s ease;"></textarea>
-            <div id="mentionIndicator" style="position:absolute; top:0.5rem; right:0.5rem; background:#6a82fb; color:white; padding:0.2rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600; display:none;">@</div>
+
+        <!-- Apple-Style Chat Input -->
+        <div class="chat-input-container">
+          <div class="chat-input-bar">
+            <button id="forumEmojiBtn" type="button" class="btn btn-secondary" aria-label="Insert emoji">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 15s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+            </button>
+            
+            <div style="flex:1; position:relative;">
+              <textarea id="forumInput" placeholder="Type your message... Use @ to mention users" rows="1"></textarea>
+              <div id="mentionIndicator" class="mention-indicator">@</div>
+            </div>
+            
+            <button id="forumUploadBtn" type="button" class="btn btn-secondary" aria-label="Attach media">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a5.5 5.5 0 0 1-7.78-7.78l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.2 9.19a1.5 1.5 0 0 1-2.12-2.12l8.49-8.49"/></svg>
+            </button>
+            
+            <input type="file" id="forumMediaInput" accept="image/*,video/*" style="display:none;" />
+            
+            <button id="forumSendBtn" class="btn btn-primary">
+              <span style="font-size:1.3rem;">&#10148;</span>
+            </button>
           </div>
-          <button id="forumUploadBtn" type="button" class="btn btn-secondary" aria-label="Attach media" style="padding:0; width:44px; height:44px; border-radius:50%; display:flex;align-items:center;justify-content:center;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6a82fb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a5.5 5.5 0 0 1-7.78-7.78l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.2 9.19a1.5 1.5 0 0 1-2.12-2.12l8.49-8.49"/></svg>
-          </button>
-          <input type="file" id="forumMediaInput" accept="image/*,video/*" style="display:none;" />
-          <button id="forumSendBtn" class="btn btn-primary" style="padding:0.5rem 1.2rem;display:flex;align-items:center;gap:0.3rem;">
-            <span style="font-size:1.3rem;">&#10148;</span>
-          </button>
-        </div>
-        
-        <!-- Mention Help Text -->
-        <div id="mentionHelp" style="display:none; margin-top:0.5rem; padding:0.5rem; background:#f0f4ff; border:1px solid #6a82fb; border-radius:8px; font-size:0.8rem; color:#6a82fb;">
-          <strong>💡 Mention Tips:</strong> Type @ to mention users. You can search by username, class, email, or mobile number. Use ↑↓ arrows to navigate, Enter to select, or click on a user.
-        </div>
-        
-        <!-- Mention Suggestions Dropdown -->
-        <div id="mentionSuggestions" style="display:none; position:absolute; background:white; border:1px solid #e5e7eb; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); max-height:200px; overflow-y:auto; z-index:1000; min-width:250px; margin-top:-10px;">
-          <div style="padding:0.5rem; border-bottom:1px solid #e5e7eb; background:#f8fafc; border-radius:8px 8px 0 0;">
-            <small style="color:#6b7280; font-weight:500;">💬 Mention a user</small>
+          
+          <!-- Apple-Style Mention Help Text -->
+          <div id="mentionHelp" class="mention-help" style="display:none;">
+            <strong>💡 Mention Tips:</strong> Type @ to mention users. You can search by username, class, email, or mobile number. Use ↑↓ arrows to navigate, Enter to select, or click on a user.
           </div>
-          <div id="mentionSuggestionsList" style="max-height:150px; overflow-y:auto;">
-            <!-- User suggestions will be populated here -->
+          
+          <!-- Apple-Style Mention Suggestions Dropdown -->
+          <div id="mentionSuggestions" class="mention-suggestions" style="display:none;">
+            <div class="mention-suggestions-header">
+              <small>💬 Mention a user</small>
+            </div>
+            <div id="mentionSuggestionsList" class="mention-suggestions-list">
+              <!-- User suggestions will be populated here -->
+            </div>
           </div>
+          
+          <!-- Apple-Style Media Preview -->
+          <div id="forumMediaPreview" class="media-preview" style="display:none;"></div>
         </div>
-        
-        <div id="forumMediaPreview" style="margin-top:0.5rem;"></div>
       </section>
-      <div style="text-align:center; margin: 1.5rem 0 2rem 0;">
-        <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
-      </div>
     </main>
-    <footer class="footer">
-      <div class="container footer-content">
-        <div class="footer-social">
-          <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">Instagram</a>
-          <a href="https://www.youtube.com/@MohitNariyani" target="_blank">YouTube</a>
-        </div>
-        <div class="footer-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Contact Us</a>
-        </div>
-        <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
-      </div>
-    </footer>
+
     <script src="script.js"></script>
     <script src="forum.js"></script>
     <script>
@@ -527,7 +836,7 @@
               if (data.status === 'success') {
                 // Fade out the notification
                 notificationItem.style.opacity = '0.5';
-                notificationItem.style.background = 'rgba(106,130,251,0.1)';
+                notificationItem.style.background = 'rgba(255,255,255,0.1)';
                 
                 // Remove notification after a short delay
                 setTimeout(() => {
@@ -537,7 +846,7 @@
                   const remainingNotifications = document.querySelectorAll('.notification-item');
                   if (remainingNotifications.length === 0) {
                     const noNotificationsLi = document.createElement('li');
-                    noNotificationsLi.style.cssText = 'padding:0.7rem 0; color:var(--text-muted); text-align:center;';
+                    noNotificationsLi.style.cssText = 'padding:0.7rem 0; color:var(--apple-text-secondary); text-align:center;';
                     noNotificationsLi.textContent = 'No new notifications.';
                     notifDropdown.querySelector('ul').appendChild(noNotificationsLi);
                   }
@@ -551,7 +860,5 @@
         });
       }
     </script>
-
-    
   </body>
 </html>
