@@ -617,11 +617,138 @@
         }
       });
 
-      // Google Sign In Function
+      // Google Sign In Function with OAuth
       function signInWithGoogle() {
-        // This would integrate with Google OAuth
-        // For now, we'll show a message
-        alert('Google Sign In integration coming soon! Please use the form above to sign in.');
+        // Initialize Google Sign-In
+        if (typeof google !== 'undefined' && google.accounts) {
+          google.accounts.oauth2.initTokenClient({
+            client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // Replace with your actual Google Client ID
+            scope: 'openid email profile',
+            callback: handleGoogleSignIn
+          }).requestAccessToken();
+        } else {
+          // Fallback if Google API is not loaded
+          alert('Google Sign-In is not available. Please use the form above to sign in.');
+        }
+      }
+
+      // Handle Google Sign-In response
+      function handleGoogleSignIn(response) {
+        if (response.access_token) {
+          // Get user info from Google
+          fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+            headers: {
+              'Authorization': `Bearer ${response.access_token}`
+            }
+          })
+          .then(response => response.json())
+          .then(userData => {
+            // Process Google user data
+            processGoogleUser(userData);
+          })
+          .catch(error => {
+            console.error('Error fetching user data:', error);
+            alert('Failed to get user information from Google. Please try again.');
+          });
+        } else {
+          alert('Google Sign-In failed. Please try again or use the form above.');
+        }
+      }
+
+      // Process Google user data and create account/login
+      function processGoogleUser(userData) {
+        const { id, email, name, picture } = userData;
+        
+        // Show loading state
+        const googleBtn = document.querySelector('.btn-google');
+        const originalText = googleBtn.innerHTML;
+        googleBtn.innerHTML = '<div class="google-icon"></div>Processing...';
+        googleBtn.disabled = true;
+        
+        // Check if user exists in your system
+        checkUserExists(email)
+          .then(exists => {
+            if (exists) {
+              // User exists, attempt login
+              return loginWithGoogle(email, id);
+            } else {
+              // User doesn't exist, create account
+              return createAccountWithGoogle(email, name, id, picture);
+            }
+          })
+          .then(success => {
+            if (success) {
+              // Redirect to appropriate page
+              window.location.href = '/';
+            }
+          })
+          .catch(error => {
+            console.error('Google authentication error:', error);
+            alert('Google authentication failed. Please try again or use the form above.');
+          })
+          .finally(() => {
+            // Reset button state
+            googleBtn.innerHTML = originalText;
+            googleBtn.disabled = false;
+          });
+      }
+
+      // Check if user exists in your system
+      function checkUserExists(email) {
+        return fetch('/api/check-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email })
+        })
+        .then(response => response.json())
+        .then(data => data.exists)
+        .catch(() => false); // Assume user doesn't exist on error
+      }
+
+      // Login with Google credentials
+      function loginWithGoogle(email, googleId) {
+        return fetch('/api/google-login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, google_id: googleId })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            return true;
+          } else {
+            throw new Error(data.message || 'Login failed');
+          }
+        });
+      }
+
+      // Create account with Google credentials
+      function createAccountWithGoogle(email, name, googleId, picture) {
+        return fetch('/api/google-signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            email, 
+            name, 
+            google_id: googleId, 
+            picture,
+            role: 'student' // Default role for Google sign-ups
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            return true;
+          } else {
+            throw new Error(data.message || 'Account creation failed');
+          }
+        });
       }
 
       // Form validation and enhancement
@@ -654,7 +781,69 @@
             }, 3000);
           });
         });
+
+        // Load Google OAuth API
+        loadGoogleOAuthAPI();
       });
+
+      // Load Google OAuth API
+      function loadGoogleOAuthAPI() {
+        const script = document.createElement('script');
+        script.src = 'https://accounts.google.com/gsi/client';
+        script.async = true;
+        script.defer = true;
+        script.onload = function() {
+          console.log('Google OAuth API loaded successfully');
+        };
+        script.onerror = function() {
+          console.error('Failed to load Google OAuth API');
+        };
+        document.head.appendChild(script);
+      }
+
+      // Alternative Google Sign-In method using Google Identity Services
+      function signInWithGoogleAlternative() {
+        if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+          google.accounts.id.initialize({
+            client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // Replace with your actual Google Client ID
+            callback: handleGoogleCredentialResponse
+          });
+          
+          google.accounts.id.prompt((notification) => {
+            if (notification.isNotDisplayed()) {
+              console.log('Google Sign-In not displayed:', notification.getNotDisplayedReason());
+            } else if (notification.isSkippedMoment()) {
+              console.log('Google Sign-In skipped:', notification.getSkippedReason());
+            } else if (notification.isDismissedMoment()) {
+              console.log('Google Sign-In dismissed');
+            }
+          });
+        } else {
+          // Fallback to OAuth flow
+          signInWithGoogle();
+        }
+      }
+
+      // Handle Google credential response
+      function handleGoogleCredentialResponse(response) {
+        // Decode the JWT token
+        const payload = decodeJwtResponse(response.credential);
+        processGoogleUser(payload);
+      }
+
+      // Decode JWT token (simple implementation)
+      function decodeJwtResponse(token) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        
+        return JSON.parse(jsonPayload);
+      }
     </script>
+    
+    <!-- Google OAuth API -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
   </body>
 </html>
