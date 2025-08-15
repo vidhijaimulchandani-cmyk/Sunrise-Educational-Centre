@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="google-signin-client_id" content="824681641028-9a5r25tcg5ibfrdg8e0kn90eeji4cqes.apps.googleusercontent.com" />
     <title>Sign In - Sunrise Education Centre</title>
     <link rel="icon" type="image/png" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -816,12 +817,18 @@
         }
       });
 
+      // Helper to read Google Client ID from meta tag
+      function getGoogleClientId() {
+        const meta = document.querySelector('meta[name="google-signin-client_id"]');
+        return meta ? meta.content : '';
+      }
+
       // Google Sign In Function with OAuth
       function signInWithGoogle() {
         // Initialize Google Sign-In
         if (typeof google !== 'undefined' && google.accounts) {
           google.accounts.oauth2.initTokenClient({
-            client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // Replace with your actual Google Client ID
+            client_id: getGoogleClientId(),
             scope: 'openid email profile',
             callback: handleGoogleSignIn
           }).requestAccessToken();
@@ -1004,7 +1011,7 @@
       function signInWithGoogleAlternative() {
         if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
           google.accounts.id.initialize({
-            client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // Replace with your actual Google Client ID
+            client_id: getGoogleClientId(),
             callback: handleGoogleCredentialResponse
           });
           
