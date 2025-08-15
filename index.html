@@ -14,8 +14,8 @@
         --apple-bg: #000000;
         --apple-text: #ffffff;
         --apple-text-secondary: #86868b;
-        --apple-accent: #0071e3;
-        --apple-accent-hover: #0077ed;
+        --apple-accent: #000000;
+        --apple-accent-hover: #333333;
         --apple-gray: #1d1d1f;
         --apple-gray-light: #2d2d2f;
         --apple-border: #424245;
@@ -103,6 +103,7 @@
         font-size: 12px;
         font-weight: 500;
         transition: var(--apple-transition);
+        border: 1px solid var(--apple-text);
       }
 
       .nav-links .btn-primary:hover {
@@ -124,6 +125,22 @@
 
       .hero-content {
         max-width: 800px;
+      }
+
+      .hero-logo {
+        margin-bottom: 32px;
+      }
+
+      .hero-logo img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        box-shadow: var(--apple-shadow);
+        transition: var(--apple-transition);
+      }
+
+      .hero-logo img:hover {
+        transform: scale(1.05);
       }
 
       .hero-content h1 {
@@ -161,7 +178,7 @@
         text-decoration: none;
         display: inline-block;
         transition: var(--apple-transition);
-        border: none;
+        border: 2px solid var(--apple-text);
         cursor: pointer;
       }
 
@@ -236,6 +253,7 @@
         font-weight: 500;
         display: inline-block;
         margin-bottom: 24px;
+        border: 1px solid var(--apple-text);
       }
 
       .achievement-card img {
@@ -321,6 +339,7 @@
       .year-toggle-btn.active {
         background: var(--apple-accent);
         border-color: var(--apple-accent);
+        color: var(--apple-text);
       }
 
       /* Apple-Style Fame Slider */
@@ -395,7 +414,7 @@
         transform: translateY(-50%);
         background: var(--apple-accent);
         color: var(--apple-text);
-        border: none;
+        border: 1px solid var(--apple-text);
         width: 44px;
         height: 44px;
         border-radius: 50%;
@@ -437,10 +456,55 @@
         transition: var(--apple-transition);
       }
 
+      /* Year content visibility */
+      .year-content {
+        display: none;
+      }
+
+      .year-content.active {
+        display: block;
+      }
+
+      /* Enhanced subject card styling */
+      .subject-card {
+        background: var(--apple-bg);
+        border-radius: var(--apple-radius);
+        padding: 32px;
+        text-align: center;
+        transition: var(--apple-transition);
+        border: 1px solid var(--apple-border);
+        cursor: pointer;
+      }
+
+      .subject-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--apple-shadow);
+        border-color: var(--apple-accent);
+      }
+
+      .subject-card:active {
+        transform: scale(0.98);
+      }
+
       /* Responsive Design */
       @media (max-width: 768px) {
         .nav-links {
           display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: rgba(0, 0, 0, 0.95);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border-top: 1px solid var(--apple-border);
+          padding: 20px;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .nav-links.active {
+          display: flex;
         }
 
         .hamburger {
@@ -474,6 +538,15 @@
 
         .fame-arrow {
           display: none;
+        }
+
+        .subjects-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+
+        .subject-card {
+          padding: 24px;
         }
       }
 
@@ -520,6 +593,100 @@
         outline: 2px solid var(--apple-accent);
         outline-offset: 2px;
       }
+
+      /* Apple-Style Subjects Section */
+      .subjects-section {
+        background: var(--apple-gray);
+        padding: 80px 22px;
+        margin: 40px 0;
+      }
+
+      .subjects-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .subjects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+        margin-top: 48px;
+      }
+
+      .subject-card {
+        background: var(--apple-bg);
+        border-radius: var(--apple-radius);
+        padding: 32px;
+        text-align: center;
+        transition: var(--apple-transition);
+        border: 1px solid var(--apple-border);
+      }
+
+      .subject-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--apple-shadow);
+        border-color: var(--apple-accent);
+      }
+
+      .subject-icon {
+        font-size: 48px;
+        margin-bottom: 24px;
+        display: block;
+      }
+
+      .subject-card h3 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: var(--apple-text);
+      }
+
+      .subject-card p {
+        font-size: 16px;
+        color: var(--apple-text-secondary);
+        line-height: 1.5;
+        margin-bottom: 24px;
+      }
+
+      .subject-features {
+        list-style: none;
+        text-align: left;
+        margin-bottom: 24px;
+      }
+
+      .subject-features li {
+        color: var(--apple-text-secondary);
+        margin-bottom: 8px;
+        font-size: 14px;
+        padding-left: 20px;
+        position: relative;
+      }
+
+      .subject-features li:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: var(--apple-accent);
+        font-weight: bold;
+      }
+
+      .subject-btn {
+        background: var(--apple-accent);
+        color: var(--apple-text);
+        padding: 12px 24px;
+        border-radius: 980px;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-block;
+        transition: var(--apple-transition);
+        border: 1px solid var(--apple-text);
+      }
+
+      .subject-btn:hover {
+        background: var(--apple-accent-hover);
+        transform: scale(1.02);
+      }
     </style>
   </head>
   <body>
@@ -552,6 +719,9 @@
     <!-- Apple-Style Hero Section -->
     <header class="hero-section">
       <div class="hero-content fade-in-up">
+        <div class="hero-logo">
+          <img src="attached_assets/image_1750584670920.png" alt="Sunrise Education Centre Logo">
+        </div>
         <h1>Expert Coaching for Class 9 to 12</h1>
         <p>Your trusted guide for academic excellence. Personalized coaching, real results.</p>
         <a href="#subjects-we-offer" class="btn-cta">Explore Programs</a>
@@ -728,5 +898,143 @@
       </p>
       <a href="#programs" class="btn-cta">Get Started Today</a>
     </section>
+
+    <!-- Apple-Style Subjects Section -->
+    <section id="subjects-we-offer" class="subjects-section">
+      <div class="subjects-container">
+        <h2 style="text-align: center; margin-bottom: 48px; font-size: 32px; font-weight: 600;">Subjects We Offer</h2>
+        <div class="subjects-grid">
+          <div class="subject-card">
+            <div class="subject-icon">📚</div>
+            <h3>Mathematics</h3>
+            <p>Mastering mathematical concepts and problem-solving skills.</p>
+            <ul class="subject-features">
+              <li>Comprehensive coverage of all CBSE and ICSE topics</li>
+              <li>Detailed explanations and step-by-step solutions</li>
+              <li>Regular practice sessions and mock tests</li>
+              <li>Focus on conceptual understanding</li>
+            </ul>
+            <a href="/study-resources" class="subject-btn">Learn More</a>
+          </div>
+          <div class="subject-card">
+            <div class="subject-icon">🧠</div>
+            <h3>Science</h3>
+            <p>Exploring the wonders of the natural world and human mind.</p>
+            <ul class="subject-features">
+              <li>Comprehensive coverage of all CBSE and ICSE topics</li>
+              <li>Detailed explanations and step-by-step solutions</li>
+              <li>Regular practice sessions and mock tests</li>
+              <li>Focus on conceptual understanding</li>
+            </ul>
+            <a href="/study-resources" class="subject-btn">Learn More</a>
+          </div>
+          <div class="subject-card">
+            <div class="subject-icon">💡</div>
+            <h3>English</h3>
+            <p>Enhancing communication skills and language proficiency.</p>
+            <ul class="subject-features">
+              <li>Comprehensive coverage of all CBSE and ICSE topics</li>
+              <li>Detailed explanations and step-by-step solutions</li>
+              <li>Regular practice sessions and mock tests</li>
+              <li>Focus on conceptual understanding</li>
+            </ul>
+            <a href="/study-resources" class="subject-btn">Learn More</a>
+          </div>
+          <div class="subject-card">
+            <div class="subject-icon">🔗</div>
+            <h3>Social Studies</h3>
+            <p>Understanding the world around us and its history.</p>
+            <ul class="subject-features">
+              <li>Comprehensive coverage of all CBSE and ICSE topics</li>
+              <li>Detailed explanations and step-by-step solutions</li>
+              <li>Regular practice sessions and mock tests</li>
+              <li>Focus on conceptual understanding</li>
+            </ul>
+            <a href="/study-resources" class="subject-btn">Learn More</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      // Year toggle functionality
+      function showYear(year) {
+        // Hide all year content
+        document.querySelectorAll('.year-content').forEach(content => {
+          content.style.display = 'none';
+        });
+        
+        // Remove active class from all buttons
+        document.querySelectorAll('.year-toggle-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        
+        // Show selected year content
+        document.getElementById('year' + year + 'Content').style.display = 'block';
+        
+        // Add active class to selected button
+        document.getElementById('year' + year).classList.add('active');
+      }
+
+      // Fame slider functionality
+      function slideFame(direction) {
+        const slider = document.getElementById('fameSlider');
+        const scrollAmount = 300;
+        
+        if (direction === 1) {
+          slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        } else {
+          slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        }
+      }
+
+      // Subject card interactions
+      document.addEventListener('DOMContentLoaded', function() {
+        const subjectCards = document.querySelectorAll('.subject-card');
+        
+        subjectCards.forEach(card => {
+          card.addEventListener('click', function() {
+            // Add click effect
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+              this.style.transform = 'translateY(-8px)';
+            }, 150);
+          });
+        });
+      });
+
+      // Mobile navigation toggle
+      document.addEventListener('DOMContentLoaded', function() {
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        
+        if (hamburger && navLinks) {
+          hamburger.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
+          });
+        }
+      });
+
+      // Smooth scrolling for anchor links
+      document.addEventListener('DOMContentLoaded', function() {
+        const links = document.querySelectorAll('a[href^="#"]');
+        
+        links.forEach(link => {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+              targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }
+          });
+        });
+      });
+    </script>
   </body>
 </html>
