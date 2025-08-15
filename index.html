@@ -6,111 +6,363 @@
     <title>Sunrise Education Centre</title>
     <link rel="icon" type="image/png" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="style.css" />
     <style>
-      /* Year Toggle Button Styles */
-      .year-toggle-btn {
-        transition: all 0.3s ease;
-        transform: scale(1);
+      /* Enhanced Modern UI Styles */
+      :root {
+        --primary-color: #6a82fb;
+        --secondary-color: #fc5c7d;
+        --accent-color: #ffd700;
+        --dark-color: #232946;
+        --light-color: #f8fafc;
+        --gradient-primary: linear-gradient(135deg, #6a82fb 0%, #764ba2 100%);
+        --gradient-secondary: linear-gradient(135deg, #fc5c7d 0%, #f093fb 100%);
+        --gradient-accent: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+        --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+        --shadow-md: 0 8px 32px rgba(0,0,0,0.12);
+        --shadow-lg: 0 16px 64px rgba(0,0,0,0.15);
+        --border-radius: 16px;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      
-      .year-toggle-btn:hover {
+
+      /* Enhanced Navigation */
+      .navbar {
+        backdrop-filter: blur(20px);
+        background: rgba(255, 255, 255, 0.9);
+        border-bottom: 1px solid rgba(106, 130, 251, 0.1);
+        transition: var(--transition);
+      }
+
+      .navbar.scrolled {
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: var(--shadow-md);
+      }
+
+      .nav-logo img {
+        transition: var(--transition);
+        filter: drop-shadow(0 2px 8px rgba(106, 130, 251, 0.3));
+      }
+
+      .nav-logo img:hover {
         transform: scale(1.05);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important;
+        filter: drop-shadow(0 4px 16px rgba(106, 130, 251, 0.5));
       }
-      
+
+      .nav-links a {
+        position: relative;
+        transition: var(--transition);
+        font-weight: 500;
+      }
+
+      .nav-links a::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--gradient-primary);
+        transition: var(--transition);
+        transform: translateX(-50%);
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      /* Enhanced Hero Section */
+      .hero-section {
+        background: linear-gradient(135deg, rgba(106, 130, 251, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+        position: relative;
+        overflow: hidden;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+      }
+
+      .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('attached_assets/image_1750584670920.png') center/cover no-repeat;
+        opacity: 0.1;
+        z-index: 1;
+      }
+
+      .hero-section::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: float 20s ease-in-out infinite;
+        z-index: 2;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        33% { transform: translate(30px, -30px) rotate(120deg); }
+        66% { transform: translate(-20px, 20px) rotate(240deg); }
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 3;
+        text-align: center;
+        color: white;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .hero-content h1 {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 800;
+        margin-bottom: 1.5rem;
+        text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        line-height: 1.2;
+      }
+
+      .hero-content p {
+        font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+        margin-bottom: 2.5rem;
+        opacity: 0.95;
+        font-weight: 400;
+        line-height: 1.6;
+      }
+
+      /* Enhanced Buttons */
+      .btn {
+        position: relative;
+        overflow: hidden;
+        border-radius: var(--border-radius);
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      .btn-cta {
+        background: var(--gradient-secondary);
+        color: white;
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+        box-shadow: var(--shadow-md);
+        transform: translateY(0);
+      }
+
+      .btn-cta:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .btn-cta::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+      }
+
+      .btn-cta:hover::before {
+        left: 100%;
+      }
+
+      /* Enhanced Year Toggle Buttons */
+      .year-toggle-btn {
+        background: var(--gradient-accent);
+        color: var(--dark-color);
+        border: 3px solid var(--dark-color);
+        padding: 1.2rem 2.5rem;
+        border-radius: var(--border-radius);
+        font-weight: 700;
+        font-size: 1.1rem;
+        cursor: pointer;
+        box-shadow: var(--shadow-md);
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .year-toggle-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        transition: left 0.5s;
+      }
+
+      .year-toggle-btn:hover::before {
+        left: 100%;
+      }
+
+      .year-toggle-btn:hover {
+        transform: translateY(-4px) scale(1.05);
+        box-shadow: var(--shadow-lg);
+      }
+
       .year-toggle-btn.active {
         transform: scale(1.1);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.4) !important;
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-color);
       }
-      
-      /* Year Content Sections */
+
+      /* Enhanced Year Content Sections */
       .year-content {
         display: none;
-        animation: fadeIn 0.5s ease-in;
+        animation: slideUp 0.6s ease-out;
       }
-      
+
       .year-content.active {
         display: block;
       }
-      
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+
+      @keyframes slideUp {
+        from { 
+          opacity: 0; 
+          transform: translateY(30px); 
+        }
+        to { 
+          opacity: 1; 
+          transform: translateY(0); 
+        }
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .hero-content {
+          padding: 1rem;
+        }
+        
+        .year-toggle-btn {
+          padding: 1rem 1.5rem;
+          font-size: 1rem;
+          margin: 0.5rem;
+        }
+        
+        .nav-links {
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(20px);
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero-content h1 {
+          font-size: 2rem;
+        }
+        
+        .hero-content p {
+          font-size: 1rem;
+        }
+        
+        .btn-cta {
+          padding: 0.8rem 2rem;
+          font-size: 1rem;
+        }
       }
     </style>
   </head>
   <body>
-    <nav class="navbar glassmorphic">
+    <nav class="navbar glassmorphic" id="navbar">
       <div class="container nav-content">
         <div class="nav-logo">
-          <img src="attached_assets/image_1750584670920.png" alt="Logo">
+          <img src="attached_assets/image_1750584670920.png" alt="Sunrise Education Centre Logo">
         </div>
         <ul class="nav-links">
-
-                  <li><a href="#about-us">About</a></li>
-        <li><a href="/online-class">Live Class</a></li>
-        <li><a href="/study-resources">Study Resources</a></li>
-        <li><a href="/forum">Forum</a></li>
-
-        <li class="profile-dropdown" style="position:relative;">
-          <a href="/profile" id="profileLink">Profile</a>
-          <div class="profile-dropdown-menu" id="profileDropdown">
-            <a href="/profile" class="dropdown-item">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right:8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/></svg>
-              My Profile
-            </a>
-
-            <a href="/logout" class="dropdown-item">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right:8px;"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 8v-2H4V5z" fill="currentColor"/></svg>
-              Logout
-            </a>
-          </div>
-        </li>
-          <!-- Notification Bell - Standard implementation like other pages -->
+          <li><a href="#about-us">About</a></li>
+          <li><a href="/online-class">Live Class</a></li>
+          <li><a href="/study-resources">Study Resources</a></li>
+          <li><a href="/forum">Forum</a></li>
+          <li class="profile-dropdown" style="position:relative;">
+            <a href="/profile" id="profileLink">Profile</a>
+            <div class="profile-dropdown-menu" id="profileDropdown">
+              <a href="/profile" class="dropdown-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right:8px;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/></svg>
+                My Profile
+              </a>
+              <a href="/logout" class="dropdown-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="margin-right:8px;"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 8v-2H4V5z" fill="currentColor"/></svg>
+                Logout
+              </a>
+            </div>
+          </li>
+          <!-- Enhanced Notification Bell -->
           <li style="position:relative;">
-            <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative;">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
-              <span id="notificationCount" style="position:absolute;top:0;right:0;width:18px;height:18px;background:#fc5c7d;border-radius:50%;color:white;font-size:10px;font-weight:bold;display:flex;align-items:center;justify-content:center;display:{% if user_notifications and user_notifications|length > 0 %}flex{% else %}none{% endif %};">{{ user_notifications|length if user_notifications else 0 }}</span>
+            <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative; padding: 0.5rem; border-radius: 50%; transition: var(--transition);">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle; transition: var(--transition);"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="currentColor"/></svg>
+              <span id="notificationCount" style="position:absolute;top:-5px;right:-5px;width:20px;height:20px;background:var(--secondary-color);border-radius:50%;color:white;font-size:11px;font-weight:bold;display:flex;align-items:center;justify-content:center;box-shadow: var(--shadow-sm);">{{ user_notifications|length if user_notifications else 0 }}</span>
             </button>
-            <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:#fff; min-width:320px; box-shadow:0 4px 24px rgba(100,100,255,0.13); border-radius:12px; z-index:100; padding:1rem;">
-              <strong style="color:#6a82fb;">Notifications</strong>
-              <ul style="list-style:none; padding:0; margin:0;">
+            <div id="notifDropdown" style="display:none; position:absolute; right:0; top:45px; background:#fff; min-width:350px; box-shadow:var(--shadow-lg); border-radius:var(--border-radius); z-index:100; padding:1.5rem; border: 1px solid rgba(106,130,251,0.1);">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+                <strong style="color:var(--primary-color); font-size:1.1rem;">🔔 Notifications</strong>
+                <button onclick="markAllAsRead()" style="background:var(--gradient-primary); color:white; border:none; padding:0.5rem 1rem; border-radius:8px; font-size:0.8rem; cursor:pointer; transition:var(--transition);">Mark All Read</button>
+              </div>
+              <ul style="list-style:none; padding:0; margin:0; max-height:300px; overflow-y:auto;">
                 {% if user_notifications and user_notifications|length > 0 %}
                 {% for notification in user_notifications %}
                   {% if notification|length >= 7 %}
                     {% set id, message, created_at, status, notification_type, scheduled_time, item_type = notification %}
                     {% if item_type == 'personal_chat' %}
                       {% set sender_name = notification[7] if notification|length > 7 else 'User' %}
-                      <li class="notification-item personal-chat-item" data-notification-id="{{ id }}" data-type="personal_chat" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease; border-left:3px solid #fc5c7d; padding-left:0.5rem;" onmouseover="this.style.background='#ffe6cc'" onmouseout="this.style.background='transparent'">
-                        <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
-                          <span style="background:#fc5c7d; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">💬</span>
-                          <span style="color:#fc5c7d; font-size:0.8rem; font-weight:600;">@{{ sender_name }}</span>
+                      <li class="notification-item personal-chat-item" data-notification-id="{{ id }}" data-type="personal_chat" style="padding:1rem; border-radius:12px; margin-bottom:0.8rem; background:rgba(252,92,125,0.05); border-left:4px solid var(--secondary-color); cursor:pointer; transition:var(--transition);" onmouseover="this.style.background='rgba(252,92,125,0.1)'" onmouseout="this.style.background='rgba(252,92,125,0.05)'">
+                        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+                          <span style="background:var(--secondary-color); color:white; padding:0.2rem 0.6rem; border-radius:20px; font-size:0.7rem; font-weight:600;">💬</span>
+                          <span style="color:var(--secondary-color); font-size:0.9rem; font-weight:600;">@{{ sender_name }}</span>
                         </div>
-                        {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                        <div style="color:#232946; font-size:0.95rem; line-height:1.4; margin-bottom:0.5rem;">{{ message }}</div>
+                        <div style="font-size:0.8rem; color:#666; display:flex; align-items:center; gap:0.5rem;">
+                          <span>🕒 {{ format_datetime_for_display(created_at) }}</span>
+                        </div>
                       </li>
                     {% else %}
-                      <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='transparent'">
-                        <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
-                          <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
+                      <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:1rem; border-radius:12px; margin-bottom:0.8rem; background:rgba(106,130,251,0.05); border-left:4px solid var(--primary-color); cursor:pointer; transition:var(--transition);" onmouseover="this.style.background='rgba(106,130,251,0.1)'" onmouseout="this.style.background='rgba(106,130,251,0.05)'">
+                        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+                          <span style="background:var(--primary-color); color:white; padding:0.2rem 0.6rem; border-radius:20px; font-size:0.7rem; font-weight:600;">📢</span>
                         </div>
-                        {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                        <div style="color:#232946; font-size:0.95rem; line-height:1.4; margin-bottom:0.5rem;">{{ message }}</div>
+                        <div style="font-size:0.8rem; color:#666; display:flex; align-items:center; gap:0.5rem;">
+                          <span>🕒 {{ format_datetime_for_display(created_at) }}</span>
+                        </div>
                       </li>
                     {% endif %}
                   {% else %}
                     <!-- Fallback for old notification format -->
                     {% set id, message, created_at, status, notification_type, scheduled_time = notification %}
-                    <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='transparent'">
-                      <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
-                        <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
+                    <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:1rem; border-radius:12px; margin-bottom:0.8rem; background:rgba(106,130,251,0.05); border-left:4px solid var(--primary-color); cursor:pointer; transition:var(--transition);" onmouseover="this.style.background='rgba(106,130,251,0.1)'" onmouseout="this.style.background='rgba(106,130,251,0.05)'">
+                      <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+                        <span style="background:var(--primary-color); color:white; padding:0.2rem 0.6rem; border-radius:20px; font-size:0.7rem; font-weight:600;">📢</span>
                       </div>
-                      {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                      <div style="color:#232946; font-size:0.95rem; line-height:1.4; margin-bottom:0.5rem;">{{ message }}</div>
+                      <div style="font-size:0.8rem; color:#666; display:flex; align-items:center; gap:0.5rem;">
+                        <span>🕒 {{ format_datetime_for_display(created_at) }}</span>
+                      </div>
                     </li>
                   {% endif %}
                 {% endfor %}
                 {% else %}
-                  <li style="padding:0.7rem 0; color:#888; text-align:center;">No new notifications.</li>
+                  <li style="padding:2rem; color:#888; text-align:center; background:rgba(106,130,251,0.05); border-radius:12px;">
+                    <div style="font-size:3rem; margin-bottom:1rem;">🔕</div>
+                    <div style="font-size:1.1rem; color:#666; margin-bottom:0.5rem;">No new notifications</div>
+                    <div style="font-size:0.9rem; color:#999;">You're all caught up!</div>
+                  </li>
                 {% endif %}
               </ul>
             </div>
@@ -120,21 +372,26 @@
           {% else %}
             <li><a href="/auth" class="btn btn-primary">Login</a></li>
           {% endif %}
-      </ul>
-      <button class="hamburger">
-        <span class="bar"></span>
-        <span class="bar"></span>
-        <span class="bar"></span>
-      </button>
+        </ul>
+        <button class="hamburger">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
       </div>
     </nav>
-    <header class="hero-section" style="background: url('attached_assets/image_1750584670920.png') center/contain no-repeat; position: relative;">
-      <div style="position: absolute; inset: 0; background: rgba(106,130,251,0.55); z-index: 1;"></div>
-      <div class="container hero-content" style="position: relative; z-index: 2;">
+
+    <header class="hero-section">
+      <div class="hero-content">
         <h1><span id="typing-hero"></span></h1>
         <p>Your trusted guide for Class 9-12. Personalized coaching, real results.</p>
-        <div style="text-align:center; margin:2rem 0;">
-          <a href="#subjects-we-offer" class="btn btn-cta">Explore Programs</a>
+        <div style="text-align:center; margin:3rem 0;">
+          <a href="#subjects-we-offer" class="btn btn-cta">
+            <span>🚀 Explore Programs</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="transition: var(--transition);">
+              <path d="M7 17l9.2-9.2M17 17V7H7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
         </div>
       </div>
     </header>
