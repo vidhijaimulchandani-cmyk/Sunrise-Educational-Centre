@@ -6,14 +6,668 @@
     <title>Live Class - Sunrise Education Centre</title>
     <link rel="icon" type="image/png" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap">
+    <style>
+      /* Apple-Inspired Design System */
+      :root {
+        --apple-bg: #000000;
+        --apple-text: #ffffff;
+        --apple-text-secondary: #86868b;
+        --apple-accent: #000000;
+        --apple-accent-hover: #333333;
+        --apple-gray: #1d1d1f;
+        --apple-gray-light: #2d2d2f;
+        --apple-border: #424245;
+        --apple-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        --apple-radius: 12px;
+        --apple-transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        --apple-card-bg: rgba(255, 255, 255, 0.03);
+        --apple-card-hover: rgba(255, 255, 255, 0.08);
+        --apple-input-bg: rgba(255, 255, 255, 0.05);
+        --apple-input-border: rgba(255, 255, 255, 0.1);
+        --apple-input-focus: rgba(255, 255, 255, 0.15);
+        --apple-success: #34c759;
+        --apple-warning: #ff9f0a;
+        --apple-error: #ff3b30;
+        --apple-live: #ff3b30;
+        --apple-upcoming: #ff9f0a;
+        --apple-completed: #86868b;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--apple-bg);
+        color: var(--apple-text);
+        line-height: 1.47059;
+        font-weight: 400;
+        letter-spacing: -0.022em;
+        overflow-x: hidden;
+      }
+
+      /* Apple-Style Navigation */
+      .navbar {
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--apple-border);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        transition: var(--apple-transition);
+      }
+
+      .nav-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 44px;
+      }
+
+      .nav-logo img {
+        height: 32px;
+        filter: brightness(0) invert(1);
+        transition: var(--apple-transition);
+      }
+
+      .nav-logo img:hover {
+        opacity: 0.8;
+      }
+
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 32px;
+        align-items: center;
+      }
+
+      .nav-links a {
+        color: var(--apple-text);
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 400;
+        transition: var(--apple-transition);
+        opacity: 0.8;
+      }
+
+      .nav-links a:hover {
+        opacity: 1;
+        color: var(--apple-accent);
+      }
+
+      .nav-links .btn-primary {
+        background: var(--apple-accent);
+        color: var(--apple-text);
+        padding: 8px 16px;
+        border-radius: 980px;
+        font-size: 12px;
+        font-weight: 500;
+        transition: var(--apple-transition);
+        border: 1px solid var(--apple-text);
+      }
+
+      .nav-links .btn-primary:hover {
+        background: var(--apple-accent-hover);
+        transform: scale(1.02);
+      }
+
+      /* Apple-Style Hero Section */
+      .hero-section {
+        background: var(--apple-bg);
+        min-height: 50vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 120px 22px 80px;
+        position: relative;
+      }
+
+      .hero-content {
+        max-width: 800px;
+      }
+
+      .hero-content h1 {
+        font-size: 56px;
+        font-weight: 600;
+        line-height: 1.07143;
+        letter-spacing: -0.005em;
+        margin-bottom: 16px;
+        background: linear-gradient(135deg, #ffffff 0%, #86868b 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero-content p {
+        font-size: 28px;
+        font-weight: 400;
+        line-height: 1.10722;
+        letter-spacing: .004em;
+        margin-bottom: 48px;
+        color: var(--apple-text-secondary);
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* Apple-Style Main Content */
+      .main-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 22px 80px;
+      }
+
+      /* Apple-Style Test Button */
+      .test-av-section {
+        text-align: center;
+        margin: 40px 0;
+      }
+
+      .btn-test-av {
+        background: var(--apple-accent);
+        color: var(--apple-text);
+        border: 2px solid var(--apple-text);
+        border-radius: 980px;
+        padding: 18px 31px;
+        font-size: 17px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--apple-transition);
+        font-family: inherit;
+        min-width: 180px;
+      }
+
+      .btn-test-av:hover {
+        background: var(--apple-accent-hover);
+        transform: scale(1.02);
+      }
+
+      /* Apple-Style Forum Section */
+      .forum-section {
+        background: var(--apple-card-bg);
+        border: 1px solid var(--apple-border);
+        border-radius: var(--apple-radius);
+        padding: 48px;
+        margin: 40px auto;
+        max-width: 900px;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: var(--apple-shadow);
+      }
+
+      .forum-section h2 {
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 1.08349;
+        letter-spacing: -.003em;
+        margin-bottom: 16px;
+        text-align: center;
+        color: var(--apple-text);
+      }
+
+      .forum-section p {
+        font-size: 18px;
+        color: var(--apple-text-secondary);
+        text-align: center;
+        margin-bottom: 32px;
+      }
+
+      /* Apple-Style Tab Buttons */
+      .tab-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        margin-bottom: 48px;
+        flex-wrap: wrap;
+      }
+
+      .tab-btn {
+        background: var(--apple-card-bg);
+        border: 1px solid var(--apple-border);
+        border-radius: var(--apple-radius);
+        padding: 16px 32px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--apple-text);
+        transition: var(--apple-transition);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        min-width: 120px;
+        text-align: center;
+      }
+
+      .tab-btn:hover {
+        background: var(--apple-card-hover);
+        border-color: var(--apple-text);
+        transform: translateY(-2px);
+      }
+
+      .tab-btn.active {
+        background: var(--apple-accent);
+        border-color: var(--apple-accent);
+        color: var(--apple-text);
+        box-shadow: var(--apple-shadow);
+      }
+
+      .live-tab-btn.active {
+        background: var(--apple-live);
+        border-color: var(--apple-live);
+      }
+
+      .upcoming-tab-btn.active {
+        background: var(--apple-warning);
+        border-color: var(--apple-warning);
+        color: var(--apple-bg);
+      }
+
+      .schedule-tab-btn.active {
+        background: var(--apple-completed);
+        border-color: var(--apple-completed);
+      }
+
+      /* Apple-Style Tab Content */
+      .tab-content {
+        display: none;
+        animation: fadeIn 0.5s ease-out;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Apple-Style Class Cards */
+      .live-class-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+        margin-top: 32px;
+      }
+
+      .class-card {
+        background: var(--apple-card-bg);
+        border: 1px solid var(--apple-border);
+        border-radius: var(--apple-radius);
+        padding: 32px;
+        transition: var(--apple-transition);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        cursor: pointer;
+      }
+
+      .class-card:hover {
+        background: var(--apple-card-hover);
+        border-color: var(--apple-text);
+        transform: translateY(-8px);
+        box-shadow: var(--apple-shadow);
+      }
+
+      .class-card h3 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        color: var(--apple-text);
+        line-height: 1.3;
+      }
+
+      .class-card .class-info {
+        color: var(--apple-text-secondary);
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 16px;
+      }
+
+      .class-card .class-code {
+        font-size: 18px;
+        color: var(--apple-text);
+        margin-bottom: 12px;
+        font-weight: 500;
+      }
+
+      .class-card .class-description {
+        color: var(--apple-text-secondary);
+        font-size: 16px;
+        margin-bottom: 20px;
+        line-height: 1.4;
+      }
+
+      .class-card .class-schedule {
+        color: var(--apple-text-secondary);
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+
+      /* Apple-Style Buttons */
+      .btn {
+        transition: var(--apple-transition);
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        border-radius: 980px;
+        font-weight: 500;
+        transition: var(--apple-transition);
+      }
+
+      .btn-primary {
+        background: var(--apple-accent);
+        color: var(--apple-text);
+        border: 2px solid var(--apple-text);
+        padding: 12px 24px;
+        font-size: 16px;
+        min-width: 90px;
+      }
+
+      .btn-primary:hover {
+        background: var(--apple-accent-hover);
+        transform: scale(1.02);
+      }
+
+      .btn-secondary {
+        background: var(--apple-card-bg);
+        color: var(--apple-text-secondary);
+        border: 1px solid var(--apple-border);
+        padding: 12px 24px;
+        font-size: 16px;
+        min-width: 90px;
+        cursor: not-allowed;
+      }
+
+      .btn-secondary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* Apple-Style Audio/Video Preview Dialog */
+      .av-preview-dialog {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      .av-preview-content {
+        background: var(--apple-gray);
+        border: 1px solid var(--apple-border);
+        border-radius: var(--apple-radius);
+        padding: 48px;
+        max-width: 500px;
+        margin: auto;
+        box-shadow: var(--apple-shadow);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      .av-preview-content h3 {
+        font-size: 24px;
+        font-weight: 600;
+        margin-bottom: 24px;
+        color: var(--apple-text);
+        text-align: center;
+      }
+
+      .av-preview-content label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--apple-text);
+        font-size: 14px;
+      }
+
+      .av-preview-content select {
+        width: 100%;
+        background: var(--apple-input-bg);
+        border: 1px solid var(--apple-input-border);
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 16px;
+        color: var(--apple-text);
+        transition: var(--apple-transition);
+        font-family: inherit;
+        margin-bottom: 16px;
+      }
+
+      .av-preview-content select:focus {
+        outline: none;
+        border-color: var(--apple-input-focus);
+        background: var(--apple-input-focus);
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+      }
+
+      .av-preview-content select option {
+        background: var(--apple-gray);
+        color: var(--apple-text);
+        padding: 8px;
+      }
+
+      .av-preview-content video {
+        width: 100%;
+        max-width: 320px;
+        height: auto;
+        background: var(--apple-bg);
+        border-radius: var(--apple-radius);
+        margin: 16px auto;
+        display: block;
+        box-shadow: var(--apple-shadow);
+      }
+
+      .av-preview-content .test-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        margin: 24px 0;
+        flex-wrap: wrap;
+      }
+
+      .av-preview-content .test-status {
+        margin: 16px 0;
+        font-weight: 500;
+        color: var(--apple-text-secondary);
+        text-align: center;
+        min-height: 24px;
+      }
+
+      .av-preview-content .mic-test {
+        margin: 16px 0;
+        text-align: center;
+      }
+
+      .av-preview-content .mic-level {
+        display: inline-block;
+        width: 80px;
+        height: 10px;
+        background: var(--apple-input-bg);
+        border-radius: 5px;
+        vertical-align: middle;
+        margin-left: 12px;
+        transition: var(--apple-transition);
+      }
+
+      /* Apple-Style Mobile Navigation */
+      .hamburger {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        transition: var(--apple-transition);
+      }
+
+      .hamburger .bar {
+        width: 20px;
+        height: 2px;
+        background: var(--apple-text);
+        margin: 4px 0;
+        transition: var(--apple-transition);
+      }
+
+      .hamburger.active .bar:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+      }
+
+      .hamburger.active .bar:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger.active .bar:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
+      }
+
+      .nav-links.active {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-top: 1px solid var(--apple-border);
+        padding: 20px;
+        gap: 20px;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+
+        .hamburger {
+          display: block;
+        }
+
+        .hero-content h1 {
+          font-size: 40px;
+        }
+
+        .hero-content p {
+          font-size: 21px;
+        }
+
+        .forum-section {
+          padding: 32px 24px;
+          margin: 20px;
+        }
+
+        .tab-buttons {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .tab-btn {
+          width: 100%;
+          max-width: 300px;
+          text-align: center;
+        }
+
+        .live-class-cards {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+
+        .class-card {
+          padding: 24px;
+        }
+
+        .av-preview-content {
+          padding: 32px 24px;
+          margin: 20px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero-content h1 {
+          font-size: 32px;
+        }
+
+        .hero-content p {
+          font-size: 18px;
+        }
+
+        .forum-section {
+          padding: 24px 20px;
+        }
+
+        .tab-btn {
+          padding: 14px 20px;
+          font-size: 14px;
+        }
+
+        .class-card {
+          padding: 20px;
+        }
+
+        .av-preview-content {
+          padding: 24px 20px;
+        }
+      }
+
+      /* Apple-Style Animations */
+      .fade-in-up {
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Apple-Style Focus States */
+      .btn:focus,
+      .tab-btn:focus,
+      .av-preview-content select:focus {
+        outline: 2px solid var(--apple-accent);
+        outline-offset: 2px;
+      }
+    </style>
   </head>
   <body>
-    <nav class="navbar glassmorphic">
-      <div class="container nav-content">
+    <!-- Apple-Style Navigation -->
+    <nav class="navbar">
+      <div class="nav-content">
         <div class="nav-logo">
-          <img src="attached_assets/image_1750584670920.png" alt="Logo">
+          <img src="attached_assets/image_1750584670920.png" alt="Sunrise Education Centre">
         </div>
         <ul class="nav-links">
           <li><a href="/">Home</a></li>
@@ -22,117 +676,133 @@
           {% if username %}
           <li style="position:relative;">
             <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative;">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#ffffff"/></svg>
               {% if user_notifications and user_notifications|length > 0 %}
               <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
               {% endif %}
             </button>
-            <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:#fff; min-width:260px; box-shadow:0 4px 24px rgba(100,100,255,0.13); border-radius:12px; z-index:100; padding:1rem;">
-              <strong style="color:#6a82fb;">Notifications</strong>
+            <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:var(--apple-gray); min-width:260px; box-shadow:var(--apple-shadow); border-radius:var(--apple-radius); z-index:100; padding:1rem; border:1px solid var(--apple-border);">
+              <strong style="color:var(--apple-text);">Notifications</strong>
               <ul style="list-style:none; padding:0; margin:0;">
                 {% if user_notifications and user_notifications|length > 0 %}
-                                  {% for notification in user_notifications %}
+                {% for notification in user_notifications %}
                   {% if notification|length >= 7 %}
                     {% set id, message, created_at, status, notification_type, scheduled_time, item_type = notification %}
                     {% if item_type == 'personal_chat' %}
                       {% set sender_name = notification[7] if notification|length > 7 else 'User' %}
-                      <li class="notification-item personal-chat-item" data-notification-id="{{ id }}" data-type="personal_chat" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease; border-left:3px solid #fc5c7d; padding-left:0.5rem;" onmouseover="this.style.background='#ffe6cc'" onmouseout="this.style.background='transparent'">
+                      <li class="notification-item personal-chat-item" data-notification-id="{{ id }}" data-type="personal_chat" style="padding:0.5rem 0; border-bottom:1px solid var(--apple-border); font-size:0.98rem; color:var(--apple-text); cursor:pointer; transition:all 0.2s ease; border-left:3px solid #fc5c7d; padding-left:0.5rem;" onmouseover="this.style.background='rgba(252,92,125,0.1)'" onmouseout="this.style.background='transparent'">
                         <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
                           <span style="background:#fc5c7d; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">💬</span>
-                          <span style="color:#fc5c7d; font-size:0.9rem; font-weight:600;">@{{ sender_name }}</span>
+                          <span style="color:#fc5c7d; font-size:0.8rem; font-weight:600;">@{{ sender_name }}</span>
                         </div>
-                        {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                        {{ message }}<br><span style="font-size:0.85rem; color:var(--apple-text-secondary);">{{ format_datetime_for_display(created_at) }}</span>
                       </li>
                     {% else %}
-                      <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='transparent'">
+                      <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid var(--apple-border); font-size:0.98rem; color:var(--apple-text); cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">
                         <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
-                          <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
+                          <span style="background:var(--apple-accent); color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
                         </div>
-                        {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                        {{ message }}<br><span style="font-size:0.85rem; color:var(--apple-text-secondary);">{{ format_datetime_for_display(created_at) }}</span>
                       </li>
                     {% endif %}
                   {% else %}
                     <!-- Fallback for old notification format -->
                     {% set id, message, created_at, status, notification_type, scheduled_time = notification %}
-                    <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='transparent'">
+                    <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid var(--apple-border); font-size:0.98rem; color:var(--apple-text); cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">
                       <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
-                        <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
+                        <span style="background:var(--apple-accent); color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
                       </div>
-                      {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                      {{ message }}<br><span style="font-size:0.85rem; color:var(--apple-text-secondary);">{{ format_datetime_for_display(created_at) }}</span>
                     </li>
                   {% endif %}
                 {% endfor %}
                 {% else %}
-                  <li style="padding:0.7rem 0; color:#888; text-align:center;">No new notifications.</li>
+                  <li style="padding:0.7rem 0; color:var(--apple-text-secondary); text-align:center;">No new notifications.</li>
                 {% endif %}
               </ul>
             </div>
           </li>
           {% endif %}
-                     {% if username %}
-             <li><a href="/logout" class="btn btn-primary">Logout</a></li>
-           {% else %}
-           <li><a href="/auth" class="btn btn-primary">Login</a></li>
-           {% endif %}
-</ul>
+          {% if username %}
+            <li><a href="/logout" class="btn-primary">Logout</a></li>
+          {% else %}
+            <li><a href="/auth" class="btn-primary">Login</a></li>
+          {% endif %}
+        </ul>
+        <button class="hamburger">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
       </div>
     </nav>
+    <!-- Apple-Style Hero Section -->
     <header class="hero-section">
-      <div class="container hero-content">
+      <div class="hero-content fade-in-up">
         <h1>Join a Live Class</h1>
         <p>Experience interactive, real-time mathematics coaching from anywhere!</p>
       </div>
     </header>
-    <main class="container main-content" style="max-width: 100vw;">
-      <div style="text-align:center; margin-top:1.5rem;">
-        <button id="previewAVBtn" class="btn btn-primary" style="min-width:180px;">Test Audio/Video</button>
+
+    <!-- Apple-Style Main Content -->
+    <main class="main-content">
+      <!-- Apple-Style Test Audio/Video Section -->
+      <div class="test-av-section">
+        <button id="previewAVBtn" class="btn-test-av">Test Audio/Video</button>
       </div>
-      <div id="avPreviewDialog" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.35); z-index:9999; align-items:center; justify-content:center;">
-        <div style="background:#fff; border-radius:16px; padding:2rem; max-width:420px; margin:auto; box-shadow:0 8px 32px rgba(0,0,0,0.18); display:flex; flex-direction:column; align-items:center;">
-          <h3 style="margin-bottom:1rem; color:#6a82fb;">Audio/Video Preview</h3>
-          <div style="margin-bottom:1rem;">
-            <label for="videoSelect" style="display:block; margin-bottom:0.5rem; font-weight:500;">Camera:</label>
-            <select id="videoSelect" style="width:100%; padding:0.5rem; border:1px solid #ddd; border-radius:6px; margin-bottom:1rem;"></select>
-            <label for="audioSelect" style="display:block; margin-bottom:0.5rem; font-weight:500;">Microphone:</label>
-            <select id="audioSelect" style="width:100%; padding:0.5rem; border:1px solid #ddd; border-radius:6px; margin-bottom:1rem;"></select>
-            <label for="speakerSelect" style="display:block; margin-bottom:0.5rem; font-weight:500;">Speaker:</label>
-            <select id="speakerSelect" style="width:100%; padding:0.5rem; border:1px solid #ddd; border-radius:6px; margin-bottom:1rem;"></select>
+      <!-- Apple-Style Audio/Video Preview Dialog -->
+      <div id="avPreviewDialog" class="av-preview-dialog">
+        <div class="av-preview-content">
+          <h3>Audio/Video Preview</h3>
+          <div>
+            <label for="videoSelect">Camera:</label>
+            <select id="videoSelect"></select>
+            <label for="audioSelect">Microphone:</label>
+            <select id="audioSelect"></select>
+            <label for="speakerSelect">Speaker:</label>
+            <select id="speakerSelect"></select>
           </div>
-          <video id="previewVideo" width="320" height="240" autoplay muted playsinline style="background:#000; border-radius:10px; margin-bottom:1rem;"></video>
-          <div style="margin-bottom:1rem;">
-            <button id="testCameraBtn" class="btn btn-primary" style="margin-right:1rem;" onclick="testCameraAndMic()">Test Camera & Mic</button>
+          <video id="previewVideo" autoplay muted playsinline></video>
+          <div class="test-buttons">
+            <button id="testCameraBtn" class="btn btn-primary" onclick="testCameraAndMic()">Test Camera & Mic</button>
             <button id="stopTestBtn" class="btn btn-secondary" onclick="stopTest()">Stop Test</button>
           </div>
-          <div id="testStatus" style="margin-bottom:1rem; font-weight:500; color:#666;"></div>
-          <div style="margin-bottom:1rem;">
-            <button id="testMicBtn" class="btn btn-secondary" style="margin-right:1rem;">Test Microphone</button>
-            <span id="micLevel" style="display:inline-block; width:80px; height:10px; background:#eee; border-radius:5px; vertical-align:middle;"></span>
+          <div id="testStatus" class="test-status"></div>
+          <div class="mic-test">
+            <button id="testMicBtn" class="btn btn-secondary">Test Microphone</button>
+            <span id="micLevel" class="mic-level"></span>
           </div>
-          <div style="margin-bottom:1rem;">
+          <div class="mic-test">
             <button id="testSpeakerBtn" class="btn btn-secondary">Test Speaker</button>
             <audio id="testAudio" style="display:none;">
               <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUarm7blmGgU7k9n1unEiBC13yO/eizEIHWq+8+OWT" type="audio/wav">
             </audio>
           </div>
-          <button id="closeAVDialog" class="btn btn-primary" style="margin-top:0.5rem;">Close</button>
+          <button id="closeAVDialog" class="btn btn-primary">Close</button>
         </div>
       </div>
-      <section class="card-section" style="max-width: 700px; margin: 2rem auto;">
-        <div style="display:flex; gap:1.2rem; justify-content:center; margin-bottom:2.2rem;">
-          <button class="live-tab-btn tab-btn" onclick="showLiveTab('live')" style="background:#e3f7fc; color:#232946; font-weight:600; border:none; border-radius:12px; padding:0.8rem 2.2rem; font-size:1.1rem; cursor:pointer;">Live</button>
-          <button class="upcoming-tab-btn tab-btn" onclick="showLiveTab('upcoming')" style="background:#ffe082; color:#232946; font-weight:600; border:none; border-radius:12px; padding:0.8rem 2.2rem; font-size:1.1rem; cursor:pointer;">Upcoming</button>
-          <button class="schedule-tab-btn tab-btn" onclick="showLiveTab('schedule')" style="background:#d1c4e9; color:#232946; font-weight:600; border:none; border-radius:12px; padding:0.8rem 2.2rem; font-size:1.1rem; cursor:pointer;">Completed</button>
+      <!-- Apple-Style Forum Section -->
+      <section class="forum-section fade-in-up">
+        <h2>Live Class Management</h2>
+        <p>Join ongoing classes, view upcoming schedules, and access completed recordings</p>
+        
+        <!-- Apple-Style Tab Buttons -->
+        <div class="tab-buttons">
+          <button class="live-tab-btn tab-btn active" onclick="showLiveTab('live')">Live</button>
+          <button class="upcoming-tab-btn tab-btn" onclick="showLiveTab('upcoming')">Upcoming</button>
+          <button class="schedule-tab-btn tab-btn" onclick="showLiveTab('schedule')">Completed</button>
         </div>
-        <div id="live-tab-content" class="tab-content" style="display:block;">
-          <h2 style="text-align:center;">Live Classes</h2>
-          <p style="text-align:center;">Join ongoing live classes here.</p>
+        <!-- Live Tab Content -->
+        <div id="live-tab-content" class="tab-content active">
+          <h2>Live Classes</h2>
+          <p>Join ongoing live classes here.</p>
           {% if active_classes and active_classes|length > 0 %}
-            <div class="live-class-cards" style="display:flex; flex-wrap:wrap; gap:2rem; justify-content:center;">
+            <div class="live-class-cards">
               {% for c in active_classes %}
-                <div class="card-section" style="min-width:260px; max-width:340px; background:#f4f4f4; border-radius:14px; box-shadow:0 2px 8px rgba(100,100,255,0.07); padding:1.5rem;">
-                  <h3 style="color:#6a82fb;">{{ c[4] or 'Live Class' }}</h3>
+                <div class="class-card">
+                  <h3>{{ c[4] or 'Live Class' }}</h3>
                   {% if c|length > 12 %}
-                  <div style="font-size:0.96rem; color:#555; margin:0.2rem 0 0.6rem 0;">
+                  <div class="class-info">
                     {% set subj = c[13] %}{% if subj %}<strong>Subject:</strong> {{ subj|capitalize }}{% endif %}
                     {% if c[14] %}{% if subj %} • {% endif %}<strong>Teacher:</strong> {{ c[14] }}{% endif %}
                     {% if c[9] %}
@@ -140,14 +810,14 @@
                     {% endif %}
                   </div>
                   {% endif %}
-                  <div style="font-size:1.1rem; color:#232946; margin-bottom:0.7rem;"><strong>Class Code:</strong> {{ c[1] }}</div>
-                  <div style="font-size:0.98rem; color:#888; margin-bottom:1.2rem;">{{ c[5] or '' }}</div>
-                  <a href="/join-class/{{ c[0] }}" class="btn btn-primary" style="width:auto; min-width:90px; margin-top:0.7rem;">Join</a>
+                  <div class="class-code"><strong>Class Code:</strong> {{ c[1] }}</div>
+                  <div class="class-description">{{ c[5] or '' }}</div>
+                  <a href="/join-class/{{ c[0] }}" class="btn btn-primary">Join</a>
                 </div>
               {% endfor %}
             </div>
           {% else %}
-            <p style="text-align:center;">No live classes are currently active.</p>
+            <p style="text-align:center; color:var(--apple-text-secondary);">No live classes are currently active.</p>
           {% endif %}
         </div>
         <div id="upcoming-tab-content" class="tab-content" style="display:none;">
@@ -178,16 +848,17 @@
             <p style="text-align:center;">No upcoming classes scheduled.</p>
           {% endif %}
         </div>
-        <div id="schedule-tab-content" class="tab-content" style="display:none;">
-          <h2 style="text-align:center;">Completed Classes</h2>
-          <p style="text-align:center;">View the full schedule of all completed classes.</p>
+        <!-- Completed Tab Content -->
+        <div id="schedule-tab-content" class="tab-content">
+          <h2>Completed Classes</h2>
+          <p>View the full schedule of all completed classes.</p>
           {% if completed_classes and completed_classes|length > 0 %}
-            <div class="live-class-cards" style="display:flex; flex-wrap:wrap; gap:2rem; justify-content:center;">
+            <div class="live-class-cards">
               {% for c in completed_classes %}
-                <div class="card-section" style="min-width:260px; max-width:340px; background:#f4f4f4; border-radius:14px; box-shadow:0 2px 8px rgba(100,100,255,0.07); padding:1.5rem;">
-                  <h3 style="color:#9e9e9e;">{{ c[4] or 'Completed Class' }}</h3>
+                <div class="class-card">
+                  <h3>{{ c[4] or 'Completed Class' }}</h3>
                   {% if c|length > 12 %}
-                  <div style="font-size:0.96rem; color:#555; margin:0.2rem 0 0.6rem 0;">
+                  <div class="class-info">
                     {% set subj = c[13] %}{% if subj %}<strong>Subject:</strong> {{ subj|capitalize }}{% endif %}
                     {% if c[14] %}{% if subj %} • {% endif %}<strong>Teacher:</strong> {{ c[14] }}{% endif %}
                     {% if c[9] %}
@@ -195,25 +866,23 @@
                     {% endif %}
                   </div>
                   {% endif %}
-                  <div style="font-size:1.1rem; color:#232946; margin-bottom:0.7rem;"><strong>Class Code:</strong> {{ c[1] }}</div>
-                  <div style="font-size:0.98rem; color:#888; margin-bottom:1.2rem;">{{ c[5] or '' }}</div>
-                  {% if c[8] %}<div style="font-size:0.95rem; color:#888;">Scheduled: {{ c[8] }}</div>{% endif %}
+                  <div class="class-code"><strong>Class Code:</strong> {{ c[1] }}</div>
+                  <div class="class-description">{{ c[5] or '' }}</div>
+                  {% if c[8] %}<div class="class-schedule">Scheduled: {{ c[8] }}</div>{% endif %}
                   {% if c[3] %}
-                    <a href="{{ c[3] }}" class="btn btn-primary" style="width:auto; min-width:90px; margin-top:0.7rem;" target="_blank">View Recording</a>
+                    <a href="{{ c[3] }}" class="btn btn-primary" target="_blank">View Recording</a>
                   {% else %}
-                    <button class="btn btn-secondary" style="width:auto; min-width:90px; margin-top:0.7rem; background:#ccc; color:#888; cursor:not-allowed;" disabled>No Recording</button>
+                    <button class="btn btn-secondary" disabled>No Recording</button>
                   {% endif %}
                 </div>
               {% endfor %}
             </div>
           {% else %}
-            <p style="text-align:center;">No completed classes yet.</p>
+            <p style="text-align:center; color:var(--apple-text-secondary);">No completed classes yet.</p>
           {% endif %}
         </div>
       </section>
-      <div style="text-align:center; margin: 1.5rem 0 2rem 0;">
-        <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
-      </div>
+
     </main>
     <footer class="footer" style="background:#181c2a; color:#fff;">
       <div class="container footer-content">
@@ -230,12 +899,27 @@
     </footer>
     <script>
       function showLiveTab(tab) {
-        document.getElementById('live-tab-content').style.display = (tab === 'live') ? 'block' : 'none';
-        document.getElementById('upcoming-tab-content').style.display = (tab === 'upcoming') ? 'block' : 'none';
-        document.getElementById('schedule-tab-content').style.display = (tab === 'schedule') ? 'block' : 'none';
-        document.querySelector('.live-tab-btn').style.background = (tab === 'live') ? '#e3f7fc' : '#f1f3f5';
-        document.querySelector('.upcoming-tab-btn').style.background = (tab === 'upcoming') ? '#ffe082' : '#f1f3f5';
-        document.querySelector('.schedule-tab-btn').style.background = (tab === 'schedule') ? '#d1c4e9' : '#f1f3f5';
+        // Hide all tab contents
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.classList.remove('active');
+        });
+        
+        // Remove active class from all tab buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        
+        // Show selected tab content
+        document.getElementById(tab + '-tab-content').classList.add('active');
+        
+        // Add active class to selected tab button
+        if (tab === 'live') {
+          document.querySelector('.live-tab-btn').classList.add('active');
+        } else if (tab === 'upcoming') {
+          document.querySelector('.upcoming-tab-btn').classList.add('active');
+        } else if (tab === 'schedule') {
+          document.querySelector('.schedule-tab-btn').classList.add('active');
+        }
         
         // Refresh class status when tab is changed
         refreshClassStatus();
@@ -266,9 +950,9 @@
 
       // Check if page should be refreshed based on status changes
       function shouldRefreshPage(hasActive, hasUpcoming, hasCompleted) {
-        const currentActiveClasses = document.querySelectorAll('#live-tab-content .card-section').length;
-        const currentUpcomingClasses = document.querySelectorAll('#upcoming-tab-content .card-section').length;
-        const currentCompletedClasses = document.querySelectorAll('#schedule-tab-content .card-section').length;
+        const currentActiveClasses = document.querySelectorAll('#live-tab-content .class-card').length;
+        const currentUpcomingClasses = document.querySelectorAll('#upcoming-tab-content .class-card').length;
+        const currentCompletedClasses = document.querySelectorAll('#schedule-tab-content .class-card').length;
         
         // Refresh if active classes count changed significantly
         return (hasActive && currentActiveClasses === 0) || (!hasActive && currentActiveClasses > 0);
@@ -667,43 +1351,50 @@
         }
       }
     </style>
-    <script src="script.js"></script>
     <script>
-      // Dark Mode functionality
-      function setupDarkMode() {
-          const isDarkMode = localStorage.getItem('darkMode') === 'true';
-          if (isDarkMode) {
-              document.body.classList.add('dark-mode');
-              updateToggleButton();
-          }
-      }
-
-      function toggleDarkMode() {
-          document.body.classList.toggle('dark-mode');
-          const isDarkMode = document.body.classList.contains('dark-mode');
-          localStorage.setItem('darkMode', isDarkMode);
-          updateToggleButton();
-      }
-
-      function updateToggleButton() {
-          const button = document.getElementById('darkModeToggle');
-          if (button) {
-              const isDark = document.body.classList.contains('dark-mode');
-              button.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
-              button.style.background = isDark ? 'rgba(255,255,255,0.1)' : 'transparent';
-              button.style.color = isDark ? '#fff' : '#6a82fb';
-              button.style.borderColor = isDark ? '#fff' : '#6a82fb';
-          }
-      }
-
-      // Initialize dark mode on page load
+      // Apple-Style Enhancements
       document.addEventListener('DOMContentLoaded', function() {
-          setupDarkMode();
-          
-          const darkModeToggle = document.getElementById('darkModeToggle');
-          if (darkModeToggle) {
-              darkModeToggle.addEventListener('click', toggleDarkMode);
-          }
+        // Add smooth animations to class cards
+        const classCards = document.querySelectorAll('.class-card');
+        classCards.forEach((card, index) => {
+          card.style.animationDelay = `${index * 0.1}s`;
+          card.classList.add('fade-in-up');
+        });
+
+        // Add hover effects to tab buttons
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        tabButtons.forEach(btn => {
+          btn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+          });
+          btn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+          });
+        });
+
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+              target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }
+          });
+        });
+
+        // Mobile navigation toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        if (hamburger && navLinks) {
+          hamburger.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            this.classList.toggle('active');
+          });
+        }
       });
     </script>
   </body>
