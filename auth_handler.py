@@ -289,6 +289,18 @@ def init_db():
             if "duplicate column" not in str(e):
                 raise e
     
+    if db_version < 7:
+        # Migration V7: Add google_id to users for Google OAuth
+        try:
+            existing_cols = [r[1] for r in c.execute('PRAGMA table_info(users)').fetchall()]
+            if 'google_id' not in existing_cols:
+                c.execute("ALTER TABLE users ADD COLUMN google_id TEXT")
+            c.execute('PRAGMA user_version = 7')
+            conn.commit()
+        except sqlite3.OperationalError as e:
+            if "duplicate column" not in str(e):
+                raise e
+    
     # --- Seed Admin User ---
     # Ensure the default admin user 'yash' exists.
     try:

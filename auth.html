@@ -821,7 +821,7 @@
         // Initialize Google Sign-In
         if (typeof google !== 'undefined' && google.accounts) {
           google.accounts.oauth2.initTokenClient({
-            client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // Replace with your actual Google Client ID
+            client_id: '{{ google_client_id }}', // Injected from server config
             scope: 'openid email profile',
             callback: handleGoogleSignIn
           }).requestAccessToken();
@@ -1004,7 +1004,7 @@
       function signInWithGoogleAlternative() {
         if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
           google.accounts.id.initialize({
-            client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com', // Replace with your actual Google Client ID
+            client_id: '{{ google_client_id }}', // Injected from server config
             callback: handleGoogleCredentialResponse
           });
           
