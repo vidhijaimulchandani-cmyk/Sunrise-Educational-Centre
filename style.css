@@ -791,8 +791,10 @@ body.dark-mode .hamburger .bar {
         /* Ensure the content doesn't break into columns on mobile */
         flex-direction: row;
         justify-content: space-between;
+        align-items: center;
         width: 100%;
         padding: 0 1rem;
+        gap: 1rem;
     }
 
     .nav-links {
@@ -801,6 +803,8 @@ body.dark-mode .hamburger .bar {
         overflow-x: auto;   /* Allow horizontal scrolling */
         white-space: nowrap;  /* Prevent links from wrapping */
         -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        gap: 0.5rem;
+        align-items: center;
         
         /* Reset any vertical menu styles */
         position: static;
@@ -812,6 +816,10 @@ body.dark-mode .hamburger .bar {
         /* Hide scrollbar for a cleaner look */
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
+        
+        /* Ensure proper flex behavior */
+        flex-shrink: 0;
+        min-width: 0;
     }
     
     .nav-links::-webkit-scrollbar {
@@ -821,6 +829,18 @@ body.dark-mode .hamburger .bar {
     .nav-links a {
         padding: 0.4rem 0.8rem;
         font-size: 0.9rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+        min-width: max-content;
+        display: block;
+    }
+    
+    /* Ensure home button is always visible */
+    .nav-links li:first-child a {
+        background: linear-gradient(90deg, #6a82fb 0%, #fc5c7d 100%);
+        color: #fff;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(100,100,255,0.15);
     }
     
     /* --- Adjust main content for mobile --- */
