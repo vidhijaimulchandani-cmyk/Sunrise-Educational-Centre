@@ -3,151 +3,658 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Login - Sunrise Education Centre</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
-    <link rel="stylesheet" href="style.css" />
+    <title>Sign In - Sunrise Education Centre</title>
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap">
+    <style>
+      /* Apple-Inspired Design System */
+      :root {
+        --apple-bg: #000000;
+        --apple-text: #ffffff;
+        --apple-text-secondary: #86868b;
+        --apple-accent: #000000;
+        --apple-accent-hover: #333333;
+        --apple-gray: #1d1d1f;
+        --apple-gray-light: #2d2d2f;
+        --apple-border: #424245;
+        --apple-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        --apple-radius: 12px;
+        --apple-transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        --apple-input-bg: rgba(255, 255, 255, 0.05);
+        --apple-input-border: rgba(255, 255, 255, 0.1);
+        --apple-input-focus: rgba(255, 255, 255, 0.15);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--apple-bg);
+        color: var(--apple-text);
+        line-height: 1.47059;
+        font-weight: 400;
+        letter-spacing: -0.022em;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+
+      /* Apple-Style Navigation */
+      .navbar {
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--apple-border);
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 9999;
+        transition: var(--apple-transition);
+      }
+
+      .nav-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 44px;
+      }
+
+      .nav-logo img {
+        height: 32px;
+        filter: brightness(0) invert(1);
+        transition: var(--apple-transition);
+      }
+
+      .nav-logo img:hover {
+        opacity: 0.8;
+      }
+
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 32px;
+        align-items: center;
+      }
+
+      .nav-links a {
+        color: var(--apple-text);
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 400;
+        transition: var(--apple-transition);
+        opacity: 0.8;
+      }
+
+      .nav-links a:hover {
+        opacity: 1;
+        color: var(--apple-accent);
+      }
+
+      /* Apple-Style Login Container */
+      .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 120px 22px 80px;
+        background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+      }
+
+      .login-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--apple-border);
+        border-radius: var(--apple-radius);
+        padding: 48px;
+        width: 100%;
+        max-width: 420px;
+        text-align: center;
+        box-shadow: var(--apple-shadow);
+        transition: var(--apple-transition);
+      }
+
+      .login-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+      }
+
+      .login-logo {
+        margin-bottom: 32px;
+      }
+
+      .login-logo img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin-bottom: 24px;
+        box-shadow: var(--apple-shadow);
+        transition: var(--apple-transition);
+      }
+
+      .login-logo img:hover {
+        transform: scale(1.05);
+      }
+
+      .login-logo h2 {
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 1.08349;
+        letter-spacing: -.003em;
+        margin-bottom: 8px;
+      }
+
+      .login-logo p {
+        font-size: 17px;
+        color: var(--apple-text-secondary);
+        line-height: 1.23536;
+        letter-spacing: -.022em;
+      }
+
+      /* Apple-Style Form Elements */
+      .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--apple-text);
+        margin-bottom: 8px;
+        letter-spacing: -0.01em;
+      }
+
+      .form-input {
+        width: 100%;
+        background: var(--apple-input-bg);
+        border: 1px solid var(--apple-input-border);
+        border-radius: 8px;
+        padding: 16px;
+        font-size: 17px;
+        color: var(--apple-text);
+        transition: var(--apple-transition);
+        font-family: inherit;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: var(--apple-input-focus);
+        background: var(--apple-input-focus);
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+      }
+
+      .form-input::placeholder {
+        color: var(--apple-text-secondary);
+        opacity: 0.7;
+      }
+
+      .form-select {
+        width: 100%;
+        background: var(--apple-input-bg);
+        border: 1px solid var(--apple-input-border);
+        border-radius: 8px;
+        padding: 16px;
+        font-size: 17px;
+        color: var(--apple-text);
+        transition: var(--apple-transition);
+        font-family: inherit;
+        cursor: pointer;
+      }
+
+      .form-select:focus {
+        outline: none;
+        border-color: var(--apple-input-focus);
+        background: var(--apple-input-focus);
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+      }
+
+      .form-select option {
+        background: var(--apple-gray);
+        color: var(--apple-text);
+        padding: 8px;
+      }
+
+      /* Apple-Style Buttons */
+      .btn-primary {
+        width: 100%;
+        background: var(--apple-accent);
+        color: var(--apple-text);
+        border: 2px solid var(--apple-text);
+        border-radius: 980px;
+        padding: 16px 24px;
+        font-size: 17px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--apple-transition);
+        font-family: inherit;
+        margin-bottom: 16px;
+      }
+
+      .btn-primary:hover {
+        background: var(--apple-accent-hover);
+        transform: scale(1.02);
+      }
+
+      .btn-primary:active {
+        transform: scale(0.98);
+      }
+
+      .btn-google {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--apple-text);
+        border: 1px solid var(--apple-border);
+        border-radius: 980px;
+        padding: 16px 24px;
+        font-size: 17px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--apple-transition);
+        font-family: inherit;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      .btn-google:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: var(--apple-text);
+        transform: scale(1.02);
+      }
+
+      .btn-google:active {
+        transform: scale(0.98);
+      }
+
+      .google-icon {
+        width: 20px;
+        height: 20px;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="%23FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/><path fill="%23FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/><path fill="%234CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/><path fill="%231976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/></svg>') no-repeat center;
+        background-size: contain;
+      }
+
+      /* Apple-Style Form Toggle */
+      .form-toggle {
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid var(--apple-border);
+      }
+
+      .form-toggle a {
+        color: var(--apple-accent);
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        transition: var(--apple-transition);
+      }
+
+      .form-toggle a:hover {
+        color: var(--apple-text);
+        text-decoration: underline;
+      }
+
+      /* Apple-Style Error Messages */
+      .error-message {
+        background: rgba(255, 59, 48, 0.1);
+        border: 1px solid rgba(255, 59, 48, 0.3);
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 24px;
+        color: #ff3b30;
+        font-size: 14px;
+        text-align: left;
+      }
+
+      .success-message {
+        background: rgba(52, 199, 89, 0.1);
+        border: 1px solid rgba(52, 199, 89, 0.3);
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 24px;
+        color: #34c759;
+        font-size: 14px;
+        text-align: left;
+      }
+
+      /* Apple-Style Divider */
+      .divider {
+        display: flex;
+        align-items: center;
+        margin: 24px 0;
+        color: var(--apple-text-secondary);
+        font-size: 14px;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--apple-border);
+      }
+
+      .divider span {
+        padding: 0 16px;
+      }
+
+      /* Apple-Style Back Link */
+      .back-link {
+        position: absolute;
+        top: 60px;
+        left: 22px;
+        color: var(--apple-text-secondary);
+        text-decoration: none;
+        font-size: 14px;
+        transition: var(--apple-transition);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .back-link:hover {
+        color: var(--apple-text);
+      }
+
+      .back-arrow {
+        font-size: 18px;
+        transition: var(--apple-transition);
+      }
+
+      .back-link:hover .back-arrow {
+        transform: translateX(-4px);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+
+        .login-card {
+          padding: 32px 24px;
+          margin: 0 16px;
+        }
+
+        .login-logo h2 {
+          font-size: 28px;
+        }
+
+        .back-link {
+          position: relative;
+          top: auto;
+          left: auto;
+          margin-bottom: 24px;
+          justify-content: center;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .login-container {
+          padding: 100px 16px 60px;
+        }
+
+        .login-card {
+          padding: 24px 20px;
+        }
+
+        .login-logo h2 {
+          font-size: 24px;
+        }
+
+        .btn-primary,
+        .btn-google {
+          padding: 14px 20px;
+          font-size: 16px;
+        }
+      }
+
+      /* Apple-Style Animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .fade-in-up {
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      /* Apple-Style Focus States */
+      .btn-primary:focus,
+      .btn-google:focus,
+      .form-input:focus,
+      .form-select:focus {
+        outline: 2px solid var(--apple-accent);
+        outline-offset: 2px;
+      }
+    </style>
   </head>
-  <body class="login-bg">
-    <nav class="navbar glassmorphic">
-      <div class="container nav-content">
+  <body>
+    <!-- Apple-Style Navigation -->
+    <nav class="navbar">
+      <div class="nav-content">
         <div class="nav-logo">
-          <img src="attached_assets/image_1750584670920.png" alt="Logo">
+          <img src="attached_assets/image_1750584670920.png" alt="Sunrise Education Centre">
         </div>
         <ul class="nav-links">
           <li><a href="/">Home</a></li>
+          <li><a href="/online-class">Live Class</a></li>
+          <li><a href="/study-resources">Study Resources</a></li>
         </ul>
-        <button class="hamburger">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </button>
       </div>
     </nav>
+
+    <!-- Apple-Style Login Container -->
     <div class="login-container">
-      <div class="login-card">
+      <a href="/" class="back-link">
+        <span class="back-arrow">←</span>
+        Back to Home
+      </a>
+
+      <div class="login-card fade-in-up">
         <div class="login-logo">
-          <img src="attached_assets/image_1750584670920.png" alt="Logo">
-          <h2 id="formTitle">Login</h2>
+          <img src="attached_assets/image_1750584670920.png" alt="Sunrise Education Centre Logo">
+          <h2 id="formTitle">Sign In</h2>
+          <p id="formSubtitle">Welcome back to Sunrise Education Centre</p>
         </div>
+
+        <!-- Google Sign In Button -->
+        <button class="btn-google" onclick="signInWithGoogle()">
+          <div class="google-icon"></div>
+          Continue with Google
+        </button>
+
+        <div class="divider">
+          <span>or</span>
+        </div>
+
+        <!-- Login Form -->
         <form id="loginForm" method="POST" action="/auth" class="login-form">
-          <input type="text" name="username" placeholder="Username" required autocomplete="username" />
-          <input type="password" name="password" placeholder="Password" required autocomplete="current-password" />
-          <select name="class_id" id="loginRole" required style="border-radius:20px; padding:0.7rem 1.1rem;">
-            {% for id, name in all_classes %}
-              <option value="{{ id }}">{{ name|title }}</option>
-            {% endfor %}
-          </select>
-          <input type="text" name="admin_code" id="loginAdminCodeInput" placeholder="Admin Code" style="display:none;" />
-          <button type="submit" class="btn btn-primary">Login</button>
+          <div class="form-group">
+            <label for="loginUsername">Username</label>
+            <input type="text" id="loginUsername" name="username" class="form-input" placeholder="Enter your username" required autocomplete="username" />
+          </div>
+
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" name="password" class="form-input" placeholder="Enter your password" required autocomplete="current-password" />
+          </div>
+
+          <div class="form-group">
+            <label for="loginRole">Select Role</label>
+            <select name="class_id" id="loginRole" class="form-select" required>
+              <option value="">Choose your role</option>
+              {% for id, name in all_classes %}
+                <option value="{{ id }}">{{ name|title }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group" id="loginAdminCodeGroup" style="display: none;">
+            <label for="loginAdminCode">Admin Code</label>
+            <input type="text" id="loginAdminCode" name="admin_code" class="form-input" placeholder="Enter admin code" />
+          </div>
+
+          <button type="submit" class="btn-primary">Sign In</button>
         </form>
-        <form id="signupForm" method="POST" action="/register" class="login-form" style="display:none;">
-          <input type="text" id="signup-username" name="username" placeholder="Username" required autocomplete="username" />
-          <input type="password" id="signup-password" name="password" placeholder="Password" required autocomplete="new-password" />
-          <select name="class_id" id="signupRole" required style="border-radius:20px; padding:0.7rem 1.1rem;">
-            {% for id, name in all_classes %}
-              <option value="{{ id }}">{{ name|title }}</option>
-            {% endfor %}
-                    </select>
-          <input type="text" name="admin_code" id="signupAdminCodeInput" placeholder="Admin Code" style="display:none;" />
-          <button type="submit" class="btn btn-primary">Sign Up</button>
-              </form>
-        <div class="login-links">
-          <a href="/">&larr; Back to Home</a> |
+
+        <!-- Sign Up Form -->
+        <form id="signupForm" method="POST" action="/register" class="login-form" style="display: none;">
+          <div class="form-group">
+            <label for="signupUsername">Username</label>
+            <input type="text" id="signupUsername" name="username" class="form-input" placeholder="Choose a username" required autocomplete="username" />
+          </div>
+
+          <div class="form-group">
+            <label for="signupPassword">Password</label>
+            <input type="password" id="signupPassword" name="password" class="form-input" placeholder="Create a password" required autocomplete="new-password" />
+          </div>
+
+          <div class="form-group">
+            <label for="signupRole">Select Role</label>
+            <select name="class_id" id="signupRole" class="form-select" required>
+              <option value="">Choose your role</option>
+              {% for id, name in all_classes %}
+                <option value="{{ id }}">{{ name|title }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group" id="signupAdminCodeGroup" style="display: none;">
+            <label for="signupAdminCode">Admin Code</label>
+            <input type="text" id="signupAdminCode" name="admin_code" class="form-input" placeholder="Enter admin code" />
+          </div>
+
+          <button type="submit" class="btn-primary">Create Account</button>
+        </form>
+
+        <!-- Form Toggle -->
+        <div class="form-toggle">
           <a href="#" id="toggleForm">Don't have an account? Sign Up</a>
         </div>
+
+        <!-- Error/Success Messages -->
         {% if error %}
-        <div class="login-error">{{ error }}</div>
-        {% else %}
-        <div class="login-hint" style="margin-top:0.75rem; font-size:0.95rem; color:#6b7280;">Tip: If you face login issues, contact the institute.</div>
+        <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        {% if success %}
+        <div class="success-message">{{ success }}</div>
         {% endif %}
       </div>
     </div>
-    <div style="text-align:center; margin: 1.5rem 0 2rem 0;">
-      <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
-    </div>
-  </body>
-  <script src="script.js"></script>
-  <script>
-    // Toggle between Login and Sign Up forms
-    const loginForm = document.getElementById('loginForm');
-    const signupForm = document.getElementById('signupForm');
-    const toggleForm = document.getElementById('toggleForm');
-    const formTitle = document.getElementById('formTitle');
-    let isLogin = true;
-    toggleForm.addEventListener('click', function(e) {
-      e.preventDefault();
-      isLogin = !isLogin;
-      loginForm.style.display = isLogin ? '' : 'none';
-      signupForm.style.display = isLogin ? 'none' : '';
-      formTitle.textContent = isLogin ? 'Login' : 'Sign Up';
-      toggleForm.textContent = isLogin ? "Don't have an account? Sign Up" : "Already have an account? Login";
-    });
-    // Show/hide admin code input on role change
-    const signupRole = document.getElementById('signupRole');
-    const signupAdminCodeInput = document.getElementById('signupAdminCodeInput');
-    signupRole.addEventListener('change', function() {
-      if (signupRole.value === 'admin') {
-        signupAdminCodeInput.style.display = '';
-        signupAdminCodeInput.required = true;
-      } else {
-        signupAdminCodeInput.style.display = 'none';
-        signupAdminCodeInput.required = false;
-      }
-    });
-    // Show/hide admin code input on login role change
-    const loginRole = document.getElementById('loginRole');
-    const loginAdminCodeInput = document.getElementById('loginAdminCodeInput');
-    const all_classes_dict = {
-        {% for id, name in all_classes %}'{{ id }}': '{{ name }}',{% endfor %}
-    };
-    loginRole.addEventListener('change', function() {
-      const selectedRoleName = all_classes_dict[loginRole.value];
-      if (selectedRoleName === 'admin') {
-        loginAdminCodeInput.style.display = '';
-        loginAdminCodeInput.required = true;
-      } else {
-        loginAdminCodeInput.style.display = 'none';
-        loginAdminCodeInput.required = false;
-      }
-    });
-  </script>
-  <script>
-    // Dark Mode functionality
-    function setupDarkMode() {
-        const isDarkMode = localStorage.getItem('darkMode') === 'true';
-        if (isDarkMode) {
-            document.body.classList.add('dark-mode');
-            updateToggleButton();
-        }
-    }
 
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-        const isDarkMode = document.body.classList.contains('dark-mode');
-        localStorage.setItem('darkMode', isDarkMode);
-        updateToggleButton();
-    }
+    <script>
+      // Toggle between Login and Sign Up forms
+      const loginForm = document.getElementById('loginForm');
+      const signupForm = document.getElementById('signupForm');
+      const toggleForm = document.getElementById('toggleForm');
+      const formTitle = document.getElementById('formTitle');
+      const formSubtitle = document.getElementById('formSubtitle');
+      let isLogin = true;
 
-    function updateToggleButton() {
-        const button = document.getElementById('darkModeToggle');
-        if (button) {
-            const isDark = document.body.classList.contains('dark-mode');
-            button.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
-            button.style.background = isDark ? 'rgba(255,255,255,0.1)' : 'transparent';
-            button.style.color = isDark ? '#fff' : '#6a82fb';
-            button.style.borderColor = isDark ? '#fff' : '#6a82fb';
-        }
-    }
-
-    // Initialize dark mode on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        setupDarkMode();
+      toggleForm.addEventListener('click', function(e) {
+        e.preventDefault();
+        isLogin = !isLogin;
         
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        if (darkModeToggle) {
-            darkModeToggle.addEventListener('click', toggleDarkMode);
+        if (isLogin) {
+          loginForm.style.display = 'block';
+          signupForm.style.display = 'none';
+          formTitle.textContent = 'Sign In';
+          formSubtitle.textContent = 'Welcome back to Sunrise Education Centre';
+          toggleForm.textContent = "Don't have an account? Sign Up";
+        } else {
+          loginForm.style.display = 'none';
+          signupForm.style.display = 'block';
+          formTitle.textContent = 'Sign Up';
+          formSubtitle.textContent = 'Join Sunrise Education Centre';
+          toggleForm.textContent = "Already have an account? Sign In";
         }
-    });
-  </script>
-</body>
+      });
+
+      // Show/hide admin code input on role change
+      const signupRole = document.getElementById('signupRole');
+      const signupAdminCodeGroup = document.getElementById('signupAdminCodeGroup');
+      
+      signupRole.addEventListener('change', function() {
+        if (signupRole.value === 'admin') {
+          signupAdminCodeGroup.style.display = 'block';
+          document.getElementById('signupAdminCode').required = true;
+        } else {
+          signupAdminCodeGroup.style.display = 'none';
+          document.getElementById('signupAdminCode').required = false;
+        }
+      });
+
+      // Show/hide admin code input on login role change
+      const loginRole = document.getElementById('loginRole');
+      const loginAdminCodeGroup = document.getElementById('loginAdminCodeGroup');
+      
+      loginRole.addEventListener('change', function() {
+        if (loginRole.value === 'admin') {
+          loginAdminCodeGroup.style.display = 'block';
+          document.getElementById('loginAdminCode').required = true;
+        } else {
+          loginAdminCodeGroup.style.display = 'none';
+          document.getElementById('loginAdminCode').required = false;
+        }
+      });
+
+      // Google Sign In Function
+      function signInWithGoogle() {
+        // This would integrate with Google OAuth
+        // For now, we'll show a message
+        alert('Google Sign In integration coming soon! Please use the form above to sign in.');
+      }
+
+      // Form validation and enhancement
+      document.addEventListener('DOMContentLoaded', function() {
+        const inputs = document.querySelectorAll('.form-input, .form-select');
+        
+        inputs.forEach(input => {
+          // Add focus effects
+          input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.02)';
+          });
+          
+          input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'scale(1)';
+          });
+        });
+
+        // Smooth form transitions
+        const forms = document.querySelectorAll('.login-form');
+        forms.forEach(form => {
+          form.addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.textContent = 'Processing...';
+            submitBtn.disabled = true;
+            
+            // Re-enable after a delay (in case of validation errors)
+            setTimeout(() => {
+              submitBtn.textContent = submitBtn.textContent === 'Sign In' ? 'Sign In' : 'Create Account';
+              submitBtn.disabled = false;
+            }, 3000);
+          });
+        });
+      });
+    </script>
+  </body>
 </html>
