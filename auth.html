@@ -549,6 +549,64 @@
         outline: 2px solid var(--apple-accent);
         outline-offset: 2px;
       }
+
+      /* New styles for admin code input */
+      .admin-code-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--apple-input-border);
+        border-radius: 8px;
+        background: var(--apple-input-bg);
+        transition: var(--apple-transition);
+      }
+
+      .admin-code-container:focus-within {
+        border-color: var(--apple-input-focus);
+        background: var(--apple-input-focus);
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+      }
+
+      .admin-code-input {
+        flex-grow: 1;
+        padding-right: 40px; /* Space for toggle button */
+        padding-left: 16px;
+        font-size: 17px;
+        color: var(--apple-text);
+        border: none;
+        background: transparent;
+        -webkit-text-security: disc; /* For password input */
+      }
+
+      .admin-code-input:focus {
+        outline: none;
+      }
+
+      .admin-code-toggle {
+        position: absolute;
+        right: 12px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-left: 1px solid var(--apple-input-border);
+        border-radius: 0 8px 8px 0;
+        transition: var(--apple-transition);
+      }
+
+      .admin-code-toggle:hover {
+        background: var(--apple-input-border);
+      }
+
+      .admin-code-hint {
+        font-size: 12px;
+        color: var(--apple-text-secondary);
+        margin-top: 4px;
+        text-align: left;
+      }
     </style>
   </head>
   <body>
@@ -634,7 +692,15 @@
 
           <div class="form-group" id="loginAdminCodeGroup" style="display: none;">
             <label for="loginAdminCode">Admin Code</label>
-            <input type="text" id="loginAdminCode" name="admin_code" class="form-input" placeholder="Enter admin code" />
+            <div class="admin-code-container">
+              <input type="password" id="loginAdminCode" name="admin_code" class="form-input admin-code-input" placeholder="Enter admin code" />
+              <button type="button" class="admin-code-toggle" onclick="toggleAdminCodeVisibility('loginAdminCode')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+            <div class="admin-code-hint">Enter the secure admin code to access administrative functions</div>
           </div>
 
           <button type="submit" class="btn-primary">Sign In</button>
@@ -664,7 +730,15 @@
 
           <div class="form-group" id="signupAdminCodeGroup" style="display: none;">
             <label for="signupAdminCode">Admin Code</label>
-            <input type="text" id="signupAdminCode" name="admin_code" class="form-input" placeholder="Enter admin code" />
+            <div class="admin-code-container">
+              <input type="password" id="signupAdminCode" name="admin_code" class="form-input admin-code-input" placeholder="Enter admin code" />
+              <button type="button" class="admin-code-toggle" onclick="toggleAdminCodeVisibility('signupAdminCode')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+            <div class="admin-code-hint">Enter the secure admin code to access administrative functions</div>
           </div>
 
           <button type="submit" class="btn-primary">Create Account</button>
@@ -965,6 +1039,21 @@
         }).join(''));
         
         return JSON.parse(jsonPayload);
+      }
+
+      // Function to toggle admin code visibility
+      function toggleAdminCodeVisibility(inputId) {
+        const input = document.getElementById(inputId);
+        const toggleBtn = input.parentElement.querySelector('.admin-code-toggle');
+        const isPassword = input.type === 'password';
+
+        if (isPassword) {
+          input.type = 'text';
+          toggleBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/></svg>';
+        } else {
+          input.type = 'password';
+          toggleBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/></svg>';
+        }
       }
     </script>
     

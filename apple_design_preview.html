@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apple Design System Preview - Sunrise Education Centre</title>
+  <link rel="icon" type="image/png" href="/favicon.ico">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Apple Design System Variables */
+    :root {
+      --apple-bg: #000000;
+      --apple-text: #ffffff;
+      --apple-text-secondary: #86868b;
+      --apple-accent: #007aff;
+      --apple-accent-hover: #0056cc;
+      --apple-gray: #1d1d1f;
+      --apple-gray-light: #2d2d2f;
+      --apple-border: #424245;
+      --apple-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      --apple-radius: 12px;
+      --apple-transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --apple-card-bg: rgba(255, 255, 255, 0.05);
+      --apple-card-border: rgba(255, 255, 255, 0.1);
+      --apple-success: #34c759;
+      --apple-warning: #ff9500;
+      --apple-danger: #ff3b30;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--apple-bg);
+      color: var(--apple-text);
+      line-height: 1.47059;
+      font-weight: 400;
+      letter-spacing: -0.022em;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Navigation */
+    .navbar {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--apple-border);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      transition: var(--apple-transition);
+    }
+
+    .nav-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 44px;
+    }
+
+    .nav-logo {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--apple-text);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--apple-text);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 17px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: var(--apple-transition);
+    }
+
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--apple-accent);
+    }
+
+    /* Main Container */
+    .main-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 22px 40px 22px;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      text-align: center;
+      margin-bottom: 80px;
+      animation: textReveal 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .hero-title {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--apple-text) 0%, var(--apple-accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 24px;
+      color: var(--apple-text-secondary);
+      font-weight: 400;
+      margin-bottom: 32px;
+    }
+
+    .hero-description {
+      font-size: 18px;
+      color: var(--apple-text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Design System Showcase */
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 32px;
+      margin-bottom: 80px;
+    }
+
+    .showcase-card {
+      background: var(--apple-card-bg);
+      border: 1px solid var(--apple-card-border);
+      border-radius: var(--apple-radius);
+      padding: 32px;
+      box-shadow: var(--apple-shadow);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: var(--apple-transition);
+      animation: textFadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+      opacity: 0;
+    }
+
+    .showcase-card:nth-child(1) { animation-delay: 0.1s; }
+    .showcase-card:nth-child(2) { animation-delay: 0.2s; }
+    .showcase-card:nth-child(3) { animation-delay: 0.3s; }
+
+    .showcase-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      border-color: var(--apple-accent);
+    }
+
+    .showcase-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--apple-accent);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      font-size: 32px;
+      color: var(--apple-text);
+    }
+
+    .showcase-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--apple-text);
+    }
+
+    .showcase-description {
+      color: var(--apple-text-secondary);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    /* Typography Showcase */
+    .typography-section {
+      margin-bottom: 80px;
+      animation: textSlideIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .section-title {
+      font-size: 36px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 48px;
+      color: var(--apple-text);
+    }
+
+    .typography-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .typography-item {
+      background: var(--apple-card-bg);
+      border: 1px solid var(--apple-card-border);
+      border-radius: var(--apple-radius);
+      padding: 24px;
+      text-align: center;
+      transition: var(--apple-transition);
+    }
+
+    .typography-item:hover {
+      transform: scale(1.02);
+      border-color: var(--apple-accent);
+    }
+
+    .typography-example {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--apple-text);
+    }
+
+    .typography-label {
+      font-size: 14px;
+      color: var(--apple-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Animation Showcase */
+    .animation-section {
+      margin-bottom: 80px;
+      animation: textScaleIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .animation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+    }
+
+    .animation-item {
+      background: var(--apple-card-bg);
+      border: 1px solid var(--apple-card-border);
+      border-radius: var(--apple-radius);
+      padding: 32px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--apple-transition);
+    }
+
+    .animation-item:hover {
+      border-color: var(--apple-accent);
+    }
+
+    .animation-text {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--apple-text);
+      margin-bottom: 16px;
+    }
+
+    .animation-description {
+      font-size: 14px;
+      color: var(--apple-text-secondary);
+    }
+
+    /* Color Palette */
+    .color-section {
+      margin-bottom: 80px;
+      animation: textFadeInUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+    }
+
+    .color-item {
+      text-align: center;
+    }
+
+    .color-swatch {
+      width: 100%;
+      height: 80px;
+      border-radius: var(--apple-radius);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: var(--apple-text);
+      transition: var(--apple-transition);
+    }
+
+    .color-swatch:hover {
+      transform: scale(1.05);
+    }
+
+    .color-name {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--apple-text);
+    }
+
+    .color-value {
+      font-size: 14px;
+      color: var(--apple-text-secondary);
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+    }
+
+    /* Buttons Showcase */
+    .button-section {
+      margin-bottom: 80px;
+      animation: textSlideIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .button-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 16px 32px;
+      border: none;
+      border-radius: var(--apple-radius);
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--apple-transition);
+      font-family: inherit;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: var(--apple-accent);
+      color: var(--apple-text);
+    }
+
+    .btn-primary:hover {
+      background: var(--apple-accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 122, 255, 0.3);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--apple-text);
+      border: 1px solid var(--apple-card-border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--apple-accent);
+      transform: translateY(-2px);
+    }
+
+    .btn-success {
+      background: var(--apple-success);
+      color: var(--apple-text);
+    }
+
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(52, 199, 89, 0.3);
+    }
+
+    .btn-warning {
+      background: var(--apple-warning);
+      color: var(--apple-text);
+    }
+
+    .btn-warning:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 149, 0, 0.3);
+    }
+
+    .btn-danger {
+      background: var(--apple-danger);
+      color: var(--apple-text);
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 59, 48, 0.3);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 40px 0;
+      border-top: 1px solid var(--apple-card-border);
+      color: var(--apple-text-secondary);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .main-container {
+        padding: 80px 16px 32px 16px;
+      }
+
+      .hero-title {
+        font-size: 36px;
+      }
+
+      .hero-subtitle {
+        font-size: 20px;
+      }
+
+      .showcase-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .typography-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .animation-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .color-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .button-grid {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .btn {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+      }
+    }
+
+    /* Interactive Elements */
+    .interactive-demo {
+      background: var(--apple-card-bg);
+      border: 1px solid var(--apple-card-border);
+      border-radius: var(--apple-radius);
+      padding: 32px;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .demo-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: var(--apple-text);
+    }
+
+    .demo-text {
+      font-size: 18px;
+      color: var(--apple-text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .demo-button {
+      background: var(--apple-accent);
+      color: var(--apple-text);
+      border: none;
+      padding: 12px 24px;
+      border-radius: var(--apple-radius);
+      font-size: 16px;
+      cursor: pointer;
+      transition: var(--apple-transition);
+      font-family: inherit;
+    }
+
+    .demo-button:hover {
+      background: var(--apple-accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 122, 255, 0.3);
+    }
+
+    .demo-text-animated {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--apple-text);
+      margin: 16px 0;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .demo-text-animated.animate {
+      animation: textReveal 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <div class="nav-logo">🍎 Apple Design System</div>
+      <ul class="nav-links">
+        <li><a href="#typography">Typography</a></li>
+        <li><a href="#animations">Animations</a></li>
+        <li><a href="#colors">Colors</a></li>
+        <li><a href="#components">Components</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="main-container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <h1 class="hero-title">Apple Design System</h1>
+      <h2 class="hero-subtitle">Modern, Elegant, and Accessible</h2>
+      <p class="hero-description">
+        Experience the power of Apple's design philosophy with our comprehensive design system. 
+        Featuring smooth animations, beautiful typography, and intuitive interactions.
+      </p>
+    </section>
+
+    <!-- Design System Showcase -->
+    <section class="showcase-grid">
+      <div class="showcase-card">
+        <div class="showcase-icon">🎨</div>
+        <h3 class="showcase-title">Design Principles</h3>
+        <p class="showcase-description">
+          Built on Apple's core design principles: clarity, deference, and depth. 
+          Every element is crafted with purpose and precision.
+        </p>
+      </div>
+
+      <div class="showcase-card">
+        <div class="showcase-icon">✨</div>
+        <h3 class="showcase-title">Smooth Animations</h3>
+        <p class="showcase-description">
+          Fluid, natural animations that enhance user experience without being distracting. 
+          Powered by advanced CSS transitions and keyframes.
+        </p>
+      </div>
+
+      <div class="showcase-card">
+        <div class="showcase-icon">📱</div>
+        <h3 class="showcase-title">Responsive Design</h3>
+        <p class="showcase-description">
+          Seamlessly adapts to any screen size. Mobile-first approach ensures 
+          perfect experience across all devices.
+        </p>
+      </div>
+    </section>
+
+    <!-- Typography Section -->
+    <section id="typography" class="typography-section">
+      <h2 class="section-title">Typography</h2>
+      <div class="typography-grid">
+        <div class="typography-item">
+          <div class="typography-example text-reveal">Display Large</div>
+          <div class="typography-label">SF Pro Display - 48px</div>
+        </div>
+        <div class="typography-item">
+          <div class="typography-example text-slide-in">Heading</div>
+          <div class="typography-label">SF Pro Display - 24px</div>
+        </div>
+        <div class="typography-item">
+          <div class="typography-example text-fade-in-up">Body Text</div>
+          <div class="typography-label">SF Pro Display - 16px</div>
+        </div>
+        <div class="typography-item">
+          <div class="typography-example text-scale-in">Caption</div>
+          <div class="typography-label">SF Pro Display - 14px</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Animation Section -->
+    <section id="animations" class="animation-section">
+      <h2 class="section-title">Animations</h2>
+      <div class="animation-grid">
+        <div class="animation-item" onclick="triggerAnimation('text-reveal')">
+          <div class="animation-text text-reveal">Text Reveal</div>
+          <div class="animation-description">Smooth fade-in with blur effect</div>
+        </div>
+        <div class="animation-item" onclick="triggerAnimation('text-slide-in')">
+          <div class="animation-text text-slide-in">Slide In</div>
+          <div class="animation-description">Horizontal slide animation</div>
+        </div>
+        <div class="animation-item" onclick="triggerAnimation('text-fade-in-up')">
+          <div class="animation-text text-fade-in-up">Fade In Up</div>
+          <div class="animation-description">Vertical fade with movement</div>
+        </div>
+        <div class="animation-item" onclick="triggerAnimation('text-scale-in')">
+          <div class="animation-text text-scale-in">Scale In</div>
+          <div class="animation-description">Scale and fade combination</div>
+        </div>
+        <div class="animation-item" onclick="triggerAnimation('text-glow')">
+          <div class="animation-text text-glow">Glow Effect</div>
+          <div class="animation-description">Pulsing glow animation</div>
+        </div>
+        <div class="animation-item" onclick="triggerAnimation('text-bounce')">
+          <div class="animation-text text-bounce">Bounce</div>
+          <div class="animation-description">Playful bounce effect</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Color Section -->
+    <section id="colors" class="color-section">
+      <h2 class="section-title">Color Palette</h2>
+      <div class="color-grid">
+        <div class="color-item">
+          <div class="color-swatch" style="background: var(--apple-accent)">Primary</div>
+          <div class="color-name">Primary Blue</div>
+          <div class="color-value">#007aff</div>
+        </div>
+        <div class="color-item">
+          <div class="color-swatch" style="background: var(--apple-success)">Success</div>
+          <div class="color-name">Success Green</div>
+          <div class="color-value">#34c759</div>
+        </div>
+        <div class="color-item">
+          <div class="color-swatch" style="background: var(--apple-warning)">Warning</div>
+          <div class="color-name">Warning Orange</div>
+          <div class="color-value">#ff9500</div>
+        </div>
+        <div class="color-item">
+          <div class="color-swatch" style="background: var(--apple-danger)">Danger</div>
+          <div class="color-name">Danger Red</div>
+          <div class="color-value">#ff3b30</div>
+        </div>
+        <div class="color-item">
+          <div class="color-swatch" style="background: var(--apple-gray)">Dark Gray</div>
+          <div class="color-name">Dark Gray</div>
+          <div class="color-value">#1d1d1f</div>
+        </div>
+        <div class="color-item">
+          <div class="color-swatch" style="background: var(--apple-text-secondary)">Text Secondary</div>
+          <div class="color-name">Text Secondary</div>
+          <div class="color-value">#86868b</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Button Section -->
+    <section id="components" class="button-section">
+      <h2 class="section-title">Components</h2>
+      <div class="button-grid">
+        <button class="btn btn-primary">Primary Button</button>
+        <button class="btn btn-secondary">Secondary Button</button>
+        <button class="btn btn-success">Success Button</button>
+        <button class="btn btn-warning">Warning Button</button>
+        <button class="btn btn-danger">Danger Button</button>
+      </div>
+    </section>
+
+    <!-- Interactive Demo -->
+    <section class="interactive-demo">
+      <h3 class="demo-title">Interactive Animation Demo</h3>
+      <p class="demo-description">Click the button below to see animations in action!</p>
+      <button class="demo-button" onclick="triggerDemoAnimation()">Trigger Animation</button>
+      <div class="demo-text-animated" id="demoText">Watch this text animate!</div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2024 Sunrise Education Centre. Built with Apple Design System.</p>
+  </footer>
+
+  <script>
+    // Animation trigger functions
+    function triggerAnimation(animationClass) {
+      const elements = document.querySelectorAll('.' + animationClass);
+      elements.forEach(element => {
+        element.style.animation = 'none';
+        element.offsetHeight; // Trigger reflow
+        element.style.animation = null;
+      });
+    }
+
+    function triggerDemoAnimation() {
+      const demoText = document.getElementById('demoText');
+      demoText.classList.remove('animate');
+      demoText.offsetHeight; // Trigger reflow
+      demoText.classList.add('animate');
+    }
+
+    // Intersection Observer for scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'none';
+        }
+      });
+    }, observerOptions);
+
+    // Observe all showcase cards
+    document.querySelectorAll('.showcase-card').forEach(card => {
+      observer.observe(card);
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Add hover effects to showcase cards
+    document.querySelectorAll('.showcase-card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-8px)';
+        this.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.4)';
+      });
+
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+        this.style.boxShadow = 'var(--apple-shadow)';
+      });
+    });
+  </script>
+</body>
+</html>

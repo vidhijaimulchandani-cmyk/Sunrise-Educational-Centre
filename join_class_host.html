@@ -4,30 +4,350 @@
   <title>Host Live Class - {{ topic or 'Live Class' }}</title>
   <link rel="stylesheet" href="style.css" />
   <script src="script.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap">
   <style>
-    .host-container { display: flex; max-width: 1400px; margin: 2rem auto; background: #fff; border-radius: 18px; box-shadow: 0 4px 24px rgba(100,100,255,0.10); }
-    .video-section { flex: 2; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%); }
-    .control-section { flex: 1; padding: 2rem; border-left: 1.5px solid #eee; display: flex; flex-direction: column; background: #fff; max-height: 90vh; overflow-y: auto; }
-    .video-player { width: 100%; max-width: 640px; height: 360px; background: #000; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); margin-bottom: 1.5rem; }
-    .class-info { width: 100%; max-width: 640px; text-align: left; }
-    .class-title { font-size: 1.5rem; font-weight: 600; color: #232946; margin-bottom: 0.5rem; }
-    .class-description { color: #666; line-height: 1.5; margin-bottom: 1rem; }
-    .back-link { color: #6a82fb; text-decoration: none; font-weight: 500; }
-    .back-link:hover { text-decoration: underline; }
+    /* Apple Design System Variables */
+    :root {
+      --apple-bg: #000000;
+      --apple-text: #ffffff;
+      --apple-text-secondary: #86868b;
+      --apple-accent: #007aff;
+      --apple-accent-hover: #0056cc;
+      --apple-gray: #1d1d1f;
+      --apple-gray-light: #2d2d2f;
+      --apple-border: #424245;
+      --apple-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      --apple-radius: 12px;
+      --apple-transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --apple-card-bg: rgba(255, 255, 255, 0.05);
+      --apple-card-border: rgba(255, 255, 255, 0.1);
+      --apple-success: #34c759;
+      --apple-warning: #ff9500;
+      --apple-danger: #ff3b30;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--apple-bg);
+      color: var(--apple-text);
+      line-height: 1.47059;
+      font-weight: 400;
+      letter-spacing: -0.022em;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    .host-container { 
+      display: flex; 
+      max-width: 1400px; 
+      margin: 2rem auto; 
+      background: var(--apple-card-bg); 
+      border-radius: var(--apple-radius); 
+      box-shadow: var(--apple-shadow); 
+      border: 1px solid var(--apple-card-border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      animation: textReveal 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
     
-    .tab-container { display: flex; margin-bottom: 1rem; border-bottom: 2px solid #e0e7ff; justify-content: flex-end; gap: 0.5rem; }
-    .tab-btn { padding: 0.8rem; background: none; border: none; cursor: pointer; font-weight: 500; color: #666; transition: all 0.2s; }
-    .tab-btn.active { color: #6a82fb; border-bottom: 2px solid #6a82fb; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
+    .video-section { 
+      flex: 2; 
+      padding: 2rem; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: flex-start; 
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%); 
+    }
     
-    .chat-card { background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%); border-radius:12px; box-shadow: 0 4px 16px rgba(100,100,255,0.08); padding:1.2rem; border: 1px solid #e0e7ff; margin-bottom: 1rem; }
-    .chat-messages { max-height: 200px; overflow-y:auto; margin-bottom:0.7rem; border-bottom:1px solid #e0e7ff; padding-bottom:0.5rem; font-size:0.95rem; }
-    .chat-input { width: 100%; border-radius:8px; border:1px solid #e0e7ff; padding:0.5rem 0.8rem; background: #fff; margin-bottom: 0.5rem; }
-    .chat-input:focus { outline: none; border-color: #6a82fb; box-shadow: 0 0 0 2px rgba(106,130,251,0.1); }
-    .chat-send-btn { border-radius:8px; background: linear-gradient(135deg, #6a82fb 0%, #5a6fd8 100%); border: none; color: #fff; padding: 0.5rem 1rem; cursor: pointer; transition: all 0.2s; }
-    .chat-send-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(106,130,251,0.3); }
-    .chat-message { margin: 0.3rem 0; padding: 0.4rem 0.7rem; background: #fff; border-radius: 7px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 3px solid #6a82fb; }
+    .control-section { 
+      flex: 1; 
+      padding: 2rem; 
+      border-left: 1.5px solid var(--apple-card-border); 
+      display: flex; 
+      flex-direction: column; 
+      background: var(--apple-card-bg); 
+      max-height: 90vh; 
+      overflow-y: auto; 
+    }
+    
+    .video-player { 
+      width: 100%; 
+      max-width: 640px; 
+      height: 360px; 
+      background: #000; 
+      border-radius: var(--apple-radius); 
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3); 
+      margin-bottom: 1.5rem; 
+    }
+    
+    .class-info { 
+      width: 100%; 
+      max-width: 640px; 
+      text-align: left; 
+    }
+    
+    .class-title { 
+      font-size: 1.5rem; 
+      font-weight: 600; 
+      color: var(--apple-text); 
+      margin-bottom: 0.5rem; 
+    }
+    
+    .class-description { 
+      color: var(--apple-text-secondary); 
+      line-height: 1.5; 
+      margin-bottom: 1rem; 
+    }
+    
+    .back-link { 
+      color: var(--apple-accent); 
+      text-decoration: none; 
+      font-weight: 500; 
+      transition: var(--apple-transition);
+    }
+    
+    .back-link:hover { 
+      text-decoration: underline; 
+      color: var(--apple-accent-hover);
+    }
+    
+    .tab-container { 
+      display: flex; 
+      margin-bottom: 1rem; 
+      border-bottom: 2px solid var(--apple-card-border); 
+      justify-content: flex-end; 
+      gap: 0.5rem; 
+    }
+    
+    .tab-btn { 
+      padding: 0.8rem; 
+      background: none; 
+      border: none; 
+      cursor: pointer; 
+      font-weight: 500; 
+      color: var(--apple-text-secondary); 
+      transition: var(--apple-transition);
+      font-family: inherit;
+    }
+    
+    .tab-btn.active { 
+      color: var(--apple-accent); 
+      border-bottom: 2px solid var(--apple-accent); 
+    }
+    
+    .tab-content { 
+      display: none; 
+    }
+    
+    .tab-content.active { 
+      display: block; 
+      animation: textFadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+    
+    .chat-card { 
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%); 
+      border-radius: var(--apple-radius); 
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2); 
+      padding: 1.2rem; 
+      border: 1px solid var(--apple-card-border); 
+      margin-bottom: 1rem; 
+    }
+    
+    .chat-messages { 
+      max-height: 200px; 
+      overflow-y: auto; 
+      margin-bottom: 0.7rem; 
+      border-bottom: 1px solid var(--apple-card-border); 
+      padding-bottom: 0.5rem; 
+      font-size: 0.95rem; 
+    }
+    
+    .chat-input { 
+      width: 100%; 
+      border-radius: 8px; 
+      border: 1px solid var(--apple-card-border); 
+      padding: 0.5rem 0.8rem; 
+      background: rgba(255, 255, 255, 0.05); 
+      margin-bottom: 0.5rem; 
+      color: var(--apple-text);
+      font-family: inherit;
+      transition: var(--apple-transition);
+    }
+    
+    .chat-input:focus { 
+      outline: none; 
+      border-color: var(--apple-accent); 
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2); 
+      background: rgba(255, 255, 255, 0.08);
+    }
+    
+    .chat-send-btn { 
+      border-radius: 8px; 
+      background: var(--apple-accent); 
+      border: none; 
+      color: var(--apple-text); 
+      padding: 0.5rem 1rem; 
+      cursor: pointer; 
+      transition: var(--apple-transition);
+      font-family: inherit;
+    }
+    
+    .chat-send-btn:hover { 
+      transform: translateY(-1px); 
+      box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3); 
+      background: var(--apple-accent-hover);
+    }
+    
+    .chat-message { 
+      margin: 0.3rem 0; 
+      padding: 0.4rem 0.7rem; 
+      background: rgba(255, 255, 255, 0.05); 
+      border-radius: 7px; 
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1); 
+      border-left: 3px solid var(--apple-accent); 
+      transition: var(--apple-transition);
+      animation: textSlideIn 0.3s ease-out;
+    }
+    
+    /* Chat Control Buttons */
+    .chat-control-btn { 
+      display: flex; 
+      align-items: center; 
+      gap: 0.5rem; 
+      padding: 0.5rem 0.8rem; 
+      border: 1px solid var(--apple-card-border); 
+      border-radius: 8px; 
+      background: rgba(255, 255, 255, 0.05); 
+      color: var(--apple-accent); 
+      cursor: pointer; 
+      transition: var(--apple-transition); 
+      font-size: 0.9rem; 
+      font-weight: 500; 
+      font-family: inherit;
+    }
+    
+    .chat-control-btn:hover { 
+      background: rgba(255, 255, 255, 0.1); 
+      border-color: var(--apple-accent); 
+      transform: translateY(-1px); 
+    }
+    
+    .chat-control-btn.locked { 
+      background: rgba(255, 59, 48, 0.1); 
+      border-color: var(--apple-danger); 
+      color: var(--apple-danger); 
+    }
+    
+    .chat-control-btn.private { 
+      background: rgba(0, 122, 255, 0.1); 
+      border-color: var(--apple-accent); 
+      color: var(--apple-accent); 
+    }
+    
+    .chat-control-btn svg { 
+      width: 18px; 
+      height: 18px; 
+    }
+    
+    /* Enhanced Chat Control Buttons */
+    .chat-control-btn.clear-chat { 
+      background: rgba(255, 149, 0, 0.1); 
+      border-color: var(--apple-warning); 
+      color: var(--apple-warning); 
+    }
+    
+    .chat-control-btn.clear-chat:hover { 
+      background: rgba(255, 149, 0, 0.2); 
+      border-color: var(--apple-warning); 
+      transform: translateY(-1px); 
+    }
+    
+    .chat-control-btn.export-chat { 
+      background: rgba(52, 199, 89, 0.1); 
+      border-color: var(--apple-success); 
+      color: var(--apple-success); 
+    }
+    
+    .chat-control-btn.export-chat:hover { 
+      background: rgba(52, 199, 89, 0.2); 
+      border-color: var(--apple-success); 
+      transform: translateY(-1px); 
+    }
+    
+    /* Chat Message Animations */
+    .chat-message {
+      transition: var(--apple-transition);
+      animation: textSlideIn 0.3s ease-out;
+    }
+    
+    @keyframes textSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Typing Indicator */
+    .typing-indicator {
+      opacity: 0.7;
+      font-style: italic;
+      color: var(--apple-text-secondary);
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      margin: 0.5rem 0;
+      animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 0.4; }
+    }
+    
+    .poll-section { 
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%); 
+      border-radius: var(--apple-radius); 
+      padding: 1.2rem; 
+      border: 1px solid var(--apple-card-border); 
+      margin-bottom: 1rem; 
+    }
+    
+    .poll-input { 
+      width: 100%; 
+      border-radius: 8px; 
+      border: 1px solid var(--apple-card-border); 
+      padding: 0.5rem 0.8rem; 
+      background: rgba(255, 255, 255, 0.05); 
+      margin-bottom: 0.5rem; 
+      color: var(--apple-text);
+      font-family: inherit;
+    }
+    
+    .poll-option { 
+      display: flex; 
+      align-items: center; 
+      margin-bottom: 0.5rem; 
+    }
+    
+    .poll-option input { 
+      margin-right: 0.5rem; 
+    }
+    
+    .poll-option label { 
+      flex: 1; 
+      color: var(--apple-text);
+    }
     
     /* Chat Control Buttons */
     .chat-control-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.8rem; border: 1px solid #e0e7ff; border-radius: 8px; background: #fff; color: #6a82fb; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; font-weight: 500; }
@@ -288,6 +608,242 @@
     body.dark-mode .typing-indicator {
       background: #2a2a3a;
       color: #b8c5d6;
+    }
+    
+    /* Video Controls with Apple Design */
+    .video-controls { 
+      display: flex; 
+      justify-content: center; 
+      gap: 1rem; 
+      margin-top: 1rem; 
+      padding: 1rem; 
+      background: rgba(255, 255, 255, 0.03); 
+      border-radius: var(--apple-radius); 
+      border: 1px solid var(--apple-card-border);
+    }
+    
+    .icon-btn { 
+      width: 50px; 
+      height: 50px; 
+      border-radius: 50%; 
+      border: none; 
+      cursor: pointer; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      font-size: 1.2rem; 
+      transition: var(--apple-transition); 
+      position: relative; 
+    }
+    
+    .icon-btn:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3); 
+    }
+    
+    .icon-btn.active { 
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3); 
+    }
+    
+    .icon-btn-start { 
+      background: var(--apple-success); 
+      color: var(--apple-text); 
+    }
+    
+    .icon-btn-stop { 
+      background: var(--apple-danger); 
+      color: var(--apple-text); 
+    }
+    
+    .icon-btn-mic { 
+      background: var(--apple-accent); 
+      color: var(--apple-text); 
+    }
+    
+    .icon-btn-mic.muted { 
+      background: var(--apple-danger); 
+      color: var(--apple-text); 
+    }
+    
+    .icon-btn-camera { 
+      background: #5856d6; 
+      color: var(--apple-text); 
+    }
+    
+    .icon-btn-content { 
+      background: #38b2ac; 
+      color: var(--apple-text); 
+    }
+    
+    /* Tooltip for icon buttons */
+    .icon-btn::after { 
+      content: attr(title); 
+      position: absolute; 
+      bottom: -35px; 
+      left: 50%; 
+      transform: translateX(-50%); 
+      background: var(--apple-gray); 
+      color: var(--apple-text); 
+      padding: 0.3rem 0.6rem; 
+      border-radius: 4px; 
+      font-size: 0.8rem; 
+      white-space: nowrap; 
+      opacity: 0; 
+      pointer-events: none; 
+      transition: opacity 0.3s; 
+    }
+    
+    .icon-btn:hover::after { 
+      opacity: 1; 
+    }
+    
+    /* Device Selection Styles */
+    .device-selection { 
+      margin-top: 1rem; 
+      padding: 1rem; 
+      background: rgba(255, 255, 255, 0.03); 
+      border-radius: var(--apple-radius); 
+      border: 1px solid var(--apple-card-border); 
+    }
+    
+    .device-row { 
+      display: flex; 
+      gap: 1rem; 
+      margin-bottom: 0.8rem; 
+      align-items: center; 
+    }
+    
+    .device-row:last-child { 
+      margin-bottom: 0; 
+    }
+    
+    .device-label { 
+      min-width: 80px; 
+      font-weight: 500; 
+      color: var(--apple-text); 
+      font-size: 0.9rem; 
+    }
+    
+    .device-select { 
+      flex: 1; 
+      padding: 0.6rem 0.8rem; 
+      border: 1px solid var(--apple-card-border); 
+      border-radius: 6px; 
+      background: rgba(255, 255, 255, 0.05); 
+      font-size: 0.9rem; 
+      cursor: pointer; 
+      transition: var(--apple-transition);
+      color: var(--apple-text);
+      font-family: inherit;
+    }
+    
+    .device-select:focus { 
+      outline: none; 
+      border-color: var(--apple-accent); 
+      box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2); 
+      background: rgba(255, 255, 255, 0.08);
+    }
+    
+    .device-select:hover { 
+      border-color: var(--apple-accent); 
+    }
+    
+    .device-icon { 
+      width: 20px; 
+      height: 20px; 
+      color: var(--apple-accent); 
+    }
+    
+    .device-status { 
+      font-size: 0.8rem; 
+      color: var(--apple-text-secondary); 
+      margin-top: 0.5rem; 
+    }
+    
+    /* Live Watch Container */
+    .live-watch-container { 
+      width: 100%; 
+      max-width: 680px; 
+      background: var(--apple-card-bg); 
+      border: 1px solid var(--apple-card-border); 
+      border-radius: var(--apple-radius); 
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3); 
+      padding: 0.8rem; 
+      margin-bottom: 1.5rem; 
+    }
+    
+    /* Doubt Section */
+    .doubt-section {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+      border-radius: var(--apple-radius);
+      padding: 1.2rem;
+      border: 1px solid var(--apple-card-border);
+      margin-bottom: 1rem;
+    }
+    
+    .doubt-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-left: 3px solid var(--apple-success);
+      transition: var(--apple-transition);
+    }
+    
+    .doubt-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateX(4px);
+    }
+    
+    .doubt-user {
+      font-weight: 600;
+      color: var(--apple-accent);
+      margin-bottom: 0.5rem;
+    }
+    
+    .doubt-text {
+      color: var(--apple-text-secondary);
+      line-height: 1.5;
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .host-container {
+        flex-direction: column;
+        margin: 1rem;
+      }
+      
+      .video-section,
+      .control-section {
+        flex: none;
+        width: 100%;
+      }
+      
+      .control-section {
+        border-left: none;
+        border-top: 1px solid var(--apple-card-border);
+      }
+      
+      .video-player {
+        height: 240px;
+      }
+      
+      .tab-container {
+        justify-content: center;
+      }
+    }
+    
+    /* Animation Classes */
+    .host-container {
+      animation: textReveal 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+    
+    .tab-content.active {
+      animation: textFadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+    
+    .chat-message {
+      animation: textSlideIn 0.3s ease-out;
     }
   </style>
 </head>
