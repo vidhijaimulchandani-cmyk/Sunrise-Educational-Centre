@@ -179,6 +179,126 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-content h1 .animated-text {
+        display: inline-block;
+        animation: slideInFromBottom 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        opacity: 0;
+        transform: translateY(100%);
+      }
+
+      .hero-content h1 .animated-text:nth-child(1) { animation-delay: 0.2s; }
+      .hero-content h1 .animated-text:nth-child(2) { animation-delay: 0.4s; }
+      .hero-content h1 .animated-text:nth-child(3) { animation-delay: 0.6s; }
+      .hero-content h1 .animated-text:nth-child(4) { animation-delay: 0.8s; }
+      .hero-content h1 .animated-text:nth-child(5) { animation-delay: 1.0s; }
+      .hero-content h1 .animated-text:nth-child(6) { animation-delay: 1.2s; }
+
+      @keyframes slideInFromBottom {
+        0% {
+          opacity: 0;
+          transform: translateY(100%);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .hero-content h1::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #ffffff, #86868b);
+        animation: expandLine 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.5s forwards;
+      }
+
+      @keyframes expandLine {
+        0% {
+          width: 0;
+        }
+        100% {
+          width: 100%;
+        }
+      }
+
+      /* Enhanced typography effects */
+      .hero-content h1 .animated-text {
+        position: relative;
+        display: inline-block;
+        margin-right: 8px;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      .hero-content h1 .animated-text:hover {
+        transform: scale(1.05) translateY(-2px);
+        text-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
+      }
+
+      /* Glowing effect for numbers */
+      .hero-content h1 .animated-text:nth-child(5),
+      .hero-content h1 .animated-text:nth-child(7) {
+        background: linear-gradient(135deg, #ffffff 0%, #34c759 50%, #86868b 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 700;
+        animation: glowPulse 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes glowPulse {
+        0% {
+          filter: brightness(1) drop-shadow(0 0 5px rgba(52, 199, 89, 0.3));
+        }
+        100% {
+          filter: brightness(1.2) drop-shadow(0 0 15px rgba(52, 199, 89, 0.6));
+        }
+      }
+
+      /* Floating animation for the entire heading */
+      .hero-content h1 {
+        animation: floatHeading 6s ease-in-out infinite;
+        position: relative;
+      }
+
+      @keyframes floatHeading {
+        0%, 100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      /* Particle effect around the heading */
+      .hero-content h1::before {
+        content: '';
+        position: absolute;
+        top: -20px;
+        left: -20px;
+        right: -20px;
+        bottom: -20px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        animation: particleGlow 4s ease-in-out infinite;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      @keyframes particleGlow {
+        0%, 100% {
+          opacity: 0.3;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.6;
+          transform: scale(1.1);
+        }
       }
 
       .hero-content p {
@@ -541,6 +661,10 @@
           font-size: 40px;
         }
 
+        .hero-content h1 .animated-text {
+          margin-right: 6px;
+        }
+
         .hero-content p {
           font-size: 21px;
         }
@@ -579,6 +703,10 @@
       @media (max-width: 480px) {
         .hero-content h1 {
           font-size: 32px;
+        }
+
+        .hero-content h1 .animated-text {
+          margin-right: 4px;
         }
 
         .hero-content p {
@@ -756,7 +884,15 @@
         <div class="hero-logo">
           <img src="attached_assets/image_1750584670920.png" alt="Sunrise Education Centre Logo">
         </div>
-        <h1>Expert Coaching for Class 9 to 12</h1>
+        <h1>
+          <span class="animated-text">Expert</span>
+          <span class="animated-text">Coaching</span>
+          <span class="animated-text">for</span>
+          <span class="animated-text">Class</span>
+          <span class="animated-text">9</span>
+          <span class="animated-text">to</span>
+          <span class="animated-text">12</span>
+        </h1>
         <p>Your trusted guide for academic excellence. Personalized coaching, real results.</p>
         <a href="#subjects-we-offer" class="btn-cta">Explore Programs</a>
       </div>
@@ -1112,6 +1248,42 @@
         
         window.addEventListener('scroll', updateActiveNavLink);
         updateActiveNavLink();
+
+        // Typography animation enhancements
+        const animatedTexts = document.querySelectorAll('.hero-content h1 .animated-text');
+        
+        // Add intersection observer for better performance
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.style.animationPlayState = 'running';
+            }
+          });
+        }, { threshold: 0.5 });
+
+        animatedTexts.forEach(text => {
+          observer.observe(text);
+        });
+
+        // Add hover sound effect simulation (visual feedback)
+        animatedTexts.forEach(text => {
+          text.addEventListener('mouseenter', function() {
+            this.style.animationPlayState = 'running';
+            this.style.transform = 'scale(1.05) translateY(-2px)';
+          });
+          
+          text.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1) translateY(0)';
+          });
+        });
+
+        // Add typing effect simulation for the numbers
+        const numberElements = document.querySelectorAll('.hero-content h1 .animated-text:nth-child(5), .hero-content h1 .animated-text:nth-child(7)');
+        numberElements.forEach((element, index) => {
+          setTimeout(() => {
+            element.style.animation = 'glowPulse 2s ease-in-out infinite alternate, slideInFromBottom 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards';
+          }, (index + 1) * 200);
+        });
       });
     </script>
   </body>
