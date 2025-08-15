@@ -1036,7 +1036,113 @@ body.dark-mode .hamburger .bar {
 @media (max-width: 500px) {
   .login-card {
     min-width: 90vw;
-    padding: 1.2rem 0.5rem;
+    max-width: 95vw;
+    padding: 1.5rem 1rem;
+    margin: 1rem;
+  }
+  
+  .login-container {
+    padding: 1rem;
+    align-items: flex-start;
+    padding-top: 2rem;
+  }
+  
+  .login-form {
+    gap: 1rem;
+  }
+  
+  .login-form input,
+  .login-form select,
+  .login-form button {
+    font-size: 1rem;
+    padding: 0.8rem 1rem;
+  }
+  
+  .login-logo img {
+    height: 40px;
+  }
+  
+  .login-logo h2 {
+    font-size: 1.5rem;
+  }
+  
+  .login-links {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .login-links a {
+    display: block;
+    margin: 0.5rem 0;
+  }
+  
+  #darkModeToggle {
+    min-width: 140px !important;
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+  
+  /* Login page navigation mobile styles */
+  .navbar .nav-content {
+    padding: 0 0.5rem;
+    gap: 0.5rem;
+  }
+  
+  .navbar .nav-links {
+    gap: 0.3rem;
+  }
+  
+  .navbar .nav-links a {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+  
+  .navbar .nav-logo {
+    font-size: 1rem;
+  }
+  
+  .navbar .nav-logo img {
+    height: 32px;
+  }
+}
+
+@media (max-width: 360px) {
+  .login-card {
+    min-width: 95vw;
+    max-width: 98vw;
+    padding: 1rem 0.8rem;
+    margin: 0.5rem;
+  }
+  
+  .login-container {
+    padding: 0.5rem;
+    padding-top: 1rem;
+  }
+  
+  .login-form input,
+  .login-form select,
+  .login-form button {
+    font-size: 0.9rem;
+    padding: 0.7rem 0.8rem;
+  }
+  
+  .login-logo img {
+    height: 36px;
+  }
+  
+  .login-logo h2 {
+    font-size: 1.3rem;
+  }
+  
+  .login-links {
+    font-size: 0.85rem;
+  }
+  
+  #darkModeToggle {
+    min-width: 120px !important;
+    font-size: 0.8rem;
+    padding: 0.5rem 0.8rem;
   }
 }
 
