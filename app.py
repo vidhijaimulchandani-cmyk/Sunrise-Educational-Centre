@@ -822,6 +822,10 @@ def admin_api_required(f):
 
 app.secret_key = 'your_secret_key_here'  # Change this to a secure random value in production
 
+# Google OAuth config from environment
+app.config['GOOGLE_CLIENT_ID'] = os.environ.get('GOOGLE_CLIENT_ID', '')
+app.config['GOOGLE_CLIENT_SECRET'] = os.environ.get('GOOGLE_CLIENT_SECRET', '')
+
 # Register blueprints
 app.register_blueprint(bulk_upload_bp)
 
@@ -1075,7 +1079,8 @@ def inject_global_variables():
         username=username, 
         role=role,
         user_paid_status=user_paid_status,
-        format_datetime_for_display=format_datetime_for_display
+        format_datetime_for_display=format_datetime_for_display,
+        google_client_id=app.config.get('GOOGLE_CLIENT_ID')
     )
 
 # Route for the main page
@@ -1543,6 +1548,117 @@ def register():
         return redirect(url_for('auth'))
     else:
         return render_template('auth.html', error='Username already exists. Please choose another.')
+
+# Google OAuth helper and API endpoints
+@app.route('/api/check-user', methods=['POST'])
+def api_check_user():
+    try:
+        data = request.get_json(force=True, silent=True) or {}
+        email = (data.get('email') or '').strip().lower()
+        if not email:
+            return jsonify({'exists': False}), 200
+        conn = sqlite3.connect(DATABASE, timeout=30.0)
+        c = conn.cursor()
+        c.execute('SELECT id FROM users WHERE lower(email_address)=? OR lower(username)=?', (email, email))
+        row = c.fetchone()
+        conn.close()
+        return jsonify({'exists': bool(row)})
+    except Exception as e:
+        print(f"check-user error: {e}")
+        return jsonify({'exists': False}), 200
+
+@app.route('/api/google-login', methods=['POST'])
+def api_google_login():
+    try:
+        data = request.get_json(force=True, silent=True) or {}
+        email = (data.get('email') or '').strip().lower()
+        google_id = (data.get('google_id') or '').strip()
+        if not email or not google_id:
+            return jsonify({'success': False, 'message': 'Invalid payload'}), 400
+
+        conn = sqlite3.connect(DATABASE, timeout=30.0)
+        c = conn.cursor()
+        c.execute('SELECT id, username, class_id, paid, banned, google_id FROM users WHERE lower(email_address)=? OR lower(username)=?', (email, email))
+        row = c.fetchone()
+        if not row:
+            conn.close()
+            return jsonify({'success': False, 'message': 'User not found'}), 404
+        user_id, username, class_id, paid, banned, existing_google_id = row
+        if banned == 1:
+            conn.close()
+            return jsonify({'success': False, 'message': 'Account banned'}), 403
+        if not existing_google_id:
+            c.execute('UPDATE users SET google_id=? WHERE id=?', (google_id, user_id))
+            conn.commit()
+        conn.close()
+
+        # Session creation (mirrors password login)
+        xff = request.headers.get('X-Forwarded-For', '')
+        client_ip = (xff.split(',')[0].strip() if xff else request.remote_addr) or 'unknown'
+        user_agent = request.headers.get('User-Agent', '')[:300]
+        session_id = session.sid if hasattr(session, 'sid') else str(uuid.uuid4())
+        if create_user_session(user_id, session_id, client_ip, user_agent):
+            session['user_id'] = user_id
+            session['username'] = username or email
+            # Determine role/class name
+            id_to_name = {cid: cname for cid, cname in get_all_classes()}
+            role_name = id_to_name.get(class_id)
+            if not role_name:
+                # Default student class if missing
+                all_classes = get_all_classes()
+                default_class_name = 'class 9'
+                default_id = next((cid for cid, cname in all_classes if cname == default_class_name), None)
+                if default_id is not None:
+                    try:
+                        conn2 = sqlite3.connect(DATABASE, timeout=30.0)
+                        c2 = conn2.cursor()
+                        c2.execute('UPDATE users SET class_id=? WHERE id=?', (default_id, user_id))
+                        conn2.commit()
+                        conn2.close()
+                    except Exception as e:
+                        print(f'Failed to set default class_id: {e}')
+                    role_name = default_class_name
+            session['role'] = role_name
+            session['session_id'] = session_id
+            session['paid_status'] = paid
+            return jsonify({'success': True})
+        else:
+            return jsonify({'success': False, 'message': 'Failed to create session'}), 500
+    except Exception as e:
+        print(f'google-login error: {e}')
+        return jsonify({'success': False, 'message': 'Server error'}), 500
+
+@app.route('/api/google-signup', methods=['POST'])
+def api_google_signup():
+    try:
+        data = request.get_json(force=True, silent=True) or {}
+        email = (data.get('email') or '').strip().lower()
+        name = (data.get('name') or '').strip()
+        google_id = (data.get('google_id') or '').strip()
+        if not email or not google_id:
+            return jsonify({'success': False, 'message': 'Missing fields'}), 400
+
+        conn = sqlite3.connect(DATABASE, timeout=30.0)
+        c = conn.cursor()
+        c.execute('SELECT id FROM users WHERE lower(email_address)=? OR lower(username)=?', (email, email))
+        if c.fetchone():
+            conn.close()
+            return jsonify({'success': True})
+
+        # Choose a default non-admin/teacher class for students
+        all_classes = get_all_classes()
+        default_class_id = next((cid for cid, cname in all_classes if cname not in ('admin', 'teacher')), None)
+
+        random_password = secrets.token_hex(8)
+        c.execute('INSERT INTO users (username, password, class_id, paid, email_address, google_id) VALUES (?, ?, ?, ?, ?, ?)',
+                  (email, random_password, default_class_id, 'not paid', email, google_id))
+        conn.commit()
+        user_id = c.lastrowid
+        conn.close()
+        return jsonify({'success': True, 'user_id': user_id})
+    except Exception as e:
+        print(f'google-signup error: {e}')
+        return jsonify({'success': False, 'message': 'Server error'}), 500
 
 # Admin panel route
 @app.route('/admin', methods=['GET', 'POST'])
