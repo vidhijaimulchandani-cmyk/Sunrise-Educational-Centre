@@ -3125,3 +3125,332 @@ body.dark-mode .section-item h5 {
     transform: none !important;
   }
 }
+
+/* Apple-Style Demo Container Section */
+.demo-section {
+  padding: 80px 22px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.demo-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(106, 130, 251, 0.05) 0%, rgba(252, 92, 125, 0.05) 100%);
+  pointer-events: none;
+}
+
+.demo-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.demo-container h2 {
+  font-size: 48px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 16px;
+  color: #232946;
+}
+
+.demo-container > p {
+  font-size: 21px;
+  color: #6b7280;
+  text-align: center;
+  margin-bottom: 48px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.demo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.demo-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 32px;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.demo-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(106, 130, 251, 0.1), transparent);
+  transition: left 0.6s ease;
+}
+
+.demo-card:hover::before {
+  left: 100%;
+}
+
+.demo-card:hover {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 20px 60px rgba(106, 130, 251, 0.15);
+  border-color: rgba(106, 130, 251, 0.3);
+}
+
+.demo-icon {
+  font-size: 48px;
+  margin-bottom: 24px;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.demo-card:hover .demo-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.demo-card h3 {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #232946;
+}
+
+.demo-card p {
+  font-size: 16px;
+  color: #6b7280;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.demo-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.feature-tag {
+  background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.feature-tag:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(106, 130, 251, 0.3);
+}
+
+/* Apple-Style FAQ Section */
+.faq-section {
+  padding: 80px 22px;
+  background: var(--apple-bg);
+  color: var(--apple-text);
+  position: relative;
+}
+
+.faq-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.faq-container h2 {
+  font-size: 48px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 16px;
+  color: var(--apple-text);
+}
+
+.faq-container > p {
+  font-size: 21px;
+  color: var(--apple-text-secondary);
+  text-align: center;
+  margin-bottom: 48px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.faq-grid {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.faq-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.faq-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(106, 130, 251, 0.3);
+  transform: translateY(-2px);
+}
+
+.faq-item.active {
+  background: rgba(106, 130, 251, 0.1);
+  border-color: rgba(106, 130, 251, 0.5);
+}
+
+.faq-question {
+  padding: 24px 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.3s ease;
+}
+
+.faq-question:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.faq-question h3 {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--apple-text);
+  margin: 0;
+  flex: 1;
+  padding-right: 16px;
+}
+
+.faq-icon {
+  font-size: 24px;
+  font-weight: 300;
+  color: var(--apple-text-secondary);
+  transition: all 0.3s ease;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.faq-item.active .faq-icon {
+  transform: rotate(45deg);
+  color: #6a82fb;
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.faq-item.active .faq-answer {
+  max-height: 300px;
+}
+
+.faq-answer p {
+  padding: 0 32px 24px 32px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--apple-text-secondary);
+}
+
+.faq-cta {
+  text-align: center;
+  margin-top: 48px;
+}
+
+.faq-cta p {
+  font-size: 18px;
+  color: var(--apple-text-secondary);
+  margin-bottom: 24px;
+}
+
+/* Mobile Responsiveness for Demo and FAQ */
+@media (max-width: 768px) {
+  .demo-section,
+  .faq-section {
+    padding: 60px 16px;
+  }
+  
+  .demo-container h2,
+  .faq-container h2 {
+    font-size: 32px;
+  }
+  
+  .demo-container > p,
+  .faq-container > p {
+    font-size: 18px;
+  }
+  
+  .demo-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .demo-card {
+    padding: 24px;
+  }
+  
+  .demo-card h3 {
+    font-size: 20px;
+  }
+  
+  .faq-question {
+    padding: 20px 24px;
+  }
+  
+  .faq-question h3 {
+    font-size: 16px;
+  }
+  
+  .faq-answer p {
+    padding: 0 24px 20px 24px;
+    font-size: 14px;
+  }
+}
+
+/* Dark mode support for demo section */
+body.dark-mode .demo-section {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+}
+
+body.dark-mode .demo-section::before {
+  background: linear-gradient(45deg, rgba(106, 130, 251, 0.1) 0%, rgba(252, 92, 125, 0.1) 100%);
+}
+
+body.dark-mode .demo-card {
+  background: rgba(30, 41, 59, 0.9);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+}
+
+body.dark-mode .demo-card h3 {
+  color: #e2e8f0;
+}
+
+body.dark-mode .demo-card p {
+  color: #94a3b8;
+}
+
+body.dark-mode .demo-card:hover {
+  border-color: rgba(106, 130, 251, 0.5);
+  box-shadow: 0 20px 60px rgba(106, 130, 251, 0.2);
+}
