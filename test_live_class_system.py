@@ -74,7 +74,10 @@ def test_live_class_system():
         conn = sqlite3.connect('users.db')
         c = conn.cursor()
         c.execute("DELETE FROM live_class_attendance WHERE class_id = ?", (test_class_id,))
-        c.execute("DELETE FROM live_class_messages WHERE live_class_id = ?", (test_class_id,))
+        try:
+            c.execute("DELETE FROM live_class_messages WHERE live_class_id = ?", (test_class_id,))
+        except sqlite3.OperationalError:
+            c.execute("DELETE FROM live_class_messages WHERE live_class_id IS NULL AND live_class_id = ?", (test_class_id,))
         c.execute("DELETE FROM live_classes WHERE id = ?", (test_class_id,))
         conn.commit()
         conn.close()

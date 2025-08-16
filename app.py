@@ -50,6 +50,7 @@ from study_resources import (
     add_resource_rating, get_resource_ratings, get_average_rating, get_resource_statistics,
     allowed_file, get_file_size, get_file_type, user_has_access_to_resource
 )
+from notifications import extract_mentions, create_mention_notifications
 import csv
 from io import StringIO
 from collections import Counter
