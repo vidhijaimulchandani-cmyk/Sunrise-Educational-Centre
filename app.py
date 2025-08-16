@@ -31,17 +31,24 @@ except ImportError:
         filename = re.sub(r'[^a-zA-Z0-9._-]', '', filename)
         return filename
 from auth_handler import (
-    init_db, register_user, authenticate_user, save_resource, get_all_resources,
-    delete_resource, get_all_users, delete_user, search_users, get_user_by_id,
+    init_db, register_user, authenticate_user,
+    get_all_users, delete_user, search_users, get_user_by_id,
     update_user, add_notification, get_unread_notifications_for_user, get_all_notifications,
     create_live_class, get_live_class, get_active_classes, deactivate_class,
-    get_class_details_by_id, get_all_classes, get_resources_for_class_id,
+    get_class_details_by_id, get_all_classes,
     mark_notification_as_seen, delete_notification,
     save_forum_message, get_live_class_messages, save_live_class_message,
     create_topic, delete_topic, get_all_topics, get_topics_for_user, can_user_access_topic,
     update_user_with_password, add_personal_notification, get_forum_messages,
-    format_datetime_for_display, get_categories_for_class, mark_messages_as_read,
+    format_datetime_for_display, mark_messages_as_read,
     get_user_by_username
+)
+from study_resources import (
+    save_resource, get_all_resources, delete_resource, get_resources_for_class_id,
+    get_categories_for_class, get_all_categories, update_resource, add_category,
+    update_category, delete_category, search_resources, track_resource_download,
+    add_resource_rating, get_resource_ratings, get_average_rating, get_resource_statistics,
+    allowed_file, get_file_size, get_file_type, user_has_access_to_resource
 )
 import csv
 from io import StringIO
