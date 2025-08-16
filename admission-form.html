@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admission Form - Sunrise Education Centre</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admission-form.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="nav-logo">
+                <img src="attached_assets/image_1750584670920.png" alt="Sunrise Education Centre">
+            </div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/#subjects-we-offer">Programs</a></li>
+                <li><a href="/#admission">Admission</a></li>
+                <li><a href="/#faq">FAQ</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Admission Form Header -->
+    <header class="form-header">
+        <div class="form-header-content">
+            <h1 class="text-reveal">Admission Application</h1>
+            <p class="text-fade-in-up">Join our community of achievers and start your academic journey</p>
+            <div class="progress-bar">
+                <div class="progress-step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Personal Info</div>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Academic Details</div>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Program Selection</div>
+                </div>
+                <div class="progress-step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Review & Submit</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admission Form -->
+    <main class="form-container">
+        <form id="admissionForm" class="admission-form">
+            <!-- Step 1: Personal Information -->
+            <div class="form-step active" data-step="1">
+                <div class="step-header">
+                    <h2>Personal Information</h2>
+                    <p>Please provide your basic personal details</p>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="firstName">First Name *</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastName">Last Name *</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dateOfBirth">Date of Birth *</label>
+                        <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gender">Gender *</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="address">Address *</label>
+                        <textarea id="address" name="address" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="city">City *</label>
+                        <input type="text" id="city" name="city" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="state">State *</label>
+                        <input type="text" id="state" name="state" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pincode">Pincode *</label>
+                        <input type="text" id="pincode" name="pincode" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Academic Details -->
+            <div class="form-step" data-step="2">
+                <div class="step-header">
+                    <h2>Academic Details</h2>
+                    <p>Tell us about your educational background</p>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="currentClass">Current Class *</label>
+                        <select id="currentClass" name="currentClass" required>
+                            <option value="">Select Class</option>
+                            <option value="9">Class 9</option>
+                            <option value="10">Class 10</option>
+                            <option value="11">Class 11</option>
+                            <option value="12">Class 12</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="board">Board *</label>
+                        <select id="board" name="board" required>
+                            <option value="">Select Board</option>
+                            <option value="cbse">CBSE</option>
+                            <option value="icse">ICSE</option>
+                            <option value="state">State Board</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="schoolName">Current School *</label>
+                        <input type="text" id="schoolName" name="schoolName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="previousPercentage">Previous Year Percentage</label>
+                        <input type="number" id="previousPercentage" name="previousPercentage" min="0" max="100" step="0.01">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="targetPercentage">Target Percentage *</label>
+                        <input type="number" id="targetPercentage" name="targetPercentage" min="0" max="100" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="weakSubjects">Weak Subjects</label>
+                        <input type="text" id="weakSubjects" name="weakSubjects" placeholder="e.g., Mathematics, Physics">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="academicGoals">Academic Goals</label>
+                        <textarea id="academicGoals" name="academicGoals" rows="3" placeholder="Describe your academic goals and aspirations"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Program Selection -->
+            <div class="form-step" data-step="3">
+                <div class="step-header">
+                    <h2>Program Selection</h2>
+                    <p>Choose the program that best fits your needs</p>
+                </div>
+                
+                <div class="program-selection">
+                    <div class="program-card" data-program="class9-10">
+                        <div class="program-header">
+                            <div class="program-icon">🎓</div>
+                            <h3>Class 9 & 10</h3>
+                            <div class="program-price">₹15,000/year</div>
+                        </div>
+                        <ul class="program-features">
+                            <li>CBSE & ICSE Curriculum</li>
+                            <li>Regular Mock Tests</li>
+                            <li>Doubt Resolution</li>
+                            <li>Performance Tracking</li>
+                            <li>Study Materials</li>
+                        </ul>
+                        <div class="program-selector">
+                            <input type="radio" name="selectedProgram" value="class9-10" id="program9-10">
+                            <label for="program9-10">Select This Program</label>
+                        </div>
+                    </div>
+                    
+                    <div class="program-card featured" data-program="class11-12">
+                        <div class="program-badge">Most Popular</div>
+                        <div class="program-header">
+                            <div class="program-icon">📚</div>
+                            <h3>Class 11 & 12</h3>
+                            <div class="program-price">₹25,000/year</div>
+                        </div>
+                        <ul class="program-features">
+                            <li>JEE/NEET Preparation</li>
+                            <li>Board Exam Focus</li>
+                            <li>Career Counseling</li>
+                            <li>Study Material</li>
+                            <li>Mock Tests</li>
+                            <li>Doubt Sessions</li>
+                        </ul>
+                        <div class="program-selector">
+                            <input type="radio" name="selectedProgram" value="class11-12" id="program11-12">
+                            <label for="program11-12">Select This Program</label>
+                        </div>
+                    </div>
+                    
+                    <div class="program-card" data-program="crash">
+                        <div class="program-header">
+                            <div class="program-icon">🎯</div>
+                            <h3>Crash Course</h3>
+                            <div class="program-price">₹8,000/3 months</div>
+                        </div>
+                        <ul class="program-features">
+                            <li>Quick Revision</li>
+                            <li>Important Topics</li>
+                            <li>Practice Tests</li>
+                            <li>Exam Strategies</li>
+                            <li>Last Minute Tips</li>
+                        </ul>
+                        <div class="program-selector">
+                            <input type="radio" name="selectedProgram" value="crash" id="programCrash">
+                            <label for="programCrash">Select This Program</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="preferredSubjects">Preferred Subjects *</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="preferredSubjects" value="mathematics">
+                            <span class="checkmark"></span>
+                            Mathematics
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="preferredSubjects" value="physics">
+                            <span class="checkmark"></span>
+                            Physics
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="preferredSubjects" value="chemistry">
+                            <span class="checkmark"></span>
+                            Chemistry
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="preferredSubjects" value="biology">
+                            <span class="checkmark"></span>
+                            Biology
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="preferredSubjects" value="english">
+                            <span class="checkmark"></span>
+                            English
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="preferredSubjects" value="social-studies">
+                            <span class="checkmark"></span>
+                            Social Studies
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Review & Submit -->
+            <div class="form-step" data-step="4">
+                <div class="step-header">
+                    <h2>Review & Submit</h2>
+                    <p>Please review your information before submitting</p>
+                </div>
+                
+                <div class="review-section">
+                    <div class="review-card">
+                        <h3>Personal Information</h3>
+                        <div id="personalReview" class="review-content"></div>
+                    </div>
+                    
+                    <div class="review-card">
+                        <h3>Academic Details</h3>
+                        <div id="academicReview" class="review-content"></div>
+                    </div>
+                    
+                    <div class="review-card">
+                        <h3>Program Selection</h3>
+                        <div id="programReview" class="review-content"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="termsAccepted" required>
+                        <span class="checkmark"></span>
+                        I agree to the <a href="/terms" target="_blank">Terms and Conditions</a> and <a href="/privacy" target="_blank">Privacy Policy</a> *
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="newsletterOptIn">
+                        <span class="checkmark"></span>
+                        I would like to receive updates and educational content via email
+                    </label>
+                </div>
+            </div>
+
+            <!-- Form Navigation -->
+            <div class="form-navigation">
+                <button type="button" class="btn-secondary" id="prevBtn" style="display: none;">Previous</button>
+                <button type="button" class="btn-primary" id="nextBtn">Next</button>
+                <button type="submit" class="btn-submit" id="submitBtn" style="display: none;">Submit Application</button>
+            </div>
+        </form>
+    </main>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="success-icon">✅</div>
+                <h2>Application Submitted Successfully!</h2>
+            </div>
+            <div class="modal-body">
+                <p>Thank you for applying to Sunrise Education Centre. We have received your application and will contact you within 24 hours to discuss the next steps.</p>
+                <div class="application-details">
+                    <h4>Application Details:</h4>
+                    <div id="applicationSummary"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="window.location.href='/'">Return to Home</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admission-form.js"></script>
+</body>
+</html>
