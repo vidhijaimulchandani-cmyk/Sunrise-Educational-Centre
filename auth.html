@@ -825,16 +825,35 @@
 
       // Google Sign In Function with OAuth
       function signInWithGoogle() {
-        // Initialize Google Sign-In
-        if (typeof google !== 'undefined' && google.accounts) {
-          google.accounts.oauth2.initTokenClient({
-            client_id: getGoogleClientId(),
-            scope: 'openid email profile',
-            callback: handleGoogleSignIn
-          }).requestAccessToken();
-        } else {
-          // Fallback if Google API is not loaded
-          alert('Google Sign-In is not available. Please use the form above to sign in.');
+        const clientId = getGoogleClientId();
+        if (!clientId) {
+          alert('Google Sign-In is not configured. Please set GOOGLE_CLIENT_ID on the server.');
+          return;
+        }
+
+        const startFlow = () => {
+          if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
+            google.accounts.oauth2
+              .initTokenClient({ client_id: clientId, scope: 'openid email profile', callback: handleGoogleSignIn })
+              .requestAccessToken();
+            return true;
+          }
+          return false;
+        };
+
+        if (!startFlow()) {
+          // Load and retry briefly if the script hasn't finished loading
+          loadGoogleOAuthAPI();
+          let attempts = 0;
+          const timer = setInterval(() => {
+            attempts++;
+            if (startFlow() || attempts > 20) {
+              clearInterval(timer);
+              if (attempts > 20) {
+                alert('Google Sign-In failed to load. Check your connection and that the origin is authorized in Google Cloud.');
+              }
+            }
+          }, 150);
         }
       }
 
