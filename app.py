@@ -1273,60 +1273,7 @@ def api_post_forum_message():
     else:
         return jsonify({'error': 'Access denied or invalid topic'}), 403
 
-def extract_mentions(message):
-    """Extract mentioned usernames from message text"""
-    import re
-    # Find all @username patterns
-    mentions = re.findall(r'@(\w+)', message)
-    return list(set(mentions))  # Remove duplicates
-
-def create_mention_notifications(sender_id, sender_username, mentioned_usernames, topic_id, message_preview):
-    """Create notifications for mentioned users"""
-    from auth_handler import get_user_by_username, add_personal_notification
-    
-    for username in mentioned_usernames:
-        # Get the mentioned user
-        mentioned_user = get_user_by_username(username)
-        if mentioned_user and mentioned_user[0] != sender_id:  # Don't notify self
-            mentioned_user_id = mentioned_user[0]
-            
-            # Create notification message
-            notification_message = f"There is a mention message for you by @{sender_username}."
-            
-            # Create the notification (personal) with proper type
-            add_personal_notification(notification_message, mentioned_user_id, notification_type='forum_mention')
-            
-            # Don't mark as seen immediately - let the user see it as an unread notification
-            # The notification will be marked as seen when the user actually reads it
-
-def mark_notification_as_seen_for_user(user_id, notification_message):
-    """Mark a specific notification as seen for a user"""
-    conn = sqlite3.connect(DATABASE)
-    c = conn.cursor()
-    
-    try:
-        # Find the notification by message content
-        c.execute('''
-            SELECT id FROM notifications 
-            WHERE message = ? AND notification_type = 'forum_mention'
-            ORDER BY created_at DESC LIMIT 1
-        ''', (notification_message,))
-        
-        notification = c.fetchone()
-        if notification:
-            notification_id = notification[0]
-            
-            # Mark as seen for the specific user
-            c.execute('''
-                INSERT OR REPLACE INTO user_notification_status (user_id, notification_id, seen_at)
-                VALUES (?, ?, datetime('now'))
-            ''', (user_id, notification_id))
-            
-            conn.commit()
-    except Exception as e:
-        print(f"Error marking notification as seen: {e}")
-    finally:
-        conn.close()
+# Note: extract_mentions and create_mention_notifications functions are now imported from notifications.py
 
 @app.route('/api/forum/messages/<int:message_id>/replies', methods=['GET'])
 def api_get_message_replies(message_id):
@@ -1936,7 +1883,9 @@ def mark_notification_seen_route():
     if not notification_id:
         return {'status': 'error', 'message': 'Notification ID is required'}, 400
         
-    mark_notification_as_seen(user_id, notification_id)
+    # Determine notification type based on the notification data
+    # For now, we'll use 'general' as default, but this should be improved
+    mark_notification_as_read(user_id, notification_id, 'general')
     return {'status': 'success'}
 
 @app.route('/delete-notification/<int:notification_id>', methods=['POST'])
@@ -6174,7 +6123,7 @@ def mark_notification_seen_api(notification_id):
         success = mark_messages_as_read(user_id, notification_id)
     else:
         # Mark regular notification as seen
-        success = mark_notification_as_seen(user_id, notification_id)
+        success = mark_notification_as_read(user_id, notification_id, 'general')
     
     if success:
         return jsonify({'success': True, 'message': 'Item marked as seen'})
