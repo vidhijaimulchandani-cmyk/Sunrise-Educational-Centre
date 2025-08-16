@@ -799,6 +799,13 @@ def init_admissions_tables():
         cols = [r[1] for r in c.fetchall()]
         if 'submit_ip' not in cols:
             c.execute('ALTER TABLE admissions ADD COLUMN submit_ip TEXT')
+        
+        # Ensure admission_access_plain has access_username column for credential lookups
+        c.execute("PRAGMA table_info(admission_access_plain)")
+        ap_cols = [r[1] for r in c.fetchall()]
+        if 'access_username' not in ap_cols:
+            c.execute("ALTER TABLE admission_access_plain ADD COLUMN access_username TEXT")
+        
         conn.commit()
         conn.close()
     except Exception as e:
@@ -3188,30 +3195,41 @@ def check_admission_by_credentials(access_username, access_password):
     c = conn.cursor()
     
     try:
-        # First, find the admission_id using the credentials (try both hashed and plain text)
-        c.execute('''
-            SELECT admission_id 
-            FROM admission_access 
-            WHERE access_username = ? AND access_password = ?
-        ''', (access_username, access_password))
+        # Try hashed credentials first (stored in admission_access)
+        c.execute('SELECT admission_id, access_password FROM admission_access WHERE access_username = ?', (access_username,))
+        row = c.fetchone()
+        admission_id = None
+        if row:
+            possible_adm_id, hashed_pw = row
+            try:
+                if check_password_hash(hashed_pw, access_password):
+                    admission_id = possible_adm_id
+            except Exception:
+                admission_id = None
         
-        access_record = c.fetchone()
+        # Fallback to plain-text credentials table if needed
+        if not admission_id:
+            # Fallback for legacy/plain password storage
+            try:
+                c.execute('''
+                    SELECT admission_id 
+                    FROM admission_access_plain 
+                    WHERE access_username = ? AND access_password_plain = ?
+                ''', (access_username, access_password))
+                plain = c.fetchone()
+            except sqlite3.OperationalError:
+                c.execute('''
+                    SELECT admission_id 
+                    FROM admission_access_plain 
+                    WHERE access_username = ? AND plain_password = ?
+                ''', (access_username, access_password))
+                plain = c.fetchone()
+            if plain:
+                admission_id = plain[0]
         
-        # If not found in hashed table, try plain text table
-        if not access_record:
-            c.execute('''
-                SELECT admission_id 
-                FROM admission_access_plain 
-                WHERE access_username = ? AND access_password_plain = ?
-            ''', (access_username, access_password))
-            
-            access_record = c.fetchone()
-        
-        if not access_record:
+        if not admission_id:
             conn.close()
             return None
-        
-        admission_id = access_record[0]
         
         # Check in pending admissions
         c.execute('''
@@ -3225,7 +3243,7 @@ def check_admission_by_credentials(access_username, access_password):
             conn.close()
             return {
                 'status': admission[3],
-                'paid_status': 'unpaid',  # Default for pending admissions
+                'paid_status': 'unpaid',
                 'details': {
                     'student_name': admission[0],
                     'class': admission[1],
@@ -3246,7 +3264,7 @@ def check_admission_by_credentials(access_username, access_password):
             conn.close()
             return {
                 'status': 'approved',
-                'paid_status': 'unpaid',  # Default for approved admissions
+                'paid_status': 'unpaid',
                 'details': {
                     'student_name': admission[0],
                     'class': admission[1],
@@ -3267,7 +3285,7 @@ def check_admission_by_credentials(access_username, access_password):
             conn.close()
             return {
                 'status': 'disapproved',
-                'paid_status': 'unpaid',  # Default for disapproved admissions
+                'paid_status': 'unpaid',
                 'details': {
                     'student_name': admission[0],
                     'class': admission[1],
