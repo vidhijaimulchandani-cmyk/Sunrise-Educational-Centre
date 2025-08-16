@@ -7,4 +7,5 @@ yt-dlp
 requests
 pytz 
 Flask-SocketIO
-eventlet 
+eventlet
+python-dotenv 

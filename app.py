@@ -2,6 +2,15 @@ from flask import Flask, render_template, send_from_directory, request, redirect
 import json
 import threading
 import time
+import os
+
+# Load environment variables from .env file if it exists
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # If python-dotenv is not installed, continue without it
+    pass
 try:
     from werkzeug.security import generate_password_hash, check_password_hash
     WERKZEUG_AVAILABLE = True
