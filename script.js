@@ -3,16 +3,15 @@ function joinLiveClass() {
   window.location.href = 'online-class.html';
 }
 
-// Typing animation for the main heading
+// Enhanced Typography Animation System
 document.addEventListener('DOMContentLoaded', function() {
-  const headingElement = document.getElementById('typing-hero');
+  // Enhanced typing animation for the main heading
+  const headingElement = document.querySelector('.hero-content h1');
   
   // Only run typing animation if the element exists
   if (headingElement) {
     const text = "Expert Coaching for Class 9 to 12";
     let index = 0;
-    
-    headingElement.classList.add('typing-active');
     
     function typeText() {
       if (index < text.length) {
@@ -20,22 +19,215 @@ document.addEventListener('DOMContentLoaded', function() {
         index++;
         setTimeout(typeText, 100); // Adjust speed here (100ms per character)
       } else {
-        // Remove typing cursor after completion
+        // Add a subtle glow effect after typing completes
         setTimeout(() => {
-          headingElement.style.borderRight = 'none';
-          setTimeout(() => {
-            headingElement.textContent = '';
-            headingElement.style.borderRight = '';
-            index = 0;
-            setTimeout(typeText, 500); // Pause before restarting
-          }, 1500); // Pause after finishing
-        }, 1000);
+          headingElement.classList.add('text-glow');
+        }, 500);
       }
     }
     
-    // Start typing after a small delay
-    setTimeout(typeText, 500);
+    // Clear the heading and start typing
+    headingElement.textContent = '';
+    
+    // Start typing after a brief delay
+    setTimeout(typeText, 500); // Pause before restarting
   }
+  
+  // Enhanced scroll-triggered animations
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationPlayState = 'running';
+        
+        // Add staggered animations for child elements
+        const animatedChildren = entry.target.querySelectorAll('.animated-text, .animate-stagger');
+        animatedChildren.forEach((child, index) => {
+          child.style.animationDelay = `${index * 0.1}s`;
+          child.style.animationPlayState = 'running';
+        });
+      }
+    });
+  }, observerOptions);
+  
+  // Observe all animated cards and sections
+  const revealElements = document.querySelectorAll('.animated-card, .section-header, .card-section');
+  revealElements.forEach(el => {
+    el.style.animationPlayState = 'paused';
+    observer.observe(el);
+  });
+  
+  // Enhanced text animation triggers
+  function triggerTextAnimation(element, animationType) {
+    element.style.animation = 'none';
+    element.offsetHeight; // Trigger reflow
+    element.classList.remove('text-reveal', 'text-slide-in', 'text-fade-in-up', 'text-scale-in', 'text-glow', 'text-bounce', 'text-shimmer', 'text-wave', 'text-pulse', 'text-rainbow', 'text-gradient');
+    element.classList.add(animationType);
+  }
+  
+  // Add click-to-animate functionality for demonstration
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('animation-trigger')) {
+      const targetElement = document.querySelector(e.target.dataset.target);
+      if (targetElement) {
+        triggerTextAnimation(targetElement, e.target.dataset.animation);
+      }
+    }
+  });
+  
+  // Enhanced hover effects for typography
+  const typographyElements = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  typographyElements.forEach(element => {
+    element.addEventListener('mouseenter', function() {
+      if (!this.classList.contains('text-glow') && !this.classList.contains('text-shimmer')) {
+        this.classList.add('text-hover-glow');
+      }
+    });
+    
+    element.addEventListener('mouseleave', function() {
+      this.classList.remove('text-hover-glow');
+    });
+  });
+  
+  // Parallax effect for hero section text
+  let ticking = false;
+  function updateParallax() {
+    const scrolled = window.pageYOffset;
+    const heroText = document.querySelector('.hero-content h1');
+    if (heroText) {
+      const rate = scrolled * -0.5;
+      heroText.style.transform = `translateY(${rate}px)`;
+    }
+    ticking = false;
+  }
+  
+  function requestTick() {
+    if (!ticking) {
+      requestAnimationFrame(updateParallax);
+      ticking = true;
+    }
+  }
+  
+  window.addEventListener('scroll', requestTick);
+  
+  // Enhanced ripple effect for buttons
+  function createRipple(event) {
+    const button = event.currentTarget;
+    const ripple = document.createElement('span');
+    const rect = button.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
+    
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = x + 'px';
+    ripple.style.top = y + 'px';
+    ripple.classList.add('ripple');
+    
+    button.appendChild(ripple);
+    
+    setTimeout(() => {
+      ripple.remove();
+    }, 600);
+  }
+  
+  const buttons = document.querySelectorAll('.btn, .btn-cta, .subject-btn');
+  buttons.forEach(button => {
+    button.addEventListener('click', createRipple);
+  });
+  
+  // Add ripple effect styles
+  const style = document.createElement('style');
+  style.textContent = `
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      background: rgba(255,255,255,0.5);
+      pointer-events: none;
+      width: 100px;
+      height: 100px;
+      left: 0;
+      top: 0;
+      z-index: 10;
+    }
+    @keyframes ripple {
+      to {
+        transform: scale(2.5);
+        opacity: 0;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // Enhanced text reveal on scroll
+  const textObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const text = entry.target;
+        const words = text.textContent.split(' ');
+        text.innerHTML = '';
+        
+        words.forEach((word, index) => {
+          const span = document.createElement('span');
+          span.textContent = word + ' ';
+          span.style.opacity = '0';
+          span.style.transform = 'translateY(20px)';
+          span.style.animation = `textFadeInUp 0.6s ease-out ${index * 0.1}s forwards`;
+          text.appendChild(span);
+        });
+        
+        textObserver.unobserve(text);
+      }
+    });
+  }, { threshold: 0.5 });
+  
+  // Observe text elements for reveal animation
+  const textElements = document.querySelectorAll('.text-reveal-on-scroll');
+  textElements.forEach(el => textObserver.observe(el));
+  
+  // Enhanced loading animations
+  function addLoadingAnimations() {
+    const loadingElements = document.querySelectorAll('.loading-animate');
+    loadingElements.forEach((element, index) => {
+      element.style.animationDelay = `${index * 0.1}s`;
+      element.classList.add('text-fade-in-up');
+    });
+  }
+  
+  // Call loading animations after page load
+  window.addEventListener('load', addLoadingAnimations);
+  
+  // Enhanced performance monitoring for animations
+  let animationFrameCount = 0;
+  let lastTime = performance.now();
+  
+  function monitorAnimationPerformance(currentTime) {
+    animationFrameCount++;
+    
+    if (currentTime - lastTime >= 1000) {
+      const fps = Math.round((animationFrameCount * 1000) / (currentTime - lastTime));
+      
+      // Reduce animation complexity if FPS is low
+      if (fps < 30) {
+        document.body.classList.add('reduce-animations');
+      } else {
+        document.body.classList.remove('reduce-animations');
+      }
+      
+      animationFrameCount = 0;
+      lastTime = currentTime;
+    }
+    
+    requestAnimationFrame(monitorAnimationPerformance);
+  }
+  
+  requestAnimationFrame(monitorAnimationPerformance);
 });
 
 // Section reveal on scroll

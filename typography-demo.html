@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typography Animation Demo - Sunrise Education Centre</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        .demo-section {
+            margin: 3rem 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            color: white;
+        }
+        
+        .demo-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .animation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .animation-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .animation-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .animation-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .animation-description {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .hero-demo {
+            background: linear-gradient(120deg, #6a82fb 0%, #fc5c7d 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+        }
+        
+        .hero-demo h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-demo p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-demo {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: white;
+            color: #fc5c7d;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-demo:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="hero-demo">
+            <h1 class="text-reveal">
+                <span class="animated-text text-fade-in-up">Enhanced</span>
+                <span class="animated-text text-fade-in-up">Typography</span>
+                <span class="animated-text text-fade-in-up">Animations</span>
+            </h1>
+            <p class="text-fade-in-up">Experience vibrant and smooth text animations</p>
+            <a href="#" class="btn-demo text-scale-in">Get Started</a>
+        </div>
+
+        <div class="demo-section">
+            <h2 class="demo-title text-slide-in">Basic Animations</h2>
+            <div class="animation-grid">
+                <div class="animation-item" onclick="triggerAnimation('text-reveal')">
+                    <div class="animation-text text-reveal">Text Reveal</div>
+                    <div class="animation-description">Smooth reveal with blur and scale effects</div>
+                </div>
+                
+                <div class="animation-item" onclick="triggerAnimation('text-slide-in')">
+                    <div class="animation-text text-slide-in">Slide In</div>
+                    <div class="animation-description">Horizontal slide with skew effect</div>
+                </div>
+                
+                <div class="animation-item" onclick="triggerAnimation('text-fade-in-up')">
+                    <div class="animation-text text-fade-in-up">Fade In Up</div>
+                    <div class="animation-description">Vertical fade with 3D rotation</div>
+                </div>
+                
+                <div class="animation-item" onclick="triggerAnimation('text-scale-in')">
+                    <div class="animation-text text-scale-in">Scale In</div>
+                    <div class="animation-description">Scale and rotate entrance</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2 class="demo-title text-scale-in">Advanced Effects</h2>
+            <div class="animation-grid">
+                <div class="animation-item" onclick="triggerAnimation('text-glow')">
+                    <div class="animation-text text-glow">Glow Effect</div>
+                    <div class="animation-description">Pulsing glow with multiple shadows</div>
+                </div>
+                
+                <div class="animation-item" onclick="triggerAnimation('text-bounce')">
+                    <div class="animation-text text-bounce">Bounce</div>
+                    <div class="animation-description">Playful bounce with scale</div>
+                </div>
+                
+                <div class="animation-item" onclick="triggerAnimation('text-shimmer')">
+                    <div class="animation-text text-shimmer">Shimmer</div>
+                    <div class="animation-description">Shimmering light effect</div>
+                </div>
+                
+                <div class="animation-item" onclick="triggerAnimation('text-wave')">
+                    <div class="animation-text text-wave">Wave</div>
+                    <div class="animation-description">Gentle wave motion</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2 class="demo-title text-fade-in-up">Color Effects</h2>
+            <div class="animation-grid">
+                <div class="animation-item" onclick="triggerAnimation('text-pulse')">
+                    <div class="animation-text text-pulse">Pulse</div>
+                    <div class="animation-description">Breathing pulse effect</div>
+                </div>
+                
+                <div class="animation-item" onclick="triggerAnimation('text-rainbow')">
+                    <div class="animation-text text-rainbow">Rainbow</div>
+                    <div class="animation-description">Cycling through colors</div>
+                </div>
+                
+                <div class="animation-item" onclick="triggerAnimation('text-gradient')">
+                    <div class="animation-text text-gradient">Gradient</div>
+                    <div class="animation-description">Animated gradient background</div>
+                </div>
+                
+                <div class="animation-item" onclick="triggerAnimation('text-hover-glow')">
+                    <div class="animation-text text-hover-glow">Hover Glow</div>
+                    <div class="animation-description">Hover to see glow effect</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2 class="demo-title text-reveal">Staggered Animations</h2>
+            <div class="animation-grid">
+                <div class="animation-item">
+                    <div class="animation-text text-fade-in-up animate-stagger-1">Stagger 1</div>
+                    <div class="animation-text text-fade-in-up animate-stagger-2">Stagger 2</div>
+                    <div class="animation-text text-fade-in-up animate-stagger-3">Stagger 3</div>
+                    <div class="animation-text text-fade-in-up animate-stagger-4">Stagger 4</div>
+                </div>
+                
+                <div class="animation-item">
+                    <div class="animation-text text-slide-in animate-stagger-1">Slide 1</div>
+                    <div class="animation-text text-slide-in animate-stagger-2">Slide 2</div>
+                    <div class="animation-text text-slide-in animate-stagger-3">Slide 3</div>
+                    <div class="animation-text text-slide-in animate-stagger-4">Slide 4</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function triggerAnimation(animationType) {
+            const elements = document.querySelectorAll('.animation-text');
+            elements.forEach(element => {
+                element.style.animation = 'none';
+                element.offsetHeight; // Trigger reflow
+                element.classList.remove('text-reveal', 'text-slide-in', 'text-fade-in-up', 'text-scale-in', 'text-glow', 'text-bounce', 'text-shimmer', 'text-wave', 'text-pulse', 'text-rainbow', 'text-gradient', 'text-hover-glow');
+                element.classList.add(animationType);
+            });
+        }
+
+        // Add intersection observer for scroll-triggered animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Observe all animated elements
+        document.querySelectorAll('.animation-text, .demo-title').forEach(el => {
+            el.style.animationPlayState = 'paused';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
