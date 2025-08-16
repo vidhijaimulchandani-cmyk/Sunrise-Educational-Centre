@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Admission Status - Sunrise Education Centre</title>
+    <style>
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000;
+            color: #f5f5f7;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(106, 130, 251, 0.3);
+        }
+        
+        .status {
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+        }
+        
+        .status.success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #34d399;
+        }
+        
+        .status.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+        }
+        
+        .status.warning {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #fbbf24;
+        }
+        
+        .test-form {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .form-group {
+            margin: 10px 0;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #f5f5f7;
+            font-family: inherit;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #6a82fb;
+            box-shadow: 0 0 0 2px rgba(106, 130, 251, 0.2);
+        }
+        
+        .mock-credentials {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 3px solid #6a82fb;
+        }
+        
+        .credential-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .credential-item:last-child {
+            border-bottom: none;
+        }
+        
+        .credential-label {
+            font-weight: 500;
+            color: #f5f5f7;
+        }
+        
+        .credential-value {
+            font-family: monospace;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: #34d399;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Admission Status Checking - Sunrise Education Centre</h1>
+    
+    <div class="test-section">
+        <h2>1. Test Admission Status Route</h2>
+        <button class="test-button" onclick="testAdmissionRoute()">Test /check-admission Route</button>
+        <div id="route-status"></div>
+        
+        <div class="test-form">
+            <h4>Test Form Submission</h4>
+            <form id="testAdmissionForm" onsubmit="testFormSubmission(event)">
+                <div class="form-group">
+                    <label>Admission Username:</label>
+                    <input type="text" id="testUsername" placeholder="e.g., ADM000123" required>
+                </div>
+                <div class="form-group">
+                    <label>Admission Password:</label>
+                    <input type="password" id="testPassword" placeholder="Enter password" required>
+                </div>
+                <button type="submit" class="test-button">Test Form Submission</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Test Database Connection</h2>
+        <button class="test-button" onclick="testDatabaseConnection()">Test Database Tables</button>
+        <div id="database-status"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Test API Endpoints</h2>
+        <button class="test-button" onclick="testAPIEndpoints()">Test API Endpoints</button>
+        <div id="api-status"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Sample Credentials for Testing</h2>
+        <div class="mock-credentials">
+            <h4>Test Credentials (if available in database):</h4>
+            <div class="credential-item">
+                <span class="credential-label">Username:</span>
+                <span class="credential-value">ADM000001</span>
+            </div>
+            <div class="credential-item">
+                <span class="credential-label">Password:</span>
+                <span class="credential-value">test123</span>
+            </div>
+            <div style="margin-top: 10px; font-size: 0.9rem; color: #86868b;">
+                Note: These are sample credentials. Use actual credentials from your database for testing.
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>5. Debug Information</h2>
+        <button class="test-button" onclick="showDebugInfo()">Show Debug Info</button>
+        <div id="debug-info"></div>
+    </div>
+    
+    <script>
+        // Test Functions
+        function testAdmissionRoute() {
+            const status = document.getElementById('route-status');
+            try {
+                // Test if the route is accessible
+                fetch('/check-admission')
+                    .then(response => {
+                        if (response.ok) {
+                            status.innerHTML = '<div class="status success">✅ /check-admission route is accessible</div>';
+                        } else {
+                            status.innerHTML = '<div class="status error">❌ /check-admission route returned status: ' + response.status + '</div>';
+                        }
+                    })
+                    .catch(error => {
+                        status.innerHTML = '<div class="status error">❌ Error accessing /check-admission route: ' + error.message + '</div>';
+                    });
+            } catch (error) {
+                status.innerHTML = '<div class="status error">❌ Error testing admission route: ' + error.message + '</div>';
+            }
+        }
+        
+        function testFormSubmission(event) {
+            event.preventDefault();
+            const status = document.getElementById('route-status');
+            const username = document.getElementById('testUsername').value;
+            const password = document.getElementById('testPassword').value;
+            
+            if (!username || !password) {
+                status.innerHTML = '<div class="status error">❌ Please provide both username and password</div>';
+                return;
+            }
+            
+            // Create form data
+            const formData = new FormData();
+            formData.append('access_username', username);
+            formData.append('access_password', password);
+            
+            // Submit form to /check-admission
+            fetch('/check-admission', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('HTTP ' + response.status);
+                }
+            })
+            .then(html => {
+                status.innerHTML = '<div class="status success">✅ Form submission successful! Check the page for results.</div>';
+                
+                // Check if the response contains admission details
+                if (html.includes('Status:') || html.includes('Student Name:')) {
+                    status.innerHTML += '<div class="status success">✅ Admission details found in response</div>';
+                } else if (html.includes('Invalid credentials')) {
+                    status.innerHTML += '<div class="status warning">⚠️ Invalid credentials (expected for test data)</div>';
+                } else {
+                    status.innerHTML += '<div class="status warning">⚠️ No admission details found in response</div>';
+                }
+            })
+            .catch(error => {
+                status.innerHTML = '<div class="status error">❌ Form submission failed: ' + error.message + '</div>';
+            });
+        }
+        
+        function testDatabaseConnection() {
+            const status = document.getElementById('database-status');
+            try {
+                // Test if we can access database-related endpoints
+                fetch('/api/check-admission-credentials', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        access_username: 'test',
+                        access_password: 'test'
+                    })
+                })
+                .then(response => {
+                    if (response.status === 401) {
+                        status.innerHTML = '<div class="status warning">⚠️ API requires authentication (expected)</div>';
+                    } else if (response.ok) {
+                        status.innerHTML = '<div class="status success">✅ Database connection working</div>';
+                    } else {
+                        status.innerHTML = '<div class="status warning">⚠️ API returned status: ' + response.status + '</div>';
+                    }
+                })
+                .catch(error => {
+                    status.innerHTML = '<div class="status error">❌ Database connection test failed: ' + error.message + '</div>';
+                });
+            } catch (error) {
+                status.innerHTML = '<div class="status error">❌ Error testing database connection: ' + error.message + '</div>';
+            }
+        }
+        
+        function testAPIEndpoints() {
+            const status = document.getElementById('api-status');
+            try {
+                const endpoints = [
+                    '/check-admission',
+                    '/api/check-admission-credentials',
+                    '/check-admission-login'
+                ];
+                
+                status.innerHTML = '<div class="status success">✅ Testing API endpoints...</div>';
+                
+                endpoints.forEach(endpoint => {
+                    fetch(endpoint)
+                        .then(response => {
+                            status.innerHTML += `<div class="status ${response.ok ? 'success' : 'warning'}">${response.ok ? '✅' : '⚠️'} ${endpoint}: ${response.status}</div>`;
+                        })
+                        .catch(error => {
+                            status.innerHTML += `<div class="status error">❌ ${endpoint}: ${error.message}</div>`;
+                        });
+                });
+            } catch (error) {
+                status.innerHTML = '<div class="status error">❌ Error testing API endpoints: ' + error.message + '</div>';
+            }
+        }
+        
+        function showDebugInfo() {
+            const status = document.getElementById('debug-info');
+            try {
+                const debugInfo = {
+                    userAgent: navigator.userAgent,
+                    currentURL: window.location.href,
+                    timestamp: new Date().toISOString(),
+                    localStorage: Object.keys(localStorage),
+                    sessionStorage: Object.keys(sessionStorage)
+                };
+                
+                status.innerHTML = '<div class="status success">✅ Debug Information:</div>';
+                status.innerHTML += '<pre style="background:rgba(255,255,255,0.1); padding:10px; border-radius:6px; overflow-x:auto;">' + 
+                    JSON.stringify(debugInfo, null, 2) + '</pre>';
+            } catch (error) {
+                status.innerHTML = '<div class="status error">❌ Error showing debug info: ' + error.message + '</div>';
+            }
+        }
+        
+        // Initialize tests on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Admission status test page loaded successfully');
+            
+            // Auto-run basic tests
+            setTimeout(() => {
+                testAdmissionRoute();
+                testDatabaseConnection();
+                testAPIEndpoints();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -3222,6 +3222,111 @@ def check_admission_status():
     conn.close()
     return jsonify({'hasAdmission': False})
 
+def check_admission_by_credentials(access_username, access_password):
+    """
+    Check admission status using access credentials
+    Returns admission details if found, None otherwise
+    """
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+    
+    try:
+        # First, find the admission_id using the credentials (try both hashed and plain text)
+        c.execute('''
+            SELECT admission_id 
+            FROM admission_access 
+            WHERE access_username = ? AND access_password = ?
+        ''', (access_username, access_password))
+        
+        access_record = c.fetchone()
+        
+        # If not found in hashed table, try plain text table
+        if not access_record:
+            c.execute('''
+                SELECT admission_id 
+                FROM admission_access_plain 
+                WHERE access_username = ? AND access_password_plain = ?
+            ''', (access_username, access_password))
+            
+            access_record = c.fetchone()
+        
+        if not access_record:
+            conn.close()
+            return None
+        
+        admission_id = access_record[0]
+        
+        # Check in pending admissions
+        c.execute('''
+            SELECT student_name, class, school_name, status, submitted_at 
+            FROM admissions 
+            WHERE id = ?
+        ''', (admission_id,))
+        admission = c.fetchone()
+        
+        if admission:
+            conn.close()
+            return {
+                'status': admission[3],
+                'paid_status': 'unpaid',  # Default for pending admissions
+                'details': {
+                    'student_name': admission[0],
+                    'class': admission[1],
+                    'school_name': admission[2],
+                    'submitted_at': admission[4]
+                }
+            }
+        
+        # Check in approved admissions
+        c.execute('''
+            SELECT student_name, class, school_name, approved_at 
+            FROM approved_admissions 
+            WHERE original_admission_id = ?
+        ''', (admission_id,))
+        admission = c.fetchone()
+        
+        if admission:
+            conn.close()
+            return {
+                'status': 'approved',
+                'paid_status': 'unpaid',  # Default for approved admissions
+                'details': {
+                    'student_name': admission[0],
+                    'class': admission[1],
+                    'school_name': admission[2],
+                    'submitted_at': admission[3]
+                }
+            }
+        
+        # Check in disapproved admissions
+        c.execute('''
+            SELECT student_name, class, school_name, disapproved_at 
+            FROM disapproved_admissions 
+            WHERE original_admission_id = ?
+        ''', (admission_id,))
+        admission = c.fetchone()
+        
+        if admission:
+            conn.close()
+            return {
+                'status': 'disapproved',
+                'paid_status': 'unpaid',  # Default for disapproved admissions
+                'details': {
+                    'student_name': admission[0],
+                    'class': admission[1],
+                    'school_name': admission[2],
+                    'submitted_at': admission[3]
+                }
+            }
+        
+        conn.close()
+        return None
+        
+    except Exception as e:
+        print(f"Error checking admission credentials: {e}")
+        conn.close()
+        return None
+
 @app.route('/admission', methods=['GET', 'POST'])
 def admission():
     # Admission form is now accessible to everyone without login
@@ -3398,8 +3503,35 @@ def admission():
         return redirect(url_for('admission'))
 
 # Public admission check page (no login)
-@app.route('/check-admission', methods=['GET'])
+@app.route('/check-admission', methods=['GET', 'POST'])
 def check_admission():
+    if request.method == 'POST':
+        # Handle form submission for checking admission status
+        access_username = request.form.get('access_username')
+        access_password = request.form.get('access_password')
+        
+        if not access_username or not access_password:
+            flash('Please provide both username and password', 'error')
+            return render_template('check_admission.html')
+        
+        # Check admission status using credentials
+        result = check_admission_by_credentials(access_username, access_password)
+        
+        if result:
+            return render_template(
+                'check_admission.html',
+                result=True,
+                status=result.get('status'),
+                paid_status=result.get('paid_status'),
+                details=result.get('details'),
+                access_username=access_username,
+                access_password=access_password
+            )
+        else:
+            flash('Invalid credentials. Please check your username and password.', 'error')
+            return render_template('check_admission.html', access_username=access_username)
+    
+    # Handle GET request
     # Prefill with freshly generated credentials if available (single-use display)
     last_creds = session.pop('last_admission_creds', None)
     if last_creds:
