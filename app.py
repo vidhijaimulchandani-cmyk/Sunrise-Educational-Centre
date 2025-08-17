@@ -1427,6 +1427,13 @@ def end_live_class():
 def auth():
     error = None
     if request.method == 'POST':
+        # Handle Google OAuth callback if provided
+        if request.form.get('google_token'):
+            # Placeholder: accept any non-empty google_token and treat as student login
+            session['user_id'] = -1
+            session['username'] = 'google_user'
+            session['role'] = 'class 11 applied'
+            return redirect(url_for('home'))
         class_id = request.form.get('class_id')
         all_classes_dict = {str(c[0]): c[1] for c in get_all_classes()}
         selected_role = all_classes_dict.get(class_id)
