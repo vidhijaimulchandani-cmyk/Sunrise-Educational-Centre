@@ -271,10 +271,22 @@ class BulkUploadHandler:
         return results
     
     def get_upload_statistics(self):
-        """Get upload statistics from database"""
+        """Get upload statistics from database. If the table doesn't exist yet, return empty stats."""
         try:
             conn = sqlite3.connect(self.db_path)
             cursor = conn.cursor()
+            
+            # Ensure table exists; if not, return empty stats gracefully
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS uploaded_files (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    filename TEXT,
+                    category TEXT,
+                    upload_date TEXT,
+                    status TEXT DEFAULT 'active'
+                )
+            """)
+            conn.commit()
             
             # Get total files
             cursor.execute('SELECT COUNT(*) FROM uploaded_files WHERE status = "active"')
@@ -309,7 +321,11 @@ class BulkUploadHandler:
             
         except Exception as e:
             logger.error(f"Error getting upload statistics: {str(e)}")
-            return None
+            return {
+                'total_files': 0,
+                'category_stats': {},
+                'recent_uploads': []
+            }
     
     def create_excel_template(self, output_path='file_upload_template.xlsx'):
         """Create Excel template for file uploads"""

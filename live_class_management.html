@@ -313,6 +313,14 @@
             </select>
           </div>
           <div>
+            <label for="completedFilterStream" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #232946;">Class 11 Stream:</label>
+            <select id="completedFilterStream" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid #e0e7ff; border-radius: 8px; font-size: 1rem;">
+              <option value="all">All</option>
+              <option value="applied">Applied</option>
+              <option value="core">Core</option>
+            </select>
+          </div>
+          <div>
             <label for="completedFilterType" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #232946;">Filter by Class Type:</label>
             <select id="completedFilterType" style="width: 100%; padding: 0.8rem 1rem; border: 1px solid #e0e7ff; border-radius: 8px; font-size: 1rem;">
               <option value="">All Types</option>
@@ -864,6 +872,8 @@
     function applyCompletedFilters() {
       const sortBy = document.getElementById('completedSortBy').value;
       const filterClass = document.getElementById('completedFilterClass').value;
+      const filterStreamEl = document.getElementById('completedFilterStream');
+      const filterStream = filterStreamEl ? filterStreamEl.value : 'all';
       const filterType = document.getElementById('completedFilterType').value;
       const searchText = document.getElementById('completedSearchText').value.toLowerCase();
       
@@ -876,6 +886,7 @@
         const targetClass = card.dataset.targetClass;
         const host = card.dataset.host.toLowerCase();
         const duration = card.dataset.duration.toLowerCase();
+        const classStream = (card.querySelector('p:nth-of-type(3)')?.textContent.toLowerCase().includes('applied') ? 'applied' : (card.querySelector('p:nth-of-type(3)')?.textContent.toLowerCase().includes('core') ? 'core' : ''));
         const participants = parseInt(card.dataset.participants) || 0;
         const completionDate = card.dataset.completionDate;
         
@@ -890,6 +901,13 @@
         // Filter by class type
         if (filterType && classType !== filterType) {
           shouldShow = false;
+        }
+        
+        // Filter by Class 11 stream when applicable
+        if (filterClass === '11' && filterStream && filterStream !== 'all') {
+          if (classStream !== filterStream) {
+            shouldShow = false;
+          }
         }
         
         // Filter by search text
