@@ -8,6 +8,63 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     <link rel="stylesheet" href="style.css" />
+    <style>
+      .batch-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
+      }
+      .batch-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 4px 16px rgba(100,100,255,0.08);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .batch-card:hover { 
+        transform: translateY(-4px);
+        box-shadow: 0 10px 28px rgba(100,100,255,0.15);
+      }
+      .batch-image { 
+        width: 100%;
+        height: 150px;
+        background: #f3f4f6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+      .batch-image img { 
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .batch-info {
+        padding: 0.9rem 1rem 1rem 1rem;
+      }
+      .batch-info h3 {
+        margin: 0 0 0.4rem 0;
+        font-size: 1.05rem;
+        color: #232946;
+      }
+      .batch-meta { 
+        display: grid; 
+        grid-template-columns: 1fr 1fr; 
+        gap: 0.35rem 0.6rem; 
+        font-size: 0.92rem; 
+        color: #6b7280;
+        margin-bottom: 0.7rem;
+      }
+      .batch-actions { 
+        display: flex; 
+        gap: 0.5rem; 
+        flex-wrap: wrap; 
+      }
+      body.dark-mode .batch-card { background:#232946; border-color:#3a3a4a; }
+      body.dark-mode .batch-info h3 { color: #e2e8f0; }
+      body.dark-mode .batch-meta { color: #b8c5d6; }
+    </style>
   </head>
   <body>
     <nav class="navbar glassmorphic">
@@ -39,6 +96,35 @@
     </nav>
 
     <main class="container main-content">
+      <section class="card animated-card" style="padding: 1.2rem 1rem;">
+        <h2 style="margin-top:0;">Available Batches</h2>
+        <div class="batch-grid">
+          {% if batch_cards and batch_cards|length > 0 %}
+            {% for card in batch_cards %}
+            <div class="batch-card">
+              <div class="batch-image">
+                <img src="{{ card.image }}" alt="{{ card.batch_name }}" />
+              </div>
+              <div class="batch-info">
+                <h3>{{ card.batch_name }}</h3>
+                <div class="batch-meta">
+                  <div><strong>Class</strong>: {{ card.class_name }}</div>
+                  <div><strong>ID</strong>: {{ card.class_id }}</div>
+                  <div><strong>Start</strong>: {{ card.start_date }}</div>
+                  <div><strong>End</strong>: {{ card.end_date }}</div>
+                </div>
+                <div class="batch-actions">
+                  <a class="btn btn-primary" href="/online-class">Join Live</a>
+                  <a class="btn btn-secondary" href="/study-resources">Resources</a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div style="color:#6b7280;">No batches available.</div>
+          {% endif %}
+        </div>
+      </section>
       <section class="card animated-card" style="padding: 1.2rem 1rem;">
         <h1 style="margin: 0.2rem 0 0.8rem 0;">My Batch</h1>
         <p style="margin: 0; color: #6b7280;">Welcome{% if username %}, {{ username }}{% endif %}. Your class: <strong>{{ role }}</strong> (ID: {{ class_id }})</p>

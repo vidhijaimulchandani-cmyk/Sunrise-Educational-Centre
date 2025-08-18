@@ -1165,11 +1165,31 @@ def batch_page():
     user_id = session.get('user_id')
     user_notifications = get_unread_notifications_for_user(user_id) if user_id else []
 
-    # Map class name to class_id
-    all_classes_dict_rev = {c[1]: c[0] for c in get_all_classes()}
+    # Map class name to class_id and prepare sample batch metadata
+    classes = get_all_classes()  # List of tuples (id, name)
+    all_classes_dict_rev = {c[1]: c[0] for c in classes}
     class_id = all_classes_dict_rev.get(role)
 
-    return render_template('batch.html', username=username, role=role, class_id=class_id, user_notifications=user_notifications)
+    # Choose up to four classes for cards (or pad to four if fewer exist)
+    selected_classes = classes[:4] if classes else []
+    # Provide default dates; in a real system these would come from DB
+    from datetime import date
+    today = date.today()
+    default_start = today.replace(day=1)
+    default_end = today.replace(day=28 if today.month == 2 else 30)
+    batch_cards = [
+        {
+            'class_id': cid,
+            'class_name': cname.title(),
+            'batch_name': f"{cname.title()} - Batch",
+            'start_date': default_start.strftime('%Y-%m-%d'),
+            'end_date': default_end.strftime('%Y-%m-%d'),
+            'image': 'img/IMG-20250706-WA0000.jpg'
+        }
+        for cid, cname in selected_classes
+    ]
+
+    return render_template('batch.html', username=username, role=role, class_id=class_id, user_notifications=user_notifications, batch_cards=batch_cards)
 
 # Route for forum
 @app.route("/forum")
