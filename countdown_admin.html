@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Page Management - Admin</title>
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
+            color: #232946;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .header h1 {
+            color: #6a82fb;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #6a82fb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .admin-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 24px rgba(100,100,255,0.07);
+            border: 1px solid rgba(106,130,251,0.1);
+        }
+        
+        .admin-card h3 {
+            color: #6a82fb;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #374151;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #6a82fb;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(106,130,251,0.1);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .color-picker {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .color-picker input[type="color"] {
+            width: 60px;
+            height: 50px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #6a82fb;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .btn {
+            background: #6a82fb;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6b7280;
+        }
+        
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+        
+        .btn-danger {
+            background: #ef4444;
+        }
+        
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+        
+        .preview-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 24px rgba(100,100,255,0.07);
+            margin-top: 2rem;
+        }
+        
+        .preview-section h3 {
+            color: #6a82fb;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .preview-container {
+            border: 2px dashed #e5e7eb;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            background: #f9fafb;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .preview-text {
+            color: #6b7280;
+            font-size: 1.1rem;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-inactive {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .current-settings {
+            background: #f0f4ff;
+            border: 1px solid #dbeafe;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .current-settings h4 {
+            color: #1e40af;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #dbeafe;
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-label {
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .setting-value {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/admin" class="back-btn">← Back to Admin Panel</a>
+        
+        <div class="header">
+            <h1>🎯 Countdown Page Management</h1>
+            <p>Customize your website launch countdown page and gate animation</p>
+        </div>
+        
+        <!-- Current Settings Display -->
+        <div class="current-settings">
+            <h4>📊 Current Settings</h4>
+            <div class="setting-item">
+                <span class="setting-label">Status:</span>
+                <span class="setting-value" id="currentStatus">Loading...</span>
+            </div>
+            <div class="setting-item">
+                <span class="setting-label">Launch Date:</span>
+                <span class="setting-value" id="currentLaunchDate">Loading...</span>
+            </div>
+            <div class="setting-item">
+                <span class="setting-label">Gate Animation:</span>
+                <span class="setting-value" id="currentGateStatus">Loading...</span>
+            </div>
+            <div class="setting-item">
+                <span class="setting-item">
+                    <span class="setting-label">Last Updated:</span>
+                    <span class="setting-value" id="currentUpdated">Loading...</span>
+                </span>
+            </div>
+        </div>
+        
+        <form id="countdownForm">
+            <div class="admin-grid">
+                <!-- Basic Settings -->
+                <div class="admin-card">
+                    <h3>⚙️ Basic Settings</h3>
+                    
+                    <div class="form-group">
+                        <label for="launchDate">Launch Date & Time</label>
+                        <input type="datetime-local" id="launchDate" name="launchDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="launchMessage">Launch Message</label>
+                        <textarea id="launchMessage" name="launchMessage" placeholder="Enter your launch message..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="logoText">Logo Text</label>
+                        <input type="text" id="logoText" name="logoText" placeholder="S" maxlength="3">
+                    </div>
+                </div>
+                
+                <!-- Background Settings -->
+                <div class="admin-card">
+                    <h3>🎨 Background Settings</h3>
+                    
+                    <div class="form-group">
+                        <label for="backgroundType">Background Type</label>
+                        <select id="backgroundType" name="backgroundType">
+                            <option value="gradient">Gradient</option>
+                            <option value="solid">Solid Color</option>
+                            <option value="custom">Custom CSS</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="gradientGroup">
+                        <label for="backgroundGradient">Background Gradient</label>
+                        <input type="text" id="backgroundGradient" name="backgroundGradient" placeholder="linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
+                    </div>
+                    
+                    <div class="form-group" id="colorGroup" style="display: none;">
+                        <label for="backgroundColor">Background Color</label>
+                        <div class="color-picker">
+                            <input type="color" id="backgroundColor" name="backgroundColor" value="#667eea">
+                            <input type="text" id="backgroundColorText" placeholder="#667eea" style="flex: 1;">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="logoColor">Logo Color</label>
+                        <div class="color-picker">
+                            <input type="color" id="logoColor" name="logoColor" value="#ff6b6b">
+                            <input type="text" id="logoColorText" placeholder="#ff6b6b" style="flex: 1;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gate Animation Settings -->
+            <div class="admin-card" style="grid-column: 1 / -1;">
+                <h3>🚪 Gate Animation Settings</h3>
+                
+                <div class="form-group">
+                    <label for="gateAnimationEnabled">Enable Gate Animation</label>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="gateAnimationEnabled" name="gateAnimationEnabled" checked>
+                            <span class="slider"></span>
+                        </label>
+                        <span>Show gate opening animation when website goes live</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gateMessage">Gate Welcome Message</label>
+                    <textarea id="gateMessage" name="gateMessage" placeholder="Enter welcome message for gate animation..." required></textarea>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div style="text-align: center; margin-top: 2rem;">
+                <button type="submit" class="btn">💾 Save Settings</button>
+                <button type="button" class="btn btn-secondary" onclick="previewCountdown()">👁️ Preview</button>
+                <button type="button" class="btn btn-danger" onclick="toggleCountdown()" id="toggleBtn">🔄 Toggle Status</button>
+            </div>
+        </form>
+        
+        <!-- Preview Section -->
+        <div class="preview-section">
+            <h3>👁️ Live Preview</h3>
+            <div class="preview-container" id="previewContainer">
+                <div class="preview-text">Click "Preview" to see how your countdown page will look</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSettings = {};
+        
+        // Load current settings
+        async function loadCurrentSettings() {
+            try {
+                const response = await fetch('/admin/countdown/settings');
+                if (response.ok) {
+                    currentSettings = await response.json();
+                    populateForm(currentSettings);
+                    updateCurrentSettingsDisplay(currentSettings);
+                }
+            } catch (error) {
+                console.error('Error loading settings:', error);
+            }
+        }
+        
+        // Populate form with current settings
+        function populateForm(settings) {
+            if (settings.launch_date) {
+                // Convert ISO string to datetime-local format
+                const date = new Date(settings.launch_date);
+                const localDateTime = date.toISOString().slice(0, 16);
+                document.getElementById('launchDate').value = localDateTime;
+            }
+            
+            document.getElementById('launchMessage').value = settings.launch_message || '';
+            document.getElementById('logoText').value = settings.logo_text || 'S';
+            document.getElementById('backgroundType').value = settings.background_type || 'gradient';
+            document.getElementById('backgroundGradient').value = settings.background_gradient || '';
+            document.getElementById('backgroundColor').value = settings.background_color || '#667eea';
+            document.getElementById('backgroundColorText').value = settings.background_color || '#667eea';
+            document.getElementById('logoColor').value = settings.logo_color || '#ff6b6b';
+            document.getElementById('logoColorText').value = settings.logo_color || '#ff6b6b';
+            document.getElementById('gateAnimationEnabled').checked = settings.gate_animation_enabled !== false;
+            document.getElementById('gateMessage').value = settings.gate_message || '';
+            
+            updateBackgroundFields();
+        }
+        
+        // Update current settings display
+        function updateCurrentSettingsDisplay(settings) {
+            const status = settings.is_active ? 'Active' : 'Inactive';
+            const statusClass = settings.is_active ? 'status-active' : 'status-inactive';
+            
+            document.getElementById('currentStatus').innerHTML = `<span class="${statusClass}">${status}</span>`;
+            document.getElementById('currentLaunchDate').textContent = settings.launch_date ? new Date(settings.launch_date).toLocaleString() : 'Not set';
+            document.getElementById('currentGateStatus').textContent = settings.gate_animation_enabled ? 'Enabled' : 'Disabled';
+            document.getElementById('currentUpdated').textContent = settings.updated_at || 'Never';
+            
+            // Update toggle button
+            const toggleBtn = document.getElementById('toggleBtn');
+            toggleBtn.textContent = settings.is_active ? '🔄 Deactivate' : '🔄 Activate';
+            toggleBtn.className = settings.is_active ? 'btn btn-danger' : 'btn btn-secondary';
+        }
+        
+        // Handle background type change
+        document.getElementById('backgroundType').addEventListener('change', updateBackgroundFields);
+        
+        function updateBackgroundFields() {
+            const backgroundType = document.getElementById('backgroundType').value;
+            const gradientGroup = document.getElementById('gradientGroup');
+            const colorGroup = document.getElementById('colorGroup');
+            
+            if (backgroundType === 'gradient') {
+                gradientGroup.style.display = 'block';
+                colorGroup.style.display = 'none';
+            } else if (backgroundType === 'solid') {
+                gradientGroup.style.display = 'none';
+                colorGroup.style.display = 'block';
+            } else {
+                gradientGroup.style.display = 'none';
+                colorGroup.style.display = 'none';
+            }
+        }
+        
+        // Sync color picker with text input
+        document.getElementById('backgroundColor').addEventListener('input', function() {
+            document.getElementById('backgroundColorText').value = this.value;
+        });
+        
+        document.getElementById('backgroundColorText').addEventListener('input', function() {
+            document.getElementById('backgroundColor').value = this.value;
+        });
+        
+        document.getElementById('logoColor').addEventListener('input', function() {
+            document.getElementById('logoColorText').value = this.value;
+        });
+        
+        document.getElementById('logoColorText').addEventListener('input', function() {
+            document.getElementById('logoColor').value = this.value;
+        });
+        
+        // Form submission
+        document.getElementById('countdownForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const settings = {
+                launch_date: formData.get('launchDate') + ':00',
+                launch_message: formData.get('launchMessage'),
+                logo_text: formData.get('logoText'),
+                background_type: formData.get('backgroundType'),
+                background_gradient: formData.get('backgroundGradient'),
+                background_color: formData.get('backgroundColor'),
+                logo_color: formData.get('logoColor'),
+                gate_animation_enabled: formData.get('gateAnimationEnabled') === 'on',
+                gate_message: formData.get('gateMessage')
+            };
+            
+            try {
+                const response = await fetch('/admin/countdown/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(settings)
+                });
+                
+                if (response.ok) {
+                    alert('Settings saved successfully!');
+                    await loadCurrentSettings();
+                } else {
+                    alert('Error saving settings');
+                }
+            } catch (error) {
+                console.error('Error saving settings:', error);
+                alert('Error saving settings');
+            }
+        });
+        
+        // Toggle countdown status
+        async function toggleCountdown() {
+            try {
+                const response = await fetch('/admin/countdown/toggle', {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    await loadCurrentSettings();
+                } else {
+                    alert('Error toggling countdown status');
+                }
+            } catch (error) {
+                console.error('Error toggling countdown:', error);
+                alert('Error toggling countdown status');
+            }
+        }
+        
+        // Preview countdown
+        function previewCountdown() {
+            const formData = new FormData(document.getElementById('countdownForm'));
+            const settings = {
+                launch_date: formData.get('launchDate') + ':00',
+                launch_message: formData.get('launchMessage'),
+                logo_text: formData.get('logoText'),
+                background_type: formData.get('backgroundType'),
+                background_gradient: formData.get('backgroundGradient'),
+                background_color: formData.get('backgroundColor'),
+                logo_color: formData.get('logoColor'),
+                gate_animation_enabled: formData.get('gateAnimationEnabled') === 'on',
+                gate_message: formData.get('gateMessage')
+            };
+            
+            // Open preview in new window
+            const previewWindow = window.open('/countdown-preview', '_blank');
+            if (previewWindow) {
+                previewWindow.settings = settings;
+            }
+        }
+        
+        // Load settings on page load
+        document.addEventListener('DOMContentLoaded', loadCurrentSettings);
+    </script>
+</body>
+</html>

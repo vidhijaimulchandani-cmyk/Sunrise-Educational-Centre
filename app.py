@@ -1103,6 +1103,17 @@ def inject_global_variables():
 # Route for the main page
 @app.route('/')
 def home():
+    # Check if countdown page is active
+    from countdown_manager import is_countdown_active, is_website_live
+    
+    if is_countdown_active() and not is_website_live():
+        # Show countdown page
+        from countdown_manager import get_countdown_settings
+        settings = get_countdown_settings()
+        if settings:
+            return render_template('countdown_dynamic.html', settings=settings)
+    
+    # Normal home page logic
     with sqlite3.connect(DATABASE) as conn:
         c = conn.cursor()
         c.execute('SELECT name, email, message, submitted_at FROM queries ORDER BY id DESC LIMIT 10')
@@ -1906,6 +1917,72 @@ def admin_panel():
         return render_template('admin.html', resources=resources, users=users, search_query=q, all_notifications=all_notifications, notification_usernames=notification_usernames, active_classes=active_classes, forum_messages=forum_messages, forum_search_query=forum_q, all_classes=all_classes, total_users=total_users, total_forum_posts=total_forum_posts, total_resources=total_resources, total_classes=total_classes, most_active_users=most_active_users, most_resource_classes=most_resource_classes, all_topics=all_topics, total_queries=total_queries, pending_queries=pending_queries, resolved_queries=resolved_queries)
     else:
         return redirect(url_for('auth'))
+
+# Countdown Management Routes
+@app.route('/admin/countdown', methods=['GET'])
+def countdown_admin():
+    if session.get('role') not in ['admin', 'teacher']:
+        return redirect(url_for('auth'))
+    return render_template('countdown_admin.html')
+
+@app.route('/admin/countdown/settings', methods=['GET'])
+def get_countdown_settings():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    from countdown_manager import get_countdown_settings as get_settings
+    settings = get_settings()
+    return jsonify(settings if settings else {})
+
+@app.route('/admin/countdown/update', methods=['POST'])
+def update_countdown_settings():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    try:
+        data = request.get_json()
+        from countdown_manager import update_countdown_settings as update_settings
+        
+        success = update_settings(data)
+        if success:
+            return jsonify({'message': 'Settings updated successfully'}), 200
+        else:
+            return jsonify({'error': 'Failed to update settings'}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/admin/countdown/toggle', methods=['POST'])
+def toggle_countdown():
+    if session.get('role') not in ['admin', 'teacher']:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    try:
+        from countdown_manager import toggle_countdown_status
+        success = toggle_countdown_status()
+        if success:
+            return jsonify({'message': 'Countdown status toggled successfully'}), 200
+        else:
+            return jsonify({'error': 'Failed to toggle countdown status'}), 500
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/countdown-preview', methods=['GET'])
+def countdown_preview():
+    from countdown_manager import get_countdown_settings as get_settings
+    settings = get_settings()
+    if not settings:
+        settings = {
+            'launch_date': '2024-02-01T00:00:00',
+            'launch_message': '🚀 Our website will be live soon! Get ready for an amazing learning experience.',
+            'logo_text': 'S',
+            'background_type': 'gradient',
+            'background_gradient': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            'background_color': '#667eea',
+            'logo_color': '#ff6b6b',
+            'gate_animation_enabled': True,
+            'gate_message': '🚀 Welcome to Sunrise Educational Centre! 🚀'
+        }
+    return render_template('countdown_dynamic.html', settings=settings)
 
 @app.route('/admin/delete-forum-message/<int:message_id>', methods=['POST'])
 def admin_delete_forum_message(message_id):

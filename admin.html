@@ -740,6 +740,30 @@
       </div>
     </section>
 
+    <!-- Countdown Page Management Section -->
+    <section id="countdown" class="admin-section" aria-label="Countdown page management">
+      <h2>🎯 Countdown Page Management</h2>
+      <p style="color: #666; margin-bottom: 1.5rem;">Customize your website launch countdown page and gate animation settings.</p>
+      <a href="/admin/countdown" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">⚙️ Manage Countdown</a>
+      <p style="color: #666; margin-bottom: 1rem;">Set launch date, customize messages, background colors, and enable/disable the gate opening animation.</p>
+      
+      <!-- Quick Countdown Stats -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Countdown Status</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;" id="countdownStatus">Loading...</p>
+        </div>
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Launch Date</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;" id="launchDate">Loading...</p>
+        </div>
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Gate Animation</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;" id="gateStatus">Loading...</p>
+        </div>
+      </div>
+    </section>
+
     <section id="resources" class="admin-section" aria-label="Resource management">
       <h2>Resource Management</h2>
       <a href="/upload-resource" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">📁 Resource Management</a>
@@ -928,7 +952,46 @@
       
       // Load sessions on page load
       refreshSessions();
+      
+      // Load countdown stats
+      loadCountdownStats();
     });
+    
+    // Load countdown statistics
+    async function loadCountdownStats() {
+      try {
+        const response = await fetch('/admin/countdown/settings');
+        if (response.ok) {
+          const settings = await response.json();
+          
+          // Update countdown status
+          const statusElement = document.getElementById('countdownStatus');
+          if (statusElement) {
+            const status = settings.is_active ? 'Active' : 'Inactive';
+            statusElement.textContent = status;
+            statusElement.style.color = settings.is_active ? '#059669' : '#dc2626';
+          }
+          
+          // Update launch date
+          const dateElement = document.getElementById('launchDate');
+          if (dateElement && settings.launch_date) {
+            const date = new Date(settings.launch_date);
+            dateElement.textContent = date.toLocaleDateString();
+          }
+          
+          // Update gate animation status
+          const gateElement = document.getElementById('gateStatus');
+          if (gateElement) {
+            const gateStatus = settings.gate_animation_enabled ? 'Enabled' : 'Disabled';
+            gateElement.textContent = gateStatus;
+            gateElement.style.color = settings.gate_animation_enabled ? '#059669' : '#dc2626';
+          }
+        }
+      } catch (error) {
+        console.error('Error loading countdown stats:', error);
+      }
+    }
+    
     // Force light mode for admin panel - aggressive prevention
     function forceLightMode() {
       // Remove any dark mode class
