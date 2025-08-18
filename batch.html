@@ -96,9 +96,16 @@
     </nav>
 
     <main class="container main-content">
+      {% if is_logged_in %}
       <section class="card animated-card" style="padding: 1.2rem 1rem;">
-        <h2 style="margin-top:0;">Paid Batches</h2>
-        <div class="batch-grid">
+        <div style="display:flex; gap:0.6rem; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+          <h2 style="margin:0;">My Batches</h2>
+          <div style="display:flex; gap:0.4rem;">
+            <button class="tab-btn active" data-filter="paid">Paid</button>
+            <button class="tab-btn" data-filter="free">Free</button>
+          </div>
+        </div>
+        <div id="paid-section" class="batch-grid" style="margin-top:0.8rem;">
           {% if paid_cards and paid_cards|length > 0 %}
             {% for card in paid_cards %}
             <div class="batch-card">
@@ -127,11 +134,7 @@
             <div style="color:#6b7280;">No paid batches available.</div>
           {% endif %}
         </div>
-      </section>
-
-      <section class="card animated-card" style="padding: 1.2rem 1rem;">
-        <h2 style="margin-top:0;">Free Batches</h2>
-        <div class="batch-grid">
+        <div id="free-section" class="batch-grid" style="display:none; margin-top:0.8rem;">
           {% if free_cards and free_cards|length > 0 %}
             {% for card in free_cards %}
             <div class="batch-card">
@@ -157,10 +160,38 @@
           {% endif %}
         </div>
       </section>
+      {% else %}
+      <section class="card animated-card" style="padding: 1.2rem 1rem;">
+        <h2 style="margin:0 0 0.8rem 0;">All Batches</h2>
+        <div style="display:flex; flex-direction:column; gap:0.8rem;">
+          {% for card in all_cards %}
+          <div class="batch-card" style="display:flex; gap:0.8rem;">
+            <div class="batch-image" style="flex:0 0 180px; height:120px;">
+              <img src="{{ card.image }}" alt="{{ card.batch_name }}" />
+            </div>
+            <div class="batch-info" style="flex:1;">
+              <h3 style="margin-top:0;">{{ card.batch_name }}</h3>
+              <div class="batch-meta" style="grid-template-columns:repeat(4, auto); gap:0.8rem;">
+                <div><strong>Class</strong>: {{ card.class_name }}</div>
+                <div><strong>ID</strong>: {{ card.class_id }}</div>
+                <div><strong>Start</strong>: {{ card.start_date }}</div>
+                <div><strong>End</strong>: {{ card.end_date }}</div>
+              </div>
+              <div class="batch-actions">
+                <a class="btn btn-primary" href="/admission">Buy Now</a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+      {% if is_logged_in %}
       <section class="card animated-card" style="padding: 1.2rem 1rem;">
         <h1 style="margin: 0.2rem 0 0.8rem 0;">My Batch</h1>
         <p style="margin: 0; color: #6b7280;">Welcome{% if username %}, {{ username }}{% endif %}. Your class: <strong>{{ role }}</strong> (ID: {{ class_id }})</p>
       </section>
+      {% endif %}
 
       <section class="card animated-card" style="padding: 1.2rem 1rem;">
         <h2 style="margin-top:0;">Batch Links</h2>
@@ -178,6 +209,30 @@
       </section>
     </main>
 
+    <script>
+      // Toggle between paid and free sections for logged-in users
+      document.addEventListener('DOMContentLoaded', function() {
+        const filterButtons = document.querySelectorAll('.tab-btn[data-filter]');
+        const paidSection = document.getElementById('paid-section');
+        const freeSection = document.getElementById('free-section');
+        if (filterButtons.length && paidSection && freeSection) {
+          filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+              filterButtons.forEach(b => b.classList.remove('active'));
+              btn.classList.add('active');
+              const filter = btn.getAttribute('data-filter');
+              if (filter === 'paid') {
+                paidSection.style.display = '';
+                freeSection.style.display = 'none';
+              } else {
+                paidSection.style.display = 'none';
+                freeSection.style.display = '';
+              }
+            });
+          });
+        }
+      });
+    </script>
     <script src="script.js"></script>
   </body>
 </html>
