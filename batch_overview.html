@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ class_name }} - Batch Overview</title>
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      .tabs { display:flex; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.8rem; }
+      .tab-btn { padding:0.5rem 0.9rem; border:1px solid #e5e7eb; border-radius:10px; background:#fff; cursor:pointer; }
+      .tab-btn.active { background:#6a82fb; color:#fff; border-color:#6a82fb; }
+      .tab-content { display:none; }
+      .tab-content.active { display:block; }
+      .resource-list { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:0.8rem; }
+      .resource-item { border:1px solid #e5e7eb; border-radius:12px; padding:0.8rem; background:#fff; }
+      body.dark-mode .tab-btn { background:#232946; border-color:#3a3a4a; color:#e2e8f0; }
+      body.dark-mode .tab-btn.active { background:#6a82fb; color:#fff; border-color:#6a82fb; }
+      body.dark-mode .resource-item { background:#232946; border-color:#3a3a4a; }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar glassmorphic">
+      <div class="container nav-content">
+        <div class="nav-logo">
+          <img src="/attached_assets/image_1750584670920.png" alt="Logo">
+        </div>
+        <ul class="nav-links">
+          <li><a href="/batch">Back to Batches</a></li>
+          <li><a href="/online-class">Live Class</a></li>
+          <li><a href="/study-resources">Study Resources</a></li>
+          <li><a href="/forum">Forum</a></li>
+          {% if username %}
+          <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+          {% else %}
+          <li><a href="/auth" class="btn btn-primary">Login</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+
+    <main class="container main-content">
+      <section class="card animated-card" style="padding:1rem;">
+        <h1 style="margin:0.2rem 0 0.4rem 0;">{{ class_name }} - Batch Overview</h1>
+        <p style="margin:0; color:#6b7280;">Explore lectures, resources, and tests for this batch.</p>
+      </section>
+
+      <section class="card animated-card" style="padding:1rem;">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="overview">Overview</button>
+          <button class="tab-btn" data-tab="resources">Study Resources</button>
+          <button class="tab-btn" data-tab="tests">Tests</button>
+          <button class="tab-btn" data-tab="live">Live Class</button>
+        </div>
+
+        <div id="tab-overview" class="tab-content active">
+          <h3>Batch Overview</h3>
+          <p>Class: {{ class_name }} (ID: {{ class_id }})</p>
+          {% if user_paid_status == 'paid' %}
+          <p>Status: <span style="color:#10b981; font-weight:600;">Paid</span></p>
+          {% else %}
+          <p>Status: <span style="color:#ef4444; font-weight:600;">Unpaid</span></p>
+          {% endif %}
+        </div>
+
+        <div id="tab-resources" class="tab-content">
+          <h3>Study Resources</h3>
+          <div class="tabs" style="margin:0.5rem 0 0.8rem 0;">
+            <button class="tab-btn active" data-subtab="worksheet">Worksheet</button>
+            <button class="tab-btn" data-subtab="formula">Formula Sheet</button>
+            <button class="tab-btn" data-subtab="notes">Notes</button>
+            <button class="tab-btn" data-subtab="other">Other</button>
+          </div>
+          <div id="subtab-worksheet" class="tab-content active">
+            <div class="resource-list">
+              {% for r in resource_groups['worksheet'] %}
+              <div class="resource-item">
+                <div style="font-weight:600;">{{ r[4] }}</div>
+                <div style="font-size:0.9rem; color:#6b7280;">{{ r[6] }}</div>
+                <div style="margin-top:0.4rem; display:flex; gap:0.5rem;">
+                  <a class="btn btn-primary" href="/{{ r[3] }}" download>Download</a>
+                </div>
+              </div>
+              {% endfor %}
+              {% if resource_groups['worksheet']|length == 0 %}
+              <div style="color:#6b7280;">No worksheet resources.</div>
+              {% endif %}
+            </div>
+          </div>
+          <div id="subtab-formula" class="tab-content">
+            <div class="resource-list">
+              {% for r in resource_groups['formula sheet'] %}
+              <div class="resource-item">
+                <div style="font-weight:600;">{{ r[4] }}</div>
+                <div style="font-size:0.9rem; color:#6b7280;">{{ r[6] }}</div>
+                <div style="margin-top:0.4rem; display:flex; gap:0.5rem;">
+                  <a class="btn btn-primary" href="/{{ r[3] }}" download>Download</a>
+                </div>
+              </div>
+              {% endfor %}
+              {% if resource_groups['formula sheet']|length == 0 %}
+              <div style="color:#6b7280;">No formula sheet resources.</div>
+              {% endif %}
+            </div>
+          </div>
+          <div id="subtab-notes" class="tab-content">
+            <div class="resource-list">
+              {% for r in resource_groups['notes'] %}
+              <div class="resource-item">
+                <div style="font-weight:600;">{{ r[4] }}</div>
+                <div style="font-size:0.9rem; color:#6b7280;">{{ r[6] }}</div>
+                <div style="margin-top:0.4rem; display:flex; gap:0.5rem;">
+                  <a class="btn btn-primary" href="/{{ r[3] }}" download>Download</a>
+                </div>
+              </div>
+              {% endfor %}
+              {% if resource_groups['notes']|length == 0 %}
+              <div style="color:#6b7280;">No notes found.</div>
+              {% endif %}
+            </div>
+          </div>
+          <div id="subtab-other" class="tab-content">
+            <div class="resource-list">
+              {% for r in resource_groups['other'] %}
+              <div class="resource-item">
+                <div style="font-weight:600;">{{ r[4] }}</div>
+                <div style="font-size:0.9rem; color:#6b7280;">{{ r[6] }}</div>
+                <div style="margin-top:0.4rem; display:flex; gap:0.5rem;">
+                  <a class="btn btn-primary" href="/{{ r[3] }}" download>Download</a>
+                </div>
+              </div>
+              {% endfor %}
+              {% if resource_groups['other']|length == 0 %}
+              <div style="color:#6b7280;">No other resources.</div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-tests" class="tab-content">
+          <h3>Tests</h3>
+          <p style="color:#6b7280;">No tests configured yet.</p>
+        </div>
+
+        <div id="tab-live" class="tab-content">
+          <h3>Live Classes</h3>
+          <div>
+            <h4>Active</h4>
+            <ul>
+              {% for lc in active_classes %}
+              <li><a href="/join-class/{{ lc[0] }}">{{ lc[4] }}</a> - {{ lc[5] }}</li>
+              {% endfor %}
+              {% if active_classes|length == 0 %}<li style="color:#6b7280;">No active classes</li>{% endif %}
+            </ul>
+            <h4>Upcoming</h4>
+            <ul>
+              {% for lc in upcoming_classes %}
+              <li>{{ lc[4] }} - {{ lc[8] or 'TBA' }}</li>
+              {% endfor %}
+              {% if upcoming_classes|length == 0 %}<li style="color:#6b7280;">No upcoming classes</li>{% endif %}
+            </ul>
+            <h4>Completed</h4>
+            <ul>
+              {% for lc in completed_classes %}
+              <li>{{ lc[4] }} - Completed</li>
+              {% endfor %}
+              {% if completed_classes|length == 0 %}<li style="color:#6b7280;">No completed classes</li>{% endif %}
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const tabButtons = document.querySelectorAll('.tab-btn[data-tab]');
+      const tabContents = {
+        overview: document.getElementById('tab-overview'),
+        resources: document.getElementById('tab-resources'),
+        tests: document.getElementById('tab-tests'),
+        live: document.getElementById('tab-live'),
+      };
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          tabButtons.forEach(b => b.classList.remove('active'));
+          Object.values(tabContents).forEach(el => el.classList.remove('active'));
+          btn.classList.add('active');
+          const target = btn.getAttribute('data-tab');
+          tabContents[target].classList.add('active');
+        });
+      });
+
+      const subtabButtons = document.querySelectorAll('.tab-btn[data-subtab]');
+      const subtabs = {
+        worksheet: document.getElementById('subtab-worksheet'),
+        formula: document.getElementById('subtab-formula'),
+        notes: document.getElementById('subtab-notes'),
+        other: document.getElementById('subtab-other'),
+      };
+      subtabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          subtabButtons.forEach(b => b.classList.remove('active'));
+          Object.values(subtabs).forEach(el => el.classList.remove('active'));
+          btn.classList.add('active');
+          subtabs[btn.getAttribute('data-subtab')].classList.add('active');
+        });
+      });
+    </script>
+  </body>
+  </html>
+

@@ -1153,6 +1153,135 @@ def study_resources():
 
     return render_template('study-resources.html', resources=resources, categories=categories, class_name=role, class_id=class_id, paid_status=paid_status)
 
+# Route for batch page
+@app.route('/batch')
+def batch_page():
+    role = session.get('role')
+    if not role:
+        flash('You must be logged in to view your batch.', 'error')
+        return redirect(url_for('auth'))
+
+    username = session.get('username')
+    user_id = session.get('user_id')
+    user_notifications = get_unread_notifications_for_user(user_id) if user_id else []
+
+    # Determine user's paid status
+    user_paid_status = None
+    if user_id:
+        user = get_user_by_id(user_id)
+        if user and len(user) > 3:
+            user_paid_status = user[3]
+
+    # Map class name to class_id and prepare sample batch metadata
+    classes = get_all_classes()  # List of tuples (id, name)
+    all_classes_dict_rev = {c[1]: c[0] for c in classes}
+    class_id = all_classes_dict_rev.get(role)
+
+    # Build cards for all classes and split into paid/free by name heuristic
+    # Any class name containing 'free', 'demo', or 'trial' (case-insensitive) is considered free
+    from datetime import date
+    today = date.today()
+    default_start = today.replace(day=1)
+    default_end = today.replace(day=28 if today.month == 2 else 30)
+
+    paid_cards = []
+    free_cards = []
+    for cid, cname in classes:
+        card = {
+            'class_id': cid,
+            'class_name': cname.title(),
+            'batch_name': f"{cname.title()} - Batch",
+            'start_date': default_start.strftime('%Y-%m-%d'),
+            'end_date': default_end.strftime('%Y-%m-%d'),
+            'image': 'img/IMG-20250706-WA0000.jpg'
+        }
+        lname = (cname or '').lower()
+        if 'free' in lname or 'demo' in lname or 'trial' in lname:
+            free_cards.append(card)
+        else:
+            paid_cards.append(card)
+
+    return render_template(
+        'batch.html',
+        username=username,
+        role=role,
+        class_id=class_id,
+        user_notifications=user_notifications,
+        user_paid_status=user_paid_status,
+        paid_cards=paid_cards,
+        free_cards=free_cards,
+    )
+
+# Batch Overview per class
+@app.route('/batch/<int:class_id>')
+def batch_overview(class_id):
+    username = session.get('username')
+    user_id = session.get('user_id')
+    role = session.get('role')
+    if not user_id:
+        flash('You must be logged in to view batch details.', 'error')
+        return redirect(url_for('auth'))
+
+    # Determine paid status
+    user_paid_status = None
+    user = get_user_by_id(user_id)
+    if user and len(user) > 3:
+        user_paid_status = user[3]
+
+    # Fetch class name
+    class_name = None
+    try:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        c.execute('SELECT name FROM classes WHERE id=?', (class_id,))
+        row = c.fetchone()
+        class_name = row[0] if row else f"Class {class_id}"
+        conn.close()
+    except Exception:
+        class_name = f"Class {class_id}"
+
+    # Live class sections (reuse lists; optionally filter by target_class)
+    from auth_handler import get_upcoming_live_classes, get_active_live_classes, get_completed_live_classes
+    upcoming_classes = [lc for lc in get_upcoming_live_classes() if lc[9] in ('all', class_name)]
+    active_classes = [lc for lc in get_active_live_classes() if lc[9] in ('all', class_name)]
+    completed_classes = [lc for lc in get_completed_live_classes() if lc[9] in ('all', class_name)]
+
+    # Study resources for this class
+    # Show both free and paid; CTA visibility will depend on user_paid_status
+    resources_all = get_resources_for_class_id(class_id)
+    # Split resources by categories for easy tabs: worksheet, formula sheet, notes
+    def group_by_category(resources):
+        groups = {'worksheet': [], 'formula sheet': [], 'notes': [], 'other': []}
+        for r in resources:
+            category = (r[6] or '').strip().lower()
+            if 'worksheet' in category:
+                groups['worksheet'].append(r)
+            elif 'formula' in category:
+                groups['formula sheet'].append(r)
+            elif 'note' in category:
+                groups['notes'].append(r)
+            else:
+                groups['other'].append(r)
+        return groups
+
+    resource_groups = group_by_category(resources_all)
+
+    user_notifications = get_unread_notifications_for_user(user_id) if user_id else []
+
+    return render_template(
+        'batch_overview.html',
+        username=username,
+        role=role,
+        class_id=class_id,
+        class_name=class_name,
+        user_paid_status=user_paid_status,
+        upcoming_classes=upcoming_classes,
+        active_classes=active_classes,
+        completed_classes=completed_classes,
+        resource_groups=resource_groups,
+        user_notifications=user_notifications,
+    )
+
 # Route for forum
 @app.route("/forum")
 def forum():
