@@ -1661,12 +1661,23 @@ def auth_google_callback():
             else:
                 user = get_user_by_email(email)
             if not user:
-                session['pending_google_email'] = email
-                session['pending_google_name'] = name or email.split('@')[0]
-                # Prefill link_username if there is a mapped username
-                if mapped_username:
-                    session['pending_link_username'] = mapped_username
-                return redirect(url_for('google_complete'))
+                email_local = (email.split('@')[0] if email else '').strip()
+                guessed_user = get_user_by_username(email_local) if email_local else None
+                if guessed_user:
+                    if guessed_user[4] == 'admin':
+                        session['pending_google_email'] = email
+                        session['pending_google_name'] = name or email_local
+                        session['pending_link_username'] = guessed_user[1]
+                        return redirect(url_for('google_complete'))
+                    else:
+                        update_user(guessed_user[0], guessed_user[1], guessed_user[2], guessed_user[3], guessed_user[5], guessed_user[6], email)
+                        user = get_user_by_username(guessed_user[1])
+                if not user:
+                    session['pending_google_email'] = email
+                    session['pending_google_name'] = name or email_local
+                    if mapped_username:
+                        session['pending_link_username'] = mapped_username
+                    return redirect(url_for('google_complete'))
 
             # user tuple: (id, username, class_id, paid, class_name, banned, mobile_no, email_address)
             user_id = user[0]
