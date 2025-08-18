@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My Batch - Sunrise Education Centre</title>
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <nav class="navbar glassmorphic">
+      <div class="container nav-content">
+        <div class="nav-logo">
+          <img src="attached_assets/image_1750584670920.png" alt="Logo">
+        </div>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/online-class">Live Class</a></li>
+          <li><a href="/study-resources">Study Resources</a></li>
+          <li><a href="/forum">Forum</a></li>
+          <li><a href="/batch">Batch</a></li>
+          {% if username %}
+          <li style="position:relative;">
+            <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a 1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
+              {% if user_notifications and user_notifications|length > 0 %}
+              <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
+              {% endif %}
+            </button>
+          </li>
+          <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+          {% else %}
+          <li><a href="/auth" class="btn btn-primary">Login</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+
+    <main class="container main-content">
+      <section class="card animated-card" style="padding: 1.2rem 1rem;">
+        <h1 style="margin: 0.2rem 0 0.8rem 0;">My Batch</h1>
+        <p style="margin: 0; color: #6b7280;">Welcome{% if username %}, {{ username }}{% endif %}. Your class: <strong>{{ role }}</strong> (ID: {{ class_id }})</p>
+      </section>
+
+      <section class="card animated-card" style="padding: 1.2rem 1rem;">
+        <h2 style="margin-top:0;">Batch Links</h2>
+        <ul style="list-style:none; padding:0; margin:0; display:flex; gap:0.6rem; flex-wrap:wrap;">
+          <li><a class="btn btn-primary" href="/online-class">Join Live Class</a></li>
+          <li><a class="btn btn-secondary" href="/study-resources">Study Resources</a></li>
+          <li><a class="btn btn-secondary" href="/forum">Forum</a></li>
+          <li><a class="btn btn-secondary" href="/profile">Profile</a></li>
+        </ul>
+      </section>
+
+      <section class="card animated-card" style="padding: 1.2rem 1rem;">
+        <h2 style="margin-top:0;">Announcements</h2>
+        <div id="batchAnnouncements" style="color:#6b7280;">No announcements yet.</div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
+

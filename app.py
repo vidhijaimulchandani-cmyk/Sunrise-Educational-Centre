@@ -1153,6 +1153,24 @@ def study_resources():
 
     return render_template('study-resources.html', resources=resources, categories=categories, class_name=role, class_id=class_id, paid_status=paid_status)
 
+# Route for batch page
+@app.route('/batch')
+def batch_page():
+    role = session.get('role')
+    if not role:
+        flash('You must be logged in to view your batch.', 'error')
+        return redirect(url_for('auth'))
+
+    username = session.get('username')
+    user_id = session.get('user_id')
+    user_notifications = get_unread_notifications_for_user(user_id) if user_id else []
+
+    # Map class name to class_id
+    all_classes_dict_rev = {c[1]: c[0] for c in get_all_classes()}
+    class_id = all_classes_dict_rev.get(role)
+
+    return render_template('batch.html', username=username, role=role, class_id=class_id, user_notifications=user_notifications)
+
 # Route for forum
 @app.route("/forum")
 def forum():
