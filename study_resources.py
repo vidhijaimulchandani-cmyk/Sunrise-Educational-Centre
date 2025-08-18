@@ -8,6 +8,7 @@ import os
 import re
 from datetime import datetime, timezone
 from typing import List, Dict, Optional, Tuple, Union
+from flask import session
 try:
     from werkzeug.utils import secure_filename
     from werkzeug.datastructures import FileStorage
@@ -974,6 +975,33 @@ def user_has_access_to_resource(filename: str, user_role: str, user_paid_status:
         return False
     
     return True
+
+def resolve_uploaded_file_path(filename: str) -> Optional[str]:
+    """Resolve an uploaded file path by searching common folders"""
+    # Direct path in uploads
+    direct_path = os.path.join(UPLOAD_FOLDER, filename)
+    if os.path.exists(direct_path):
+        return direct_path
+    # Search in nested subfolders under uploads
+    for root, _dirs, files in os.walk(UPLOAD_FOLDER):
+        if filename in files:
+            return os.path.join(root, filename)
+    return None
+
+def can_preview_pdf(filename: str) -> Tuple[bool, str]:
+    """Lightweight guard to check preview preconditions; returns (ok, message)."""
+    if not session.get('role'):
+        return False, 'You must be logged in to view resources.'
+    if not filename.lower().endswith('.pdf'):
+        return False, 'Invalid file type. Only PDF files can be previewed.'
+    if not resolve_uploaded_file_path(filename):
+        return False, 'File not found.'
+    # Access check uses current session info
+    role = session.get('role')
+    paid = session.get('paid_status')
+    if not user_has_access_to_resource(filename, role, paid):
+        return False, 'You do not have access to this resource.'
+    return True, ''
 
 # Initialize tables when module is imported
 ensure_resource_tables()
