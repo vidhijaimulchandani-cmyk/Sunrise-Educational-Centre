@@ -1603,6 +1603,12 @@ def auth():
         error = 'Wrong credentials. Contact the institute.'
     return render_template('auth.html', error=error)
 
+# Placeholder Google OAuth start (UI only)
+@app.route('/auth/google')
+def auth_google_start():
+    flash('Google sign-in is coming soon. Please use username/password for now.', 'info')
+    return redirect(url_for('auth'))
+
 # Route for registration
 @app.route('/register', methods=['POST'])
 def register():
