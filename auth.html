@@ -44,11 +44,6 @@
             <span>or</span>
             <span style="height:1px; background:#e5e7eb; flex:1;"></span>
           </div>
-          <a href="/auth/google" class="btn btn-secondary" style="display:flex; align-items:center; justify-content:center; gap:0.6rem; background:#fff; color:#374151; border:1px solid #e5e7eb;">
-            <span style="font-weight:700; color:#4285F4;">G</span>
-            <span>Continue with Google</span>
-          </a>
-          <div id="googleButtonLogin" style="margin-top:0.6rem;"></div>
           <div id="googleButtonLogin" style="margin-top:0.6rem;"></div>
         </form>
         <form id="signupForm" method="POST" action="/register" class="login-form" style="display:none;">
@@ -66,11 +61,6 @@
             <span>or</span>
             <span style="height:1px; background:#e5e7eb; flex:1;"></span>
           </div>
-          <a href="/auth/google" class="btn btn-secondary" style="display:flex; align-items:center; justify-content:center; gap:0.6rem; background:#fff; color:#374151; border:1px solid #e5e7eb;">
-            <span style="font-weight:700; color:#4285F4;">G</span>
-            <span>Continue with Google</span>
-          </a>
-          <div id="googleButtonSignup" style="margin-top:0.6rem;"></div>
           <div id="googleButtonSignup" style="margin-top:0.6rem;"></div>
               </form>
         <div class="login-links">
@@ -174,8 +164,7 @@
     });
   </script>
   <script>
-    // If Google One Tap/Popup is desired, you can initialize it here.
-    // This keeps the simple link fallback working as well.
+    // Google Sign-In button rendering with account chooser each time
     document.addEventListener('DOMContentLoaded', function() {
       const clientId = '{{ google_client_id }}';
       if (!clientId || clientId.includes('None')) return;
@@ -183,7 +172,6 @@
         google.accounts.id.initialize({
           client_id: clientId,
           callback: function(response) {
-            // Send ID token to backend callback for verification
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = '/auth/google/callback';
@@ -194,13 +182,16 @@
             form.appendChild(input);
             document.body.appendChild(form);
             form.submit();
-          }
+          },
+          auto_select: false
         });
         const btnOpts = { type: 'standard', theme: 'outline', size: 'large', text: 'continue_with', shape: 'pill', logo_alignment: 'left', width: 320 };
         const loginBtn = document.getElementById('googleButtonLogin');
         const signupBtn = document.getElementById('googleButtonSignup');
         if (loginBtn) google.accounts.id.renderButton(loginBtn, btnOpts);
         if (signupBtn) google.accounts.id.renderButton(signupBtn, btnOpts);
+        // Prompt account chooser to avoid auto-using a remembered account
+        google.accounts.id.prompt();
       }
     });
   </script>
