@@ -56,12 +56,6 @@
                     </select>
           <input type="text" name="admin_code" id="signupAdminCodeInput" placeholder="Admin Code" style="display:none;" />
           <button type="submit" class="btn btn-primary">Sign Up</button>
-          <div style="display:flex; align-items:center; gap:0.6rem; margin:0.8rem 0; color:#9ca3af;">
-            <span style="height:1px; background:#e5e7eb; flex:1;"></span>
-            <span>or</span>
-            <span style="height:1px; background:#e5e7eb; flex:1;"></span>
-          </div>
-          <div id="googleButtonSignup" style="margin-top:0.6rem;"></div>
               </form>
         <div class="login-links">
           <a href="/">&larr; Back to Home</a> |
@@ -187,10 +181,7 @@
         });
         const btnOpts = { type: 'standard', theme: 'outline', size: 'large', text: 'continue_with', shape: 'pill', logo_alignment: 'left', width: 320 };
         const loginBtn = document.getElementById('googleButtonLogin');
-        const signupBtn = document.getElementById('googleButtonSignup');
         if (loginBtn) google.accounts.id.renderButton(loginBtn, btnOpts);
-        if (signupBtn) google.accounts.id.renderButton(signupBtn, btnOpts);
-        // Prompt account chooser to avoid auto-using a remembered account
         google.accounts.id.prompt();
       }
     });
