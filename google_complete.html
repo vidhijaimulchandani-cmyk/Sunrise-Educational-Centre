@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Complete Sign-In - Sunrise Education Centre</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="login-bg">
+    <nav class="navbar glassmorphic">
+      <div class="container nav-content">
+        <div class="nav-logo">
+          <img src="attached_assets/image_1750584670920.png" alt="Logo">
+        </div>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-logo">
+          <img src="attached_assets/image_1750584670920.png" alt="Logo">
+          <h2>Complete Your Sign-In</h2>
+          <p style="margin:0; color:#6b7280;">Signed in with: <strong>{{ email }}</strong></p>
+        </div>
+        <form method="POST" class="login-form">
+          <label style="font-weight:600;">Link to existing username (optional)</label>
+          <input type="text" name="link_username" placeholder="Existing username to link (e.g., yas)" />
+          <small style="color:#6b7280;">If you already have an account, enter your existing username to link this Google email.</small>
+          <div style="height:10px;"></div>
+          <label style="font-weight:600;">Or create a new username</label>
+          <input type="text" name="chosen_username" placeholder="Preferred username" value="{{ suggested_name }}" />
+          <label style="font-weight:600;">Select your role/class</label>
+          <select name="class_id" required style="border-radius:20px; padding:0.7rem 1.1rem;">
+            {% for id, name in all_classes %}
+              <option value="{{ id }}">{{ name|title }}</option>
+            {% endfor %}
+          </select>
+          <input type="text" name="admin_code" placeholder="Admin Code (only if role is admin)" />
+          <button type="submit" class="btn btn-primary">Continue</button>
+        </form>
+        <div class="login-links">
+          <a href="/auth">Back to Login</a>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="script.js"></script>
+</html>
+

@@ -1644,20 +1644,12 @@ def auth_google_callback():
                 flash('Google account has no email.', 'error')
                 return redirect(url_for('auth'))
 
-            # Find or create user by email
+            # If existing user is linked by email, sign them in; else ask to complete setup
             user = get_user_by_email(email)
             if not user:
-                # Default class: first non-admin class or first available
-                classes = get_all_classes()
-                default_class_id = None
-                for cid, cname in classes:
-                    if cname != 'admin':
-                        default_class_id = cid
-                        break
-                if default_class_id is None and classes:
-                    default_class_id = classes[0][0]
-                register_user(username=name, password=secrets.token_hex(8), class_id=default_class_id, email_address=email)
-                user = get_user_by_email(email)
+                session['pending_google_email'] = email
+                session['pending_google_name'] = name or email.split('@')[0]
+                return redirect(url_for('google_complete'))
 
             # user tuple: (id, username, class_id, paid, class_name, banned, mobile_no, email_address)
             user_id = user[0]
@@ -1686,6 +1678,115 @@ def auth_google_callback():
         print('Google callback error:', e)
         flash('Google sign-in error. Please try again.', 'error')
         return redirect(url_for('auth'))
+
+@app.route('/auth/google/complete', methods=['GET', 'POST'])
+def google_complete():
+    email = session.get('pending_google_email')
+    suggested_name = session.get('pending_google_name') or (email.split('@')[0] if email else None)
+    if not email:
+        flash('Google session expired. Please try signing in again.', 'error')
+        return redirect(url_for('auth'))
+
+    if request.method == 'POST':
+        chosen_username = (request.form.get('chosen_username') or suggested_name or '').strip()
+        link_username = (request.form.get('link_username') or '').strip()
+        class_id = request.form.get('class_id')
+        admin_code = request.form.get('admin_code')
+
+        all_classes_dict = {str(c[0]): c[1] for c in get_all_classes()}
+        selected_role = all_classes_dict.get(str(class_id))
+        if not selected_role:
+            flash('Please select a valid role.', 'error')
+            return redirect(url_for('google_complete'))
+
+        # Link to existing username
+        if link_username:
+            existing = get_user_by_username(link_username)
+            if not existing:
+                flash('Username not found for linking.', 'error')
+                return redirect(url_for('google_complete'))
+
+            existing_role = existing[4]
+            if existing_role == 'admin' and admin_code != 'sec@011':
+                flash('Invalid admin code for linking admin account.', 'error')
+                return redirect(url_for('google_complete'))
+
+            other = get_user_by_email(email)
+            if other and other[0] != existing[0]:
+                flash('This email is already linked with another account.', 'error')
+                return redirect(url_for('google_complete'))
+
+            user_id = existing[0]
+            username_val = existing[1]
+            existing_class_id = existing[2]
+            existing_paid = existing[3]
+            existing_banned = existing[5]
+            existing_mobile = existing[6]
+            update_user(user_id, username_val, existing_class_id, existing_paid, existing_banned, existing_mobile, email)
+
+            xff = request.headers.get('X-Forwarded-For', '')
+            client_ip = (xff.split(',')[0].strip() if xff else request.remote_addr) or 'unknown'
+            user_agent = request.headers.get('User-Agent', '')[:300]
+            session_id = session.sid if hasattr(session, 'sid') else str(uuid.uuid4())
+            if create_user_session(user_id, session_id, client_ip, user_agent):
+                session['user_id'] = user_id
+                session['username'] = username_val
+                session['role'] = existing_role
+                session['session_id'] = session_id
+                session.pop('pending_google_email', None)
+                session.pop('pending_google_name', None)
+                return redirect(url_for('home'))
+            else:
+                flash('Failed to create session. Please try again.', 'error')
+                return redirect(url_for('auth'))
+
+        # Create a new account with selected role
+        if selected_role == 'admin' and admin_code != 'sec@011':
+            flash('Invalid admin code for admin role.', 'error')
+            return redirect(url_for('google_complete'))
+
+        try:
+            class_id_int = int(class_id)
+        except (TypeError, ValueError):
+            flash('Invalid class selection.', 'error')
+            return redirect(url_for('google_complete'))
+
+        base_username = (chosen_username or suggested_name or 'user').strip() or 'user'
+        candidate = base_username
+        suffix = 1
+        while get_user_by_username(candidate):
+            candidate = f"{base_username}{suffix}"
+            suffix += 1
+
+        if not register_user(username=candidate, password=secrets.token_hex(8), class_id=class_id_int, email_address=email):
+            flash('Failed to create account. Please try again.', 'error')
+            return redirect(url_for('google_complete'))
+
+        new_user = get_user_by_username(candidate)
+        if not new_user:
+            flash('Account creation incomplete. Please try again.', 'error')
+            return redirect(url_for('google_complete'))
+
+        user_id = new_user[0]
+        user_role = new_user[4]
+        xff = request.headers.get('X-Forwarded-For', '')
+        client_ip = (xff.split(',')[0].strip() if xff else request.remote_addr) or 'unknown'
+        user_agent = request.headers.get('User-Agent', '')[:300]
+        session_id = session.sid if hasattr(session, 'sid') else str(uuid.uuid4())
+        if create_user_session(user_id, session_id, client_ip, user_agent):
+            session['user_id'] = user_id
+            session['username'] = candidate
+            session['role'] = user_role
+            session['session_id'] = session_id
+            session.pop('pending_google_email', None)
+            session.pop('pending_google_name', None)
+            return redirect(url_for('home'))
+        else:
+            flash('Failed to create session. Please try again.', 'error')
+            return redirect(url_for('auth'))
+
+    classes = get_all_classes()
+    return render_template('google_complete.html', email=email, suggested_name=suggested_name, all_classes=classes)
 # Route for registration
 @app.route('/register', methods=['POST'])
 def register():
