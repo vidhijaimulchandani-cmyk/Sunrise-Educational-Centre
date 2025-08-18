@@ -379,6 +379,19 @@
             <strong>Selected File:</strong> <span id="fileName"></span>
           </div>
           
+        <div style="margin:1rem 0; display:flex; align-items:center; gap:0.6rem; color:#9ca3af;">
+          <span style="height:1px; background:#e5e7eb; flex:1;"></span>
+          <span>or</span>
+          <span style="height:1px; background:#e5e7eb; flex:1;"></span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="resource_url">Upload via URL / Google Drive Link</label>
+            <input type="url" id="resource_url" name="resource_url" placeholder="Paste public URL or Google Drive share link here">
+            <small style="color:#6b7280;">Make sure the link is publicly accessible. For Google Drive, set sharing to "Anyone with the link".</small>
+          </div>
+        </div>
+
         <button type="submit" class="btn btn-primary" style="margin-top:1rem;">Upload Resource</button>
       </form>
       </div>
