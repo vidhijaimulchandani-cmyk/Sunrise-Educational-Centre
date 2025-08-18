@@ -8,3 +8,5 @@ requests
 pytz 
 Flask-SocketIO
 eventlet 
+google-api-python-client
+google-auth
