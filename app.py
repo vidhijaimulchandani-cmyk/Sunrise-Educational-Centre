@@ -1212,6 +1212,76 @@ def batch_page():
         free_cards=free_cards,
     )
 
+# Batch Overview per class
+@app.route('/batch/<int:class_id>')
+def batch_overview(class_id):
+    username = session.get('username')
+    user_id = session.get('user_id')
+    role = session.get('role')
+    if not user_id:
+        flash('You must be logged in to view batch details.', 'error')
+        return redirect(url_for('auth'))
+
+    # Determine paid status
+    user_paid_status = None
+    user = get_user_by_id(user_id)
+    if user and len(user) > 3:
+        user_paid_status = user[3]
+
+    # Fetch class name
+    class_name = None
+    try:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        c.execute('SELECT name FROM classes WHERE id=?', (class_id,))
+        row = c.fetchone()
+        class_name = row[0] if row else f"Class {class_id}"
+        conn.close()
+    except Exception:
+        class_name = f"Class {class_id}"
+
+    # Live class sections (reuse lists; optionally filter by target_class)
+    from auth_handler import get_upcoming_live_classes, get_active_live_classes, get_completed_live_classes
+    upcoming_classes = [lc for lc in get_upcoming_live_classes() if lc[9] in ('all', class_name)]
+    active_classes = [lc for lc in get_active_live_classes() if lc[9] in ('all', class_name)]
+    completed_classes = [lc for lc in get_completed_live_classes() if lc[9] in ('all', class_name)]
+
+    # Study resources for this class
+    # Show both free and paid; CTA visibility will depend on user_paid_status
+    resources_all = get_resources_for_class_id(class_id)
+    # Split resources by categories for easy tabs: worksheet, formula sheet, notes
+    def group_by_category(resources):
+        groups = {'worksheet': [], 'formula sheet': [], 'notes': [], 'other': []}
+        for r in resources:
+            category = (r[6] or '').strip().lower()
+            if 'worksheet' in category:
+                groups['worksheet'].append(r)
+            elif 'formula' in category:
+                groups['formula sheet'].append(r)
+            elif 'note' in category:
+                groups['notes'].append(r)
+            else:
+                groups['other'].append(r)
+        return groups
+
+    resource_groups = group_by_category(resources_all)
+
+    user_notifications = get_unread_notifications_for_user(user_id) if user_id else []
+
+    return render_template(
+        'batch_overview.html',
+        username=username,
+        role=role,
+        class_id=class_id,
+        class_name=class_name,
+        user_paid_status=user_paid_status,
+        upcoming_classes=upcoming_classes,
+        active_classes=active_classes,
+        completed_classes=completed_classes,
+        resource_groups=resource_groups,
+        user_notifications=user_notifications,
+    )
+
 # Route for forum
 @app.route("/forum")
 def forum():

@@ -115,7 +115,7 @@
                 </div>
                 <div class="batch-actions">
                   {% if user_paid_status == 'paid' %}
-                  <a class="btn btn-primary" href="/study-resources">Explore</a>
+                  <a class="btn btn-primary" href="/batch/{{ card.class_id }}">Explore</a>
                   {% else %}
                   <a class="btn btn-primary" href="/admission">Buy Now</a>
                   {% endif %}
@@ -147,7 +147,7 @@
                   <div><strong>End</strong>: {{ card.end_date }}</div>
                 </div>
                 <div class="batch-actions">
-                  <a class="btn btn-secondary" href="/study-resources">Explore</a>
+                  <a class="btn btn-secondary" href="/batch/{{ card.class_id }}">Explore</a>
                 </div>
               </div>
             </div>
