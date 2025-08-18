@@ -64,6 +64,10 @@
       body.dark-mode .batch-card { background:#232946; border-color:#3a3a4a; }
       body.dark-mode .batch-info h3 { color: #e2e8f0; }
       body.dark-mode .batch-meta { color: #b8c5d6; }
+      .toggle-row { display:flex; gap:0.5rem; margin-bottom:0.8rem; }
+      .toggle-btn { padding:0.45rem 0.9rem; border:1px solid #e5e7eb; border-radius:999px; background:#fff; cursor:pointer; }
+      .toggle-btn.active { background:#6a82fb; color:#fff; border-color:#6a82fb; }
+      .guest-list { display:flex; flex-direction:column; gap:0.8rem; }
     </style>
   </head>
   <body>
@@ -96,67 +100,102 @@
     </nav>
 
     <main class="container main-content">
+      {% if show_mode == 'user' %}
       <section class="card animated-card" style="padding: 1.2rem 1rem;">
-        <h2 style="margin-top:0;">Paid Batches</h2>
-        <div class="batch-grid">
-          {% if paid_cards and paid_cards|length > 0 %}
-            {% for card in paid_cards %}
-            <div class="batch-card">
-              <div class="batch-image">
-                <img src="{{ card.image }}" alt="{{ card.batch_name }}" />
+        <div class="toggle-row">
+          <button class="toggle-btn active" id="togglePaid">Paid</button>
+          <button class="toggle-btn" id="toggleFree">Free</button>
+        </div>
+        <div id="paidSection">
+          <h2 style="margin-top:0;">My Paid Batch</h2>
+          <div class="batch-grid">
+            {% if paid_cards and paid_cards|length > 0 %}
+              {% for card in paid_cards %}
+              <div class="batch-card">
+                <div class="batch-image">
+                  <img src="{{ card.image }}" alt="{{ card.batch_name }}" />
+                </div>
+                <div class="batch-info">
+                  <h3>{{ card.batch_name }}</h3>
+                  <div class="batch-meta">
+                    <div><strong>Class</strong>: {{ card.class_name }}</div>
+                    <div><strong>ID</strong>: {{ card.class_id }}</div>
+                    <div><strong>Start</strong>: {{ card.start_date }}</div>
+                    <div><strong>End</strong>: {{ card.end_date }}</div>
+                  </div>
+                  <div class="batch-actions">
+                    {% if user_paid_status == 'paid' %}
+                    <a class="btn btn-primary" href="/batch/{{ card.class_id }}">Explore</a>
+                    {% else %}
+                    <a class="btn btn-primary" href="/admission">Buy Now</a>
+                    {% endif %}
+                  </div>
+                </div>
               </div>
-              <div class="batch-info">
-                <h3>{{ card.batch_name }}</h3>
-                <div class="batch-meta">
-                  <div><strong>Class</strong>: {{ card.class_name }}</div>
-                  <div><strong>ID</strong>: {{ card.class_id }}</div>
-                  <div><strong>Start</strong>: {{ card.start_date }}</div>
-                  <div><strong>End</strong>: {{ card.end_date }}</div>
+              {% endfor %}
+            {% else %}
+              <div style="color:#6b7280;">No paid batch found for your class.</div>
+            {% endif %}
+          </div>
+        </div>
+        <div id="freeSection" style="display:none;">
+          <h2 style="margin-top:0;">My Free Batch</h2>
+          <div class="batch-grid">
+            {% if free_cards and free_cards|length > 0 %}
+              {% for card in free_cards %}
+              <div class="batch-card">
+                <div class="batch-image">
+                  <img src="{{ card.image }}" alt="{{ card.batch_name }}" />
                 </div>
-                <div class="batch-actions">
-                  {% if user_paid_status == 'paid' %}
-                  <a class="btn btn-primary" href="/batch/{{ card.class_id }}">Explore</a>
-                  {% else %}
-                  <a class="btn btn-primary" href="/admission">Buy Now</a>
-                  {% endif %}
+                <div class="batch-info">
+                  <h3>{{ card.batch_name }}</h3>
+                  <div class="batch-meta">
+                    <div><strong>Class</strong>: {{ card.class_name }}</div>
+                    <div><strong>ID</strong>: {{ card.class_id }}</div>
+                    <div><strong>Start</strong>: {{ card.start_date }}</div>
+                    <div><strong>End</strong>: {{ card.end_date }}</div>
+                  </div>
+                  <div class="batch-actions">
+                    <a class="btn btn-secondary" href="/batch/{{ card.class_id }}">Explore</a>
+                  </div>
                 </div>
+              </div>
+              {% endfor %}
+            {% else %}
+              <div style="color:#6b7280;">No free batch found for your class.</div>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+      {% else %}
+      <section class="card animated-card" style="padding: 1.2rem 1rem;">
+        <h2 style="margin-top:0;">All Batches</h2>
+        <div class="guest-list">
+          {% for card in guest_all_cards %}
+          <div class="batch-card" style="display:flex; gap:0.8rem; overflow:hidden;">
+            <div class="batch-image" style="flex: 0 0 220px; height:140px;">
+              <img src="{{ card.image }}" alt="{{ card.batch_name }}" />
+            </div>
+            <div class="batch-info" style="flex:1;">
+              <h3>{{ card.batch_name }}</h3>
+              <div class="batch-meta" style="grid-template-columns: repeat(4, minmax(0,1fr));">
+                <div><strong>Class</strong>: {{ card.class_name }}</div>
+                <div><strong>ID</strong>: {{ card.class_id }}</div>
+                <div><strong>Start</strong>: {{ card.start_date }}</div>
+                <div><strong>End</strong>: {{ card.end_date }}</div>
+              </div>
+              <div class="batch-actions">
+                <a class="btn btn-primary" href="/admission">Buy Now</a>
               </div>
             </div>
-            {% endfor %}
-          {% else %}
-            <div style="color:#6b7280;">No paid batches available.</div>
+          </div>
+          {% endfor %}
+          {% if guest_all_cards|length == 0 %}
+          <div style="color:#6b7280;">No batches available.</div>
           {% endif %}
         </div>
       </section>
-
-      <section class="card animated-card" style="padding: 1.2rem 1rem;">
-        <h2 style="margin-top:0;">Free Batches</h2>
-        <div class="batch-grid">
-          {% if free_cards and free_cards|length > 0 %}
-            {% for card in free_cards %}
-            <div class="batch-card">
-              <div class="batch-image">
-                <img src="{{ card.image }}" alt="{{ card.batch_name }}" />
-              </div>
-              <div class="batch-info">
-                <h3>{{ card.batch_name }}</h3>
-                <div class="batch-meta">
-                  <div><strong>Class</strong>: {{ card.class_name }}</div>
-                  <div><strong>ID</strong>: {{ card.class_id }}</div>
-                  <div><strong>Start</strong>: {{ card.start_date }}</div>
-                  <div><strong>End</strong>: {{ card.end_date }}</div>
-                </div>
-                <div class="batch-actions">
-                  <a class="btn btn-secondary" href="/batch/{{ card.class_id }}">Explore</a>
-                </div>
-              </div>
-            </div>
-            {% endfor %}
-          {% else %}
-            <div style="color:#6b7280;">No free batches available.</div>
-          {% endif %}
-        </div>
-      </section>
+      {% endif %}
       <section class="card animated-card" style="padding: 1.2rem 1rem;">
         <h1 style="margin: 0.2rem 0 0.8rem 0;">My Batch</h1>
         <p style="margin: 0; color: #6b7280;">Welcome{% if username %}, {{ username }}{% endif %}. Your class: <strong>{{ role }}</strong> (ID: {{ class_id }})</p>
@@ -179,6 +218,26 @@
     </main>
 
     <script src="script.js"></script>
+    <script>
+      const paidBtn = document.getElementById('togglePaid');
+      const freeBtn = document.getElementById('toggleFree');
+      const paidSection = document.getElementById('paidSection');
+      const freeSection = document.getElementById('freeSection');
+      if (paidBtn && freeBtn && paidSection && freeSection) {
+        paidBtn.addEventListener('click', () => {
+          paidBtn.classList.add('active');
+          freeBtn.classList.remove('active');
+          paidSection.style.display = '';
+          freeSection.style.display = 'none';
+        });
+        freeBtn.addEventListener('click', () => {
+          freeBtn.classList.add('active');
+          paidBtn.classList.remove('active');
+          freeSection.style.display = '';
+          paidSection.style.display = 'none';
+        });
+      }
+    </script>
   </body>
 </html>
 

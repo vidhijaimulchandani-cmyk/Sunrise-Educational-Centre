@@ -1157,9 +1157,6 @@ def study_resources():
 @app.route('/batch')
 def batch_page():
     role = session.get('role')
-    if not role:
-        flash('You must be logged in to view your batch.', 'error')
-        return redirect(url_for('auth'))
 
     username = session.get('username')
     user_id = session.get('user_id')
@@ -1175,7 +1172,7 @@ def batch_page():
     # Map class name to class_id and prepare sample batch metadata
     classes = get_all_classes()  # List of tuples (id, name)
     all_classes_dict_rev = {c[1]: c[0] for c in classes}
-    class_id = all_classes_dict_rev.get(role)
+    class_id = all_classes_dict_rev.get(role) if role else None
 
     # Build cards for all classes and split into paid/free by name heuristic
     # Any class name containing 'free', 'demo', or 'trial' (case-insensitive) is considered free
@@ -1201,6 +1198,16 @@ def batch_page():
         else:
             paid_cards.append(card)
 
+    # If user is logged in, show only their class; otherwise show all batches
+    show_mode = 'guest'
+    my_paid_cards = paid_cards
+    my_free_cards = free_cards
+    guest_all_cards = paid_cards + free_cards
+    if user_id and class_id:
+        show_mode = 'user'
+        my_paid_cards = [c for c in paid_cards if c['class_id'] == class_id]
+        my_free_cards = [c for c in free_cards if c['class_id'] == class_id]
+
     return render_template(
         'batch.html',
         username=username,
@@ -1208,8 +1215,10 @@ def batch_page():
         class_id=class_id,
         user_notifications=user_notifications,
         user_paid_status=user_paid_status,
-        paid_cards=paid_cards,
-        free_cards=free_cards,
+        paid_cards=my_paid_cards,
+        free_cards=my_free_cards,
+        guest_all_cards=guest_all_cards,
+        show_mode=show_mode,
     )
 
 # Batch Overview per class
