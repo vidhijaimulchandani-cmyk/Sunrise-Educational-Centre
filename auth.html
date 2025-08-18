@@ -85,6 +85,8 @@
     </div>
   </body>
   <script src="script.js"></script>
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
     // Toggle between Login and Sign Up forms
     const loginForm = document.getElementById('loginForm');
@@ -165,6 +167,34 @@
         if (darkModeToggle) {
             darkModeToggle.addEventListener('click', toggleDarkMode);
         }
+    });
+  </script>
+  <script>
+    // If Google One Tap/Popup is desired, you can initialize it here.
+    // This keeps the simple link fallback working as well.
+    document.addEventListener('DOMContentLoaded', function() {
+      const clientId = '{{ google_client_id }}';
+      if (!clientId || clientId.includes('None')) return;
+      if (window.google && google.accounts && google.accounts.id) {
+        google.accounts.id.initialize({
+          client_id: clientId,
+          callback: function(response) {
+            // Send ID token to backend callback for verification
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/auth/google/callback';
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'credential';
+            input.value = response.credential;
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+          }
+        });
+        // Optionally render a Google button near our link if desired
+        // google.accounts.id.renderButton(document.body, { theme: 'outline', size: 'large' });
+      }
     });
   </script>
 </body>

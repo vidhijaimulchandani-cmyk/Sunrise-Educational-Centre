@@ -463,6 +463,18 @@ def get_user_by_username(username):
     conn.close()
     return user
 
+def get_user_by_email(email_address):
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+    c.execute('''
+        SELECT u.id, u.username, u.class_id, u.paid, c.name, u.banned, u.mobile_no, u.email_address FROM users u
+        LEFT JOIN classes c ON u.class_id = c.id
+        WHERE u.email_address=?
+    ''', (email_address,))
+    user = c.fetchone()
+    conn.close()
+    return user
+
 def update_user(user_id, username, class_id, paid, banned=None, mobile_no=None, email_address=None):
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
