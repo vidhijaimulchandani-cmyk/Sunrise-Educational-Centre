@@ -1156,13 +1156,12 @@ def study_resources():
 # Route for batch page
 @app.route('/batch')
 def batch_page():
+    # Allow guests to view batches; enhance UI based on login state
     role = session.get('role')
-    if not role:
-        flash('You must be logged in to view your batch.', 'error')
-        return redirect(url_for('auth'))
-
     username = session.get('username')
     user_id = session.get('user_id')
+    is_logged_in = bool(role)
+
     user_notifications = get_unread_notifications_for_user(user_id) if user_id else []
 
     # Determine user's paid status
@@ -1201,6 +1200,8 @@ def batch_page():
         else:
             paid_cards.append(card)
 
+    all_cards = paid_cards + free_cards
+
     return render_template(
         'batch.html',
         username=username,
@@ -1210,6 +1211,8 @@ def batch_page():
         user_paid_status=user_paid_status,
         paid_cards=paid_cards,
         free_cards=free_cards,
+        all_cards=all_cards,
+        is_logged_in=is_logged_in,
     )
 
 # Batch Overview per class
@@ -1599,6 +1602,12 @@ def auth():
                     return render_template('auth.html', error=error)
         error = 'Wrong credentials. Contact the institute.'
     return render_template('auth.html', error=error)
+
+# Placeholder Google OAuth start (UI only)
+@app.route('/auth/google')
+def auth_google_start():
+    flash('Google sign-in is coming soon. Please use username/password for now.', 'info')
+    return redirect(url_for('auth'))
 
 # Route for registration
 @app.route('/register', methods=['POST'])
