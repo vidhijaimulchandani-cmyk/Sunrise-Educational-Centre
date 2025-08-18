@@ -48,6 +48,8 @@
             <span style="font-weight:700; color:#4285F4;">G</span>
             <span>Continue with Google</span>
           </a>
+          <div id="googleButtonLogin" style="margin-top:0.6rem;"></div>
+          <div id="googleButtonLogin" style="margin-top:0.6rem;"></div>
         </form>
         <form id="signupForm" method="POST" action="/register" class="login-form" style="display:none;">
           <input type="text" id="signup-username" name="username" placeholder="Username" required autocomplete="username" />
@@ -68,6 +70,8 @@
             <span style="font-weight:700; color:#4285F4;">G</span>
             <span>Continue with Google</span>
           </a>
+          <div id="googleButtonSignup" style="margin-top:0.6rem;"></div>
+          <div id="googleButtonSignup" style="margin-top:0.6rem;"></div>
               </form>
         <div class="login-links">
           <a href="/">&larr; Back to Home</a> |
@@ -85,6 +89,8 @@
     </div>
   </body>
   <script src="script.js"></script>
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
     // Toggle between Login and Sign Up forms
     const loginForm = document.getElementById('loginForm');
@@ -165,6 +171,37 @@
         if (darkModeToggle) {
             darkModeToggle.addEventListener('click', toggleDarkMode);
         }
+    });
+  </script>
+  <script>
+    // If Google One Tap/Popup is desired, you can initialize it here.
+    // This keeps the simple link fallback working as well.
+    document.addEventListener('DOMContentLoaded', function() {
+      const clientId = '{{ google_client_id }}';
+      if (!clientId || clientId.includes('None')) return;
+      if (window.google && google.accounts && google.accounts.id) {
+        google.accounts.id.initialize({
+          client_id: clientId,
+          callback: function(response) {
+            // Send ID token to backend callback for verification
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/auth/google/callback';
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'credential';
+            input.value = response.credential;
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+          }
+        });
+        const btnOpts = { type: 'standard', theme: 'outline', size: 'large', text: 'continue_with', shape: 'pill', logo_alignment: 'left', width: 320 };
+        const loginBtn = document.getElementById('googleButtonLogin');
+        const signupBtn = document.getElementById('googleButtonSignup');
+        if (loginBtn) google.accounts.id.renderButton(loginBtn, btnOpts);
+        if (signupBtn) google.accounts.id.renderButton(signupBtn, btnOpts);
+      }
     });
   </script>
 </body>

@@ -41,7 +41,7 @@ from auth_handler import (
     create_topic, delete_topic, get_all_topics, get_topics_for_user, can_user_access_topic,
     update_user_with_password, add_personal_notification, get_forum_messages,
     format_datetime_for_display, mark_messages_as_read,
-    get_user_by_username
+    get_user_by_username, get_user_by_email
 )
 from study_resources import (
     save_resource, get_all_resources, delete_resource, get_resources_for_class_id,
@@ -59,6 +59,8 @@ import sqlite3
 from datetime import datetime, timedelta, timezone
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask import g
+import base64
+import requests
 import uuid
 
 # Import time configuration
@@ -77,6 +79,7 @@ app = Flask(__name__, static_folder='.', template_folder='.')
 # Configuration
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['SECRET_KEY'] = secrets.token_hex(16)
+app.config['GOOGLE_CLIENT_ID'] = '26558108002-3s4a4m7verimsj8psklf7ptr2tl5okhq.apps.googleusercontent.com'
 
 # Ensure required directories exist
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -1090,7 +1093,8 @@ def inject_global_variables():
         username=username, 
         role=role,
         user_paid_status=user_paid_status,
-        format_datetime_for_display=format_datetime_for_display
+        format_datetime_for_display=format_datetime_for_display,
+        google_client_id=app.config.get('GOOGLE_CLIENT_ID')
     )
 
 # Route for the main page
@@ -1606,9 +1610,82 @@ def auth():
 # Placeholder Google OAuth start (UI only)
 @app.route('/auth/google')
 def auth_google_start():
-    flash('Google sign-in is coming soon. Please use username/password for now.', 'info')
+    # Using Google Identity Services One Tap/Popup from frontend is recommended.
+    # This endpoint can also serve as an OAuth 2.0 redirect target if needed.
+    flash('Redirecting to Google sign-in...', 'info')
     return redirect(url_for('auth'))
 
+@app.route('/auth/google/callback', methods=['POST', 'GET'])
+def auth_google_callback():
+    # Two modes supported:
+    # - POST with 'credential' (JWT) from Google Identity Services
+    # - GET with 'code' for OAuth flow (not implemented fully here)
+    try:
+        if 'credential' in request.form:
+            # Verify Google ID token via Google endpoint
+            id_token = request.form['credential']
+            resp = requests.get(
+                'https://oauth2.googleapis.com/tokeninfo',
+                params={'id_token': id_token},
+                timeout=8
+            )
+            if resp.status_code != 200:
+                flash('Google sign-in failed. Please try again.', 'error')
+                return redirect(url_for('auth'))
+            data = resp.json()
+            aud = data.get('aud')
+            if aud != app.config['GOOGLE_CLIENT_ID']:
+                flash('Google sign-in client mismatch.', 'error')
+                return redirect(url_for('auth'))
+
+            email = data.get('email')
+            name = data.get('name') or (email.split('@')[0] if email else None)
+            if not email:
+                flash('Google account has no email.', 'error')
+                return redirect(url_for('auth'))
+
+            # Find or create user by email
+            user = get_user_by_email(email)
+            if not user:
+                # Default class: first non-admin class or first available
+                classes = get_all_classes()
+                default_class_id = None
+                for cid, cname in classes:
+                    if cname != 'admin':
+                        default_class_id = cid
+                        break
+                if default_class_id is None and classes:
+                    default_class_id = classes[0][0]
+                register_user(username=name, password=secrets.token_hex(8), class_id=default_class_id, email_address=email)
+                user = get_user_by_email(email)
+
+            # user tuple: (id, username, class_id, paid, class_name, banned, mobile_no, email_address)
+            user_id = user[0]
+            user_role = user[4]
+            username_val = user[1]
+
+            # Session setup similar to /auth
+            xff = request.headers.get('X-Forwarded-For', '')
+            client_ip = (xff.split(',')[0].strip() if xff else request.remote_addr) or 'unknown'
+            user_agent = request.headers.get('User-Agent', '')[:300]
+            session_id = session.sid if hasattr(session, 'sid') else str(uuid.uuid4())
+            if create_user_session(user_id, session_id, client_ip, user_agent):
+                session['user_id'] = user_id
+                session['username'] = username_val
+                session['role'] = user_role
+                session['session_id'] = session_id
+                return redirect(url_for('home'))
+            else:
+                flash('Failed to create session after Google sign-in.', 'error')
+                return redirect(url_for('auth'))
+
+        # If we reach here, unsupported mode
+        flash('Unsupported Google sign-in response.', 'error')
+        return redirect(url_for('auth'))
+    except Exception as e:
+        print('Google callback error:', e)
+        flash('Google sign-in error. Please try again.', 'error')
+        return redirect(url_for('auth'))
 # Route for registration
 @app.route('/register', methods=['POST'])
 def register():
