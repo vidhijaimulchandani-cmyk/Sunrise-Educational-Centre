@@ -1165,20 +1165,29 @@ def batch_page():
     user_id = session.get('user_id')
     user_notifications = get_unread_notifications_for_user(user_id) if user_id else []
 
+    # Determine user's paid status
+    user_paid_status = None
+    if user_id:
+        user = get_user_by_id(user_id)
+        if user and len(user) > 3:
+            user_paid_status = user[3]
+
     # Map class name to class_id and prepare sample batch metadata
     classes = get_all_classes()  # List of tuples (id, name)
     all_classes_dict_rev = {c[1]: c[0] for c in classes}
     class_id = all_classes_dict_rev.get(role)
 
-    # Choose up to four classes for cards (or pad to four if fewer exist)
-    selected_classes = classes[:4] if classes else []
-    # Provide default dates; in a real system these would come from DB
+    # Build cards for all classes and split into paid/free by name heuristic
+    # Any class name containing 'free', 'demo', or 'trial' (case-insensitive) is considered free
     from datetime import date
     today = date.today()
     default_start = today.replace(day=1)
     default_end = today.replace(day=28 if today.month == 2 else 30)
-    batch_cards = [
-        {
+
+    paid_cards = []
+    free_cards = []
+    for cid, cname in classes:
+        card = {
             'class_id': cid,
             'class_name': cname.title(),
             'batch_name': f"{cname.title()} - Batch",
@@ -1186,10 +1195,22 @@ def batch_page():
             'end_date': default_end.strftime('%Y-%m-%d'),
             'image': 'img/IMG-20250706-WA0000.jpg'
         }
-        for cid, cname in selected_classes
-    ]
+        lname = (cname or '').lower()
+        if 'free' in lname or 'demo' in lname or 'trial' in lname:
+            free_cards.append(card)
+        else:
+            paid_cards.append(card)
 
-    return render_template('batch.html', username=username, role=role, class_id=class_id, user_notifications=user_notifications, batch_cards=batch_cards)
+    return render_template(
+        'batch.html',
+        username=username,
+        role=role,
+        class_id=class_id,
+        user_notifications=user_notifications,
+        user_paid_status=user_paid_status,
+        paid_cards=paid_cards,
+        free_cards=free_cards,
+    )
 
 # Route for forum
 @app.route("/forum")

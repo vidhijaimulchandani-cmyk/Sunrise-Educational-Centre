@@ -97,10 +97,10 @@
 
     <main class="container main-content">
       <section class="card animated-card" style="padding: 1.2rem 1rem;">
-        <h2 style="margin-top:0;">Available Batches</h2>
+        <h2 style="margin-top:0;">Paid Batches</h2>
         <div class="batch-grid">
-          {% if batch_cards and batch_cards|length > 0 %}
-            {% for card in batch_cards %}
+          {% if paid_cards and paid_cards|length > 0 %}
+            {% for card in paid_cards %}
             <div class="batch-card">
               <div class="batch-image">
                 <img src="{{ card.image }}" alt="{{ card.batch_name }}" />
@@ -114,14 +114,46 @@
                   <div><strong>End</strong>: {{ card.end_date }}</div>
                 </div>
                 <div class="batch-actions">
-                  <a class="btn btn-primary" href="/online-class">Join Live</a>
-                  <a class="btn btn-secondary" href="/study-resources">Resources</a>
+                  {% if user_paid_status == 'paid' %}
+                  <a class="btn btn-primary" href="/study-resources">Explore</a>
+                  {% else %}
+                  <a class="btn btn-primary" href="/admission">Buy Now</a>
+                  {% endif %}
                 </div>
               </div>
             </div>
             {% endfor %}
           {% else %}
-            <div style="color:#6b7280;">No batches available.</div>
+            <div style="color:#6b7280;">No paid batches available.</div>
+          {% endif %}
+        </div>
+      </section>
+
+      <section class="card animated-card" style="padding: 1.2rem 1rem;">
+        <h2 style="margin-top:0;">Free Batches</h2>
+        <div class="batch-grid">
+          {% if free_cards and free_cards|length > 0 %}
+            {% for card in free_cards %}
+            <div class="batch-card">
+              <div class="batch-image">
+                <img src="{{ card.image }}" alt="{{ card.batch_name }}" />
+              </div>
+              <div class="batch-info">
+                <h3>{{ card.batch_name }}</h3>
+                <div class="batch-meta">
+                  <div><strong>Class</strong>: {{ card.class_name }}</div>
+                  <div><strong>ID</strong>: {{ card.class_id }}</div>
+                  <div><strong>Start</strong>: {{ card.start_date }}</div>
+                  <div><strong>End</strong>: {{ card.end_date }}</div>
+                </div>
+                <div class="batch-actions">
+                  <a class="btn btn-secondary" href="/study-resources">Explore</a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <div style="color:#6b7280;">No free batches available.</div>
           {% endif %}
         </div>
       </section>
