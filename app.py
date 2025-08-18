@@ -80,6 +80,9 @@ app = Flask(__name__, static_folder='.', template_folder='.')
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['SECRET_KEY'] = secrets.token_hex(16)
 app.config['GOOGLE_CLIENT_ID'] = '26558108002-3s4a4m7verimsj8psklf7ptr2tl5okhq.apps.googleusercontent.com'
+app.config['GOOGLE_EMAIL_USERNAME_MAP'] = {
+    'yashrajmoolchandani@gmail.com': 'yash',
+}
 
 # Ensure required directories exist
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -1644,11 +1647,25 @@ def auth_google_callback():
                 flash('Google account has no email.', 'error')
                 return redirect(url_for('auth'))
 
-            # If existing user is linked by email, sign them in; else ask to complete setup
-            user = get_user_by_email(email)
+            # Auto-map certain emails to usernames if configured
+            mapped_username = app.config.get('GOOGLE_EMAIL_USERNAME_MAP', {}).get(email)
+            if mapped_username:
+                mapped = get_user_by_username(mapped_username)
+                if mapped:
+                    # Attach email to mapped user if not already set
+                    if not mapped[7]:
+                        update_user(mapped[0], mapped[1], mapped[2], mapped[3], mapped[5], mapped[6], email)
+                    user = mapped
+                else:
+                    user = get_user_by_email(email)
+            else:
+                user = get_user_by_email(email)
             if not user:
                 session['pending_google_email'] = email
                 session['pending_google_name'] = name or email.split('@')[0]
+                # Prefill link_username if there is a mapped username
+                if mapped_username:
+                    session['pending_link_username'] = mapped_username
                 return redirect(url_for('google_complete'))
 
             # user tuple: (id, username, class_id, paid, class_name, banned, mobile_no, email_address)
