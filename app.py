@@ -98,6 +98,11 @@ try:
 except Exception as _e:
     # Blueprint may not exist during certain scripts/tests; ignore registration errors
     pass
+try:
+    from notifications_routes import notifications_bp
+    app.register_blueprint(notifications_bp)
+except Exception as _e:
+    pass
 
 
 def get_db_connection():
@@ -2157,16 +2162,7 @@ def user_info(user_id):
     all_classes = get_all_classes()
     return render_template('user_info.html', user=user, error=error, all_classes=all_classes)
 
-@app.route('/add-notification', methods=['POST'])
-def add_notification_route():
-    if session.get('role') not in ['admin', 'teacher']:
-        return redirect(url_for('auth'))
-    message = request.form.get('message')
-    class_id = request.form.get('class_id')
-    if message and class_id:
-        add_notification(message, class_id)
-        flash('Notification sent!', 'success')
-    return redirect(url_for('admin_panel'))
+## Notification routes moved to blueprint `notifications_routes.notifications_bp`
 
 @app.route('/logout')
 def logout():
@@ -2227,30 +2223,9 @@ def profile():
     
     return render_template('profile.html', user=user)
 
-@app.route('/mark-notification-seen', methods=['POST'])
-def mark_notification_seen_route():
-    user_id = session.get('user_id')
-    if not user_id:
-        return {'status': 'error', 'message': 'User not logged in'}, 401
-    
-    data = request.json
-    notification_id = data.get('notification_id')
-    
-    if not notification_id:
-        return {'status': 'error', 'message': 'Notification ID is required'}, 400
-        
-    # Determine notification type based on the notification data
-    # For now, we'll use 'general' as default, but this should be improved
-    mark_notification_as_read(user_id, notification_id, 'general')
-    return {'status': 'success'}
+## Notification routes moved to blueprint `notifications_routes.notifications_bp`
 
-@app.route('/delete-notification/<int:notification_id>', methods=['POST'])
-def delete_notification_route(notification_id):
-    if session.get('role') not in ['admin', 'teacher']:
-        return redirect(url_for('auth'))
-    delete_notification(notification_id)
-    flash('Notification deleted!', 'success')
-    return redirect(url_for('admin_panel'))
+## Notification routes moved to blueprint `notifications_routes.notifications_bp`
 
 @app.route('/admin/classes/add', methods=['POST'])
 def admin_add_class():
@@ -2308,12 +2283,7 @@ def admin_delete_resource(filename):
     delete_resource(filename)
     return redirect(url_for('admin_panel', _anchor='resources'))
 
-@app.route('/admin/delete-notification/<int:notification_id>', methods=['POST'])
-def admin_delete_notification(notification_id):
-    if session.get('role') not in ['admin', 'teacher']:
-        return redirect(url_for('auth'))
-    delete_notification(notification_id)
-    return redirect(url_for('admin_panel', _anchor='notifications'))
+## Notification routes moved to blueprint `notifications_routes.notifications_bp`
 
 @app.route('/admin/download/users')
 def admin_download_users():
@@ -2394,52 +2364,7 @@ def admin_delete_admin(user_id):
     delete_user(user_id)
     return redirect(url_for('admin_panel', _anchor='settings'))
 
-@app.route('/send-notification', methods=['GET', 'POST'])
-def send_notification_page():
-    if session.get('role') not in ['admin', 'teacher']:
-        return redirect(url_for('auth'))
-    
-    if request.method == 'POST':
-        message = request.form.get('message')
-        class_id = request.form.get('class_id')
-        target_paid_status = request.form.get('target_paid_status', 'all')
-        schedule_date = request.form.get('schedule_date')
-        
-        # Validation
-        if not message or not class_id or not target_paid_status:
-            flash('Message, class, and target users are required.', 'error')
-            return render_template('send_notification.html')
-        
-        # Validate target_paid_status
-        valid_paid_statuses = ['all', 'paid', 'not paid']
-        if target_paid_status not in valid_paid_statuses:
-            flash('Invalid target users selection.', 'error')
-            return render_template('send_notification.html')
-        
-        try:
-            # Add notification
-            add_notification(
-                message=message,
-                class_id=int(class_id),
-                target_paid_status=target_paid_status,
-                status='active',
-                scheduled_time=schedule_date if schedule_date else None,
-                notification_type='admin_notification'
-            )
-            
-            status_text = "scheduled" if schedule_date else "sent"
-            flash(f'Notification {status_text} successfully!', 'success')
-            return redirect(url_for('admin_panel', _anchor='notifications'))
-            
-        except Exception as e:
-            flash(f'Error sending notification: {str(e)}', 'error')
-            return render_template('send_notification.html')
-    
-    # Get recent notifications for display
-    from auth_handler import get_all_notifications
-    notifications = get_all_notifications()[:10]  # Show last 10 notifications
-    
-    return render_template('send_notification.html', notifications=notifications)
+## Notification routes moved to blueprint `notifications_routes.notifications_bp`
 
 @app.route('/admin/create-user', methods=['GET'])
 def admin_create_user_page():
@@ -3996,21 +3921,7 @@ def status_management():
                          all_classes=all_classes,
                          all_live_classes=all_live_classes)
 
-@app.route('/admin/update-notification-status/<int:notification_id>', methods=['POST'])
-def update_notification_status_route(notification_id):
-    if session.get('role') not in ['admin', 'teacher']:
-        return jsonify({'success': False, 'error': 'Unauthorized'}), 401
-    
-    data = request.get_json()
-    status = data.get('status')
-    
-    if status not in ['active', 'scheduled', 'completed', 'cancelled']:
-        return jsonify({'success': False, 'error': 'Invalid status'}), 400
-    
-    from auth_handler import update_notification_status
-    update_notification_status(notification_id, status)
-    
-    return jsonify({'success': True})
+## Notification routes moved to blueprint `notifications_routes.notifications_bp`
 
 @app.route('/admin/update-live-class-status/<int:class_id>', methods=['POST'])
 def update_live_class_status_route(class_id):
@@ -6455,26 +6366,7 @@ def get_conversations():
     conversations = get_user_conversations(user_id)
     return jsonify({'conversations': conversations})
 
-@app.route('/api/mark-notification-seen/<int:notification_id>', methods=['POST'])
-def mark_notification_seen_api(notification_id):
-    if 'user_id' not in session:
-        return jsonify({'error': 'Not authenticated'}), 401
-    
-    data = request.get_json() or {}
-    notification_type = data.get('type', 'notification')
-    user_id = session['user_id']
-    
-    if notification_type == 'personal_chat':
-        # Mark personal chat message as read
-        success = mark_messages_as_read(user_id, notification_id)
-    else:
-        # Mark regular notification as seen
-        success = mark_notification_as_read(user_id, notification_id, 'general')
-    
-    if success:
-        return jsonify({'success': True, 'message': 'Item marked as seen'})
-    else:
-        return jsonify({'error': 'Failed to mark item as seen'}), 500
+## Notification routes moved to blueprint `notifications_routes.notifications_bp`
 
 # Socket.IO events for real-time chat
 @socketio.on('join_chat')
@@ -6672,21 +6564,7 @@ def api_admin_force_logout(user_id):
         return jsonify({'success': False, 'error': str(e)}), 500
 
 # API route for fetching user notifications
-@app.route('/api/notifications', methods=['GET'])
-def api_get_user_notifications():
-    user_id = session.get('user_id')
-    if not user_id:
-        return jsonify({'success': False, 'error': 'Not logged in'})
-    
-    try:
-        notifications = get_unread_notifications_for_user(user_id)
-        return jsonify({
-            'success': True, 
-            'notifications': notifications,
-            'count': len(notifications)
-        })
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)})
+## Notification routes moved to blueprint `notifications_routes.notifications_bp`
 
 @socketio.on('chat_status_change')
 def handle_chat_status_change(data):
