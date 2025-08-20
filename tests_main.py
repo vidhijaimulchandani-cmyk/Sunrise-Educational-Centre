@@ -14,6 +14,8 @@ import sqlite3
 import socket
 import ssl
 from datetime import datetime, timedelta
+import glob
+import subprocess
 
 try:
     import requests
@@ -360,6 +362,40 @@ def run_all_tests():
     for key, ok in results.items():
         print(f"- {key}: {'✅ PASS' if ok else '❌ FAIL'}")
     print("=" * 64)
+
+    # Discover and run any remaining standalone test scripts once, then remove them
+    print("\n🔎 Discovering additional test scripts (test*.py)...")
+    this_file = os.path.basename(__file__)
+    test_files = [f for f in glob.glob(os.path.join(os.path.dirname(__file__), 'test*.py'))
+                  if os.path.basename(f) != this_file]
+    if not test_files:
+        print("No extra test scripts found.")
+        return
+
+    print(f"Found {len(test_files)} extra test scripts:")
+    for tf in test_files:
+        print(f" - {os.path.basename(tf)}")
+
+    print("\n▶️ Running extra test scripts once before consolidation...")
+    for tf in test_files:
+        try:
+            print(f"\n--- Running {os.path.basename(tf)} ---")
+            proc = subprocess.run([sys.executable, tf], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=180)
+            print(proc.stdout)
+            if proc.returncode != 0:
+                print(f"❌ {os.path.basename(tf)} exited with code {proc.returncode}")
+            else:
+                print(f"✅ {os.path.basename(tf)} completed")
+        except Exception as e:
+            print(f"❌ Failed running {os.path.basename(tf)}: {e}")
+
+    print("\n🧹 Removing extra standalone test scripts to consolidate into this runner...")
+    for tf in test_files:
+        try:
+            os.remove(tf)
+            print(f"Deleted: {os.path.basename(tf)}")
+        except Exception as e:
+            print(f"Failed to delete {os.path.basename(tf)}: {e}")
 
 
 if __name__ == '__main__':
