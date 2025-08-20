@@ -64,6 +64,26 @@
       body.dark-mode .batch-card { background:#232946; border-color:#3a3a4a; }
       body.dark-mode .batch-info h3 { color: #e2e8f0; }
       body.dark-mode .batch-meta { color: #b8c5d6; }
+      /* Tabs styling */
+      .tabs { display:flex; gap:0.5rem; flex-wrap:wrap; }
+      .tab-btn {
+        padding: 0.45rem 0.9rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 9999px;
+        background: #fff;
+        color: #232946;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .tab-btn:hover { background:#f3f6ff; border-color:#dbeafe; }
+      .tab-btn.active { background:#6a82fb; color:#fff; border-color:#6a82fb; }
+      body.dark-mode .tab-btn { background:#1f2440; border-color:#3a3a4a; color:#e2e8f0; }
+      body.dark-mode .tab-btn:hover { background:#252b4d; border-color:#4a4a5a; }
+      body.dark-mode .tab-btn.active { background:#6a82fb; color:#fff; border-color:#6a82fb; }
+
+      /* Card polish */
+      .card.animated-card { border-radius:16px; box-shadow:0 4px 16px rgba(100,100,255,0.08); }
+      .batch-info h3 { font-weight:600; }
     </style>
   </head>
   <body>

@@ -10,15 +10,18 @@
     <link rel="stylesheet" href="style.css" />
     <style>
       .tabs { display:flex; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.8rem; }
-      .tab-btn { padding:0.5rem 0.9rem; border:1px solid #e5e7eb; border-radius:10px; background:#fff; cursor:pointer; }
+      .tab-btn { padding:0.45rem 0.9rem; border:1px solid #e5e7eb; border-radius:9999px; background:#fff; cursor:pointer; transition:all 0.2s ease; }
+      .tab-btn:hover { background:#f3f6ff; border-color:#dbeafe; }
       .tab-btn.active { background:#6a82fb; color:#fff; border-color:#6a82fb; }
       .tab-content { display:none; }
       .tab-content.active { display:block; }
       .resource-list { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:0.8rem; }
       .resource-item { border:1px solid #e5e7eb; border-radius:12px; padding:0.8rem; background:#fff; }
+      .resource-item:hover { box-shadow:0 8px 24px rgba(100,100,255,0.10); }
       body.dark-mode .tab-btn { background:#232946; border-color:#3a3a4a; color:#e2e8f0; }
       body.dark-mode .tab-btn.active { background:#6a82fb; color:#fff; border-color:#6a82fb; }
       body.dark-mode .resource-item { background:#232946; border-color:#3a3a4a; }
+      .card.animated-card { border-radius:16px; box-shadow:0 4px 16px rgba(100,100,255,0.08); }
     </style>
   </head>
   <body>
