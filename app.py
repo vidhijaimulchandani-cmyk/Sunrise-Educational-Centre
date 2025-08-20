@@ -947,7 +947,7 @@ def init_queries_db():
         conn.close()
 init_queries_db()
 
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet', 
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading', 
                    ping_timeout=60, ping_interval=25, logger=True, engineio_logger=True)
 
 # Active session tracking
@@ -4254,28 +4254,7 @@ def create_category():
         flash(f'Error creating category: {str(e)}', 'error')
         return redirect(url_for('upload_resource'))
 
-# Get all categories
-def get_all_categories():
-    conn = sqlite3.connect(DATABASE)
-    c = conn.cursor()
-    
-    # Create categories table if it doesn't exist
-    c.execute('''CREATE TABLE IF NOT EXISTS categories (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT UNIQUE NOT NULL,
-        description TEXT,
-        category_type TEXT DEFAULT 'general',
-        target_class TEXT DEFAULT 'all',
-        paid_status TEXT DEFAULT 'unpaid',
-        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-        created_by INTEGER,
-        is_active BOOLEAN DEFAULT 1
-    )''')
-    
-    c.execute('SELECT id, name, description, category_type, target_class, paid_status, created_at FROM categories WHERE is_active = 1 ORDER BY name')
-    categories = c.fetchall()
-    conn.close()
-    return categories
+# Get all categories - using imported function from study_resources.py
 
 # Delete category route
 @app.route('/delete-category/<int:category_id>', methods=['POST'])
@@ -6937,4 +6916,3 @@ if __name__ == '__main__':
             print(f"❌ Alternative configuration failed: {e2}")
             print("🔄 Trying with different settings...")
             socketio.run(app, host='localhost', port=port, debug=False, log_output=False)
->>>>>>> origin/chore/split-query-routes
