@@ -72,6 +72,7 @@ from time_config import (
 
 # Import bulk upload routes
 from bulk_upload.routes import bulk_upload_bp
+from query_routes import queries_bp
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='.', template_folder='.')
@@ -96,7 +97,12 @@ try:
     from live_class_routes import live_classes_bp
     app.register_blueprint(live_classes_bp)
 except Exception as _e:
-    # Blueprint may not exist during certain scripts/tests; ignore registration errors
+    pass
+
+# Register query blueprint
+try:
+    app.register_blueprint(queries_bp)
+except Exception as _e:
     pass
 
 
@@ -3403,62 +3409,7 @@ def delete_disapproved_admission(admission_id):
             flash(f'Error deleting admission: {str(e)}', 'error')
             return redirect(url_for('view_admissions', tab='disapproved'))
 
-@app.route('/submit-query', methods=['POST'])
-def submit_query():
-    name = request.form.get('name')
-    email = request.form.get('email')
-    message = request.form.get('message')
-    submitted_at = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    
-    # Get user IP address
-    user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    if user_ip and ',' in user_ip:
-        user_ip = user_ip.split(',')[0].strip()
-    
-    with sqlite3.connect(DATABASE) as conn:
-        c = conn.cursor()
-        c.execute('INSERT INTO queries (name, email, message, submitted_at, user_ip) VALUES (?, ?, ?, ?, ?)',
-                  (name, email, message, submitted_at, user_ip))
-        conn.commit()
-    return redirect(url_for('home'))
-
-@app.route('/api/recent-queries')
-def get_recent_queries():
-    # Get user IP address
-    user_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    if user_ip and ',' in user_ip:
-        user_ip = user_ip.split(',')[0].strip()
-    
-    try:
-        with sqlite3.connect(DATABASE) as conn:
-            c = conn.cursor()
-            # Get recent queries for this IP address (last 10)
-            c.execute('''
-                SELECT id, name, email, message, submitted_at, response, responded_at, status
-                FROM queries 
-                WHERE user_ip = ? 
-                ORDER BY submitted_at DESC 
-                LIMIT 10
-            ''', (user_ip,))
-            
-            queries = []
-            for row in c.fetchall():
-                query = {
-                    'id': row[0],
-                    'name': row[1],
-                    'email': row[2],
-                    'message': row[3],
-                    'submitted_at': row[4],
-                    'response': row[5],
-                    'responded_at': row[6],
-                    'status': row[7]
-                }
-                queries.append(query)
-            
-            return jsonify({'success': True, 'queries': queries})
-    
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)})
+## Moved to queries blueprint in query_routes.py
 
 # This function is now consolidated into the main before_request function below
 
@@ -5423,7 +5374,7 @@ def before_request_handler():
     """Consolidated before_request handler for login, session validation, and IP tracking"""
     
     # 1. Login requirement check
-    allowed_routes = ['home', 'auth', 'register', 'static_files', 'submit_admission', 'admission', 'check_admission_status', 'check_admission', 'submit_query', 'get_recent_queries', 'api_get_categories_for_class', 'api_get_categories_by_class_name']
+    allowed_routes = ['home', 'auth', 'register', 'static_files', 'submit_admission', 'admission', 'check_admission_status', 'check_admission', 'queries.submit_query', 'queries.get_recent_queries', 'api_get_categories_for_class', 'api_get_categories_by_class_name']
     if request.endpoint not in allowed_routes and not session.get('user_id'):
         return redirect(url_for('auth'))
     
