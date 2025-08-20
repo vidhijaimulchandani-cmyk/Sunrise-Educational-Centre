@@ -74,7 +74,45 @@
   </body>
   <script src="script.js"></script>
   <!-- Google Identity Services -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script>
+    // Safer, idempotent GIS initialization
+    window.__gis_btn_rendered = false;
+    function initGoogleSignIn() {
+      try {
+        const clientId = '{{ google_client_id }}';
+        if (!clientId || clientId === 'None') return;
+        if (!(window.google && google.accounts && google.accounts.id)) return;
+        if (window.__gis_btn_rendered) return;
+
+        google.accounts.id.initialize({
+          client_id: clientId,
+          callback: function(response) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/auth/google/callback';
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'credential';
+            input.value = response.credential;
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+          },
+          auto_select: false
+        });
+        const btnOpts = { type: 'standard', theme: 'outline', size: 'large', text: 'continue_with', shape: 'pill', logo_alignment: 'left', width: 320 };
+        const loginBtn = document.getElementById('googleButtonLogin');
+        if (loginBtn) {
+          google.accounts.id.renderButton(loginBtn, btnOpts);
+          window.__gis_btn_rendered = true;
+        }
+        google.accounts.id.prompt();
+      } catch (e) {
+        console.log('GIS init error:', e);
+      }
+    }
+  </script>
+  <script src="https://accounts.google.com/gsi/client" async defer onload="initGoogleSignIn()"></script>
   <script>
     // Toggle between Login and Sign Up forms
     const loginForm = document.getElementById('loginForm');
@@ -147,43 +185,22 @@
         }
     }
 
-    // Initialize dark mode on page load
     document.addEventListener('DOMContentLoaded', function() {
         setupDarkMode();
-        
         const darkModeToggle = document.getElementById('darkModeToggle');
         if (darkModeToggle) {
             darkModeToggle.addEventListener('click', toggleDarkMode);
         }
-    });
-  </script>
-  <script>
-    // Google Sign-In button rendering with account chooser each time
-    document.addEventListener('DOMContentLoaded', function() {
-      const clientId = '{{ google_client_id }}';
-      if (!clientId || clientId.includes('None')) return;
-      if (window.google && google.accounts && google.accounts.id) {
-        google.accounts.id.initialize({
-          client_id: clientId,
-          callback: function(response) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/auth/google/callback';
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'credential';
-            input.value = response.credential;
-            form.appendChild(input);
-            document.body.appendChild(form);
-            form.submit();
-          },
-          auto_select: false
-        });
-        const btnOpts = { type: 'standard', theme: 'outline', size: 'large', text: 'continue_with', shape: 'pill', logo_alignment: 'left', width: 320 };
-        const loginBtn = document.getElementById('googleButtonLogin');
-        if (loginBtn) google.accounts.id.renderButton(loginBtn, btnOpts);
-        google.accounts.id.prompt();
-      }
+        // Fallback polling if GIS script not yet ready
+        let tries = 0;
+        const iv = setInterval(function(){
+          tries++;
+          if (window.google && google.accounts && google.accounts.id) {
+            clearInterval(iv);
+            initGoogleSignIn();
+          }
+          if (tries > 40) clearInterval(iv);
+        }, 150);
     });
   </script>
 </body>
