@@ -1608,6 +1608,23 @@
         }
       }
       
+      // Horizontal slider controls
+      function slideFame(direction) {
+        const slider = document.getElementById('fameSlider');
+        if (!slider) return;
+        const card = slider.querySelector('.fame-card');
+        const offset = card ? card.offsetWidth + 32 : slider.clientWidth * 0.8; // card width + approx gap
+        slider.scrollBy({ left: direction * offset, behavior: 'smooth' });
+      }
+
+      function slideFame2023(direction) {
+        const slider = document.getElementById('fameSlider2023');
+        if (!slider) return;
+        const card = slider.querySelector('.fame-card');
+        const offset = card ? card.offsetWidth + 32 : slider.clientWidth * 0.8;
+        slider.scrollBy({ left: direction * offset, behavior: 'smooth' });
+      }
+      
       // Initialize with 2025 year active
       document.addEventListener('DOMContentLoaded', function() {
         showYear('2025');
