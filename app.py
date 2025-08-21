@@ -2071,6 +2071,15 @@ def upload_resource():
 
     # Get all resources for history tab
     resources = get_all_resources()
+    # Adapt to template expected shape: (filename, class_id, filepath, title, description, category)
+    try:
+        resources = [
+            (row[1], row[2], row[3], row[4], row[5], row[6])
+            for row in resources
+        ]
+    except Exception:
+        # Fallback: leave as-is if structure unexpected
+        pass
     all_classes = get_all_classes()
     categories = get_all_categories()
     return render_template('upload_resource.html', resources=resources, all_classes=all_classes, categories=categories)
