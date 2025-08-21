@@ -286,8 +286,8 @@
     </div>
 
     <script>
-        // Set the launch date (you can modify this)
-        const launchDate = new Date('2024-02-01T00:00:00').getTime();
+        // Set the launch date to 7 days from now by default so countdown is visible
+        const launchDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getTime();
 
         function updateCountdown() {
             const now = new Date().getTime();
