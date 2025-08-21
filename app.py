@@ -58,6 +58,22 @@ def home():
         return render_template('index.html')
     return 'OK'
 
+# Generic page fallback: try to serve <page>.html if it exists
+@app.route('/<page>')
+def html_page_fallback(page: str):
+    # Ignore if path has an extension; static route will handle
+    if '.' in page:
+        return send_from_directory('.', page)
+    candidate = f"{page}.html"
+    path = os.path.join(app.template_folder or '.', candidate)
+    if os.path.exists(path):
+        try:
+            return render_template(candidate)
+        except Exception:
+            # As a last resort, serve raw file
+            return send_from_directory('.', candidate)
+    return 'Not Found', 404
+
 # Serve static files
 @app.route('/<path:filename>')
 def static_files(filename):
