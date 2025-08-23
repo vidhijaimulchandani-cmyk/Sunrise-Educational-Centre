@@ -99,47 +99,7 @@
         .black-glass input::placeholder,
         .black-glass textarea::placeholder { color: rgba(255,255,255,0.6) !important; }
 
-        /* To-Do List Styles */
-        .todo-section {
-            background: linear-gradient(135deg, rgba(106,130,251,0.05) 0%, rgba(118,75,162,0.05) 100%);
-        }
 
-        .todo-container {
-            transition: all 0.3s ease;
-        }
-
-        .todo-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8) !important;
-        }
-
-        .todo-item {
-            transition: all 0.3s ease;
-            border-radius: 12px;
-        }
-
-        .todo-item:hover {
-            background: rgba(255,255,255,0.05);
-            transform: translateX(5px);
-        }
-
-        .todo-status {
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .todo-item:hover .todo-status {
-            transform: scale(1.2);
-        }
-
-        .todo-text strong {
-            color: rgba(255,255,255,0.95) !important;
-            font-size: 1.1rem;
-        }
-
-        .todo-text div {
-            color: rgba(255,255,255,0.7) !important;
-        }
 
         /* Notification Bell Styles */
         .notification-bell {
@@ -514,27 +474,15 @@
         <ul class="nav-links">
             <li><a href="/">🏠 Home</a></li>
             
-            <!-- Learning Dropdown -->
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">📚 Learning</a>
-                <ul class="dropdown-menu">
-                    <li><a href="/online-class">🎥 Live Classes</a></li>
-                    <li><a href="/batch">📋 Batches</a></li>
-                    <li><a href="/study-resources">📖 Study Resources</a></li>
-                    <li><a href="/forum">💬 Forum</a></li>
-                </ul>
-            </li>
-            
-            <!-- Services Dropdown -->
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">🛠️ Services</a>
-                <ul class="dropdown-menu">
-                    <li><a href="/admission">📝 Admission</a></li>
-                    <li><a href="/check-admission-status">🔍 Check Status</a></li>
-                    <li><a href="/query-management">❓ Query Management</a></li>
-                    <li><a href="/send-notification">📢 Send Notification</a></li>
-                </ul>
-            </li>
+            <!-- Direct Page Links -->
+            <li><a href="/online-class">🎥 Live Classes</a></li>
+            <li><a href="/batch">📋 Batches</a></li>
+            <li><a href="/study-resources">📖 Study Resources</a></li>
+            <li><a href="/forum">💬 Forum</a></li>
+            <li><a href="/admission">📝 Admission</a></li>
+            <li><a href="/check-admission-status">🔍 Check Status</a></li>
+            <li><a href="/query-management">❓ Query Management</a></li>
+            <li><a href="/send-notification">📢 Send Notification</a></li>
             
             <!-- Admin Dropdown (for admin users) -->
             {% if username and role == 'admin' %}
@@ -783,8 +731,54 @@
                 <div style="margin-top:0.4rem; opacity:0.9;">Celebrating our toppers and scholarship achievers</div>
             </div>
 
+            <!-- 2023-24 Top Performers Slider -->
+            <div class="fame-slider-container black-glass" style="max-width:1100px; border-radius:18px; padding:1rem; margin-bottom:2rem;">
+                <h3 style="text-align:center; margin-bottom:1rem; font-size:1.4rem; font-weight:700;">2023-24 Academic Year</h3>
+                <button class="fame-arrow" aria-label="Previous" onclick="scrollFame('fame2023', -1)">‹</button>
+                <div id="fame2023" class="fame-slider">
+                    <div class="fame-card black-glass">
+                        <div class="fame-image-wrapper">
+                            <img class="fame-photo" src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=800&q=80" alt="Topper 2023-1">
+                            <div class="fame-overlay">
+                                <div class="fame-name">Riya Patel</div>
+                                <div class="fame-meta"><span>Class 12</span><span>99%</span><span>2023-24</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fame-card black-glass">
+                        <div class="fame-image-wrapper">
+                            <img class="fame-photo" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" alt="Topper 2023-2">
+                            <div class="fame-overlay">
+                                <div class="fame-name">Vikram Singh</div>
+                                <div class="fame-meta"><span>Class 10</span><span>96%</span><span>2023-24</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fame-card black-glass">
+                        <div class="fame-image-wrapper">
+                            <img class="fame-photo" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=800&q=80" alt="Topper 2023-3">
+                            <div class="fame-overlay">
+                                <div class="fame-name">Ananya Desai</div>
+                                <div class="fame-meta"><span>Class 11</span><span>Gold Medal</span><span>Science Olympiad</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fame-card black-glass">
+                        <div class="fame-image-wrapper">
+                            <img class="fame-photo" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&q=80" alt="Topper 2023-4">
+                            <div class="fame-overlay">
+                                <div class="fame-name">Arjun Kumar</div>
+                                <div class="fame-meta"><span>Class 9</span><span>Top 2%</span><span>Mock JEE</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="fame-arrow" aria-label="Next" onclick="scrollFame('fame2023', 1)">›</button>
+            </div>
+
             <!-- 2024-25 Top Performers Slider -->
             <div class="fame-slider-container black-glass" style="max-width:1100px; border-radius:18px; padding:1rem;">
+                <h3 style="text-align:center; margin-bottom:1rem; font-size:1.4rem; font-weight:700;">2024-25 Academic Year</h3>
                 <button class="fame-arrow" aria-label="Previous" onclick="scrollFame('fame2024', -1)">‹</button>
                 <div id="fame2024" class="fame-slider">
                     <div class="fame-card black-glass">
@@ -836,9 +830,34 @@
                 <button class="fame-arrow" aria-label="Next" onclick="scrollFame('fame2024', 1)">›</button>
             </div>
 
-            <!-- Scholarship Winners Grid -->
+            <!-- 2023-24 Scholarship Winners Grid -->
             <div style="margin-top:2.5rem; text-align:center;">
-                <h3 style="margin-bottom:1rem; font-size:1.6rem; font-weight:800;">Scholarship Winners</h3>
+                <h3 style="margin-bottom:1rem; font-size:1.6rem; font-weight:800;">2023-24 Scholarship Winners</h3>
+                <div class="outstanding-performers black-glass" style="border-radius:18px; padding:1.5rem; max-width:1100px; margin:0 auto; margin-bottom:2rem;">
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:1.25rem;">
+                        <div class="achievement-card student-card black-glass" style="border-radius:16px; padding:1rem;">
+                            <div style="font-weight:800;">Rahul Sharma</div>
+                            <div style="opacity:0.9; margin-top:0.25rem;">Class 9 • 95% Scholarship</div>
+                        </div>
+                        <div class="achievement-card student-card black-glass" style="border-radius:16px; padding:1rem;">
+                            <div style="font-weight:800;">Priya Verma</div>
+                            <div style="opacity:0.9; margin-top:0.25rem;">Class 10 • 100% Scholarship</div>
+                        </div>
+                        <div class="achievement-card student-card black-glass" style="border-radius:16px; padding:1rem;">
+                            <div style="font-weight:800;">Amit Kumar</div>
+                            <div style="opacity:0.9; margin-top:0.25rem;">Class 11 • 85% Scholarship</div>
+                        </div>
+                        <div class="achievement-card student-card black-glass" style="border-radius:16px; padding:1rem;">
+                            <div style="font-weight:800;">Neha Singh</div>
+                            <div style="opacity:0.9; margin-top:0.25rem;">Class 12 • 90% Scholarship</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2024-25 Scholarship Winners Grid -->
+            <div style="margin-top:2.5rem; text-align:center;">
+                <h3 style="margin-bottom:1rem; font-size:1.6rem; font-weight:800;">2024-25 Scholarship Winners</h3>
                 <div class="outstanding-performers black-glass" style="border-radius:18px; padding:1.5rem; max-width:1100px; margin:0 auto;">
                     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:1.25rem;">
                         <div class="achievement-card student-card black-glass" style="border-radius:16px; padding:1rem;">
@@ -863,75 +882,9 @@
         </div>
     </section>
 
-    <!-- To-Do List Section -->
-    <section class="todo-section" style="padding: 3rem 0;">
-        <div class="container">
-            <div class="black-glass" style="text-align:center; margin-bottom:2rem; padding:1.5rem; border-radius:18px;">
-                <h2 style="font-size:2.2rem; font-weight:800;">📋 Development To-Do List</h2>
-                <div style="margin-top:0.4rem; opacity:0.9;">Current tasks and features being implemented</div>
-            </div>
 
-            <div class="todo-container black-glass" style="max-width:900px; margin:0 auto; border-radius:18px; padding:2rem;">
-                <div class="todo-list">
-                    <div class="todo-item" style="display:flex; align-items:center; gap:1rem; padding:1rem; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:1rem;">
-                        <div class="todo-status" style="width:20px; height:20px; border-radius:50%; background:#ff6b6b; border:2px solid rgba(255,255,255,0.3);"></div>
-                        <div class="todo-text" style="flex:1;">
-                            <strong>Remove "Service and Learning" from navbar</strong>
-                            <div style="opacity:0.8; font-size:0.9rem; margin-top:0.3rem;">Add page names directly in navbar like Forum, Live Class, and Study Resource</div>
-                        </div>
-                    </div>
 
-                    <div class="todo-item" style="display:flex; align-items:center; gap:1rem; padding:1rem; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:1rem;">
-                        <div class="todo-status" style="width:20px; height:20px; border-radius:50%; background:#ff6b6b; border:2px solid rgba(255,255,255,0.3);"></div>
-                        <div class="todo-text" style="flex:1;">
-                            <strong>Add notification bell to all pages</strong>
-                            <div style="opacity:0.8; font-size:0.9rem; margin-top:0.3rem;">Restore notification functionality across the website</div>
-                        </div>
-                    </div>
 
-                    <div class="todo-item" style="display:flex; align-items:center; gap:1rem; padding:1rem; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:1rem;">
-                        <div class="todo-status" style="width:20px; height:20px; border-radius:50%; background:#ff6b6b; border:2px solid rgba(255,255,255,0.3);"></div>
-                        <div class="todo-text" style="flex:1;">
-                            <strong>Restore Wall of Fame and Scholar sections</strong>
-                            <div style="opacity:0.8; font-size:0.9rem; margin-top:0.3rem;">Bring back 2023-24 and 2024-25 sections with glassy black theme</div>
-                        </div>
-                    </div>
-
-                    <div class="todo-item" style="display:flex; align-items:center; gap:1rem; padding:1rem; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:1rem;">
-                        <div class="todo-status" style="width:20px; height:20px; border-radius:50%; background:#ff6b6b; border:2px solid rgba(255,255,255,0.3);"></div>
-                        <div class="todo-text" style="flex:1;">
-                            <strong>Fix Study Resource root internal server error</strong>
-                            <div style="opacity:0.8; font-size:0.9rem; margin-top:0.3rem;">Resolve the 500 error in study resources module</div>
-                        </div>
-                    </div>
-
-                    <div class="todo-item" style="display:flex; align-items:center; gap:1rem; padding:1rem; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:1rem;">
-                        <div class="todo-status" style="width:20px; height:20px; border-radius:50%; background:#ff6b6b; border:2px solid rgba(255,255,255,0.3);"></div>
-                        <div class="todo-text" style="flex:1;">
-                            <strong>Apply glassy black transparent theme to Admission section</strong>
-                            <div style="opacity:0.8; font-size:0.9rem; margin-top:0.3rem;">Update all admission pages with the new glassy black design</div>
-                        </div>
-                    </div>
-
-                    <div class="todo-item" style="display:flex; align-items:center; gap:1rem; padding:1rem; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:1rem;">
-                        <div class="todo-status" style="width:20px; height:20px; border-radius:50%; background:#ff6b6b; border:2px solid rgba(255,255,255,0.3);"></div>
-                        <div class="todo-text" style="flex:1;">
-                            <strong>Fix Google login authentication issues</strong>
-                            <div style="opacity:0.8; font-size:0.9rem; margin-top:0.3rem;">Resolve Google OAuth login problems</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="text-align:center; margin-top:2rem; padding-top:1.5rem; border-top:1px solid rgba(255,255,255,0.1);">
-                    <div style="opacity:0.8; font-size:0.9rem;">
-                        <span style="color:#ff6b6b;">●</span> Pending | 
-                        <span style="color:#51cf66;">●</span> In Progress | 
-                        <span style="color:#339af0;">●</span> Completed
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Who Made This Section -->
     <section class="card-section" style="text-align:center; margin:2rem 0 2.5rem 0;">
