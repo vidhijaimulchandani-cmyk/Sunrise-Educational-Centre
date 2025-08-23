@@ -3,57 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Page Not Found</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Home | Sunrise Education</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
-    <div class="container">
-        <!-- Search Bar -->
-        <div class="search-section">
-            <input type="text" placeholder="Search our site..." class="search-input">
-            <button class="search-btn">Search</button>
+    <nav class="navbar glassmorphic">
+      <div class="container nav-content">
+        <div class="nav-logo">
+          <img src="attached_assets/image_1750584670920.png" alt="Logo">
         </div>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/online-class">Live Class</a></li>
+          <li><a href="/batch">Batch</a></li>
+          <li><a href="/study-resources">Resources</a></li>
+          <li><a href="#important">Imp.Link</a></li>
+        </ul>
+        <button class="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+      </div>
+    </nav>
 
-        <!-- Main 404 Content -->
-        <div class="error-content">
-            <h1 class="error-code">404</h1>
-            
-            <!-- Caveman Illustration -->
-            <div class="caveman-container">
-                <div class="hills">
-                    <div class="hill left-hill"></div>
-                    <div class="hill right-hill"></div>
-                </div>
-                <div class="caveman">
-                    <div class="head">
-                        <div class="eyes">
-                            <div class="eye left-eye"></div>
-                            <div class="eye right-eye"></div>
-                        </div>
-                        <div class="mouth"></div>
-                        <div class="beard"></div>
-                    </div>
-                    <div class="body">
-                        <div class="loincloth"></div>
-                    </div>
-                    <div class="arms">
-                        <div class="arm left-arm">
-                            <div class="broken-rope"></div>
-                        </div>
-                        <div class="arm right-arm"></div>
-                    </div>
-                </div>
-            </div>
+    <!-- Hero Section -->
+    <header class="hero-section">
+      <div class="container hero-content">
+        <h1 id="typing-hero">Expert Coaching for Class 9 to 12</h1>
+        <p>Join Sunrise Education for comprehensive study resources and live classes.</p>
+        <a href="/auth" class="btn btn-cta">Get Started</a>
+      </div>
+    </header>
 
-            <!-- Error Message -->
-            <div class="error-message">
-                <h2>Looks like you're lost</h2>
-                <p>The page you are looking for is not available!</p>
-            </div>
+    <!-- Important Links -->
+    <section id="important" class="container" style="padding:2rem 0;">
+      <h2 style="text-align:center; color:#0066ff; margin-bottom:1rem;">Important Links</h2>
+      <div style="display:flex; flex-wrap:wrap; gap:1rem; justify-content:center;">
+        <a href="/study-resources" class="btn btn-primary">Study Resources</a>
+        <a href="/online-class" class="btn btn-primary">Join Live Class</a>
+        <a href="/batch" class="btn btn-primary">View Batches</a>
+      </div>
+    </section>
 
-            <!-- Action Button -->
-            <a href="#" class="link_404">Go Home</a>
-        </div>
-    </div>
+    <!-- Footer -->
+    <footer style="text-align:center; padding:1rem 0; background:#f8f9ff; color:#666;">
+      © {{ current_year if current_year else '2025' }} Sunrise Education. All rights reserved.
+    </footer>
 </body>
 </html>

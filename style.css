@@ -563,10 +563,11 @@ body.dark-mode .wall-of-fame-section div[style*="color: #666"] {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255,255,255,0.7);
-  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.15); /* more transparent */
+  backdrop-filter: blur(8px);
   box-shadow: 0 2px 16px rgba(0,0,0,0.07);
   padding: 0.5rem 0;
+  color: #0066ff; /* blue text */
 }
 .glassmorphic {
   background: rgba(255,255,255,0.6);
@@ -597,7 +598,7 @@ body.dark-mode .wall-of-fame-section div[style*="color: #666"] {
   padding: 0;
 }
 .nav-links a {
-  color: #222;
+  color: #0066ff;
   text-decoration: none;
   font-weight: 500;
   padding: 0.4rem 1rem;
