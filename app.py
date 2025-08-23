@@ -744,7 +744,6 @@ def ensure_admissions_submit_ip_column():
         conn.close()
     except Exception as e:
         print(f"Error ensuring admissions.submit_ip column: {e}")
-
 def init_admissions_tables():
     try:
         conn = sqlite3.connect(DATABASE)
@@ -1540,7 +1539,6 @@ def auth():
                     return render_template('auth.html', error=error)
         error = 'Wrong credentials. Contact the institute.'
     return render_template('auth.html', error=error)
-
 # Placeholder Google OAuth start (UI only)
 @app.route('/auth/google')
 def auth_google_start():
@@ -1746,12 +1744,15 @@ def google_complete():
 
     classes = get_all_classes()
     return render_template('google_complete.html', email=email, suggested_name=suggested_name, all_classes=classes)
+
 # Route for registration
 @app.route('/register', methods=['POST'])
 def register():
     username = request.form.get('username')
     password = request.form.get('password')
     class_id = request.form.get('class_id')
+    email = request.form.get('email')
+    phone = request.form.get('phone')
     
     all_classes_dict = {str(c[0]): c[1] for c in get_all_classes()}
     role = all_classes_dict.get(class_id)
@@ -1760,8 +1761,12 @@ def register():
     if role == 'admin':
         if admin_code != 'sec@011':
             return render_template('auth.html', error='Invalid admin code. Registration denied.')
+    
+    # Check if email or phone already exists
+    if check_email_or_phone_exists(email_address=email, mobile_no=phone):
+        return render_template('auth.html', error='Email or phone number already registered. Please use different credentials.')
             
-    if register_user(username, password, class_id):
+    if register_user(username, password, class_id, mobile_no=phone, email_address=email):
         # Send welcome message to new user
         try:
             # Get the newly registered user's ID
@@ -2340,7 +2345,6 @@ def admin_download_forum():
         cw.writerow(m)
     output = si.getvalue()
     return app.response_class(output, mimetype='text/csv', headers={'Content-Disposition': 'attachment;filename=forum.csv'})
-
 @app.route('/admin/download/resources')
 def admin_download_resources():
     if session.get('role') not in ['admin', 'teacher']:
@@ -3038,7 +3042,6 @@ def view_admissions():
                          current_tab=tab,
                          approved_admissions=approved_admissions,
                          disapproved_admissions=disapproved_admissions)
-
 @app.route('/admin/admissions/approve/<int:admission_id>', methods=['POST'])
 @admin_required
 def approve_admission(admission_id):
@@ -3817,7 +3820,6 @@ def admission():
         print('Error inserting admission:', e)
         flash(f'Error saving admission: {e}', 'error')
         return redirect(url_for('admission'))
-
 # Public admission check page (no login)
 @app.route('/check-admission', methods=['GET', 'POST'])
 def check_admission():
@@ -4580,7 +4582,6 @@ def edit_resource():
     except Exception as e:
         flash(f'Error updating resource: {str(e)}', 'error')
         return redirect(url_for('upload_resource'))
-
 # --- SOCKET.IO EVENTS FOR CHAT, POLLS AND DOUBTS ---
 
 @socketio.on('chat_message')
@@ -5352,7 +5353,6 @@ def preview_pdf(filename):
     
     # Render preview shell (actual PDF served by /pdf-content)
     return render_template('pdf_preview.html', filename=filename, title=filename.replace('.pdf', '').replace('_', ' ').title())
-
 # Route for serving PDF content (with security headers)
 @app.route('/pdf-content/<filename>')
 def pdf_content(filename):
@@ -6138,7 +6138,6 @@ def start_recording_session(class_id, recording_name, created_by):
     except Exception as e:
         print(f"Error starting recording: {e}")
         return None, None
-
 def stop_recording_session(class_id):
     """Stop an active recording session"""
     try:
@@ -6935,8 +6934,6 @@ def resolve_uploaded_file_path(filename: str) -> str | None:
         return None
     except Exception:
         return None
-
-
 def user_has_access_to_resource(filename: str, role: str) -> bool:
     """Fast check via SQL whether the current user role (class name) has access to the filename.
     Avoids loading all resources into Python.

@@ -30,7 +30,10 @@
           <h2 id="formTitle">Login</h2>
         </div>
         <form id="loginForm" method="POST" action="/auth" class="login-form">
-          <input type="text" name="username" placeholder="Username" required autocomplete="username" />
+          <div style="text-align: left; margin-bottom: 0.5rem;">
+            <label for="login-username" style="font-size: 0.9rem; color: #6b7280; font-weight: 500;">Login with:</label>
+          </div>
+          <input type="text" name="username" id="login-username" placeholder="Username, Email, or Phone Number" required autocomplete="username" />
           <input type="password" name="password" placeholder="Password" required autocomplete="current-password" />
           <select name="class_id" id="loginRole" required style="border-radius:20px; padding:0.7rem 1.1rem;">
             {% for id, name in all_classes %}
@@ -39,6 +42,9 @@
           </select>
           <input type="text" name="admin_code" id="loginAdminCodeInput" placeholder="Admin Code" style="display:none;" />
           <button type="submit" class="btn btn-primary">Login</button>
+          <div style="font-size: 0.85rem; color: #6b7280; margin-top: 0.5rem; text-align: center;">
+            💡 You can login using your email address or phone number instead of username
+          </div>
           <div style="display:flex; align-items:center; gap:0.6rem; margin:0.8rem 0; color:#9ca3af;">
             <span style="height:1px; background:#e5e7eb; flex:1;"></span>
             <span>or</span>
@@ -47,8 +53,22 @@
           <div id="googleButtonLogin" style="margin-top:0.6rem;"></div>
         </form>
         <form id="signupForm" method="POST" action="/register" class="login-form" style="display:none;">
-          <input type="text" id="signup-username" name="username" placeholder="Username" required autocomplete="username" />
-          <input type="password" id="signup-password" name="password" placeholder="Password" required autocomplete="new-password" />
+          <div style="text-align: left; margin-bottom: 0.5rem;">
+            <label for="signup-username" style="font-size: 0.9rem; color: #6b7280; font-weight: 500;">Username:</label>
+          </div>
+          <input type="text" id="signup-username" name="username" placeholder="Choose a unique username" required autocomplete="username" />
+          <div style="text-align: left; margin-bottom: 0.5rem;">
+            <label for="signup-password" style="font-size: 0.9rem; color: #6b7280; font-weight: 500;">Password:</label>
+          </div>
+          <input type="password" id="signup-password" name="password" placeholder="Create a strong password" required autocomplete="new-password" />
+          <div style="text-align: left; margin-bottom: 0.5rem;">
+            <label for="signup-email" style="font-size: 0.9rem; color: #6b7280; font-weight: 500;">Email Address:</label>
+          </div>
+          <input type="email" id="signup-email" name="email" placeholder="Enter your email address" required autocomplete="email" />
+          <div style="text-align: left; margin-bottom: 0.5rem;">
+            <label for="signup-phone" style="font-size: 0.9rem; color: #6b7280; font-weight: 500;">Phone Number:</label>
+          </div>
+          <input type="tel" id="signup-phone" name="phone" placeholder="Enter your phone number" required autocomplete="tel" />
           <select name="class_id" id="signupRole" required style="border-radius:20px; padding:0.7rem 1.1rem;">
             {% for id, name in all_classes %}
               <option value="{{ id }}">{{ name|title }}</option>
@@ -64,7 +84,10 @@
         {% if error %}
         <div class="login-error">{{ error }}</div>
         {% else %}
-        <div class="login-hint" style="margin-top:0.75rem; font-size:0.95rem; color:#6b7280;">Tip: If you face login issues, contact the institute.</div>
+        <div class="login-hint" style="margin-top:0.75rem; font-size:0.95rem; color:#6b7280;">
+          💡 <strong>Login Options:</strong> You can use your username, email address, or phone number to login.<br>
+          📧 <strong>Need help?</strong> Contact the institute if you face any login issues.
+        </div>
         {% endif %}
       </div>
     </div>
@@ -138,6 +161,29 @@
       } else {
         signupAdminCodeInput.style.display = 'none';
         signupAdminCodeInput.required = false;
+      }
+    });
+    
+    // Add form validation for signup
+    const signupForm = document.getElementById('signupForm');
+    signupForm.addEventListener('submit', function(e) {
+      const email = document.getElementById('signup-email').value;
+      const phone = document.getElementById('signup-phone').value;
+      
+      // Basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        e.preventDefault();
+        alert('Please enter a valid email address.');
+        return false;
+      }
+      
+      // Basic phone validation (allows digits, spaces, dashes, parentheses, plus)
+      const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+      if (!phoneRegex.test(phone) || phone.replace(/[\d]/g, '').length < 7) {
+        e.preventDefault();
+        alert('Please enter a valid phone number.');
+        return false;
       }
     });
     // Show/hide admin code input on login role change
