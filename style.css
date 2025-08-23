@@ -1007,7 +1007,7 @@ body.dark-mode .hamburger .bar {
 }
 
 .login-bg {
-  background: linear-gradient(120deg, #6a82fb55 0%, #fc5c7d55 100%),
+  background: radial-gradient(1200px 600px at -10% -20%, #6a82fb22 0%, transparent 60%), linear-gradient(120deg, #6a82fb33 0%, #fc5c7d33 100%);
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -1021,16 +1021,19 @@ body.dark-mode .hamburger .bar {
   justify-content: center;
 }
 .login-card {
-  background: #fff;
+  background: rgba(255,255,255,0.9);
   border-radius: 18px;
-  box-shadow: 0 4px 32px rgba(100,100,255,0.13);
-  padding: 2.5rem 2rem 2rem 2rem;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(106,130,251,0.15);
+  box-shadow: 0 8px 32px rgba(35,41,70,0.12);
+  padding: 2.25rem 2rem 2rem 2rem;
   min-width: 320px;
   max-width: 350px;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .login-logo {
   display: flex;
@@ -1056,10 +1059,13 @@ body.dark-mode .hamburger .bar {
   font-size: 1rem;
   outline: none;
   background: #f8fafc;
-  transition: border 0.2s;
+  transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+  box-shadow: inset 0 1px 0 rgba(0,0,0,0.02);
 }
 .login-form input:focus {
   border: 1.5px solid #6a82fb;
+  box-shadow: 0 0 0 3px rgba(106,130,251,0.15);
+  background: #fff;
 }
 .login-form button {
   margin-top: 0.5rem;
