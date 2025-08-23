@@ -20,6 +20,22 @@
             overflow: hidden;
         }
 
+        /* Add a subtle, oversized logo watermark on the hero background */
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;               /* make the watermark cover most of the width */
+            max-width: 600px;         /* but keep it within reasonable bounds on desktops */
+            aspect-ratio: 1 / 1;      /* ensure the logo keeps its square proportions */
+            background: url('attached_assets/image_1750584670920.png') center/contain no-repeat;
+            opacity: 0.05;            /* VERY faint so text remains legible */
+            pointer-events: none;     /* ignore clicks */
+            filter: grayscale(100%);  /* optional: keep a muted tone */
+        }
+
         .hero-section::before {
             content: '';
             position: absolute;
