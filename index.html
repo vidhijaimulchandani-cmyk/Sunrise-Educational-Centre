@@ -29,6 +29,25 @@
             bottom: 0;
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>') repeat;
             animation: float 20s infinite linear;
+            z-index: 0;
+        }
+
+        /* Coaching logo watermark over gradient */
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('attached_assets/image_1750584670920.png');
+            background-repeat: no-repeat;
+            background-position: center 15%;
+            background-size: clamp(140px, 24vw, 320px);
+            opacity: 0.08;
+            filter: grayscale(100%) contrast(110%) brightness(150%);
+            z-index: 1;
+            pointer-events: none;
         }
 
         @keyframes float {
