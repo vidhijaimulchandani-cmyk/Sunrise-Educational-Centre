@@ -146,7 +146,8 @@ def is_countdown_active() -> bool:
     settings = get_countdown_settings()
     if not settings:
         return False
-    return settings['is_active']
+    # Temporarily disable countdown to show home page
+    return False  # settings['is_active']
 
 def get_launch_date() -> Optional[str]:
     """Get the launch date"""

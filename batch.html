@@ -8,6 +8,7 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="floating-navbar.css" />
     <style>
       .batch-grid {
         display: grid;
@@ -87,32 +88,31 @@
     </style>
   </head>
   <body>
-    <nav class="navbar glassmorphic">
-      <div class="container nav-content">
-        <div class="nav-logo">
-          <img src="attached_assets/image_1750584670920.png" alt="Logo">
-        </div>
+    <!-- Floating Navbar -->
+    <nav class="floating-navbar">
         <ul class="nav-links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/online-class">Live Class</a></li>
-          <li><a href="/study-resources">Study Resources</a></li>
-          <li><a href="/forum">Forum</a></li>
-          <li><a href="/batch">Batch</a></li>
-          {% if username %}
-          <li style="position:relative;">
-            <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative;">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a 1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
-              {% if user_notifications and user_notifications|length > 0 %}
-              <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
-              {% endif %}
-            </button>
-          </li>
-          <li><a href="/logout" class="btn btn-primary">Logout</a></li>
-          {% else %}
-          <li><a href="/auth" class="btn btn-primary">Login</a></li>
-          {% endif %}
+            <li><a href="/">Home</a></li>
+            <li><a href="/online-class">Live Classes</a></li>
+            <li><a href="/batch">Batches</a></li>
+            <li><a href="/study-resources">Resources</a></li>
+            <li><a href="/forum">Forum</a></li>
+            <li><a href="/admission">Admission</a></li>
+            <li><button class="search-btn" onclick="openSearch()">🔍 Search</button></li>
+            {% if username %}
+            <li style="position:relative;">
+                <button id="notifBell" class="notification-bell">
+                    🔔
+                    {% if user_notifications and user_notifications|length > 0 %}
+                    <span class="notification-badge"></span>
+                    {% endif %}
+                </button>
+            </li>
+            <li><a href="/profile" class="btn-primary">Profile</a></li>
+            <li><a href="/logout" class="btn-primary">Logout</a></li>
+            {% else %}
+            <li><a href="/auth" class="btn-primary">Login</a></li>
+            {% endif %}
         </ul>
-      </div>
     </nav>
 
     <main class="container main-content">
@@ -230,6 +230,33 @@
     </main>
 
     <script>
+      // Search functionality
+      function openSearch() {
+          const searchTerm = prompt("Enter your search term:");
+          if (searchTerm) {
+              // Search through batch cards
+              const batchCards = document.querySelectorAll('.batch-card');
+              let found = false;
+              
+              batchCards.forEach(card => {
+                  const title = card.querySelector('h3').textContent.toLowerCase();
+                  const searchLower = searchTerm.toLowerCase();
+                  
+                  if (title.includes(searchLower)) {
+                      card.style.display = 'block';
+                      card.style.border = '2px solid #0066cc';
+                      found = true;
+                  } else {
+                      card.style.display = 'none';
+                  }
+              });
+              
+              if (!found) {
+                  alert('No batches found matching your search term.');
+              }
+          }
+      }
+
       // Toggle between paid and free sections for logged-in users
       document.addEventListener('DOMContentLoaded', function() {
         const filterButtons = document.querySelectorAll('.tab-btn[data-filter]');
