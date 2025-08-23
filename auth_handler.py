@@ -417,16 +417,49 @@ def register_user(username, password, class_id, mobile_no=None, email_address=No
 def authenticate_user(username, password):
     conn = sqlite3.connect(DATABASE)
     c = conn.cursor()
+    
+    # Try to authenticate with username, email, or phone number
     c.execute('''
         SELECT u.id, c.name FROM users u
         JOIN classes c ON u.class_id = c.id
-        WHERE u.username=? AND u.password=?
-    ''', (username, password))
+        WHERE (u.username=? OR u.email_address=? OR u.mobile_no=?) AND u.password=?
+    ''', (username, username, username, password))
     result = c.fetchone()
     conn.close()
     if result:
         return result  # (user_id, class_name)
     return None
+
+def get_user_by_mobile(mobile_no):
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+    c.execute('''
+        SELECT u.id, u.username, u.class_id, u.paid, c.name, u.banned, u.mobile_no, u.email_address FROM users u
+        LEFT JOIN classes c ON u.class_id = c.id
+        WHERE u.mobile_no=?
+    ''', (mobile_no,))
+    user = c.fetchone()
+    conn.close()
+    return user
+
+def check_email_or_phone_exists(email_address=None, mobile_no=None):
+    """Check if email or phone number already exists in the database"""
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+    
+    if email_address and mobile_no:
+        c.execute('SELECT COUNT(*) FROM users WHERE email_address=? OR mobile_no=?', (email_address, mobile_no))
+    elif email_address:
+        c.execute('SELECT COUNT(*) FROM users WHERE email_address=?', (email_address,))
+    elif mobile_no:
+        c.execute('SELECT COUNT(*) FROM users WHERE mobile_no=?', (mobile_no,))
+    else:
+        conn.close()
+        return False
+    
+    count = c.fetchone()[0]
+    conn.close()
+    return count > 0
 
 def get_all_users():
     conn = sqlite3.connect(DATABASE)
