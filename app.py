@@ -1143,40 +1143,74 @@ def home():
 # Route for study resources
 @app.route('/study-resources')
 def study_resources():
-    role = session.get('role')
+    try:
+        role = session.get('role')
 
-    # Redirect if not logged in
-    if not role:
-        flash('You must be logged in to view resources.', 'error')
+        # Redirect if not logged in
+        if not role:
+            flash('You must be logged in to view resources.', 'error')
+            return redirect(url_for('auth'))
+        
+        # Redirect admin/teacher to their own panel, as this page is for students
+        if role in ['admin', 'teacher']:
+            flash('Please use the admin panel to manage all resources.', 'info')
+            return redirect(url_for('admin_panel'))
+
+        # Get class_id from the role name stored in the session
+        try:
+            all_classes = get_all_classes()
+            if not all_classes:
+                flash('No classes available. Please contact administrator.', 'error')
+                return redirect(url_for('auth'))
+                
+            all_classes_dict_rev = {c[1]: c[0] for c in all_classes}
+            class_id = all_classes_dict_rev.get(role)
+            
+            if not class_id:
+                flash(f'Class "{role}" not found. Please contact administrator.', 'error')
+                return redirect(url_for('auth'))
+        except Exception as e:
+            print(f"Error getting classes: {e}")
+            flash('Error loading class information. Please try again.', 'error')
+            return redirect(url_for('auth'))
+        
+        # Fetch resources only for the user's class
+        resources = []
+        try:
+            if class_id:
+                resources = get_resources_for_class_id(class_id)
+        except Exception as e:
+            print(f"Error fetching resources: {e}")
+            resources = []
+            flash('Some resources could not be loaded.', 'warning')
+
+        # Fetch all categories for this class
+        categories = []
+        try:
+            if class_id:
+                categories = get_categories_for_class(class_id)
+        except Exception as e:
+            print(f"Error fetching categories: {e}")
+            categories = []
+            flash('Some categories could not be loaded.', 'warning')
+
+        user_id = session.get('user_id')
+        paid_status = None
+        try:
+            if user_id:
+                user = get_user_by_id(user_id)
+                if user and len(user) > 3:
+                    paid_status = user[3]  # Assuming user[3] is the paid status
+        except Exception as e:
+            print(f"Error getting user paid status: {e}")
+            paid_status = None
+
+        return render_template('study-resources.html', resources=resources, categories=categories, class_name=role, class_id=class_id, paid_status=paid_status)
+        
+    except Exception as e:
+        print(f"Unexpected error in study_resources route: {e}")
+        flash('An unexpected error occurred. Please try again.', 'error')
         return redirect(url_for('auth'))
-    
-    # Redirect admin/teacher to their own panel, as this page is for students
-    if role in ['admin', 'teacher']:
-        flash('Please use the admin panel to manage all resources.', 'info')
-        return redirect(url_for('admin_panel'))
-
-    # Get class_id from the role name stored in the session
-    all_classes_dict_rev = {c[1]: c[0] for c in get_all_classes()}
-    class_id = all_classes_dict_rev.get(role)
-    
-    # Fetch resources only for the user's class
-    resources = []
-    if class_id:
-        resources = get_resources_for_class_id(class_id)
-
-    # Fetch all categories for this class
-    categories = []
-    if class_id:
-        categories = get_categories_for_class(class_id)
-
-    user_id = session.get('user_id')
-    paid_status = None
-    if user_id:
-        user = get_user_by_id(user_id)
-        if user:
-            paid_status = user[3]  # Assuming user[3] is the paid status
-
-    return render_template('study-resources.html', resources=resources, categories=categories, class_name=role, class_id=class_id, paid_status=paid_status)
 
 # Route for batch page
 @app.route('/batch')

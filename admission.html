@@ -45,7 +45,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 0;
@@ -58,9 +58,13 @@
         }
         
         .admission-card {
-            background: #fff;
+            background: rgba(5, 6, 10, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(18px) saturate(110%);
+            -webkit-backdrop-filter: blur(18px) saturate(110%);
+            color: #fff;
             border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(106,130,251,0.15);
             padding: 3rem;
             margin-bottom: 2rem;
         }
@@ -71,14 +75,14 @@
         }
         
         .admission-header h1 {
-            color: #232946;
+            color: #fff;
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
         }
         
         .admission-header p {
-            color: #64748b;
+            color: rgba(255, 255, 255, 0.8);
             font-size: 1.1rem;
             line-height: 1.6;
         }
@@ -93,7 +97,7 @@
             font-weight: 600;
             margin-bottom: 1.5rem;
             padding-bottom: 0.5rem;
-            border-bottom: 2px solid #e0e7ff;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
         }
         
         .form-grid {
@@ -112,7 +116,7 @@
         
         .form-label {
             display: block;
-            color: #374151;
+            color: #fff;
             font-weight: 600;
             margin-bottom: 0.5rem;
             font-size: 0.95rem;
@@ -121,11 +125,11 @@
         .form-input {
             width: 100%;
             padding: 0.75rem 1rem;
-            border: 2px solid #e5e7eb;
+            border: 2px solid rgba(255, 255, 255, 0.24);
             border-radius: 12px;
             font-size: 1rem;
-            color: #232946;
-            background: #fff;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
             transition: all 0.3s ease;
             box-sizing: border-box;
         }
@@ -133,7 +137,12 @@
         .form-input:focus {
             outline: none;
             border-color: #6a82fb;
-            box-shadow: 0 0 0 3px rgba(106,130,251,0.1);
+            box-shadow: 0 0 0 3px rgba(106,130,251,0.3);
+            background: rgba(255, 255, 255, 0.12);
+        }
+        
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
         }
         
         /* Dark Mode Styles */
@@ -348,11 +357,11 @@
         .form-select {
             width: 100%;
             padding: 0.75rem 1rem;
-            border: 2px solid #e5e7eb;
+            border: 2px solid rgba(255, 255, 255, 0.24);
             border-radius: 12px;
             font-size: 1rem;
-            color: #232946;
-            background: #fff;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
             transition: all 0.3s ease;
             cursor: pointer;
         }
@@ -360,7 +369,8 @@
         .form-select:focus {
             outline: none;
             border-color: #6a82fb;
-            box-shadow: 0 0 0 3px rgba(106,130,251,0.1);
+            box-shadow: 0 0 0 3px rgba(106,130,251,0.3);
+            background: rgba(255, 255, 255, 0.12);
         }
         
         .file-upload {
@@ -380,19 +390,19 @@
         .file-upload-label {
             display: block;
             padding: 0.75rem 1rem;
-            border: 2px dashed #6a82fb;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
             border-radius: 12px;
             text-align: center;
-            color: #6a82fb;
+            color: rgba(255, 255, 255, 0.8);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: #f0f4ff;
+            background: rgba(255, 255, 255, 0.05);
         }
         
         .file-upload-label:hover {
-            background: #e0e7ff;
-            border-color: #5a6fd8;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
         }
         
         .submit-btn {
@@ -419,9 +429,9 @@
         }
         
         .back-btn {
-            background: #f3f4f6;
-            color: #374151;
-            border: 2px solid #d1d5db;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 2px solid rgba(255, 255, 255, 0.2);
             padding: 0.75rem 1.5rem;
             border-radius: 12px;
             font-size: 1rem;
@@ -434,21 +444,21 @@
         }
         
         .back-btn:hover {
-            background: #e5e7eb;
-            color: #1f2937;
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
         }
         
         .required {
-            color: #ef4444;
+            color: #fc5c7d;
         }
         
         .form-note {
-            background: #f0f4ff;
-            border: 1px solid #6a82fb;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
             padding: 1rem;
             margin-bottom: 2rem;
-            color: #374151;
+            color: rgba(255, 255, 255, 0.9);
             font-size: 0.95rem;
         }
         
