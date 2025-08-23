@@ -7,6 +7,7 @@
     <link rel="icon" type="image/png" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css" />
     <style>
       .batch-grid {
@@ -48,157 +49,120 @@
         font-size: 1.05rem;
         color: #232946;
       }
-      .batch-meta { 
-        display: grid; 
-        grid-template-columns: 1fr 1fr; 
-        gap: 0.35rem 0.6rem; 
-        font-size: 0.92rem; 
-        color: #6b7280;
-        margin-bottom: 0.7rem;
+      .batch-info p {
+        margin: 0 0 0.5rem 0;
+        color: #666;
+        font-size: 0.88rem;
       }
-      .batch-actions { 
-        display: flex; 
-        gap: 0.5rem; 
-        flex-wrap: wrap; 
+      .batch-cta-buttons {
+        display: flex;
+        gap: 0.6rem;
+        flex-wrap: wrap;
       }
-      body.dark-mode .batch-card { background:#232946; border-color:#3a3a4a; }
-      body.dark-mode .batch-info h3 { color: #e2e8f0; }
-      body.dark-mode .batch-meta { color: #b8c5d6; }
-      /* Tabs styling */
-      .tabs { display:flex; gap:0.5rem; flex-wrap:wrap; }
-      .tab-btn {
-        padding: 0.45rem 0.9rem;
-        border: 1px solid #e5e7eb;
-        border-radius: 9999px;
-        background: #fff;
+      .batch-cta-buttons .btn {
+        flex: 1;
+        min-width: 100px;
+        font-size: 0.85rem;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+      }
+      .batch-status-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 0.3rem 0.6rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .status-free {
+        background: #10b981;
+        color: white;
+      }
+      .status-paid {
+        background: #f59e0b;
+        color: white;
+      }
+      .section-title {
+        text-align: center;
+        margin: 2rem 0 1.5rem 0;
         color: #232946;
-        cursor: pointer;
-        transition: all 0.2s ease;
+        font-size: 1.8rem;
       }
-      .tab-btn:hover { background:#f3f6ff; border-color:#dbeafe; }
-      .tab-btn.active { background:#6a82fb; color:#fff; border-color:#6a82fb; }
-      body.dark-mode .tab-btn { background:#1f2440; border-color:#3a3a4a; color:#e2e8f0; }
-      body.dark-mode .tab-btn:hover { background:#252b4d; border-color:#4a4a5a; }
-      body.dark-mode .tab-btn.active { background:#6a82fb; color:#fff; border-color:#6a82fb; }
+      .section-divider {
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #6a82fb, transparent);
+        margin: 2rem 0;
+      }
 
-      /* Card polish */
-      .card.animated-card { border-radius:16px; box-shadow:0 4px 16px rgba(100,100,255,0.08); }
-      .batch-info h3 { font-weight:600; }
+      /* Adjust hero section to account for floating navbar */
+      .hero-section {
+        padding-top: 120px;
+      }
+
+      /* Dark mode support */
+      body.dark-mode .batch-card {
+        background: #232946;
+        border-color: #444;
+      }
+      body.dark-mode .batch-info h3 {
+        color: #f4f4f4;
+      }
+      body.dark-mode .batch-info p {
+        color: #ccc;
+      }
+      body.dark-mode .section-title {
+        color: #f4f4f4;
+      }
     </style>
   </head>
   <body>
-    <nav class="navbar glassmorphic">
-      <div class="container nav-content">
-        <div class="nav-logo">
-          <img src="attached_assets/image_1750584670920.png" alt="Logo">
-        </div>
-        <ul class="nav-links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/online-class">Live Class</a></li>
-          <li><a href="/study-resources">Study Resources</a></li>
-          <li><a href="/forum">Forum</a></li>
-          <li><a href="/batch">Batch</a></li>
-          {% if username %}
-          <li style="position:relative;">
-            <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative;">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a 1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
-              {% if user_notifications and user_notifications|length > 0 %}
-              <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
-              {% endif %}
-            </button>
-          </li>
-          <li><a href="/logout" class="btn btn-primary">Logout</a></li>
-          {% else %}
-          <li><a href="/auth" class="btn btn-primary">Login</a></li>
-          {% endif %}
-        </ul>
+    <!-- Include Floating Navbar -->
+    {% include 'floating_navbar.html' %}
+
+    <header class="hero-section">
+      <div class="container hero-content">
+        <h1>Choose Your Batch</h1>
+        <p>Select the perfect learning path that matches your needs and goals!</p>
       </div>
-    </nav>
+    </header>
 
     <main class="container main-content">
-      {% if is_logged_in %}
-      <section class="card animated-card" style="padding: 1.2rem 1rem;">
-        <div style="display:flex; gap:0.6rem; align-items:center; justify-content:space-between; flex-wrap:wrap;">
-          <h2 style="margin:0;">My Batches</h2>
-          <div style="display:flex; gap:0.4rem;">
-            <button class="tab-btn active" data-filter="paid">Paid</button>
-            <button class="tab-btn" data-filter="free">Free</button>
-          </div>
-        </div>
-        <div id="paid-section" class="batch-grid" style="margin-top:0.8rem;">
-          {% if paid_cards and paid_cards|length > 0 %}
-            {% for card in paid_cards %}
-            <div class="batch-card">
-              <div class="batch-image">
-                <img src="{{ card.image }}" alt="{{ card.batch_name }}" />
-              </div>
-              <div class="batch-info">
-                <h3>{{ card.batch_name }}</h3>
-                <div class="batch-meta">
-                  <div><strong>Class</strong>: {{ card.class_name }}</div>
-                  <div><strong>ID</strong>: {{ card.class_id }}</div>
-                  <div><strong>Start</strong>: {{ card.start_date }}</div>
-                  <div><strong>End</strong>: {{ card.end_date }}</div>
-                </div>
-                <div class="batch-actions">
-                  {% if user_paid_status == 'paid' %}
-                  <a class="btn btn-primary" href="/batch/{{ card.class_id }}">Explore</a>
-                  {% else %}
-                  <a class="btn btn-primary" href="/admission">Buy Now</a>
-                  {% endif %}
-                </div>
-              </div>
-            </div>
-            {% endfor %}
-          {% else %}
-            <div style="color:#6b7280;">No paid batches available.</div>
-          {% endif %}
-        </div>
-        <div id="free-section" class="batch-grid" style="display:none; margin-top:0.8rem;">
-          {% if free_cards and free_cards|length > 0 %}
-            {% for card in free_cards %}
-            <div class="batch-card">
-              <div class="batch-image">
-                <img src="{{ card.image }}" alt="{{ card.batch_name }}" />
-              </div>
-              <div class="batch-info">
-                <h3>{{ card.batch_name }}</h3>
-                <div class="batch-meta">
-                  <div><strong>Class</strong>: {{ card.class_name }}</div>
-                  <div><strong>ID</strong>: {{ card.class_id }}</div>
-                  <div><strong>Start</strong>: {{ card.start_date }}</div>
-                  <div><strong>End</strong>: {{ card.end_date }}</div>
-                </div>
-                <div class="batch-actions">
-                  <a class="btn btn-secondary" href="/batch/{{ card.class_id }}">Explore</a>
-                </div>
-              </div>
-            </div>
-            {% endfor %}
-          {% else %}
-            <div style="color:#6b7280;">No free batches available.</div>
-          {% endif %}
-        </div>
-      </section>
-      {% else %}
-      <section class="card animated-card" style="padding: 1.2rem 1rem;">
-        <h2 style="margin:0 0 0.8rem 0;">All Batches</h2>
-        <div style="display:flex; flex-direction:column; gap:0.8rem;">
-          {% for card in all_cards %}
-          <div class="batch-card" style="display:flex; gap:0.8rem;">
-            <div class="batch-image" style="flex:0 0 180px; height:120px;">
+      <!-- Paid Batches Section -->
+      {% if paid_cards %}
+      <section>
+        <h2 class="section-title">📚 Premium Batches</h2>
+        <div class="batch-grid">
+          {% for card in paid_cards %}
+          <div class="batch-card" style="position: relative;">
+            <div class="batch-status-badge status-paid">Premium</div>
+            <div class="batch-image">
               <img src="{{ card.image }}" alt="{{ card.batch_name }}" />
             </div>
-            <div class="batch-info" style="flex:1;">
-              <h3 style="margin-top:0;">{{ card.batch_name }}</h3>
-              <div class="batch-meta" style="grid-template-columns:repeat(4, auto); gap:0.8rem;">
-                <div><strong>Class</strong>: {{ card.class_name }}</div>
-                <div><strong>ID</strong>: {{ card.class_id }}</div>
-                <div><strong>Start</strong>: {{ card.start_date }}</div>
-                <div><strong>End</strong>: {{ card.end_date }}</div>
-              </div>
-              <div class="batch-actions">
-                <a class="btn btn-primary" href="/admission">Buy Now</a>
+            <div class="batch-info">
+              <h3>{{ card.batch_name }}</h3>
+              <p><strong>Class:</strong> {{ card.class_name }}</p>
+              <p><strong>Duration:</strong> {{ card.start_date }} to {{ card.end_date }}</p>
+              <div class="batch-cta-buttons">
+                {% if is_logged_in %}
+                  <a href="/batch/{{ card.class_id }}" class="btn btn-primary">
+                    <i class="fas fa-eye"></i> View Details
+                  </a>
+                  {% if user_paid_status == 'paid' %}
+                    <a href="/study-resources" class="btn btn-cta">
+                      <i class="fas fa-play"></i> Start Learning
+                    </a>
+                  {% else %}
+                    <button class="btn btn-secondary" onclick="alert('Please upgrade to premium to access this batch.')">
+                      <i class="fas fa-lock"></i> Upgrade Required
+                    </button>
+                  {% endif %}
+                {% else %}
+                  <a href="/auth" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Login to Access
+                  </a>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -206,54 +170,81 @@
         </div>
       </section>
       {% endif %}
-      {% if is_logged_in %}
-      <section class="card animated-card" style="padding: 1.2rem 1rem;">
-        <h1 style="margin: 0.2rem 0 0.8rem 0;">My Batch</h1>
-        <p style="margin: 0; color: #6b7280;">Welcome{% if username %}, {{ username }}{% endif %}. Your class: <strong>{{ role }}</strong> (ID: {{ class_id }})</p>
+
+      <!-- Section Divider -->
+      {% if paid_cards and free_cards %}
+      <div class="section-divider"></div>
+      {% endif %}
+
+      <!-- Free Batches Section -->
+      {% if free_cards %}
+      <section>
+        <h2 class="section-title">🎓 Free Batches</h2>
+        <div class="batch-grid">
+          {% for card in free_cards %}
+          <div class="batch-card" style="position: relative;">
+            <div class="batch-status-badge status-free">Free</div>
+            <div class="batch-image">
+              <img src="{{ card.image }}" alt="{{ card.batch_name }}" />
+            </div>
+            <div class="batch-info">
+              <h3>{{ card.batch_name }}</h3>
+              <p><strong>Class:</strong> {{ card.class_name }}</p>
+              <p><strong>Duration:</strong> {{ card.start_date }} to {{ card.end_date }}</p>
+              <div class="batch-cta-buttons">
+                {% if is_logged_in %}
+                  <a href="/batch/{{ card.class_id }}" class="btn btn-primary">
+                    <i class="fas fa-eye"></i> View Details
+                  </a>
+                  <a href="/study-resources" class="btn btn-cta">
+                    <i class="fas fa-play"></i> Start Learning
+                  </a>
+                {% else %}
+                  <a href="/auth" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Login to Access
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
       </section>
       {% endif %}
 
-      <section class="card animated-card" style="padding: 1.2rem 1rem;">
-        <h2 style="margin-top:0;">Batch Links</h2>
-        <ul style="list-style:none; padding:0; margin:0; display:flex; gap:0.6rem; flex-wrap:wrap;">
-          <li><a class="btn btn-primary" href="/online-class">Join Live Class</a></li>
-          <li><a class="btn btn-secondary" href="/study-resources">Study Resources</a></li>
-          <li><a class="btn btn-secondary" href="/forum">Forum</a></li>
-          <li><a class="btn btn-secondary" href="/profile">Profile</a></li>
-        </ul>
+      <!-- No Batches Available -->
+      {% if not paid_cards and not free_cards %}
+      <section style="text-align: center; padding: 3rem 0;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">📚</div>
+        <h2>No Batches Available</h2>
+        <p style="color: #666; margin-bottom: 2rem;">
+          We're working on adding new batches. Please check back soon!
+        </p>
+        <a href="/" class="btn btn-primary">
+          <i class="fas fa-home"></i> Go Home
+        </a>
       </section>
-
-      <section class="card animated-card" style="padding: 1.2rem 1rem;">
-        <h2 style="margin-top:0;">Announcements</h2>
-        <div id="batchAnnouncements" style="color:#6b7280;">No announcements yet.</div>
-      </section>
+      {% endif %}
     </main>
 
-    <script>
-      // Toggle between paid and free sections for logged-in users
-      document.addEventListener('DOMContentLoaded', function() {
-        const filterButtons = document.querySelectorAll('.tab-btn[data-filter]');
-        const paidSection = document.getElementById('paid-section');
-        const freeSection = document.getElementById('free-section');
-        if (filterButtons.length && paidSection && freeSection) {
-          filterButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-              filterButtons.forEach(b => b.classList.remove('active'));
-              btn.classList.add('active');
-              const filter = btn.getAttribute('data-filter');
-              if (filter === 'paid') {
-                paidSection.style.display = '';
-                freeSection.style.display = 'none';
-              } else {
-                paidSection.style.display = 'none';
-                freeSection.style.display = '';
-              }
-            });
-          });
-        }
-      });
-    </script>
-    <script src="script.js"></script>
+    <!-- Footer -->
+    <footer class="footer" style="margin-top: 3rem;">
+      <div class="container footer-content">
+        <div class="footer-social">
+          <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">
+            <i class="fab fa-instagram"></i> Instagram
+          </a>
+          <a href="https://www.youtube.com/@MohitNariyani" target="_blank">
+            <i class="fab fa-youtube"></i> YouTube
+          </a>
+        </div>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Contact Us</a>
+        </div>
+        <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
+      </div>
+    </footer>
   </body>
 </html>
 

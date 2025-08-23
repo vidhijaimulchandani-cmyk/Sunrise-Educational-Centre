@@ -1,207 +1,318 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Sunrise Education Centre</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body class="login-bg">
-    <nav class="navbar glassmorphic">
-      <div class="container nav-content">
-        <div class="nav-logo">
-          <img src="attached_assets/image_1750584670920.png" alt="Logo">
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            padding-top: 120px; /* Account for floating navbar */
+        }
+
+        .auth-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 450px;
+            width: 100%;
+            margin: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h1 {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: white;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-group select option {
+            background: #333;
+            color: white;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .auth-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .google-btn {
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .google-btn:hover {
+            background: linear-gradient(135deg, #3367d6 0%, #2d8f47 100%);
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .auth-divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .auth-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .auth-divider span {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0 1rem;
+            font-size: 0.9rem;
+        }
+
+        .auth-links {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .auth-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .auth-links a:hover {
+            color: white;
+        }
+
+        .admin-code-group {
+            display: none;
+        }
+
+        .admin-code-group.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
+            .auth-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Include Floating Navbar -->
+    {% include 'floating_navbar.html' %}
+
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1>Welcome Back</h1>
+            <p>Sign in to your account</p>
         </div>
-        <ul class="nav-links">
-          <li><a href="/">Home</a></li>
-        </ul>
-        <button class="hamburger">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </button>
-      </div>
-    </nav>
-    <div class="login-container">
-      <div class="login-card">
-        <div class="login-logo">
-          <img src="attached_assets/image_1750584670920.png" alt="Logo">
-          <h2 id="formTitle">Login</h2>
-        </div>
-        <form id="loginForm" method="POST" action="/auth" class="login-form">
-          <input type="text" name="username" placeholder="Username" required autocomplete="username" />
-          <input type="password" name="password" placeholder="Password" required autocomplete="current-password" />
-          <select name="class_id" id="loginRole" required style="border-radius:20px; padding:0.7rem 1.1rem;">
-            {% for id, name in all_classes %}
-              <option value="{{ id }}">{{ name|title }}</option>
-            {% endfor %}
-          </select>
-          <input type="text" name="admin_code" id="loginAdminCodeInput" placeholder="Admin Code" style="display:none;" />
-          <button type="submit" class="btn btn-primary">Login</button>
-          <div style="display:flex; align-items:center; gap:0.6rem; margin:0.8rem 0; color:#9ca3af;">
-            <span style="height:1px; background:#e5e7eb; flex:1;"></span>
-            <span>or</span>
-            <span style="height:1px; background:#e5e7eb; flex:1;"></span>
-          </div>
-          <div id="googleButtonLogin" style="margin-top:0.6rem;"></div>
-        </form>
-        <form id="signupForm" method="POST" action="/register" class="login-form" style="display:none;">
-          <input type="text" id="signup-username" name="username" placeholder="Username" required autocomplete="username" />
-          <input type="password" id="signup-password" name="password" placeholder="Password" required autocomplete="new-password" />
-          <select name="class_id" id="signupRole" required style="border-radius:20px; padding:0.7rem 1.1rem;">
-            {% for id, name in all_classes %}
-              <option value="{{ id }}">{{ name|title }}</option>
-            {% endfor %}
-                    </select>
-          <input type="text" name="admin_code" id="signupAdminCodeInput" placeholder="Admin Code" style="display:none;" />
-          <button type="submit" class="btn btn-primary">Sign Up</button>
-              </form>
-        <div class="login-links">
-          <a href="/">&larr; Back to Home</a> |
-          <a href="#" id="toggleForm">Don't have an account? Sign Up</a>
-        </div>
+
         {% if error %}
-        <div class="login-error">{{ error }}</div>
-        {% else %}
-        <div class="login-hint" style="margin-top:0.75rem; font-size:0.95rem; color:#6b7280;">Tip: If you face login issues, contact the institute.</div>
+        <div class="error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            {{ error }}
+        </div>
         {% endif %}
-      </div>
-    </div>
-    <div style="text-align:center; margin: 1.5rem 0 2rem 0;">
-      <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
-    </div>
-  </body>
-  <script src="script.js"></script>
-  <!-- Google Identity Services -->
-  <script>
-    // Safer, idempotent GIS initialization
-    window.__gis_btn_rendered = false;
-    function initGoogleSignIn() {
-      try {
-        const clientId = '{{ google_client_id }}';
-        if (!clientId || clientId === 'None') return;
-        if (!(window.google && google.accounts && google.accounts.id)) return;
-        if (window.__gis_btn_rendered) return;
 
-        google.accounts.id.initialize({
-          client_id: clientId,
-          callback: function(response) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/auth/google/callback';
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'credential';
-            input.value = response.credential;
-            form.appendChild(input);
-            document.body.appendChild(form);
-            form.submit();
-          },
-          auto_select: false
+        <form method="POST" action="/auth">
+            <div class="form-group">
+                <label for="username">
+                    <i class="fas fa-user"></i>
+                    Username
+                </label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">
+                    <i class="fas fa-lock"></i>
+                    Password
+                </label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="class_id">
+                    <i class="fas fa-graduation-cap"></i>
+                    Select Your Role
+                </label>
+                <select id="class_id" name="class_id" onchange="toggleAdminCode()" required>
+                    <option value="">Choose your role...</option>
+                    {% for class_id, class_name in all_classes %}
+                    <option value="{{ class_id }}">{{ class_name|title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group admin-code-group" id="adminCodeGroup">
+                <label for="admin_code">
+                    <i class="fas fa-key"></i>
+                    Admin Code
+                </label>
+                <input type="password" id="admin_code" name="admin_code" placeholder="Enter admin code">
+            </div>
+
+            <button type="submit" class="auth-btn">
+                <i class="fas fa-sign-in-alt"></i>
+                Sign In
+            </button>
+        </form>
+
+        <div class="auth-divider">
+            <span>or</span>
+        </div>
+
+        <!-- Google Sign-In Button -->
+        <form method="POST" action="/auth/google/callback" id="googleForm">
+            <button type="button" class="auth-btn google-btn" onclick="signInWithGoogle()">
+                <i class="fab fa-google"></i>
+                Continue with Google
+            </button>
+        </form>
+
+        <div class="auth-links">
+            <p>New to Sunrise Education Centre?</p>
+            <p>Contact your instructor to get registered</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleAdminCode() {
+            const classSelect = document.getElementById('class_id');
+            const adminCodeGroup = document.getElementById('adminCodeGroup');
+            const selectedOption = classSelect.options[classSelect.selectedIndex];
+            
+            if (selectedOption.text.toLowerCase().includes('admin')) {
+                adminCodeGroup.classList.add('show');
+                document.getElementById('admin_code').required = true;
+            } else {
+                adminCodeGroup.classList.remove('show');
+                document.getElementById('admin_code').required = false;
+                document.getElementById('admin_code').value = '';
+            }
+        }
+
+        function signInWithGoogle() {
+            // This would integrate with Google Sign-In API
+            // For now, show a message
+            alert('Google Sign-In integration would be implemented here');
+        }
+
+        // Initialize form state
+        document.addEventListener('DOMContentLoaded', function() {
+            // Focus on username field
+            document.getElementById('username').focus();
+            
+            // Check if admin was pre-selected
+            toggleAdminCode();
         });
-        const btnOpts = { type: 'standard', theme: 'outline', size: 'large', text: 'continue_with', shape: 'pill', logo_alignment: 'left', width: 320 };
-        const loginBtn = document.getElementById('googleButtonLogin');
-        if (loginBtn) {
-          google.accounts.id.renderButton(loginBtn, btnOpts);
-          window.__gis_btn_rendered = true;
-        }
-        google.accounts.id.prompt();
-      } catch (e) {
-        console.log('GIS init error:', e);
-      }
-    }
-  </script>
-  <script src="https://accounts.google.com/gsi/client" async defer onload="initGoogleSignIn()"></script>
-  <script>
-    // Toggle between Login and Sign Up forms
-    const loginForm = document.getElementById('loginForm');
-    const signupForm = document.getElementById('signupForm');
-    const toggleForm = document.getElementById('toggleForm');
-    const formTitle = document.getElementById('formTitle');
-    let isLogin = true;
-    toggleForm.addEventListener('click', function(e) {
-      e.preventDefault();
-      isLogin = !isLogin;
-      loginForm.style.display = isLogin ? '' : 'none';
-      signupForm.style.display = isLogin ? 'none' : '';
-      formTitle.textContent = isLogin ? 'Login' : 'Sign Up';
-      toggleForm.textContent = isLogin ? "Don't have an account? Sign Up" : "Already have an account? Login";
-    });
-    // Show/hide admin code input on role change
-    const signupRole = document.getElementById('signupRole');
-    const signupAdminCodeInput = document.getElementById('signupAdminCodeInput');
-    signupRole.addEventListener('change', function() {
-      if (signupRole.value === 'admin') {
-        signupAdminCodeInput.style.display = '';
-        signupAdminCodeInput.required = true;
-      } else {
-        signupAdminCodeInput.style.display = 'none';
-        signupAdminCodeInput.required = false;
-      }
-    });
-    // Show/hide admin code input on login role change
-    const loginRole = document.getElementById('loginRole');
-    const loginAdminCodeInput = document.getElementById('loginAdminCodeInput');
-    const all_classes_dict = {
-        {% for id, name in all_classes %}'{{ id }}': '{{ name }}',{% endfor %}
-    };
-    loginRole.addEventListener('change', function() {
-      const selectedRoleName = all_classes_dict[loginRole.value];
-      if (selectedRoleName === 'admin') {
-        loginAdminCodeInput.style.display = '';
-        loginAdminCodeInput.required = true;
-      } else {
-        loginAdminCodeInput.style.display = 'none';
-        loginAdminCodeInput.required = false;
-      }
-    });
-  </script>
-  <script>
-    // Dark Mode functionality
-    function setupDarkMode() {
-        const isDarkMode = localStorage.getItem('darkMode') === 'true';
-        if (isDarkMode) {
-            document.body.classList.add('dark-mode');
-            updateToggleButton();
-        }
-    }
 
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-        const isDarkMode = document.body.classList.contains('dark-mode');
-        localStorage.setItem('darkMode', isDarkMode);
-        updateToggleButton();
-    }
-
-    function updateToggleButton() {
-        const button = document.getElementById('darkModeToggle');
-        if (button) {
-            const isDark = document.body.classList.contains('dark-mode');
-            button.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
-            button.style.background = isDark ? 'rgba(255,255,255,0.1)' : 'transparent';
-            button.style.color = isDark ? '#fff' : '#6a82fb';
-            button.style.borderColor = isDark ? '#fff' : '#6a82fb';
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        setupDarkMode();
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        if (darkModeToggle) {
-            darkModeToggle.addEventListener('click', toggleDarkMode);
-        }
-        // Fallback polling if GIS script not yet ready
-        let tries = 0;
-        const iv = setInterval(function(){
-          tries++;
-          if (window.google && google.accounts && google.accounts.id) {
-            clearInterval(iv);
-            initGoogleSignIn();
-          }
-          if (tries > 40) clearInterval(iv);
-        }, 150);
-    });
-  </script>
+        // Add some interactive effects
+        document.querySelectorAll('.form-group input, .form-group select').forEach(element => {
+            element.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'scale(1.02)';
+            });
+            
+            element.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'scale(1)';
+            });
+        });
+    </script>
 </body>
 </html>

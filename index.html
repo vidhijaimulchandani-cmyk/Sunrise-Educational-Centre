@@ -3,57 +3,493 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - Page Not Found</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Sunrise Education Centre - Home</title>
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Floating Navbar Styles */
+        .floating-navbar {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 15px 30px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .floating-navbar:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .navbar-logo {
+            color: #2563eb;
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar-nav a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .navbar-nav a:hover {
+            color: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .navbar-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #2563eb;
+            transition: width 0.3s ease;
+        }
+
+        .navbar-nav a:hover::after {
+            width: 100%;
+        }
+
+        .search-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            border-radius: 25px;
+            padding: 8px 40px 8px 15px;
+            color: #2563eb;
+            font-size: 14px;
+            width: 180px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: rgba(37, 99, 235, 0.7);
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.3);
+            border-color: #2563eb;
+            width: 220px;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #2563eb;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #2563eb;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 20px 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .btn-cta {
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary-cta {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary-cta:hover {
+            background: white;
+            color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary-cta {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-secondary-cta:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .floating-navbar {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                transform: none;
+                padding: 12px 20px;
+                gap: 15px;
+            }
+
+            .navbar-nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(20px);
+                border-radius: 20px;
+                margin-top: 10px;
+                padding: 20px;
+                flex-direction: column;
+                gap: 15px;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            }
+
+            .navbar-nav.active {
+                display: flex;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+                margin-left: auto;
+            }
+
+            .search-container {
+                order: -1;
+            }
+
+            .search-input {
+                width: 120px;
+            }
+
+            .search-input:focus {
+                width: 150px;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1.1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-cta {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Main content padding to account for floating navbar */
+        .main-content {
+            padding-top: 100px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Search Bar -->
-        <div class="search-section">
-            <input type="text" placeholder="Search our site..." class="search-input">
-            <button class="search-btn">Search</button>
+    <!-- Floating Navbar -->
+    <nav class="floating-navbar">
+        <a href="/" class="navbar-logo">
+            <i class="fas fa-graduation-cap"></i>
+            Sunrise
+        </a>
+        
+        <ul class="navbar-nav" id="navbarNav">
+            <li><a href="/">Home</a></li>
+            <li><a href="/batch">Batches</a></li>
+            <li><a href="/study-resources">Resources</a></li>
+            <li><a href="/forum">Forum</a></li>
+            <li><a href="https://imp.link" target="_blank" rel="noopener">
+                <i class="fas fa-external-link-alt"></i>
+                IMP.Link
+            </a></li>
+            {% if username %}
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/logout">Logout</a></li>
+            {% else %}
+                <li><a href="/auth">Login</a></li>
+            {% endif %}
+        </ul>
+
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search..." id="searchInput">
+            <button class="search-btn" id="searchBtn">
+                <i class="fas fa-search"></i>
+            </button>
         </div>
 
-        <!-- Main 404 Content -->
-        <div class="error-content">
-            <h1 class="error-code">404</h1>
-            
-            <!-- Caveman Illustration -->
-            <div class="caveman-container">
-                <div class="hills">
-                    <div class="hill left-hill"></div>
-                    <div class="hill right-hill"></div>
-                </div>
-                <div class="caveman">
-                    <div class="head">
-                        <div class="eyes">
-                            <div class="eye left-eye"></div>
-                            <div class="eye right-eye"></div>
-                        </div>
-                        <div class="mouth"></div>
-                        <div class="beard"></div>
-                    </div>
-                    <div class="body">
-                        <div class="loincloth"></div>
-                    </div>
-                    <div class="arms">
-                        <div class="arm left-arm">
-                            <div class="broken-rope"></div>
-                        </div>
-                        <div class="arm right-arm"></div>
-                    </div>
-                </div>
+        <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Welcome to Sunrise Education Centre</h1>
+            <p>Empowering students with quality education and innovative learning methods</p>
+            <div class="cta-buttons">
+                {% if username %}
+                    <a href="/study-resources" class="btn-cta btn-primary-cta">
+                        <i class="fas fa-book"></i>
+                        Access Resources
+                    </a>
+                    <a href="/forum" class="btn-cta btn-secondary-cta">
+                        <i class="fas fa-comments"></i>
+                        Join Discussion
+                    </a>
+                {% else %}
+                    <a href="/auth" class="btn-cta btn-primary-cta">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Get Started
+                    </a>
+                    <a href="/batch" class="btn-cta btn-secondary-cta">
+                        <i class="fas fa-info-circle"></i>
+                        Learn More
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Add your existing home page content here -->
+        <div class="container" style="padding: 60px 20px;">
+            <div style="text-align: center; margin-bottom: 60px;">
+                <h2 style="color: #333; font-size: 2.5rem; margin-bottom: 20px;">Our Features</h2>
+                <p style="color: #666; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
+                    Discover the comprehensive learning platform designed for your academic success
+                </p>
             </div>
 
-            <!-- Error Message -->
-            <div class="error-message">
-                <h2>Looks like you're lost</h2>
-                <p>The page you are looking for is not available!</p>
-            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 60px;">
+                <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center;">
+                    <div style="color: #667eea; font-size: 3rem; margin-bottom: 20px;">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3 style="color: #333; margin-bottom: 15px;">Study Resources</h3>
+                    <p style="color: #666;">Access comprehensive study materials, worksheets, and practice tests</p>
+                </div>
 
-            <!-- Action Button -->
-            <a href="#" class="link_404">Go Home</a>
+                <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center;">
+                    <div style="color: #667eea; font-size: 3rem; margin-bottom: 20px;">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3 style="color: #333; margin-bottom: 15px;">Live Classes</h3>
+                    <p style="color: #666;">Join interactive live sessions with experienced teachers</p>
+                </div>
+
+                <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center;">
+                    <div style="color: #667eea; font-size: 3rem; margin-bottom: 20px;">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 style="color: #333; margin-bottom: 15px;">Community Forum</h3>
+                    <p style="color: #666;">Connect with peers and get help from the learning community</p>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Notification Bell (if logged in) -->
+    {% if user_notifications %}
+    <div id="notification-bell" style="position: fixed; top: 80px; right: 30px; z-index: 999;">
+        <div class="notification-bell">
+            <i class="fas fa-bell"></i>
+            <span class="notification-count">{{ user_notifications|length }}</span>
+        </div>
+    </div>
+    {% endif %}
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuToggle').addEventListener('click', function() {
+            const navbarNav = document.getElementById('navbarNav');
+            navbarNav.classList.toggle('active');
+            
+            const icon = this.querySelector('i');
+            if (navbarNav.classList.contains('active')) {
+                icon.className = 'fas fa-times';
+            } else {
+                icon.className = 'fas fa-bars';
+            }
+        });
+
+        // Search functionality
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            performSearch();
+        });
+
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (query) {
+                // Simple search implementation - you can enhance this
+                const searchResults = [
+                    { title: 'Study Resources', url: '/study-resources', description: 'Access all study materials' },
+                    { title: 'Forum', url: '/forum', description: 'Community discussions' },
+                    { title: 'Batches', url: '/batch', description: 'View available batches' },
+                    { title: 'Live Classes', url: '/admin', description: 'Join live sessions' }
+                ];
+
+                const results = searchResults.filter(item => 
+                    item.title.toLowerCase().includes(query.toLowerCase()) ||
+                    item.description.toLowerCase().includes(query.toLowerCase())
+                );
+
+                if (results.length > 0) {
+                    // For now, redirect to the first result
+                    window.location.href = results[0].url;
+                } else {
+                    alert('No results found for "' + query + '"');
+                }
+            }
+        }
+
+        // Navbar scroll effect
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.floating-navbar');
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Scrolling down
+                navbar.style.transform = 'translateX(-50%) translateY(-100px)';
+            } else {
+                // Scrolling up
+                navbar.style.transform = 'translateX(-50%) translateY(0)';
+            }
+            lastScrollTop = scrollTop;
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const navbar = document.querySelector('.floating-navbar');
+            const navbarNav = document.getElementById('navbarNav');
+            const mobileToggle = document.getElementById('mobileMenuToggle');
+            
+            if (!navbar.contains(e.target) && navbarNav.classList.contains('active')) {
+                navbarNav.classList.remove('active');
+                mobileToggle.querySelector('i').className = 'fas fa-bars';
+            }
+        });
+    </script>
 </body>
 </html>

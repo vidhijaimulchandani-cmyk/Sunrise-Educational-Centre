@@ -7,6 +7,7 @@
     <link rel="icon" type="image/png" href="/favicon.ico">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css" />
     <style>
       /* Styles for nested tabs */
@@ -107,80 +108,17 @@
           font-size: 0.85rem;
         }
       }
+
+      /* Adjust hero section to account for floating navbar */
+      .hero-section {
+        padding-top: 120px;
+      }
     </style>
   </head>
   <body>
-    <nav class="navbar glassmorphic">
-      <div class="container nav-content">
-        <div class="nav-logo">
-          <img src="attached_assets/image_1750584670920.png" alt="Logo">
-        </div>
-        <ul class="nav-links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/online-class">Live Class</a></li>
-          <li><a href="/batch">Batch</a></li>
-          <li><a href="/forum">Forum</a></li>
-          <li style="position:relative;">
-            <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative;">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
-              {% if user_notifications and user_notifications|length > 0 %}
-              <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
-              {% endif %}
-            </button>
-            <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:#fff; min-width:260px; box-shadow:0 4px 24px rgba(100,100,255,0.13); border-radius:12px; z-index:100; padding:1rem;">
-              <strong style="color:#6a82fb;">Notifications</strong>
-              <ul style="list-style:none; padding:0; margin:0;">
-                {% if user_notifications and user_notifications|length > 0 %}
-                {% for notification in user_notifications %}
-                  {% if notification|length >= 7 %}
-                    {% set id, message, created_at, status, notification_type, scheduled_time, item_type = notification %}
-                    {% if item_type == 'personal_chat' %}
-                      {% set sender_name = notification[7] if notification|length > 7 else 'User' %}
-                      <li class="notification-item personal-chat-item" data-notification-id="{{ id }}" data-type="personal_chat" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease; border-left:3px solid #fc5c7d; padding-left:0.5rem;" onmouseover="this.style.background='#ffe6cc'" onmouseout="this.style.background='transparent'">
-                        <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
-                          <span style="background:#fc5c7d; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">💬</span>
-                          <span style="color:#fc5c7d; font-size:0.8rem; font-weight:600;">@{{ sender_name }}</span>
-                        </div>
-                        {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
-                      </li>
-                    {% else %}
-                      <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='transparent'">
-                        <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
-                          <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
-                        </div>
-                        {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
-                      </li>
-                    {% endif %}
-                  {% else %}
-                    <!-- Fallback for old notification format -->
-                    {% set id, message, created_at, status, notification_type, scheduled_time = notification %}
-                    <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.5rem 0; border-bottom:1px solid #eee; font-size:0.98rem; color:#232946; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='transparent'">
-                      <div style="display:flex; align-items:center; gap:0.3rem; margin-bottom:0.2rem;">
-                        <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.7rem; font-weight:600;">📢</span>
-                      </div>
-                      {{ message }}<br><span style="font-size:0.85rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
-                    </li>
-                  {% endif %}
-                {% endfor %}
-                {% else %}
-                  <li style="padding:0.7rem 0; color:#888; text-align:center;">No new notifications.</li>
-                {% endif %}
-              </ul>
-            </div>
-          </li>
-          {% if username %}
-            <li><a href="/logout" class="btn btn-primary">Logout</a></li>
-          {% else %}
-            <li><a href="/auth" class="btn btn-primary">Login</a></li>
-                     {% endif %}
-</ul>
-        <button class="hamburger">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </button>
-      </div>
-    </nav>
+    <!-- Include Floating Navbar -->
+    {% include 'floating_navbar.html' %}
+
     <header class="hero-section">
       <div class="container hero-content">
         <h1>Study Resources</h1>
@@ -198,139 +136,73 @@
               ('notes', 'Notes'),
               ('sample_paper', 'Sample Papers'),
               ('worksheet', 'Worksheets'),
-              ('pyq', 'PYQs'),
-              ('case-base', 'Case-Base'),
-              ('assertion-reasoning', 'Assertion/Reasoning'),
-              ('formula', 'Formula')
+              ('formula_sheet', 'Formula Sheets'),
+              ('practice_test', 'Practice Tests'),
+              ('other', 'Other')
           ] %}
           
-          {# Add any categories from database that aren't in the hardcoded list #}
-          {% if categories %}
-            {% for category in categories %}
-              {% set category_exists = false %}
-              {% for cat in template_categories %}
-                {% if cat[0] == category[1] %}
-                  {% set category_exists = true %}
-                {% endif %}
-              {% endfor %}
-              {% if not category_exists %}
-                {% set _ = template_categories.append((category[1], category[1])) %}
-              {% endif %}
-            {% endfor %}
-          {% endif %}
-          
-          {% for cat_key, cat_name in template_categories %}
-            <button class="sub-tab-button" onclick="showCategory(event, 'cat-{{ cat_key }}')">{{ cat_name }}</button>
+          {% for category_key, category_display in template_categories %}
+            <button class="sub-tab-button {% if loop.first %}active{% endif %}" 
+                    onclick="showCategory('{{ category_key }}')" 
+                    id="tab-{{ category_key }}">
+              {{ category_display }}
+            </button>
           {% endfor %}
         </div>
 
-        <!-- Resources for each category -->
-        {% for cat_key, cat_name in template_categories %}
-          {% if (cat_key in ['worksheet', 'formula'] and paid_status == 'paid') or (cat_key not in ['worksheet', 'formula']) %}
-            <div id="cat-{{ cat_key }}" class="category-content">
-              <div class="card-grid">
-                {% set has_resources = false %}
-                {% for filename, res_class_id, filepath, title, description, category in resources %}
-                  {% if res_class_id == class_id and category == cat_key %}
-                    {% set has_resources = true %}
-                    <div class="card animated-card" style="text-align:left;">
-                      <strong style="font-size:1.1rem;">{{ title }}</strong><br>
-                      {% if description %}<span style="color:#555; font-size:0.98rem;">{{ description }}</span><br>{% endif %}
-                      <span style="color:#888; font-size:0.95rem;">File: {{ filename }}</span><br>
-                      <a href="/preview/{{ filename }}" class="btn btn-primary" style="margin-top:0.7rem;">Preview Document</a>
+        <!-- Category Content -->
+        {% for category_key, category_display in template_categories %}
+          <div id="category-{{ category_key }}" class="category-content {% if loop.first %}active{% endif %}">
+            <h3>{{ category_display }}</h3>
+            {% set category_resources = resources|selectattr('6', 'equalto', category_key)|list %}
+            {% if category_resources %}
+              <div class="resource-list">
+                {% for resource in category_resources %}
+                  <div class="resource-card">
+                    <h3>{{ resource[3] or resource[0] }}</h3>
+                    <p>{{ resource[4] or 'No description available' }}</p>
+                    <div class="resource-actions">
+                      {% if resource[5] == 'paid' and paid_status != 'paid' %}
+                        <span class="premium-label">Premium Content</span>
+                        <button class="btn btn-cta" onclick="alert('This is premium content. Please upgrade your subscription to access.')">
+                          <i class="fas fa-lock"></i> Upgrade to Access
+                        </button>
+                      {% else %}
+                        <a href="/uploads/{{ resource[0] }}" class="btn btn-cta" download>
+                          <i class="fas fa-download"></i> Download
+                        </a>
+                      {% endif %}
                     </div>
-                  {% endif %}
+                  </div>
                 {% endfor %}
-                {% if not has_resources %}
-                  <div style="color:#888; text-align:center; grid-column: 1 / -1;">No resources available in this category yet.</div>
-                {% endif %}
               </div>
-            </div>
-          {% else %}
-            <div id="cat-{{ cat_key }}" class="category-content">
-              <div class="card-grid">
-                <div style="color:#888; text-align:center; grid-column: 1 / -1; padding: 2rem;">
-                  <h3 style="color:#555; margin-bottom: 1rem;">🔒 Premium Content</h3>
-                  <p>This category contains premium content that requires a paid subscription.</p>
-                  <p style="font-size: 0.9rem; margin-top: 1rem;">Contact your administrator to upgrade your account.</p>
-                </div>
+            {% else %}
+              <div class="empty-state">
+                <p>No {{ category_display.lower() }} available for your class yet.</p>
               </div>
-            </div>
-          {% endif %}
+            {% endif %}
+          </div>
         {% endfor %}
+
       </section>
-      <div style="text-align:center; margin: 1.5rem 0 2rem 0;">
-        <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
-      </div>
     </main>
-    <footer class="footer">
-      <div class="container footer-content">
-        <div class="footer-social">
-          <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">Instagram</a>
-          <a href="https://www.youtube.com/@MohitNariyani" target="_blank">YouTube</a>
-        </div>
-        <div class="footer-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Contact Us</a>
-        </div>
-        <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
-      </div>
-    </footer>
-    <script src="script.js"></script>
-    <script src="study-resources.js"></script>
+
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // Show the first category tab by default
-        const firstCategoryTab = document.querySelector('.sub-tab-button');
-        if (firstCategoryTab) {
-          firstCategoryTab.click();
-        }
-      });
-
-      document.addEventListener('DOMContentLoaded', function() {
-      const notifBell = document.getElementById('notifBell');
-      const notifDropdown = document.getElementById('notifDropdown');
-      if (notifBell && notifDropdown) {
-        // Handled globally in script.js. Keep only page-specific logic below.
+      function showCategory(categoryKey) {
+        // Hide all category content
+        const allContent = document.querySelectorAll('.category-content');
+        allContent.forEach(content => content.classList.remove('active'));
+        
+        // Remove active class from all tabs
+        const allTabs = document.querySelectorAll('.sub-tab-button');
+        allTabs.forEach(tab => tab.classList.remove('active'));
+        
+        // Show selected category content
+        document.getElementById('category-' + categoryKey).classList.add('active');
+        
+        // Add active class to clicked tab
+        document.getElementById('tab-' + categoryKey).classList.add('active');
       }
-    </script>
-    <script>
-      // Dark Mode functionality
-      function setupDarkMode() {
-          const isDarkMode = localStorage.getItem('darkMode') === 'true';
-          if (isDarkMode) {
-              document.body.classList.add('dark-mode');
-              updateToggleButton();
-          }
-      }
-
-      function toggleDarkMode() {
-          document.body.classList.toggle('dark-mode');
-          const isDarkMode = document.body.classList.contains('dark-mode');
-          localStorage.setItem('darkMode', isDarkMode);
-          updateToggleButton();
-      }
-
-      function updateToggleButton() {
-          const button = document.getElementById('darkModeToggle');
-          if (button) {
-              const isDark = document.body.classList.contains('dark-mode');
-              button.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
-              button.style.background = isDark ? 'rgba(255,255,255,0.1)' : 'transparent';
-              button.style.color = isDark ? '#fff' : '#6a82fb';
-              button.style.borderColor = isDark ? '#fff' : '#6a82fb';
-          }
-      }
-
-      // Initialize dark mode on page load
-      document.addEventListener('DOMContentLoaded', function() {
-          setupDarkMode();
-          
-          const darkModeToggle = document.getElementById('darkModeToggle');
-          if (darkModeToggle) {
-              darkModeToggle.addEventListener('click', toggleDarkMode);
-          }
-      });
     </script>
   </body>
 </html>
