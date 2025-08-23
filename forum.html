@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum - Sunrise Educational Centre</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="forum.css">
+    <style>
+        /* Reusable black-glass utility (matches homepage) */
+        .black-glass {
+            background: rgba(5, 6, 10, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(18px) saturate(110%);
+            -webkit-backdrop-filter: blur(18px) saturate(110%);
+            color: #fff;
+            border-radius: 16px;
+        }
+        .forum-shell { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+        .forum-header.black-glass { border-radius: 18px; }
+        .forum-header h1 { color: #fff; }
+        .forum-header p { color: rgba(255,255,255,0.85); }
+        .class-strip { display:flex; align-items:center; justify-content:center; gap:.8rem; margin: 1rem 0 0 0; }
+        .class-chip { background: rgba(255,255,255,0.14); color: #fff; border: 1px solid rgba(255,255,255,0.25); padding: .3rem .7rem; border-radius: 999px; font-weight: 600; }
+        .status-chip { background: rgba(0, 200, 140, 0.2); color:#aef9e4; border:1px solid rgba(0,200,140,0.35); padding: .25rem .6rem; border-radius:999px; font-weight:600; }
+        .status-chip.unpaid { background: rgba(255, 255, 255, 0.12); color:#ffd2d2; border-color: rgba(255,255,255,0.25); }
+        .tabs.black-glass { border-radius: 14px; padding: .4rem; border:1px solid rgba(255,255,255,0.22); }
+        .tab-button { color:#fff; }
+        .tab-button:hover { background: rgba(255,255,255,0.10); color:#fff; }
+        .tab-button.active { background: rgba(255,255,255,0.14); color:#fff; border-bottom-color: rgba(255,255,255,0.3); }
+        .messages-container.black-glass { padding: 1rem; border-radius: 16px; }
+        /* Glassy message bubbles */
+        .message-content { background: rgba(5,6,10,0.6); color:#fff; border: 1px solid rgba(255,255,255,0.22); box-shadow: 0 8px 24px rgba(0,0,0,0.45); }
+        .message-content.own-message { background: rgba(255,255,255,0.12); color:#fff; }
+        .message-text { color:#fff; }
+        .message-avatar { background: rgba(255,255,255,0.14); color:#fff; border: 1px solid rgba(255,255,255,0.25); }
+        .message-header { border-bottom-color: rgba(255,255,255,0.22); }
+        .message-info span { color: rgba(255,255,255,0.75); }
+        .message-actions button { background: rgba(255,255,255,0.18); color:#fff; border:1px solid rgba(255,255,255,0.25); }
+        /* Glassy input bar */
+        .chat-input-bar.black-glass { padding: .8rem; }
+        .chat-input-bar textarea, .chat-input-bar input[type="text"] {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.24);
+            color:#fff;
+        }
+        .chat-input-bar textarea::placeholder { color: rgba(255,255,255,0.6); }
+        #forumSendBtn { background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%); color:#fff; }
+        /* Emoji picker glass override */
+        #emojiPicker { background: rgba(5,6,10,0.75) !important; border: 1px solid rgba(255,255,255,0.22) !important; box-shadow: 0 8px 24px rgba(0,0,0,0.6) !important; color:#fff !important; backdrop-filter: blur(14px) !important; -webkit-backdrop-filter: blur(14px) !important; }
+        #emojiPicker button { color:#fff !important; }
+        /* Mention suggestions glass */
+        #mentionSuggestions { background: rgba(5,6,10,0.75); border: 1px solid rgba(255,255,255,0.22); color:#fff; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+        .mention-suggestion { border-bottom: 1px solid rgba(255,255,255,0.18); }
+        .mention-suggestion:hover, .mention-suggestion.selected { background: rgba(255,255,255,0.12); }
+    </style>
+</head>
+<body data-user-role="{{ role or '' }}">
+    <main class="forum-shell">
+        <header class="forum-header black-glass">
+            <h1>Community Forum</h1>
+            <p>Discuss doubts, share resources, and collaborate with peers.</p>
+            <div class="class-strip">
+                <span class="class-chip">Your Class: {{ role }}</span>
+                {% if user_paid_status %}
+                <span class="status-chip {% if user_paid_status != 'paid' %}unpaid{% endif %}">
+                    {{ 'PAID' if user_paid_status == 'paid' else 'UNPAID' }}
+                </span>
+                {% endif %}
+            </div>
+        </header>
+
+        <!-- Category Tabs (Top) -->
+        <div class="tabs black-glass">
+            <button class="tab-button active" data-topic="all" data-topic-name="All">All</button>
+            {% for t in paid_topics %}
+                <button class="tab-button" data-topic="{{ t[0] }}" data-topic-name="{{ t[1] }}">{{ t[1] }} <span class="class-label">Paid</span></button>
+            {% endfor %}
+            {% for t in unpaid_topics %}
+                <button class="tab-button" data-topic="{{ t[0] }}" data-topic-name="{{ t[1] }}">{{ t[1] }}</button>
+            {% endfor %}
+        </div>
+
+        <!-- Current Topic Display -->
+        <div class="current-topic-display black-glass">
+            <h4 id="currentTopicTitle">All Topics</h4>
+            <p>Select a category to view or start the discussion.</p>
+        </div>
+
+        <!-- Messages Area -->
+        <section class="messages-container black-glass" id="forumMessages" aria-live="polite">
+            <div style="color:#b8c5d6; text-align:center; padding:2rem;">Loading messages...</div>
+        </section>
+
+        <!-- Reply indicator placement -->
+        <div id="replyIndicator" style="display:none;"></div>
+
+        <!-- Chat Input Bar -->
+        <div class="chat-input-bar black-glass" style="position:relative;">
+            <div id="forumMediaPreview" style="margin-bottom:.6rem;"></div>
+            <div style="display:flex; gap:.6rem; align-items:flex-end;">
+                <button id="forumEmojiBtn" class="btn" style="background: rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.25); color:#fff; border-radius:10px; padding:.45rem .7rem;">😊</button>
+                <button id="forumUploadBtn" class="btn" style="background: rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.25); color:#fff; border-radius:10px; padding:.45rem .7rem;">📎</button>
+                <input id="forumMediaInput" type="file" accept="image/*,video/*" style="display:none;" />
+                <textarea id="forumInput" rows="1" placeholder="Type your message..." style="flex:1; resize:none;"></textarea>
+                <button id="forumSendBtn" title="Send">➤</button>
+            </div>
+            <!-- Mention suggestions container -->
+            <div id="mentionSuggestions" style="display:none;">
+                <div id="mentionSuggestionsList"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="forum.js"></script>
+    <script>
+        // Keep topic title synced
+        document.addEventListener('DOMContentLoaded', function(){
+            const tabs = document.querySelectorAll('.tab-button');
+            const title = document.getElementById('currentTopicTitle');
+            tabs.forEach(btn => btn.addEventListener('click', () => {
+                title.textContent = btn.getAttribute('data-topic-name') || 'All Topics';
+            }));
+        });
+    </script>
+</body>
+</html>
