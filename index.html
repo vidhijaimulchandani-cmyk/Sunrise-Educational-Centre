@@ -622,6 +622,94 @@
         </div>
     </section>
 
+    <!-- Wall of Fame & Scholarship Section (restored) -->
+    <section class="wall-of-fame-section" style="background: linear-gradient(135deg, #ffd700 0%, #ff9f1c 100%); padding: 3rem 0; color:#232946;">
+        <div class="container">
+            <div style="text-align:center; margin-bottom:1.5rem;">
+                <h2 style="font-size:2.2rem; font-weight:800; color:#232946;">Wall of Fame</h2>
+                <div style="margin-top:0.4rem; color:#232946; opacity:0.85;">Celebrating our toppers and scholarship achievers</div>
+            </div>
+
+            <!-- 2024-25 Top Performers Slider -->
+            <div class="fame-slider-container" style="max-width:1100px;">
+                <button class="fame-arrow" aria-label="Previous" onclick="scrollFame('fame2024', -1)">‹</button>
+                <div id="fame2024" class="fame-slider">
+                    <div class="fame-card">
+                        <div class="fame-image-wrapper">
+                            <img class="fame-photo" src="https://images.unsplash.com/photo-1544006659-f0b21884ce1d?w=800&q=80" alt="Topper 1">
+                            <div class="fame-overlay">
+                                <div class="fame-name">Priya Sharma</div>
+                                <div class="fame-meta"><span>Class 10</span><span>98%</span><span>2024-25</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fame-card">
+                        <div class="fame-image-wrapper">
+                            <img class="fame-photo" src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=800&q=80" alt="Topper 2">
+                            <div class="fame-overlay">
+                                <div class="fame-name">Aman Verma</div>
+                                <div class="fame-meta"><span>Class 12</span><span>97%</span><span>2024-25</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fame-card">
+                        <div class="fame-image-wrapper">
+                            <img class="fame-photo" src="https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=800&q=80" alt="Topper 3">
+                            <div class="fame-overlay">
+                                <div class="fame-name">Sana Khan</div>
+                                <div class="fame-meta"><span>Class 9</span><span>Gold Medal</span><span>Maths Olympiad</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fame-card">
+                        <div class="fame-image-wrapper">
+                            <img class="fame-photo" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800&q=80" alt="Topper 4">
+                            <div class="fame-overlay">
+                                <div class="fame-name">Rohit S</div>
+                                <div class="fame-meta"><span>Class 11</span><span>Top 1%</span><span>Mock JEE</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fame-card">
+                        <div class="fame-image-wrapper">
+                            <img class="fame-photo" src="https://images.unsplash.com/photo-1520975916090-3105956dac38?w=800&q=80" alt="Topper 5">
+                            <div class="fame-overlay">
+                                <div class="fame-name">Neha Gupta</div>
+                                <div class="fame-meta"><span>Class 10</span><span>Scholarship 100%</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="fame-arrow" aria-label="Next" onclick="scrollFame('fame2024', 1)">›</button>
+            </div>
+
+            <!-- Scholarship Winners Grid -->
+            <div style="margin-top:2.5rem; text-align:center;">
+                <h3 style="margin-bottom:1rem; color:#232946; font-size:1.6rem; font-weight:800;">Scholarship Winners</h3>
+                <div class="outstanding-performers" style="background: rgba(255,255,255,0.75); border-radius:18px; padding:1.5rem; border:1px dashed rgba(0,0,0,0.12); max-width:1100px; margin:0 auto;">
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:1.25rem;">
+                        <div class="achievement-card student-card" style="background:#fff; border-radius:16px; padding:1rem; border:1px solid rgba(0,0,0,0.06);">
+                            <div style="font-weight:800; color:#232946;">Arjun Mehta</div>
+                            <div style="color:#666; margin-top:0.25rem;">Class 9 • 90% Scholarship</div>
+                        </div>
+                        <div class="achievement-card student-card" style="background:#fff; border-radius:16px; padding:1rem; border:1px solid rgba(0,0,0,0.06);">
+                            <div style="font-weight:800; color:#232946;">Isha Jain</div>
+                            <div style="color:#666; margin-top:0.25rem;">Class 10 • 100% Scholarship</div>
+                        </div>
+                        <div class="achievement-card student-card" style="background:#fff; border-radius:16px; padding:1rem; border:1px solid rgba(0,0,0,0.06);">
+                            <div style="font-weight:800; color:#232946;">Karan Patel</div>
+                            <div style="color:#666; margin-top:0.25rem;">Class 11 • 75% Scholarship</div>
+                        </div>
+                        <div class="achievement-card student-card" style="background:#fff; border-radius:16px; padding:1rem; border:1px solid rgba(0,0,0,0.06);">
+                            <div style="font-weight:800; color:#232946;">Simran K</div>
+                            <div style="color:#666; margin-top:0.25rem;">Class 12 • 80% Scholarship</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Who Made This Section -->
     <section class="card-section" style="text-align:center; margin:2rem 0 2.5rem 0;">
         <div class="card animated-card black-glass" style="max-width:400px; margin:0 auto; padding:2rem;">
@@ -799,6 +887,14 @@
                 navbar.style.background = 'rgba(255, 255, 255, 0.1)';
             }
         });
+
+        // Fame slider scroll helper
+        function scrollFame(id, dir) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const amount = 320 * (dir > 0 ? 1 : -1);
+            el.scrollBy({ left: amount, behavior: 'smooth' });
+        }
     </script>
 </body>
 </html>
