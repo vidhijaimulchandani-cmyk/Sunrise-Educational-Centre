@@ -1,0 +1,78 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle with gradient -->
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.95" />
+      <stop offset="100%" style="stop-color:#f8f9ff;stop-opacity:0.9" />
+    </linearGradient>
+    <linearGradient id="bookGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea" />
+      <stop offset="100%" style="stop-color:#764ba2" />
+    </linearGradient>
+    <linearGradient id="lightGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd700" />
+      <stop offset="100%" style="stop-color:#ffed4e" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main background circle -->
+  <circle cx="100" cy="100" r="95" fill="url(#logoGradient)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="30" cy="30" r="8" fill="rgba(102,126,234,0.2)"/>
+  <circle cx="170" cy="40" r="6" fill="rgba(118,75,162,0.2)"/>
+  <circle cx="40" cy="170" r="7" fill="rgba(102,126,234,0.15)"/>
+  <circle cx="160" cy="160" r="5" fill="rgba(118,75,162,0.15)"/>
+  
+  <!-- Stack of books -->
+  <g transform="translate(100, 120)">
+    <!-- Book 3 (bottom) -->
+    <rect x="-35" y="15" width="70" height="12" rx="2" fill="url(#bookGradient)" opacity="0.9"/>
+    <rect x="-35" y="15" width="70" height="12" rx="2" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    
+    <!-- Book 2 (middle) -->
+    <rect x="-32" y="3" width="64" height="12" rx="2" fill="url(#bookGradient)" opacity="0.8"/>
+    <rect x="-32" y="3" width="64" height="12" rx="2" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    
+    <!-- Book 1 (top) -->
+    <rect x="-30" y="-9" width="58" height="12" rx="2" fill="url(#bookGradient)" opacity="0.7"/>
+    <rect x="-30" y="-9" width="58" height="12" rx="2" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+    
+    <!-- Book spines -->
+    <rect x="-35" y="15" width="4" height="12" fill="rgba(255,255,255,0.4)"/>
+    <rect x="-32" y="3" width="4" height="12" fill="rgba(255,255,255,0.4)"/>
+    <rect x="-30" y="-9" width="4" height="12" fill="rgba(255,255,255,0.4)"/>
+  </g>
+  
+  <!-- Rising sun/lightbulb representing education and enlightenment -->
+  <g transform="translate(100, 70)">
+    <!-- Light rays -->
+    <g opacity="0.6">
+      <path d="M0,-25 L-8,-35 L-5,-40 L0,-30 L5,-40 L8,-35 Z" fill="url(#lightGradient)"/>
+      <path d="M0,-25 L-12,-30 L-8,-35 L0,-30 L8,-35 L12,-30 Z" fill="url(#lightGradient)" opacity="0.7"/>
+      <path d="M0,-25 L-15,-25 L-12,-30 L0,-30 L12,-30 L15,-25 Z" fill="url(#lightGradient)" opacity="0.5"/>
+    </g>
+    
+    <!-- Lightbulb base -->
+    <ellipse cx="0" cy="0" rx="18" ry="22" fill="url(#lightGradient)" opacity="0.9"/>
+    <ellipse cx="0" cy="0" rx="18" ry="22" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+    
+    <!-- Lightbulb filament -->
+    <path d="M-8,-8 Q0,-12 8,-8 Q0,-4 -8,-8" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>
+    <path d="M-6,-4 Q0,-8 6,-4" fill="none" stroke="rgba(255,255,255,0.8)" stroke-width="1.5"/>
+    
+    <!-- Base connector -->
+    <rect x="-6" y="18" width="12" height="4" rx="2" fill="rgba(255,255,255,0.6)"/>
+  </g>
+  
+  <!-- Small graduation cap -->
+  <g transform="translate(100, 45)">
+    <path d="M-15,-5 L15,-5 L12,-12 L-12,-12 Z" fill="url(#bookGradient)" opacity="0.8"/>
+    <rect x="-2" y="-12" width="4" height="8" fill="url(#bookGradient)" opacity="0.8"/>
+    <circle cx="0" cy="-16" r="3" fill="url(#lightGradient)" opacity="0.9"/>
+  </g>
+  
+  <!-- Text elements -->
+  <text x="100" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#667eea">SUNRISE EDUCATION CENTRE</text>
+  <text x="100" y="195" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" fill="#764ba2">- by Er. Mohit Nariyani</text>
+</svg>
