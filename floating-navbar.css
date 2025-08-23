@@ -102,6 +102,74 @@
     border: 2px solid white;
 }
 
+/* Dropdown Styles */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    cursor: pointer;
+}
+
+.dropdown-toggle::after {
+    content: '▼';
+    margin-left: 5px;
+    font-size: 10px;
+    transition: transform 0.3s ease;
+}
+
+.dropdown:hover .dropdown-toggle::after {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    padding: 10px 0;
+    margin-top: 10px;
+}
+
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu li {
+    list-style: none;
+    margin: 0;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 20px;
+    color: #0066cc;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border-radius: 0;
+    background: transparent;
+}
+
+.dropdown-menu a:hover {
+    background: rgba(0, 102, 204, 0.1);
+    color: #0052a3;
+    transform: translateX(5px);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .floating-navbar {
@@ -125,6 +193,24 @@
     .floating-navbar .nav-links li {
         margin: 2px 0;
     }
+
+    /* Mobile dropdown adjustments */
+    .dropdown-menu {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        box-shadow: none;
+        margin-top: 5px;
+        padding: 5px 0;
+    }
+
+    .dropdown-menu a {
+        padding: 8px 15px;
+        font-size: 13px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -139,5 +225,14 @@
     .floating-navbar .nav-links a {
         font-size: 12px;
         padding: 5px 10px;
+    }
+
+    .dropdown-menu {
+        min-width: 150px;
+    }
+
+    .dropdown-menu a {
+        padding: 6px 12px;
+        font-size: 12px;
     }
 }
