@@ -9,106 +9,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="floating-navbar.css" />
-    <style>
-      /* Styles for nested tabs */
-      .sub-tabs {
-        display: flex;
-        justify-content: center;
-        margin-top: 1.5rem;
-        margin-bottom: 1.5rem;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 1rem;
-      }
-      .sub-tab-button {
-        background: #f1f3f5;
-        border: none;
-        padding: 0.6rem 1.2rem;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 0.9rem;
-        color: #555;
-        margin: 0 0.4rem;
-        transition: all 0.3s ease;
-      }
-      .sub-tab-button.active {
-        background: #6a82fb;
-        color: #fff;
-      }
-      .category-content {
-        display: none;
-      }
-      .category-content.active {
-        display: block;
-      }
-      body.dark-mode .sub-tabs {
-        border-bottom-color: #333;
-      }
-      body.dark-mode .sub-tab-button {
-        background: #333;
-        color: #ccc;
-      }
-      body.dark-mode .sub-tab-button.active {
-        background: #6a82fb;
-      }
-      
-      /* Mobile Responsive Styles */
-      @media (max-width: 768px) {
-        .sub-tabs {
-          flex-wrap: wrap;
-          gap: 0.5rem;
-          margin: 1rem 0;
-        }
-        
-        .sub-tab-button {
-          padding: 0.5rem 1rem;
-          font-size: 0.85rem;
-          margin: 0 0.2rem;
-        }
-        
-        .resource-card {
-          padding: 1rem;
-          margin: 0.5rem 0;
-        }
-        
-        .resource-card h3 {
-          font-size: 1.1rem;
-        }
-        
-        .resource-card p {
-          font-size: 0.9rem;
-        }
-        
-        .container {
-          padding: 0 1rem;
-        }
-      }
-      
-      @media (max-width: 480px) {
-        .sub-tabs {
-          flex-direction: column;
-          gap: 0.3rem;
-        }
-        
-        .sub-tab-button {
-          padding: 0.4rem 0.8rem;
-          font-size: 0.8rem;
-          margin: 0;
-          width: 100%;
-        }
-        
-        .resource-card {
-          padding: 0.8rem;
-        }
-        
-        .resource-card h3 {
-          font-size: 1rem;
-        }
-        
-        .resource-card p {
-          font-size: 0.85rem;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="study-resources.css" />
   </head>
   <body>
     <!-- Floating Navbar -->
@@ -173,88 +74,132 @@
             <li><button class="search-btn" onclick="openSearch()">🔍 Search</button></li>
         </ul>
     </nav>
-    <header class="hero-section">
-      <div class="container hero-content">
+
+    <!-- Page Header with Glassmorphism -->
+    <header class="page-header">
+      <div class="container">
         <h1>Study Resources</h1>
-        <p>Access notes, worksheets, practice problems, and solutions for your class!</p>
-        <a href="#resources" class="btn btn-cta">Browse Resources</a>
+        <p>Access comprehensive notes, worksheets, practice problems, and solutions for your class with our premium glassmorphic interface!</p>
       </div>
     </header>
-    <main class="container main-content">
-      <section id="resources" class="card-section">
-        <h2>Resources for {{ class_name|title }}</h2>
-        
-        <!-- Category Sub-Tabs -->
-        <div class="sub-tabs">
-          {% set template_categories = [
-              ('notes', 'Notes'),
-              ('sample_paper', 'Sample Papers'),
-              ('worksheet', 'Worksheets'),
-              ('pyq', 'PYQs'),
-              ('case-base', 'Case-Base'),
-              ('assertion-reasoning', 'Assertion/Reasoning'),
-              ('formula', 'Formula')
-          ] %}
-          
-          {# Add any categories from database that aren't in the hardcoded list #}
-          {% if categories %}
-            {% for category in categories %}
-              {% set category_exists = false %}
-              {% for cat in template_categories %}
-                {% if cat[0] == category[1] %}
-                  {% set category_exists = true %}
-                {% endif %}
-              {% endfor %}
-              {% if not category_exists %}
-                {% set _ = template_categories.append((category[1], category[1])) %}
-              {% endif %}
-            {% endfor %}
-          {% endif %}
-          
-          {% for cat_key, cat_name in template_categories %}
-            <button class="sub-tab-button" onclick="showCategory(event, 'cat-{{ cat_key }}')">{{ cat_name }}</button>
-          {% endfor %}
-        </div>
 
-        <!-- Resources for each category -->
-        {% for cat_key, cat_name in template_categories %}
-          {% if (cat_key in ['worksheet', 'formula'] and paid_status == 'paid') or (cat_key not in ['worksheet', 'formula']) %}
-            <div id="cat-{{ cat_key }}" class="category-content">
-              <div class="card-grid">
-                {% set has_resources = false %}
-                {% for filename, res_class_id, filepath, title, description, category in resources %}
-                  {% if res_class_id == class_id and category == cat_key %}
-                    {% set has_resources = true %}
-                    <div class="card animated-card" style="text-align:left;">
-                      <strong style="font-size:1.1rem;">{{ title }}</strong><br>
-                      {% if description %}<span style="color:#555; font-size:0.98rem;">{{ description }}</span><br>{% endif %}
-                      <span style="color:#888; font-size:0.95rem;">File: {{ filename }}</span><br>
-                      <a href="/preview/{{ filename }}" class="btn btn-primary" style="margin-top:0.7rem;">Preview Document</a>
-                    </div>
+    <main class="container main-content">
+      <!-- Search and Filter Section -->
+      <section class="search-filter-section">
+        <input type="text" class="search-input" placeholder="Search resources by title, description, or category..." id="searchInput">
+      </section>
+
+      <!-- Resources Section -->
+      <section id="resources" class="resources-section">
+        <div class="glassmorphic-container" style="padding: 2rem;">
+          <h2 style="text-align: center; margin-bottom: 2rem; color: #667eea; font-size: 2rem;">Resources for {{ class_name|title }}</h2>
+          
+          <!-- Category Sub-Tabs -->
+          <div class="sub-tabs">
+            {% set template_categories = [
+                ('notes', 'Notes'),
+                ('sample_paper', 'Sample Papers'),
+                ('worksheet', 'Worksheets'),
+                ('pyq', 'PYQs'),
+                ('case-base', 'Case-Base'),
+                ('assertion-reasoning', 'Assertion/Reasoning'),
+                ('formula', 'Formula')
+            ] %}
+            
+            {# Add any categories from database that aren't in the hardcoded list #}
+            {% if categories %}
+              {% for category in categories %}
+                {% set category_exists = false %}
+                {% for cat in template_categories %}
+                  {% if cat[0] == category[1] %}
+                    {% set category_exists = true %}
                   {% endif %}
                 {% endfor %}
-                {% if not has_resources %}
-                  <div style="color:#888; text-align:center; grid-column: 1 / -1;">No resources available in this category yet.</div>
+                {% if not category_exists %}
+                  {% set _ = template_categories.append((category[1], category[1])) %}
                 {% endif %}
-              </div>
-            </div>
-          {% else %}
-            <div id="cat-{{ cat_key }}" class="category-content">
-              <div class="card-grid">
-                <div style="color:#888; text-align:center; grid-column: 1 / -1; padding: 2rem;">
-                  <h3 style="color:#555; margin-bottom: 1rem;">🔒 Premium Content</h3>
-                  <p>This category contains premium content that requires a paid subscription.</p>
-                  <p style="font-size: 0.9rem; margin-top: 1rem;">Contact your administrator to upgrade your account.</p>
+              {% endfor %}
+            {% endif %}
+            
+            {% for cat_key, cat_name in template_categories %}
+              <button class="sub-tab-button" onclick="showCategory(event, 'cat-{{ cat_key }}')">{{ cat_name }}</button>
+            {% endfor %}
+          </div>
+
+          <!-- Resources for each category -->
+          {% for cat_key, cat_name in template_categories %}
+            {% if (cat_key in ['worksheet', 'formula'] and paid_status == 'paid') or (cat_key not in ['worksheet', 'formula']) %}
+              <div id="cat-{{ cat_key }}" class="category-content">
+                <div class="resource-grid">
+                  {% set has_resources = false %}
+                  {% for filename, res_class_id, filepath, title, description, category in resources %}
+                    {% if res_class_id == class_id and category == cat_key %}
+                      {% set has_resources = true %}
+                      <div class="resource-card">
+                        <header>{{ title }}</header>
+                        {% if description %}
+                          <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1rem;">{{ description }}</p>
+                        {% endif %}
+                        <div style="margin-bottom: 1rem;">
+                          <span class="status-indicator status-free" style="margin-right: 0.5rem;">File</span>
+                          <span style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">{{ filename }}</span>
+                        </div>
+                        <a href="/preview/{{ filename }}" class="btn btn-primary" style="display: inline-block; text-decoration: none; padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px; border: none; transition: all 0.3s ease;">Preview Document</a>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                  {% if not has_resources %}
+                    <div style="color: rgba(255, 255, 255, 0.7); text-align: center; grid-column: 1 / -1; padding: 2rem; background: rgba(255, 255, 255, 0.05); border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                      <h3 style="color: #667eea; margin-bottom: 1rem;">📚 No Resources Available</h3>
+                      <p>No resources available in this category yet. Check back soon!</p>
+                    </div>
+                  {% endif %}
                 </div>
               </div>
-            </div>
-          {% endif %}
-        {% endfor %}
+            {% else %}
+              <div id="cat-{{ cat_key }}" class="category-content">
+                <div class="resource-grid">
+                  <div style="color: rgba(255, 255, 255, 0.7); text-align: center; grid-column: 1 / -1; padding: 2rem; background: rgba(255, 255, 255, 0.05); border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <h3 style="color: #667eea; margin-bottom: 1rem;">🔒 Premium Content</h3>
+                    <p>This category contains premium content that requires a paid subscription.</p>
+                    <p style="font-size: 0.9rem; margin-top: 1rem;">Contact your administrator to upgrade your account.</p>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
       </section>
-      <div style="text-align:center; margin: 1.5rem 0 2rem 0;">
-        <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
+
+      <!-- Quick Access Section -->
+      <section class="quick-access">
+        <h2>Quick Access</h2>
+        <div class="quick-access-grid">
+          <a href="/online-class" class="quick-access-item">
+            <h3>🎥 Live Classes</h3>
+            <p>Join interactive live sessions with expert teachers</p>
+          </a>
+          <a href="/batch" class="quick-access-item">
+            <h3>📋 Batch Information</h3>
+            <p>View available batches and schedules</p>
+          </a>
+          <a href="/forum" class="quick-access-item">
+            <h3>💬 Discussion Forum</h3>
+            <p>Connect with peers and ask questions</p>
+          </a>
+          <a href="/admission" class="quick-access-item">
+            <h3>📝 Admission</h3>
+            <p>Apply for admission to our programs</p>
+          </a>
+        </div>
+      </section>
+
+      <!-- Dark Mode Toggle -->
+      <div style="text-align:center; margin: 2rem 0;">
+        <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #ffffff; padding: 1rem 2rem; border-radius: 15px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: all 0.3s ease;">Toggle Dark Mode</button>
       </div>
     </main>
+
     <footer class="footer">
       <div class="container footer-content">
         <div class="footer-social">
@@ -268,6 +213,7 @@
         <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
       </div>
     </footer>
+
     <script src="script.js"></script>
     <script src="study-resources.js"></script>
     <script>
@@ -280,13 +226,13 @@
               let found = false;
               
               resourceCards.forEach(card => {
-                  const title = card.querySelector('h3').textContent.toLowerCase();
+                  const title = card.querySelector('header').textContent.toLowerCase();
                   const description = card.querySelector('p') ? card.querySelector('p').textContent.toLowerCase() : '';
                   const searchLower = searchTerm.toLowerCase();
                   
                   if (title.includes(searchLower) || description.includes(searchLower)) {
                       card.style.display = 'block';
-                      card.style.border = '2px solid #0066cc';
+                      card.style.border = '2px solid #667eea';
                       found = true;
                   } else {
                       card.style.display = 'none';
@@ -299,7 +245,28 @@
           }
       }
 
+      // Real-time search functionality
       document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+          searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const resourceCards = document.querySelectorAll('.resource-card');
+            
+            resourceCards.forEach(card => {
+              const title = card.querySelector('header').textContent.toLowerCase();
+              const description = card.querySelector('p') ? card.querySelector('p').textContent.toLowerCase() : '';
+              
+              if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                card.style.display = 'block';
+                card.style.opacity = '1';
+              } else {
+                card.style.opacity = '0.3';
+              }
+            });
+          });
+        }
+
         // Show the first category tab by default
         const firstCategoryTab = document.querySelector('.sub-tab-button');
         if (firstCategoryTab) {
@@ -307,14 +274,6 @@
         }
       });
 
-      document.addEventListener('DOMContentLoaded', function() {
-      const notifBell = document.getElementById('notifBell');
-      const notifDropdown = document.getElementById('notifDropdown');
-      if (notifBell && notifDropdown) {
-        // Handled globally in script.js. Keep only page-specific logic below.
-      }
-    </script>
-    <script>
       // Dark Mode functionality
       function setupDarkMode() {
           const isDarkMode = localStorage.getItem('darkMode') === 'true';
@@ -336,9 +295,9 @@
           if (button) {
               const isDark = document.body.classList.contains('dark-mode');
               button.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
-              button.style.background = isDark ? 'rgba(255,255,255,0.1)' : 'transparent';
-              button.style.color = isDark ? '#fff' : '#6a82fb';
-              button.style.borderColor = isDark ? '#fff' : '#6a82fb';
+              button.style.background = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(255, 255, 255, 0.1)';
+              button.style.color = '#ffffff';
+              button.style.borderColor = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(255, 255, 255, 0.2)';
           }
       }
 

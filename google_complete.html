@@ -25,19 +25,39 @@
           <p style="margin:0; color:#6b7280;">Signed in with: <strong>{{ email }}</strong></p>
         </div>
         <form method="POST" class="login-form">
-          <label style="font-weight:600;">Link to existing username (optional)</label>
-          <input type="text" name="link_username" placeholder="Existing username to link (e.g., yash)" value="{{ session.get('pending_link_username') or '' }}" />
-          <small style="color:#6b7280;">If you already have an account, enter your existing username to link this Google email.</small>
-          <div style="height:10px;"></div>
-          <label style="font-weight:600;">Or create a new username</label>
-          <input type="text" name="chosen_username" placeholder="Preferred username" value="{{ suggested_name }}" />
+          <!-- Link to existing username section - only show if not already linked -->
+          {% if not session.get('pending_link_username') %}
+          <div id="linkExistingSection">
+            <label style="font-weight:600;">Link to existing username (optional)</label>
+            <input type="text" name="link_username" placeholder="Existing username to link (e.g., yash)" />
+            <small style="color:#6b7280;">If you already have an account, enter your existing username to link this Google email.</small>
+            <div style="height:10px;"></div>
+          </div>
+          {% endif %}
+          
+          <!-- Create new username section - only show if not linking to existing -->
+          {% if not session.get('pending_link_username') %}
+          <div id="createNewSection">
+            <label style="font-weight:600;">Or create a new username</label>
+            <input type="text" name="chosen_username" placeholder="Preferred username" value="{{ suggested_name }}" />
+          </div>
+          {% endif %}
+          
+          <!-- Role selection - always visible -->
           <label style="font-weight:600;">Select your role/class</label>
-          <select name="class_id" required style="border-radius:20px; padding:0.7rem 1.1rem;">
+          <select name="class_id" id="roleSelect" required style="border-radius:20px; padding:0.7rem 1.1rem;">
+            <option value="">Select a role...</option>
             {% for id, name in all_classes %}
               <option value="{{ id }}">{{ name|title }}</option>
             {% endfor %}
           </select>
-          <input type="text" name="admin_code" placeholder="Admin Code (only if role is admin)" />
+          
+          <!-- Admin code field - only visible when admin role is selected -->
+          <div id="adminCodeSection" style="display: none;">
+            <input type="text" name="admin_code" placeholder="Admin Code (required for admin role)" required />
+            <small style="color:#6b7280;">Admin code is required to verify admin privileges.</small>
+          </div>
+          
           <button type="submit" class="btn btn-primary">Continue</button>
         </form>
         <div class="login-links">
@@ -47,5 +67,20 @@
     </div>
   </body>
   <script src="script.js"></script>
+  <script>
+    // Show/hide admin code field based on role selection
+    document.getElementById('roleSelect').addEventListener('change', function() {
+      const selectedRole = this.options[this.selectedIndex].text.toLowerCase();
+      const adminCodeSection = document.getElementById('adminCodeSection');
+      
+      if (selectedRole === 'admin') {
+        adminCodeSection.style.display = 'block';
+        adminCodeSection.querySelector('input[name="admin_code"]').required = true;
+      } else {
+        adminCodeSection.style.display = 'none';
+        adminCodeSection.querySelector('input[name="admin_code"]').required = false;
+      }
+    });
+  </script>
 </html>
 
