@@ -5457,9 +5457,26 @@ def before_request_handler():
     """Consolidated before_request handler for login, session validation, and IP tracking"""
     
     # 1. Login requirement check
-    allowed_routes = ['home', 'auth', 'register', 'static_files', 'submit_admission', 'admission', 'check_admission_status', 'check_admission', 'submit_query', 'get_recent_queries', 'api_get_categories_for_class', 'api_get_categories_by_class_name', 'index', 'static', 'countdown_preview', 'api_recent_queries', 'api_queries', 'preview', 'uploads', 'forum', 'batch', 'study_resources']
-    if request.endpoint not in allowed_routes and not session.get('user_id'):
-        return redirect(url_for('auth'))
+    allowed_routes = [
+        'home', 'auth', 'register', 'static_files', 'submit_admission', 'admission',
+        'check_admission_status', 'check_admission', 'submit_query', 'get_recent_queries',
+        'api_get_categories_for_class', 'api_get_categories_by_class_name', 'index', 'static',
+        'countdown_preview', 'api_recent_queries', 'api_queries', 'preview', 'uploads',
+        'forum', 'batch', 'study_resources',
+        # Auth/Google flows
+        'auth_google_start', 'auth_google_callback', 'google_complete'
+    ]
+
+    endpoint = request.endpoint
+    path = request.path or ''
+
+    # Avoid forcing login for static files or when endpoint is unknown (e.g., 404 handlers)
+    if (endpoint is None) or endpoint == 'static' or path.startswith('/static/'):
+        pass
+    else:
+        # Allow auth-related endpoints and unauthenticated public pages
+        if (endpoint not in allowed_routes and not endpoint.startswith('auth_') and not endpoint.startswith('google_')) and not session.get('user_id'):
+            return redirect(url_for('auth'))
     
     # 2. Session validation and activity update
     user_id = session.get('user_id')
