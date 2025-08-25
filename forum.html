@@ -1,13 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forum - Sunrise Educational Centre</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="forum.css">
-    <style>
-        /* Reusable black-glass utility (matches homepage) */
         .black-glass {
             background: rgba(5, 6, 10, 0.72);
             border: 1px solid rgba(255, 255, 255, 0.22);
@@ -17,7 +7,7 @@
             color: #fff;
             border-radius: 16px;
         }
-        .forum-shell { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+        .forum-shell { max-width: 1100px; margin: 0 auto; padding: 0 1rem; min-height: 100vh; display: flex; flex-direction: column; }
         .forum-header.black-glass { border-radius: 18px; }
         .forum-header h1 { color: #fff; }
         .forum-header p { color: rgba(255,255,255,0.85); }
@@ -29,7 +19,7 @@
         .tab-button { color:#fff; }
         .tab-button:hover { background: rgba(255,255,255,0.10); color:#fff; }
         .tab-button.active { background: rgba(255,255,255,0.14); color:#fff; border-bottom-color: rgba(255,255,255,0.3); }
-        .messages-container.black-glass { padding: 1rem; border-radius: 16px; }
+        .messages-container.black-glass { padding: 1rem; border-radius: 16px; flex: 1; overflow-y: auto; }
         /* Glassy message bubbles */
         .message-content { background: rgba(5,6,10,0.6); color:#fff; border: 1px solid rgba(255,255,255,0.22); box-shadow: 0 8px 24px rgba(0,0,0,0.45); }
         .message-content.own-message { background: rgba(255,255,255,0.12); color:#fff; }
@@ -54,75 +44,3 @@
         #mentionSuggestions { background: rgba(5,6,10,0.75); border: 1px solid rgba(255,255,255,0.22); color:#fff; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
         .mention-suggestion { border-bottom: 1px solid rgba(255,255,255,0.18); }
         .mention-suggestion:hover, .mention-suggestion.selected { background: rgba(255,255,255,0.12); }
-    </style>
-</head>
-<body data-user-role="{{ role or '' }}">
-    <main class="forum-shell">
-        <header class="forum-header black-glass">
-            <h1>Community Forum</h1>
-            <p>Discuss doubts, share resources, and collaborate with peers.</p>
-            <div class="class-strip">
-                <span class="class-chip">Your Class: {{ role }}</span>
-                {% if user_paid_status %}
-                <span class="status-chip {% if user_paid_status != 'paid' %}unpaid{% endif %}">
-                    {{ 'PAID' if user_paid_status == 'paid' else 'UNPAID' }}
-                </span>
-                {% endif %}
-            </div>
-        </header>
-
-        <!-- Category Tabs (Top) -->
-        <div class="tabs black-glass">
-            <button class="tab-button active" data-topic="all" data-topic-name="All">All</button>
-            {% for t in paid_topics %}
-                <button class="tab-button" data-topic="{{ t[0] }}" data-topic-name="{{ t[1] }}">{{ t[1] }} <span class="class-label">Paid</span></button>
-            {% endfor %}
-            {% for t in unpaid_topics %}
-                <button class="tab-button" data-topic="{{ t[0] }}" data-topic-name="{{ t[1] }}">{{ t[1] }}</button>
-            {% endfor %}
-        </div>
-
-        <!-- Current Topic Display -->
-        <div class="current-topic-display black-glass">
-            <h4 id="currentTopicTitle">All Topics</h4>
-            <p>Select a category to view or start the discussion.</p>
-        </div>
-
-        <!-- Messages Area -->
-        <section class="messages-container black-glass" id="forumMessages" aria-live="polite">
-            <div style="color:#b8c5d6; text-align:center; padding:2rem;">Loading messages...</div>
-        </section>
-
-        <!-- Reply indicator placement -->
-        <div id="replyIndicator" style="display:none;"></div>
-
-        <!-- Chat Input Bar -->
-        <div class="chat-input-bar black-glass" style="position:relative;">
-            <div id="forumMediaPreview" style="margin-bottom:.6rem;"></div>
-            <div style="display:flex; gap:.6rem; align-items:flex-end;">
-                <button id="forumEmojiBtn" class="btn" style="background: rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.25); color:#fff; border-radius:10px; padding:.45rem .7rem;">😊</button>
-                <button id="forumUploadBtn" class="btn" style="background: rgba(255,255,255,0.14); border:1px solid rgba(255,255,255,0.25); color:#fff; border-radius:10px; padding:.45rem .7rem;">📎</button>
-                <input id="forumMediaInput" type="file" accept="image/*,video/*" style="display:none;" />
-                <textarea id="forumInput" rows="1" placeholder="Type your message..." style="flex:1; resize:none;"></textarea>
-                <button id="forumSendBtn" title="Send">➤</button>
-            </div>
-            <!-- Mention suggestions container -->
-            <div id="mentionSuggestions" style="display:none;">
-                <div id="mentionSuggestionsList"></div>
-            </div>
-        </div>
-    </main>
-
-    <script src="forum.js"></script>
-    <script>
-        // Keep topic title synced
-        document.addEventListener('DOMContentLoaded', function(){
-            const tabs = document.querySelectorAll('.tab-button');
-            const title = document.getElementById('currentTopicTitle');
-            tabs.forEach(btn => btn.addEventListener('click', () => {
-                title.textContent = btn.getAttribute('data-topic-name') || 'All Topics';
-            }));
-        });
-    </script>
-</body>
-</html>
