@@ -1156,23 +1156,28 @@ def study_resources():
             flash('Please use the admin panel to manage all resources.', 'info')
             return redirect(url_for('admin_panel'))
 
-        # Get class_id from the role name stored in the session
+        # Determine the user's class from the database (more reliable than mapping role string)
         try:
-            all_classes = get_all_classes()
-            if not all_classes:
-                flash('No classes available. Please contact administrator.', 'error')
-                return redirect(url_for('auth'))
-                
-            all_classes_dict_rev = {c[1]: c[0] for c in all_classes}
-            class_id = all_classes_dict_rev.get(role)
-            
+            user_id = session.get('user_id')
+            user = get_user_by_id(user_id) if user_id else None
+            # user tuple: (id, username, class_id, paid, class_name, banned, mobile_no, email_address)
+            class_id = user[2] if user and len(user) > 2 else None
+            class_name = user[4] if user and len(user) > 4 else role
             if not class_id:
-                flash(f'Class "{role}" not found. Please contact administrator.', 'error')
-                return redirect(url_for('auth'))
+                # Fallback: attempt to resolve by role name (case-insensitive)
+                try:
+                    from auth_handler import get_class_id_by_name
+                    resolved_class_id = get_class_id_by_name(role)
+                    class_id = resolved_class_id
+                except Exception as _:
+                    pass
+            if not class_id:
+                flash('Could not determine your class. Please contact administrator.', 'error')
+                return redirect(url_for('home'))
         except Exception as e:
-            print(f"Error getting classes: {e}")
+            print(f"Error determining user class: {e}")
             flash('Error loading class information. Please try again.', 'error')
-            return redirect(url_for('auth'))
+            return redirect(url_for('home'))
         
         # Fetch resources only for the user's class
         resources = []
@@ -1194,7 +1199,6 @@ def study_resources():
             categories = []
             flash('Some categories could not be loaded.', 'warning')
 
-        user_id = session.get('user_id')
         paid_status = None
         try:
             if user_id:
@@ -1205,7 +1209,18 @@ def study_resources():
             print(f"Error getting user paid status: {e}")
             paid_status = None
 
-        return render_template('study-resources.html', resources=resources, categories=categories, class_name=role, class_id=class_id, paid_status=paid_status)
+        # Pass username and role so navbar shows correct login state
+        username = session.get('username')
+        return render_template(
+            'study-resources.html',
+            resources=resources,
+            categories=categories,
+            class_name=class_name,
+            class_id=class_id,
+            paid_status=paid_status,
+            username=username,
+            role=role
+        )
         
     except Exception as e:
         print(f"Unexpected error in study_resources route: {e}")
