@@ -9,6 +9,22 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="floating-navbar.css" />
+  <style>
+    /* Black transparent glass look */
+    .black-glass {
+      background: rgba(5, 6, 10, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(18px) saturate(110%);
+      -webkit-backdrop-filter: blur(18px) saturate(110%);
+      color: #fff;
+      border-radius: 16px;
+    }
+    body { background: linear-gradient(135deg, #0f1117 0%, #161a25 100%); }
+    .hero-section .hero-content h1, .hero-section .hero-content p { color: #fff; }
+    .card-section.black-glass h3 { color: #8fa3ff; }
+    .card-section.black-glass { color: #fff; }
+  </style>
   </head>
   <body>
     <!-- Floating Navbar -->
@@ -113,7 +129,7 @@
           <button id="closeAVDialog" class="btn btn-primary" style="margin-top:0.5rem;">Close</button>
         </div>
       </div>
-      <section class="card-section" style="max-width: 700px; margin: 2rem auto;">
+      <section class="card-section black-glass" style="max-width: 900px; margin: 2rem auto;">
         <div style="display:flex; gap:1.2rem; justify-content:center; margin-bottom:2.2rem;">
           <button class="live-tab-btn tab-btn" onclick="showLiveTab('live')" style="background:#e3f7fc; color:#232946; font-weight:600; border:none; border-radius:12px; padding:0.8rem 2.2rem; font-size:1.1rem; cursor:pointer;">Live</button>
           <button class="upcoming-tab-btn tab-btn" onclick="showLiveTab('upcoming')" style="background:#ffe082; color:#232946; font-weight:600; border:none; border-radius:12px; padding:0.8rem 2.2rem; font-size:1.1rem; cursor:pointer;">Upcoming</button>
@@ -125,7 +141,7 @@
           {% if active_classes and active_classes|length > 0 %}
             <div class="live-class-cards" style="display:flex; flex-wrap:wrap; gap:2rem; justify-content:center;">
               {% for c in active_classes %}
-                <div class="card-section" style="min-width:260px; max-width:340px; background:#f4f4f4; border-radius:14px; box-shadow:0 2px 8px rgba(100,100,255,0.07); padding:1.5rem;">
+                <div class="card-section black-glass" style="min-width:260px; max-width:340px; padding:1.5rem;">
                   <h3 style="color:#6a82fb;">{{ c[4] or 'Live Class' }}</h3>
                   {% if c|length > 12 %}
                   <div style="font-size:0.96rem; color:#555; margin:0.2rem 0 0.6rem 0;">
@@ -152,7 +168,7 @@
           {% if upcoming_classes and upcoming_classes|length > 0 %}
             <div class="live-class-cards" style="display:flex; flex-wrap:wrap; gap:2rem; justify-content:center;">
               {% for c in upcoming_classes %}
-                <div class="card-section" style="min-width:260px; max-width:340px; background:#f4f4f4; border-radius:14px; box-shadow:0 2px 8px rgba(100,100,255,0.07); padding:1.5rem;">
+                <div class="card-section black-glass" style="min-width:260px; max-width:340px; padding:1.5rem;">
                   <h3 style="color:#ffa726;">{{ c[4] or 'Upcoming Class' }}</h3>
                   {% if c|length > 12 %}
                   <div style="font-size:0.96rem; color:#555; margin:0.2rem 0 0.6rem 0;">
@@ -180,7 +196,7 @@
           {% if completed_classes and completed_classes|length > 0 %}
             <div class="live-class-cards" style="display:flex; flex-wrap:wrap; gap:2rem; justify-content:center;">
               {% for c in completed_classes %}
-                <div class="card-section" style="min-width:260px; max-width:340px; background:#f4f4f4; border-radius:14px; box-shadow:0 2px 8px rgba(100,100,255,0.07); padding:1.5rem;">
+                <div class="card-section black-glass" style="min-width:260px; max-width:340px; padding:1.5rem;">
                   <h3 style="color:#9e9e9e;">{{ c[4] or 'Completed Class' }}</h3>
                   {% if c|length > 12 %}
                   <div style="font-size:0.96rem; color:#555; margin:0.2rem 0 0.6rem 0;">

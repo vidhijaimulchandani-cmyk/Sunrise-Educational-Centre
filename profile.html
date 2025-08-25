@@ -9,6 +9,16 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="style.css" />
   <style>
+    /* Black transparent glass theme */
+    .black-glass {
+      background: rgba(5, 6, 10, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(18px) saturate(110%);
+      -webkit-backdrop-filter: blur(18px) saturate(110%);
+      color: #fff;
+      border-radius: 16px;
+    }
     body {
       background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
       color: #1e293b;
@@ -79,14 +89,7 @@
       padding: 0 1.5rem;
     }
     
-    .profile-card {
-      background: rgba(255,255,255,0.95);
-      border-radius: 18px;
-      padding: 2.5rem;
-      box-shadow: 0 4px 20px rgba(100,100,255,0.08);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.2);
-    }
+    .profile-card { background: rgba(5,6,10,0.72); color:#fff; border-radius: 18px; padding: 2.5rem; box-shadow: 0 12px 48px rgba(0,0,0,0.6); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.22); }
     
     .profile-header {
       text-align: center;
@@ -315,19 +318,9 @@
       box-shadow: 0 4px 20px rgba(106,130,251,0.3);
     }
     
-    .profile-name {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #1e293b;
-      margin-bottom: 0.5rem;
-    }
+    .profile-name { font-size: 2rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
     
-    .profile-role {
-      font-size: 1.1rem;
-      color: #6a82fb;
-      font-weight: 600;
-      text-transform: capitalize;
-    }
+    .profile-role { font-size: 1.1rem; color: #8fa3ff; font-weight: 600; text-transform: capitalize; }
     
     .profile-info {
       display: grid;
@@ -336,12 +329,7 @@
       margin-top: 2rem;
     }
     
-    .info-section {
-      background: #f8fafc;
-      border-radius: 12px;
-      padding: 1.5rem;
-      border: 1px solid #e2e8f0;
-    }
+    .info-section { background: rgba(255,255,255,0.06); color:#fff; border-radius: 12px; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.18); }
     
     .info-section h3 {
       color: #2563eb;
@@ -365,17 +353,9 @@
       border-bottom: none;
     }
     
-    .info-label {
-      font-weight: 600;
-      color: #475569;
-      font-size: 0.95rem;
-    }
+    .info-label { font-weight: 600; color: #dbeafe; font-size: 0.95rem; }
     
-    .info-value {
-      font-weight: 500;
-      color: #1e293b;
-      text-align: right;
-    }
+    .info-value { font-weight: 500; color: #fff; text-align: right; }
     
     .status-badge {
       padding: 0.4rem 0.8rem;
@@ -597,7 +577,7 @@
   </nav>
   
   <main class="profile-container">
-    <div class="profile-card">
+    <div class="profile-card black-glass">
       <div class="profile-header">
         <div class="profile-avatar">
           {{ user.username[0].upper() }}
