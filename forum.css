@@ -31,6 +31,84 @@
   --forum-scrollbar-thumb-hover: rgba(0,0,0,0.3);
 }
 
+/* Glassy dark backdrop for forum pages */
+body {
+  background: radial-gradient(1000px 600px at 10% -10%, rgba(106,130,251,0.12) 0%, transparent 60%),
+              radial-gradient(800px 500px at 110% 10%, rgba(252,92,125,0.08) 0%, transparent 60%),
+              linear-gradient(135deg, #0d0f16 0%, #10131d 50%, #0b0e15 100%);
+}
+
+/* Top wrapper sections */
+.forum-header,
+.forum-actions,
+.forum-categories,
+.new-topic article {
+  background: rgba(10, 12, 20, 0.55);
+  backdrop-filter: blur(18px) saturate(110%);
+  -webkit-backdrop-filter: blur(18px) saturate(110%);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 12px 42px rgba(0,0,0,0.35);
+}
+
+/* Post cards glass */
+.post-card {
+  background: rgba(15, 18, 28, 0.55);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 10px 36px rgba(0,0,0,0.35);
+}
+
+.post-card:hover {
+  box-shadow: 0 16px 48px rgba(0,0,0,0.45);
+  border-color: rgba(255,255,255,0.14);
+}
+
+/* Chat/input bar glass */
+.chat-input-bar,
+.forum-reply,
+.reply-indicator {
+  background: rgba(15, 18, 28, 0.55);
+  border-color: rgba(255,255,255,0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Buttons refinement */
+.tab-btn,
+.tab-button,
+.forum-action-btn {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--forum-text);
+}
+
+.tab-btn:hover,
+.tab-button:hover,
+.forum-action-btn:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-1px);
+}
+
+/* Message bubbles with subtle glass */
+.forum-bubble {
+  background: rgba(20, 24, 36, 0.55);
+}
+
+.forum-bubble.own {
+  background: linear-gradient(135deg, rgba(0,92,75,0.55), rgba(0,92,75,0.35));
+}
+
+/* Inputs */
+textarea#forumInput {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--forum-text);
+}
+
+textarea#forumInput:focus {
+  border-color: var(--forum-primary);
+  box-shadow: 0 0 0 3px rgba(106,130,251,0.2);
+}
+
 /* CSS Variables for Dark Mode */
 body.dark-mode {
   --forum-bg: #232946;

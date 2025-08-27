@@ -1,0 +1,43 @@
+/* Profile page - glassy black theme */
+body {
+  background: radial-gradient(1200px 700px at -10% 0%, rgba(102,126,234,0.12) 0%, transparent 60%),
+              radial-gradient(1000px 600px at 110% 0%, rgba(252,92,125,0.10) 0%, transparent 60%),
+              linear-gradient(135deg, #0d0f16 0%, #10131d 50%, #0b0e15 100%);
+}
+
+.user-info-section,
+.login-card,
+.cred-card {
+  background: rgba(12, 14, 22, 0.55) !important;
+  backdrop-filter: blur(22px) saturate(110%) !important;
+  -webkit-backdrop-filter: blur(22px) saturate(110%) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  box-shadow: 0 12px 42px rgba(0,0,0,0.35) !important;
+}
+
+.user-info-section h2 {
+  color: #e5e7eb;
+}
+
+.user-info-section input,
+.user-info-section select {
+  background: rgba(255,255,255,0.06) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  color: #e5e7eb !important;
+}
+
+.user-info-section input:focus,
+.user-info-section select:focus {
+  border-color: #6a82fb !important;
+  box-shadow: 0 0 0 3px rgba(106,130,251,0.2) !important;
+}
+
+.user-info-section button[type="submit"],
+.btn-primary {
+  background: linear-gradient(135deg, #6a82fb, #764ba2) !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+}
+
+.back-link a { color: #93c5fd !important; }
+.back-link a:hover { color: #bfdbfe !important; }
+
