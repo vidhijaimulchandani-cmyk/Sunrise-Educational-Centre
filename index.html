@@ -472,17 +472,17 @@
     <!-- Floating Navbar -->
     <nav class="floating-navbar black-glass">
         <ul class="nav-links">
-            <li><a href="/">🏠 Home</a></li>
+            <li><a href="/">Home</a></li>
             
             <!-- Direct Page Links -->
-            <li><a href="/online-class">🎥 Live Classes</a></li>
-            <li><a href="/batch">📋 Batches</a></li>
-            <li><a href="/study-resources">📖 Study Resources</a></li>
-            <li><a href="/forum">💬 Forum</a></li>
-            <li><a href="/admission">📝 Admission</a></li>
+            <li><a href="/online-class">Live Classes</a></li>
+            <li><a href="/batch">Batches</a></li>
+            <li><a href="/study-resources">Study Resources</a></li>
+            <li><a href="/forum">Forum</a></li>
+            <li><a href="/admission">Admission</a></li>
             
-            <li><a href="/query-management">❓ Query Management</a></li>
-            <li><a href="/send-notification">📢 Send Notification</a></li>
+            <li><a href="/query-management">Query Management</a></li>
+            <li><a href="/send-notification">Send Notification</a></li>
             
             <!-- Admin Dropdown (for admin users) -->
             
@@ -490,25 +490,24 @@
             <!-- User Dropdown -->
             {% if username %}
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle">👤 {{ username }}</a>
+                <a href="#" class="dropdown-toggle">{{ username }}</a>
                 <ul class="dropdown-menu">
-                    <li><a href="/profile">👤 Profile</a></li>
-                    <li><a href="/edit-profile">✏️ Edit Profile</a></li>
-                    <li><a href="/special-dashboard">📊 Dashboard</a></li>
-                    <li><a href="/logout">🚪 Logout</a></li>
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/special-dashboard">Dashboard</a></li>
+                    <li><a href="/logout">Logout</a></li>
                 </ul>
             </li>
             {% else %}
-            <li><a href="/auth" class="btn-primary">🔐 Login</a></li>
+            <li><a href="/auth" class="btn-primary">Login</a></li>
             {% endif %}
             
             <!-- Search Button -->
-            <li><button class="search-btn" onclick="openSearch()">🔍 Search</button></li>
+            <li><button class="search-btn" onclick="openSearch()">Search</button></li>
             
-            <!-- Notification Bell -->
+            <!-- Notification Button -->
             <li>
                 <button class="notification-bell" onclick="toggleNotifications()" title="Notifications">
-                    🔔
+                    Notifications
                     <span class="notification-badge" id="notification-count" style="display: none;">0</span>
                 </button>
             </li>
@@ -554,7 +553,7 @@
             <div class="hero-logo">
                 <img src="attached_assets/image_1750584670920.png" alt="Sunrise Educational Centre Logo" class="main-logo">
             </div>
-            <h1>Sunrise Educational Centre</h1>
+            <h1 id="typing-hero" style="border-right: 2px solid rgba(255,255,255,0.8); white-space: nowrap; overflow: hidden; display: inline-block; padding-right: 8px; min-height: 1em;"> </h1>
             <p>Empowering students from Class 9 to 12 with expert coaching, personalized attention, and a proven track record of success. Join our vibrant learning community and unlock your full potential!</p>
             <div class="hero-buttons">
                 <a href="/admission" class="btn-hero btn-primary-hero">Get Admission</a>
