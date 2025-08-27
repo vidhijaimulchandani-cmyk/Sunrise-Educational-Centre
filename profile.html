@@ -560,7 +560,7 @@
 </head>
 <body>
   <link rel="stylesheet" href="floating-navbar.css">
-  <nav class="floating-navbar">
+  <nav class="floating-navbar black-glass">
     <ul class="nav-links">
       <li><a href="/">Home</a></li>
       <li><a href="/online-class">Live Class</a></li>
@@ -570,6 +570,20 @@
       <li><a href="/logout" class="btn-primary">Logout</a></li>
     </ul>
   </nav>
+  <script>
+    (function(){
+      var btn=document.getElementById('toggleThemeBtn');
+      function applySaved(){
+        try{var t=localStorage.getItem('preferredTheme'); if(t==='dark'){document.body.classList.add('dark-mode');}}
+        catch(e){}
+      }
+      function toggle(){
+        document.body.classList.toggle('dark-mode');
+        try{localStorage.setItem('preferredTheme', document.body.classList.contains('dark-mode')?'dark':'light');}catch(e){}
+      }
+      document.addEventListener('DOMContentLoaded',function(){applySaved(); if(btn){btn.addEventListener('click', toggle);}});
+    })();
+  </script>
   
   <main class="profile-container">
     <div class="profile-card black-glass">
@@ -635,6 +649,22 @@
           <div class="info-item">
             <span class="info-label">Last Login</span>
             <span class="info-value">{{ user.last_login if user.last_login else 'Not available' }}</span>
+          </div>
+        </div>
+        
+        <div class="info-section">
+          <h3>⚙️ Settings</h3>
+          <div class="info-item">
+            <span class="info-label">Theme</span>
+            <span class="info-value">
+              <button id="toggleThemeBtn" class="btn btn-secondary" type="button">Toggle Dark Mode</button>
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Notifications</span>
+            <span class="info-value">
+              <a href="/notifications" class="btn btn-secondary">Manage</a>
+            </span>
           </div>
         </div>
       </div>
