@@ -536,20 +536,16 @@
   </style>
 </head>
 <body>
-  <nav class="navbar glassmorphic">
-    <div class="container nav-content">
-      <div class="nav-logo">
-        <img src="attached_assets/image_1750584670920.png" alt="Logo">
-        <span>Admin Panel</span>
-      </div>
-      <ul class="nav-links">
-        
-        <li><a href="#about-us">About</a></li>
-        <li><a href="/online-class">Live Class</a></li>
-        <li><a href="/study-resources">Study Resources</a></li>
-        <li><a href="/forum">Forum</a></li>
-        <li><a href="/admin/status-management">Status Management</a></li>
-        <!-- Notification Bell (rebuilt, now before login/logout) -->
+  <link rel="stylesheet" href="floating-navbar.css">
+  <nav class="floating-navbar">
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="#about-us">About</a></li>
+      <li><a href="/online-class">Live Class</a></li>
+      <li><a href="/study-resources">Study Resources</a></li>
+      <li><a href="/forum">Forum</a></li>
+      <li><a href="/admin/status-management">Status Management</a></li>
+      <!-- Notification Bell (rebuilt, now before login/logout) -->
         <li id="notifBellContainer" style="position:relative; z-index:9999;">
           <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative; z-index:10000; padding:0;">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>

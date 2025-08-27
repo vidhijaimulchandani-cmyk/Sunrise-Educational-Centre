@@ -744,6 +744,7 @@ body.dark-mode {
   box-shadow: 0 1px 2px var(--forum-shadow);
   border: 1px solid var(--forum-border);
   transition: all 0.2s ease;
+  min-height: 86px;
 }
 
 .message-content:hover {

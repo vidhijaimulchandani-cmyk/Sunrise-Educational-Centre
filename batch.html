@@ -91,42 +91,42 @@
     <!-- Floating Navbar -->
     <nav class="floating-navbar">
         <ul class="nav-links">
-            <li><a href="/">🏠 Home</a></li>
+            <li><a href="/">Home</a></li>
             
             <!-- Learning Dropdown -->
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle">📚 Learning</a>
+                <a href="#" class="dropdown-toggle">Learning</a>
                 <ul class="dropdown-menu">
-                    <li><a href="/online-class">🎥 Live Classes</a></li>
-                    <li><a href="/batch">📋 Batches</a></li>
-                    <li><a href="/study-resources">📖 Study Resources</a></li>
-                    <li><a href="/forum">💬 Forum</a></li>
+                    <li><a href="/online-class">Live Classes</a></li>
+                    <li><a href="/batch">Batches</a></li>
+                    <li><a href="/study-resources">Study Resources</a></li>
+                    <li><a href="/forum">Forum</a></li>
                 </ul>
             </li>
             
             <!-- Services Dropdown -->
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle">🛠️ Services</a>
+                <a href="#" class="dropdown-toggle">Services</a>
                 <ul class="dropdown-menu">
-                    <li><a href="/admission">📝 Admission</a></li>
-                    <li><a href="/check-admission-status">🔍 Check Status</a></li>
-                    <li><a href="/query-management">❓ Query Management</a></li>
-                    <li><a href="/send-notification">📢 Send Notification</a></li>
+                    <li><a href="/admission">Admission</a></li>
+                    <li><a href="/check-admission-status">Check Status</a></li>
+                    <li><a href="/query-management">Query Management</a></li>
+                    <li><a href="/send-notification">Send Notification</a></li>
                 </ul>
             </li>
             
             <!-- Admin Dropdown (for admin users) -->
             {% if username and role == 'admin' %}
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle">⚙️ Admin</a>
+                <a href="#" class="dropdown-toggle">Admin</a>
                 <ul class="dropdown-menu">
-                    <li><a href="/admin">👨‍💼 Admin Panel</a></li>
-                    <li><a href="/admin/admissions">📋 Admissions</a></li>
-                    <li><a href="/content-management">📝 Content Management</a></li>
-                    <li><a href="/live-class-management">🎥 Live Class Management</a></li>
-                    <li><a href="/upload-resource">📤 Upload Resource</a></li>
-                    <li><a href="/create-live-class">➕ Create Live Class</a></li>
-                    <li><a href="/bulk-upload">📊 Bulk Upload</a></li>
+                    <li><a href="/admin">Admin Panel</a></li>
+                    <li><a href="/admin/admissions">Admissions</a></li>
+                    <li><a href="/content-management">Content Management</a></li>
+                    <li><a href="/live-class-management">Live Class Management</a></li>
+                    <li><a href="/upload-resource">Upload Resource</a></li>
+                    <li><a href="/create-live-class">Create Live Class</a></li>
+                    <li><a href="/bulk-upload">Bulk Upload</a></li>
                 </ul>
             </li>
             {% endif %}
@@ -134,20 +134,19 @@
             <!-- User Dropdown -->
             {% if username %}
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle">👤 {{ username }}</a>
+                <a href="#" class="dropdown-toggle">{{ username }}</a>
                 <ul class="dropdown-menu">
-                    <li><a href="/profile">👤 Profile</a></li>
-                    <li><a href="/edit-profile">✏️ Edit Profile</a></li>
-                    <li><a href="/special-dashboard">📊 Dashboard</a></li>
-                    <li><a href="/logout">🚪 Logout</a></li>
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/special-dashboard">Dashboard</a></li>
+                    <li><a href="/logout">Logout</a></li>
                 </ul>
             </li>
             {% else %}
-            <li><a href="/auth" class="btn-primary">🔐 Login</a></li>
+            <li><a href="/auth" class="btn-primary">Login</a></li>
             {% endif %}
             
             <!-- Search Button -->
-            <li><button class="search-btn" onclick="openSearch()">🔍 Search</button></li>
+            <li><button class="search-btn" onclick="openSearch()">Search</button></li>
         </ul>
     </nav>
 

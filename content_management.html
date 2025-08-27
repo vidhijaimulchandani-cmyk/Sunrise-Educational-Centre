@@ -6,6 +6,7 @@
   <title>Content Management - Admin</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="floating-navbar.css">
   <style>
     .content-container { max-width: 1400px; margin: 2rem auto; padding: 0 1rem; }
     .header-section { text-align: center; margin-bottom: 3rem; }
@@ -90,16 +91,20 @@
   </style>
 </head>
 <body>
-  <nav class="navbar glassmorphic">
-    <div class="container nav-content">
-      <div class="nav-logo">
-        <img src="attached_assets/image_1750584670920.png" alt="Logo">
-      </div>
-      <ul class="nav-links">
-        <li><a href="/admin">Admin Panel</a></li>
-        <li><a href="/logout" class="btn btn-primary">Logout</a></li>
-      </ul>
-    </div>
+  <!-- Floating Navbar -->
+  <nav class="floating-navbar">
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle">Admin</a>
+        <ul class="dropdown-menu">
+          <li><a href="/admin">Admin Panel</a></li>
+          <li><a href="/content-management">Content Management</a></li>
+          <li><a href="/live-class-management">Live Class Management</a></li>
+        </ul>
+      </li>
+      <li><a href="/logout" class="btn-primary">Logout</a></li>
+    </ul>
   </nav>
 
   <main class="container main-content">

@@ -6,6 +6,7 @@
   <title>Check Admission Status - Sunrise Educational Centre</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
   <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="floating-navbar.css" />
   <style>
     body.dark-mode .navbar { background: rgba(35,41,70,0.95); border-bottom: 1px solid #44476a; }
     body.dark-mode .nav-links a { color: #e0e7ff; }
@@ -38,20 +39,15 @@
   </style>
 </head>
 <body>
-  <nav class="navbar glassmorphic">
-    <div class="container nav-content">
-      <div class="nav-logo">
-        <img src="attached_assets/image_1750584670920.png" alt="Logo">
-      </div>
-      <ul class="nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/admission">Admission</a></li>
-        <li><a href="/study-resources">Study Resources</a></li>
-        <li><a href="/batch">Batch</a></li>
-        <li><a href="/forum">Forum</a></li>
-        <li><a href="/online-class">Live Class</a></li>
-      </ul>
-    </div>
+  <nav class="floating-navbar">
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/admission">Admission</a></li>
+      <li><a href="/study-resources">Study Resources</a></li>
+      <li><a href="/batch">Batch</a></li>
+      <li><a href="/forum">Forum</a></li>
+      <li><a href="/online-class">Live Class</a></li>
+    </ul>
   </nav>
   <main class="container main-content" style="max-width: 760px;">
     <div class="card animated-card cred-card" style="padding:1.5rem;">
