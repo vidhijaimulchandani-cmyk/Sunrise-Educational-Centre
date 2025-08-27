@@ -1577,12 +1577,11 @@ def auth():
                     session['role'] = user_role
                     session['session_id'] = session_id
                     
-                    if username == 'yash' and user_role == 'admin':
-                        return redirect(url_for('special_dashboard'))
+                    # Redirect admins and teachers directly to the admin panel
                     if user_role in ['admin', 'teacher']:
                         return redirect(url_for('admin_panel'))
-                    else:
-                        return redirect(url_for('home'))
+                    # Special dashboard for a specific admin user can still be accessed from admin panel
+                    return redirect(url_for('home'))
                 else:
                     error = 'Failed to create session. Please try again.'
                     return render_template('auth.html', error=error)
@@ -1672,6 +1671,9 @@ def auth_google_callback():
                 session['username'] = username_val
                 session['role'] = user_role
                 session['session_id'] = session_id
+                # Redirect admins and teachers to admin panel; others to home
+                if user_role in ['admin', 'teacher']:
+                    return redirect(url_for('admin_panel'))
                 return redirect(url_for('home'))
             else:
                 flash('Failed to create session after Google sign-in.', 'error')
@@ -1741,6 +1743,9 @@ def google_complete():
                 session['session_id'] = session_id
                 session.pop('pending_google_email', None)
                 session.pop('pending_google_name', None)
+                # Admins/teachers go to admin panel, others to home
+                if existing_role in ['admin', 'teacher']:
+                    return redirect(url_for('admin_panel'))
                 return redirect(url_for('home'))
             else:
                 flash('Failed to create session. Please try again.', 'error')
@@ -1786,6 +1791,9 @@ def google_complete():
             session['session_id'] = session_id
             session.pop('pending_google_email', None)
             session.pop('pending_google_name', None)
+            # Admins/teachers go to admin panel, others to home
+            if user_role in ['admin', 'teacher']:
+                return redirect(url_for('admin_panel'))
             return redirect(url_for('home'))
         else:
             flash('Failed to create session. Please try again.', 'error')

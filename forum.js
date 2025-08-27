@@ -509,7 +509,7 @@ async function voteMessage(messageId, voteType) {
 
 // Show emoji picker
 function showEmojiPicker() {
-    const emojis = ['😀', '😂', '😍', '😎', '👍', '🙏', '🎉', '😢', '😮', '😡', '❤️', '🔥', '🤔', '😇', '🥳'];
+    const emojis = ['😀', '😂', '😍', '😎', '👍', '🙏', '🎉', '😢', '😮', '😡', '❤️', '🔥', '🤔', '😇', '🥳', '🚀', '✨'];
     
     let picker = document.getElementById('emojiPicker');
     if (picker) {
@@ -523,15 +523,18 @@ function showEmojiPicker() {
         position: absolute;
         bottom: 100%;
         left: 0;
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 8px;
+        background: rgba(5,6,10,0.85);
+        color:#fff;
+        border: 1px solid rgba(255,255,255,0.22);
+        border-radius: 12px;
         padding: 0.5rem;
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(6, 1fr);
         gap: 0.25rem;
         z-index: 1000;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
     `;
     
     emojis.forEach(emoji => {
