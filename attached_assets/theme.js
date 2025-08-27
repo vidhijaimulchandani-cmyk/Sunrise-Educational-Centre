@@ -1,4 +1,4 @@
-// Simple dark mode manager with localStorage persistence and auto-toggle injection
+// Simple dark mode manager with localStorage persistence (no auto-injection)
 (function () {
   var STORAGE_KEY = 'preferredTheme';
   var CLASS_DARK = 'dark-mode';
@@ -27,24 +27,9 @@
     return 'light';
   }
 
-  function ensureToggle() {
+  function bindToggleIfPresent() {
     var toggle = document.getElementById('darkModeToggle');
-    if (!toggle) {
-      var container = document.createElement('div');
-      container.className = 'dark-mode-toggle';
-      container.style.position = 'fixed';
-      container.style.top = '20px';
-      container.style.right = '20px';
-      container.style.zIndex = '1000';
-
-      toggle = document.createElement('button');
-      toggle.id = 'darkModeToggle';
-      toggle.className = 'btn btn-primary';
-      toggle.style.minWidth = '160px';
-      toggle.textContent = 'Toggle Dark Mode';
-      container.appendChild(toggle);
-      document.body.appendChild(container);
-    }
+    if (!toggle) return;
     toggle.addEventListener('click', function () {
       var isDark = document.body.classList.toggle(CLASS_DARK);
       try { localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light'); } catch (e) {}
@@ -70,7 +55,7 @@
 
   ready(function () {
     applyTheme(detectInitialTheme());
-    ensureToggle();
+    bindToggleIfPresent();
   });
 })();
 
