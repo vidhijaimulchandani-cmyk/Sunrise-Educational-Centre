@@ -480,25 +480,12 @@
             <li><a href="/study-resources">📖 Study Resources</a></li>
             <li><a href="/forum">💬 Forum</a></li>
             <li><a href="/admission">📝 Admission</a></li>
-            <li><a href="/check-admission-status">🔍 Check Status</a></li>
+            
             <li><a href="/query-management">❓ Query Management</a></li>
             <li><a href="/send-notification">📢 Send Notification</a></li>
             
             <!-- Admin Dropdown (for admin users) -->
-            {% if username and role == 'admin' %}
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">⚙️ Admin</a>
-                <ul class="dropdown-menu">
-                    <li><a href="/admin">👨‍💼 Admin Panel</a></li>
-                    <li><a href="/admin/admissions">📋 Admissions</a></li>
-                    <li><a href="/content-management">📝 Content Management</a></li>
-                    <li><a href="/live-class-management">🎥 Live Class Management</a></li>
-                    <li><a href="/upload-resource">📤 Upload Resource</a></li>
-                    <li><a href="/create-live-class">➕ Create Live Class</a></li>
-                    <li><a href="/bulk-upload">📊 Bulk Upload</a></li>
-                </ul>
-            </li>
-            {% endif %}
+            
             
             <!-- User Dropdown -->
             {% if username %}
