@@ -1146,10 +1146,10 @@ def study_resources():
     try:
         role = session.get('role')
 
-        # Redirect if not logged in
+        # Redirect if not logged in – preserve intended destination to prevent loops
         if not role:
             flash('You must be logged in to view resources.', 'error')
-            return redirect(url_for('auth'))
+            return redirect(url_for('auth', next='study_resources'))
         
         # Redirect admin/teacher to their own panel, as this page is for students
         if role in ['admin', 'teacher']:
@@ -1577,10 +1577,13 @@ def auth():
                     session['role'] = user_role
                     session['session_id'] = session_id
                     
-                    # Redirect admins and teachers directly to the admin panel
+                    # After successful login, honor any next param to avoid perceived loops
+                    next_page = request.args.get('next')
                     if user_role in ['admin', 'teacher']:
                         return redirect(url_for('admin_panel'))
-                    # Special dashboard for a specific admin user can still be accessed from admin panel
+                    if next_page == 'study_resources':
+                        return redirect(url_for('study_resources'))
+                    # Fallback
                     return redirect(url_for('home'))
                 else:
                     error = 'Failed to create session. Please try again.'
