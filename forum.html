@@ -1,47 +1,112 @@
-        .black-glass {
-            background: rgba(5, 6, 10, 0.72);
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(18px) saturate(110%);
-            -webkit-backdrop-filter: blur(18px) saturate(110%);
-            color: #fff;
-            border-radius: 16px;
-        }
-        .forum-shell { max-width: 1100px; margin: 0 auto; padding: 0 1rem; min-height: 100vh; display: flex; flex-direction: column; }
-        .forum-header.black-glass { border-radius: 18px; }
-        .forum-header h1 { color: #fff; }
-        .forum-header p { color: rgba(255,255,255,0.85); }
-        .class-strip { display:flex; align-items:center; justify-content:center; gap:.8rem; margin: 1rem 0 0 0; }
-        .class-chip { background: rgba(255,255,255,0.14); color: #fff; border: 1px solid rgba(255,255,255,0.25); padding: .3rem .7rem; border-radius: 999px; font-weight: 600; }
-        .status-chip { background: rgba(0, 200, 140, 0.2); color:#aef9e4; border:1px solid rgba(0,200,140,0.35); padding: .25rem .6rem; border-radius:999px; font-weight:600; }
-        .status-chip.unpaid { background: rgba(255, 255, 255, 0.12); color:#ffd2d2; border-color: rgba(255,255,255,0.25); }
-        .tabs.black-glass { border-radius: 14px; padding: .4rem; border:1px solid rgba(255,255,255,0.22); }
-        .tab-button { color:#fff; }
-        .tab-button:hover { background: rgba(255,255,255,0.10); color:#fff; }
-        .tab-button.active { background: rgba(255,255,255,0.14); color:#fff; border-bottom-color: rgba(255,255,255,0.3); }
-        .messages-container.black-glass { padding: 1rem; border-radius: 16px; flex: 1; overflow-y: auto; }
-        /* Glassy message bubbles */
-        .message-content { background: rgba(5,6,10,0.6); color:#fff; border: 1px solid rgba(255,255,255,0.22); box-shadow: 0 8px 24px rgba(0,0,0,0.45); }
-        .message-content.own-message { background: rgba(255,255,255,0.12); color:#fff; }
-        .message-text { color:#fff; }
-        .message-avatar { background: rgba(255,255,255,0.14); color:#fff; border: 1px solid rgba(255,255,255,0.25); }
-        .message-header { border-bottom-color: rgba(255,255,255,0.22); }
-        .message-info span { color: rgba(255,255,255,0.75); }
-        .message-actions button { background: rgba(255,255,255,0.18); color:#fff; border:1px solid rgba(255,255,255,0.25); }
-        /* Glassy input bar */
-        .chat-input-bar.black-glass { padding: .8rem; }
-        .chat-input-bar textarea, .chat-input-bar input[type="text"] {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.24);
-            color:#fff;
-        }
-        .chat-input-bar textarea::placeholder { color: rgba(255,255,255,0.6); }
-        #forumSendBtn { background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%); color:#fff; }
-        /* Emoji picker glass override */
-        #emojiPicker { background: rgba(5,6,10,0.75) !important; border: 1px solid rgba(255,255,255,0.22) !important; box-shadow: 0 8px 24px rgba(0,0,0,0.6) !important; color:#fff !important; backdrop-filter: blur(14px) !important; -webkit-backdrop-filter: blur(14px) !important; }
-        #emojiPicker button { color:#fff !important; }
-        /* Mention suggestions glass */
-        #mentionSuggestions { background: rgba(5,6,10,0.75); border: 1px solid rgba(255,255,255,0.22); color:#fff; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
-        .mention-suggestion { border-bottom: 1px solid rgba(255,255,255,0.18); }
-        .mention-suggestion:hover, .mention-suggestion.selected { background: rgba(255,255,255,0.12); }
-<script src="attached_assets/theme.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="forum.css">
+    <style>
+      .black-glass {
+          background: rgba(5, 6, 10, 0.72);
+          border: 1px solid rgba(255, 255, 255, 0.22);
+          box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+          backdrop-filter: blur(18px) saturate(110%);
+          -webkit-backdrop-filter: blur(18px) saturate(110%);
+          color: #fff;
+          border-radius: 16px;
+      }
+      .forum-shell { max-width: 1100px; margin: 0 auto; padding: 0 1rem; min-height: 100vh; display: flex; flex-direction: column; }
+      .forum-header.black-glass { border-radius: 18px; }
+      .forum-header h1 { color: #fff; }
+      .forum-header p { color: rgba(255,255,255,0.85); }
+      .class-strip { display:flex; align-items:center; justify-content:center; gap:.8rem; margin: 1rem 0 0 0; }
+      .class-chip { background: rgba(255,255,255,0.14); color: #fff; border: 1px solid rgba(255,255,255,0.25); padding: .3rem .7rem; border-radius: 999px; font-weight: 600; }
+      .status-chip { background: rgba(0, 200, 140, 0.2); color:#aef9e4; border:1px solid rgba(0,200,140,0.35); padding: .25rem .6rem; border-radius:999px; font-weight:600; }
+      .status-chip.unpaid { background: rgba(255, 255, 255, 0.12); color:#ffd2d2; border-color: rgba(255,255,255,0.25); }
+      .tabs.black-glass { border-radius: 14px; padding: .4rem; border:1px solid rgba(255,255,255,0.22); }
+      .tab-button { color:#fff; }
+      .tab-button:hover { background: rgba(255,255,255,0.10); color:#fff; }
+      .tab-button.active { background: rgba(255,255,255,0.14); color:#fff; border-bottom-color: rgba(255,255,255,0.3); }
+      .messages-container.black-glass { padding: 1rem; border-radius: 16px; flex: 1; overflow-y: auto; }
+      .message-content { background: rgba(5,6,10,0.6); color:#fff; border: 1px solid rgba(255,255,255,0.22); box-shadow: 0 8px 24px rgba(0,0,0,0.45); }
+      .message-content.own-message { background: rgba(255,255,255,0.12); color:#fff; }
+      .message-text { color:#fff; }
+      .message-avatar { background: rgba(255,255,255,0.14); color:#fff; border: 1px solid rgba(255,255,255,0.25); }
+      .message-header { border-bottom-color: rgba(255,255,255,0.22); }
+      .message-info span { color: rgba(255,255,255,0.75); }
+      .message-actions button { background: rgba(255,255,255,0.18); color:#fff; border:1px solid rgba(255,255,255,0.25); }
+      .chat-input-bar.black-glass { padding: .8rem; }
+      .chat-input-bar textarea {
+          background: rgba(255,255,255,0.08);
+          border: 1px solid rgba(255,255,255,0.24);
+          color:#fff;
+      }
+      .chat-input-bar textarea::placeholder { color: rgba(255,255,255,0.6); }
+      #forumSendBtn { background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%); color:#fff; }
+      #emojiPicker { background: rgba(5,6,10,0.75) !important; border: 1px solid rgba(255,255,255,0.22) !important; box-shadow: 0 8px 24px rgba(0,0,0,0.6) !important; color:#fff !important; backdrop-filter: blur(14px) !important; -webkit-backdrop-filter: blur(14px) !important; }
+      #emojiPicker button { color:#fff !important; }
+      #mentionSuggestions { background: rgba(5,6,10,0.75); border: 1px solid rgba(255,255,255,0.22); color:#fff; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+      .mention-suggestion { border-bottom: 1px solid rgba(255,255,255,0.18); }
+      .mention-suggestion:hover, .mention-suggestion.selected { background: rgba(255,255,255,0.12); }
+    </style>
+  </head>
+  <body data-user-role="{{ role|default('') }}">
+    <div class="forum-shell">
+      <header class="forum-header black-glass" style="margin-top: 5rem; padding:1.2rem 1.2rem 0.8rem 1.2rem;">
+        <h1 style="margin:0;">Forum</h1>
+        <p style="margin:0.4rem 0 0 0;">Logged in as <strong>{{ username }}</strong> • Role: <strong>{{ role }}</strong> • Paid: <strong>{{ user_paid_status or 'unknown' }}</strong></p>
+        <div class="class-strip">
+          <span class="class-chip">Class: {{ role }}</span>
+          <span class="status-chip {{ 'unpaid' if (user_paid_status != 'paid') else '' }}">{{ user_paid_status or 'unpaid' }}</span>
+        </div>
+      </header>
+
+      <section class="tabs black-glass" style="margin:1rem 0;">
+        <div style="display:flex; flex-wrap: wrap; gap:.5rem;">
+          {% if paid_topics and paid_topics|length > 0 %}
+            {% for t in paid_topics %}
+              <button class="tab-button" data-topic="{{ t[0] }}" data-topic-name="{{ t[1] }}">{{ t[1] }} (Paid)</button>
+            {% endfor %}
+          {% endif %}
+          {% if unpaid_topics and unpaid_topics|length > 0 %}
+            {% for t in unpaid_topics %}
+              <button class="tab-button" data-topic="{{ t[0] }}" data-topic-name="{{ t[1] }}">{{ t[1] }}</button>
+            {% endfor %}
+          {% endif %}
+          {% if (not paid_topics or paid_topics|length == 0) and (not unpaid_topics or unpaid_topics|length == 0) %}
+            <div style="color:#e2e8f0;">No topics available.</div>
+          {% endif %}
+        </div>
+      </section>
+
+      <section class="messages-container black-glass" id="forumMessages">
+        <div id="emptyForumMsg" style="color:#888; text-align:center; padding:2rem;">
+          Select a topic to view messages
+        </div>
+      </section>
+
+      <section class="chat-input-bar black-glass" style="margin:1rem 0; display:flex; gap:.6rem; align-items:flex-end;">
+        <textarea id="forumInput" placeholder="Type your message..." rows="1" style="flex:1; resize:none; border-radius:8px; padding:.6rem 0.8rem;"></textarea>
+        <input type="file" id="forumMediaInput" accept="image/*,video/*" style="display:none;" />
+        <button id="forumUploadBtn" class="btn">Upload</button>
+        <button id="forumEmojiBtn" class="btn">Emoji</button>
+        <button id="forumSendBtn" class="btn btn-primary">Send</button>
+      </section>
+
+      <div id="forumMediaPreview" style="margin:0 0 1rem 0;"></div>
+
+      <div id="mentionIndicator" style="display:none; color:#e2e8f0; font-size:0.9rem;">Type @ to mention someone</div>
+      <div id="mentionHelp" style="display:none; color:#a0aec0; font-size:0.85rem; margin-top:0.25rem;">Use Arrow keys and Enter/Tab to select</div>
+      <div id="mentionSuggestions" style="display:none; position:fixed; z-index:1000; border-radius:8px; overflow:hidden;">
+        <div id="mentionSuggestionsList"></div>
+      </div>
+    </div>
+
+    <script>
+      window.currentUsername = {{ username|tojson }};
+    </script>
+    <script src="attached_assets/theme.js"></script>
+    <script src="forum.js"></script>
+  </body>
+</html>
