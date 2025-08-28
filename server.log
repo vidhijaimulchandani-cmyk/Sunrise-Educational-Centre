@@ -1,0 +1,47 @@
+✅ Study resource tables ensured successfully
+✅ Notification tables ensured successfully
+INFO:bulk_upload.bulk_upload_handler:'queries' table ensured in database.
+Server initialized for threading.
+INFO:engineio.server:Server initialized for threading.
+🧹 Session cleanup service started
+🚀 Session cleanup service started
+🚀 Starting server with HTTP...
+🌐 Access your app at: http://localhost:10000
+⚠️  Note: WebRTC features will not work without HTTPS!
+🧹 Session cleanup service started - will clean stale sessions every hour
+WARNING:werkzeug:Werkzeug appears to be used in a production deployment. Consider switching to a production web server instead.
+ * Serving Flask app 'app'
+🧹 Session cleanup service started * Debug mode: off
+
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://172.30.0.2:10000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+2025-08-28 14:57:17,874 [INFO] root: 📜 Logging initialized. Writing to /workspace/server.log
+🧹 Session cleanup service started
+🚀 Session cleanup service started
+🚀 Starting server with HTTP...
+🌐 Access your app at: http://localhost:10000
+⚠️  Note: WebRTC features will not work without HTTPS!
+🧹 Session cleanup service started - will clean stale sessions every hour
+🧹 Session cleanup service started
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-08-28 14:57:17,877 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://172.30.0.2:10000
+2025-08-28 14:57:17,877 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://172.30.0.2:10000
+2025-08-28 14:57:17,877 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-08-28 14:57:17,877 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+🧹 Session cleanup service started
+2025-08-28 16:30:52,959 [INFO] werkzeug: 127.0.0.1 - - [28/Aug/2025 16:30:52] "[32mGET /online-class HTTP/1.1[0m" 302 -
+2025-08-28 16:30:52,959 [INFO] werkzeug: 127.0.0.1 - - [28/Aug/2025 16:30:52] "[32mGET /online-class HTTP/1.1[0m" 302 -
+2025-08-28 16:30:57,937 [INFO] werkzeug: 127.0.0.1 - - [28/Aug/2025 16:30:57] "GET /auth HTTP/1.1" 200 -
+2025-08-28 16:30:57,937 [INFO] werkzeug: 127.0.0.1 - - [28/Aug/2025 16:30:57] "GET /auth HTTP/1.1" 200 -
+2025-08-28 16:44:12,824 [INFO] werkzeug: 127.0.0.1 - - [28/Aug/2025 16:44:12] "GET / HTTP/1.1" 200 -
+2025-08-28 16:44:12,824 [INFO] werkzeug: 127.0.0.1 - - [28/Aug/2025 16:44:12] "GET / HTTP/1.1" 200 -

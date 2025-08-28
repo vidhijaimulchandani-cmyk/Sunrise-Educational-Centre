@@ -71,7 +71,13 @@ from time_config import (
 )
 
 # Import bulk upload routes
-from bulk_upload.routes import bulk_upload_bp
+# Register bulk upload blueprint only if dependencies are available
+bulk_upload_bp = None
+try:
+    from bulk_upload.routes import bulk_upload_bp as _bulk_upload_bp
+    bulk_upload_bp = _bulk_upload_bp
+except Exception as _e:
+    print(f"Bulk upload blueprint not loaded: {_e}")
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='.', template_folder='.')
@@ -851,7 +857,11 @@ def admin_api_required(f):
 app.secret_key = 'your_secret_key_here'  # Change this to a secure random value in production
 
 # Register blueprints
-app.register_blueprint(bulk_upload_bp)
+try:
+    if bulk_upload_bp is not None:
+        app.register_blueprint(bulk_upload_bp)
+except Exception as _e:
+    print(f"Failed to register bulk upload blueprint: {_e}")
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'pdf', 'docx', 'png', 'jpg', 'jpeg'}
@@ -7037,6 +7047,35 @@ def user_has_access_to_resource(filename: str, role: str) -> bool:
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
+    # Configure logging to file for all server output
+    try:
+        import logging, sys
+        from logging.handlers import RotatingFileHandler
+        log_file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'server.log')
+        file_handler = RotatingFileHandler(log_file_path, maxBytes=5 * 1024 * 1024, backupCount=3)
+        file_handler.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s] %(name)s: %(message)s'))
+        root_logger = logging.getLogger()
+        root_logger.setLevel(logging.INFO)
+        # Avoid duplicate handlers on reloads
+        if not any(isinstance(h, RotatingFileHandler) for h in root_logger.handlers):
+            root_logger.addHandler(file_handler)
+        # Also capture common framework loggers
+        for logger_name in ['werkzeug', 'engineio.server', 'socketio.server', 'flask_socketio']:
+            lg = logging.getLogger(logger_name)
+            lg.setLevel(logging.INFO)
+            if not any(isinstance(h, RotatingFileHandler) for h in lg.handlers):
+                lg.addHandler(file_handler)
+        # Redirect stdout/stderr so print statements go to the file as well
+        try:
+            stdout_file = open(log_file_path, 'a', buffering=1)
+            sys.stdout = stdout_file
+            sys.stderr = stdout_file
+        except Exception:
+            pass
+        logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+    except Exception as _log_e:
+        # Fallback quietly if logging setup fails
+        pass
     
     # Start session cleanup service
     cleanup_stale_sessions()
@@ -7049,13 +7088,13 @@ if __name__ == '__main__':
     print("🧹 Session cleanup service started - will clean stale sessions every hour")
     
     try:
-        socketio.run(app, host='0.0.0.0', port=port, debug=False, log_output=False)
+        socketio.run(app, host='0.0.0.0', port=port, debug=False, log_output=False, allow_unsafe_werkzeug=True)
     except Exception as e:
         print(f"❌ Server Error: {e}")
         print("🔄 Trying alternative configuration...")
         try:
-            socketio.run(app, host='127.0.0.1', port=port, debug=False, log_output=False)
+            socketio.run(app, host='127.0.0.1', port=port, debug=False, log_output=False, allow_unsafe_werkzeug=True)
         except Exception as e2:
             print(f"❌ Alternative configuration failed: {e2}")
             print("🔄 Trying with different settings...")
-            socketio.run(app, host='localhost', port=port, debug=False, log_output=False)
+            socketio.run(app, host='localhost', port=port, debug=False, log_output=False, allow_unsafe_werkzeug=True)
