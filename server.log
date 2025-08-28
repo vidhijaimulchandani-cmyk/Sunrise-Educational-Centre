@@ -38,3 +38,4 @@ INFO:werkzeug:[33mPress CTRL+C to quit[0m
  * Running on http://172.30.0.2:10000
 2025-08-28 14:57:17,877 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
 2025-08-28 14:57:17,877 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+🧹 Session cleanup service started
