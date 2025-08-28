@@ -7047,6 +7047,35 @@ def user_has_access_to_resource(filename: str, role: str) -> bool:
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 10000))
+    # Configure logging to file for all server output
+    try:
+        import logging, sys
+        from logging.handlers import RotatingFileHandler
+        log_file_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'server.log')
+        file_handler = RotatingFileHandler(log_file_path, maxBytes=5 * 1024 * 1024, backupCount=3)
+        file_handler.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s] %(name)s: %(message)s'))
+        root_logger = logging.getLogger()
+        root_logger.setLevel(logging.INFO)
+        # Avoid duplicate handlers on reloads
+        if not any(isinstance(h, RotatingFileHandler) for h in root_logger.handlers):
+            root_logger.addHandler(file_handler)
+        # Also capture common framework loggers
+        for logger_name in ['werkzeug', 'engineio.server', 'socketio.server', 'flask_socketio']:
+            lg = logging.getLogger(logger_name)
+            lg.setLevel(logging.INFO)
+            if not any(isinstance(h, RotatingFileHandler) for h in lg.handlers):
+                lg.addHandler(file_handler)
+        # Redirect stdout/stderr so print statements go to the file as well
+        try:
+            stdout_file = open(log_file_path, 'a', buffering=1)
+            sys.stdout = stdout_file
+            sys.stderr = stdout_file
+        except Exception:
+            pass
+        logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+    except Exception as _log_e:
+        # Fallback quietly if logging setup fails
+        pass
     
     # Start session cleanup service
     cleanup_stale_sessions()
