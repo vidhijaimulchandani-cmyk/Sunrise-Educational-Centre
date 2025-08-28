@@ -178,39 +178,55 @@
         width: 95%;
         max-width: 400px;
     }
-
+    /* Show hamburger and collapse menu for phones only */
+    .floating-navbar .hamburger {
+        display: block;
+        cursor: pointer;
+        background: transparent;
+        border: none;
+        padding: 6px 8px;
+        margin-right: 6px;
+    }
+    .floating-navbar .hamburger .bar {
+        display: block;
+        width: 22px;
+        height: 2px;
+        margin: 4px 0;
+        background: #0066cc;
+        transition: all .2s ease;
+    }
     .floating-navbar .nav-links {
-        gap: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(0,0,0,0.08);
+        border-radius: 14px;
+        padding: 10px 12px;
+        margin-top: 8px;
+        flex-direction: column;
+        gap: 6px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     }
-
-    .floating-navbar .nav-links a {
-        font-size: 14px;
-        padding: 6px 12px;
-    }
-
-    .floating-navbar .nav-links li {
-        margin: 2px 0;
-    }
-
-    /* Mobile dropdown adjustments */
-    .dropdown-menu {
+    .floating-navbar .nav-links.active { display: flex; }
+    .floating-navbar .nav-links a { font-size: 14px; padding: 8px 10px; }
+    .floating-navbar .nav-links li { margin: 0; }
+    /* Mobile dropdown adjustments (inside collapsed menu) */
+    .floating-navbar .dropdown-menu {
         position: static;
         opacity: 1;
         visibility: visible;
         transform: none;
-        background: rgba(255, 255, 255, 0.1);
+        background: transparent;
         border: none;
         box-shadow: none;
-        margin-top: 5px;
-        padding: 5px 0;
+        margin-top: 0;
+        padding: 0;
     }
-
-    .dropdown-menu a {
-        padding: 8px 15px;
-        font-size: 13px;
-    }
+    .floating-navbar .dropdown-menu a { padding: 8px 12px; font-size: 13px; }
 }
 
 @media (max-width: 480px) {

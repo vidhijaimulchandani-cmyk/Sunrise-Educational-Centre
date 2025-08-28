@@ -43,3 +43,5 @@ INFO:werkzeug:[33mPress CTRL+C to quit[0m
 2025-08-28 16:30:52,959 [INFO] werkzeug: 127.0.0.1 - - [28/Aug/2025 16:30:52] "[32mGET /online-class HTTP/1.1[0m" 302 -
 2025-08-28 16:30:57,937 [INFO] werkzeug: 127.0.0.1 - - [28/Aug/2025 16:30:57] "GET /auth HTTP/1.1" 200 -
 2025-08-28 16:30:57,937 [INFO] werkzeug: 127.0.0.1 - - [28/Aug/2025 16:30:57] "GET /auth HTTP/1.1" 200 -
+2025-08-28 16:44:12,824 [INFO] werkzeug: 127.0.0.1 - - [28/Aug/2025 16:44:12] "GET / HTTP/1.1" 200 -
+2025-08-28 16:44:12,824 [INFO] werkzeug: 127.0.0.1 - - [28/Aug/2025 16:44:12] "GET / HTTP/1.1" 200 -
