@@ -71,7 +71,13 @@ from time_config import (
 )
 
 # Import bulk upload routes
-from bulk_upload.routes import bulk_upload_bp
+# Register bulk upload blueprint only if dependencies are available
+bulk_upload_bp = None
+try:
+    from bulk_upload.routes import bulk_upload_bp as _bulk_upload_bp
+    bulk_upload_bp = _bulk_upload_bp
+except Exception as _e:
+    print(f"Bulk upload blueprint not loaded: {_e}")
 
 # Initialize Flask app
 app = Flask(__name__, static_folder='.', template_folder='.')
@@ -851,7 +857,11 @@ def admin_api_required(f):
 app.secret_key = 'your_secret_key_here'  # Change this to a secure random value in production
 
 # Register blueprints
-app.register_blueprint(bulk_upload_bp)
+try:
+    if bulk_upload_bp is not None:
+        app.register_blueprint(bulk_upload_bp)
+except Exception as _e:
+    print(f"Failed to register bulk upload blueprint: {_e}")
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'pdf', 'docx', 'png', 'jpg', 'jpeg'}
@@ -7049,13 +7059,13 @@ if __name__ == '__main__':
     print("🧹 Session cleanup service started - will clean stale sessions every hour")
     
     try:
-        socketio.run(app, host='0.0.0.0', port=port, debug=False, log_output=False)
+        socketio.run(app, host='0.0.0.0', port=port, debug=False, log_output=False, allow_unsafe_werkzeug=True)
     except Exception as e:
         print(f"❌ Server Error: {e}")
         print("🔄 Trying alternative configuration...")
         try:
-            socketio.run(app, host='127.0.0.1', port=port, debug=False, log_output=False)
+            socketio.run(app, host='127.0.0.1', port=port, debug=False, log_output=False, allow_unsafe_werkzeug=True)
         except Exception as e2:
             print(f"❌ Alternative configuration failed: {e2}")
             print("🔄 Trying with different settings...")
-            socketio.run(app, host='localhost', port=port, debug=False, log_output=False)
+            socketio.run(app, host='localhost', port=port, debug=False, log_output=False, allow_unsafe_werkzeug=True)
