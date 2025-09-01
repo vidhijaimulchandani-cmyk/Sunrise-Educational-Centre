@@ -142,7 +142,13 @@
               <div id="cat-{{ cat_key }}" class="category-content">
                 <div class="resource-grid">
                   {% set has_resources = false %}
-                  {% for filename, res_class_id, filepath, title, description, category in resources %}
+                  {% for resource in resources %}
+                    {% set filename = resource[1] %}
+                    {% set res_class_id = resource[2] %}
+                    {% set filepath = resource[3] %}
+                    {% set title = resource[4] %}
+                    {% set description = resource[5] %}
+                    {% set category = resource[6] %}
                     {% if res_class_id == class_id and category == cat_key %}
                       {% set has_resources = true %}
                       <div class="resource-card">
