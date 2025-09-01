@@ -25,27 +25,188 @@
       .class-chip { background: rgba(255,255,255,0.14); color: #fff; border: 1px solid rgba(255,255,255,0.25); padding: .3rem .7rem; border-radius: 999px; font-weight: 600; }
       .status-chip { background: rgba(0, 200, 140, 0.2); color:#aef9e4; border:1px solid rgba(0,200,140,0.35); padding: .25rem .6rem; border-radius:999px; font-weight:600; }
       .status-chip.unpaid { background: rgba(255, 255, 255, 0.12); color:#ffd2d2; border-color: rgba(255,255,255,0.25); }
-      .messages-container.black-glass { padding: 1rem; border-radius: 16px; flex: 1; overflow-y: auto; }
-      .message-content { background: rgba(5,6,10,0.6); color:#fff; border: 1px solid rgba(255,255,255,0.22); box-shadow: 0 8px 24px rgba(0,0,0,0.45); }
-      .message-content.own-message { background: rgba(255,255,255,0.12); color:#fff; }
-      .message-text { color:#fff; }
-      .message-avatar { background: rgba(255,255,255,0.14); color:#fff; border: 1px solid rgba(255,255,255,0.25); }
-      .message-header { border-bottom-color: rgba(255,255,255,0.22); }
-      .message-info span { color: rgba(255,255,255,0.75); }
-      .message-actions button { background: rgba(255,255,255,0.18); color:#fff; border:1px solid rgba(255,255,255,0.25); }
-      .chat-input-bar.black-glass { padding: .8rem; }
+      /* Enhanced Message Container - ChatGPT Style */
+      .messages-container.black-glass { 
+        padding: 1.5rem; 
+        border-radius: 20px; 
+        flex: 1; 
+        overflow-y: auto; 
+        min-height: 60vh;
+        max-height: 70vh;
+        background: rgba(5, 6, 10, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 
+          0 20px 60px rgba(0, 0, 0, 0.8),
+          0 8px 32px rgba(106, 130, 251, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(24px) saturate(120%);
+        -webkit-backdrop-filter: blur(24px) saturate(120%);
+      }
+      
+      .message-content { 
+        background: rgba(5,6,10,0.8); 
+        color:#fff; 
+        border: 1px solid rgba(255,255,255,0.15); 
+        box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+        border-radius: 16px;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        transition: all 0.3s ease;
+      }
+      
+      .message-content:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.7);
+      }
+      
+      .message-content.own-message { 
+        background: rgba(106, 130, 251, 0.15); 
+        color:#fff;
+        border-color: rgba(106, 130, 251, 0.3);
+      }
+      
+      .message-text { 
+        color:#fff; 
+        font-size: 1rem;
+        line-height: 1.6;
+        margin: 0.5rem 0;
+      }
+      
+      .message-avatar { 
+        background: rgba(255,255,255,0.14); 
+        color:#fff; 
+        border: 1px solid rgba(255,255,255,0.25);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 1rem;
+      }
+      
+      .message-header { 
+        border-bottom-color: rgba(255,255,255,0.15); 
+        padding-bottom: 0.5rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+      }
+      
+      .message-info span { 
+        color: rgba(255,255,255,0.8); 
+        font-size: 0.9rem;
+        margin-right: 1rem;
+      }
+      
+      .message-actions button { 
+        background: rgba(255,255,255,0.12); 
+        color:#fff; 
+        border:1px solid rgba(255,255,255,0.2);
+        border-radius: 8px;
+        padding: 0.5rem 0.75rem;
+        margin: 0.25rem;
+        transition: all 0.2s ease;
+      }
+      
+      .message-actions button:hover {
+        background: rgba(255,255,255,0.2);
+        transform: translateY(-1px);
+      }
+      
+      .chat-input-bar.black-glass { 
+        padding: 1.2rem; 
+        border-radius: 20px;
+        background: rgba(5, 6, 10, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 
+          0 20px 60px rgba(0, 0, 0, 0.8),
+          0 8px 32px rgba(106, 130, 251, 0.1);
+        backdrop-filter: blur(24px) saturate(120%);
+        -webkit-backdrop-filter: blur(24px) saturate(120%);
+      }
+      
       .chat-input-bar textarea {
           background: rgba(255,255,255,0.08);
-          border: 1px solid rgba(255,255,255,0.24);
+          border: 1px solid rgba(255,255,255,0.2);
           color:#fff;
+          border-radius: 12px;
+          padding: 1rem;
+          font-size: 1rem;
+          resize: none;
+          min-height: 60px;
+          transition: all 0.3s ease;
       }
-      .chat-input-bar textarea::placeholder { color: rgba(255,255,255,0.6); }
-      #forumSendBtn { background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%); color:#fff; }
-      #emojiPicker { background: rgba(5,6,10,0.75) !important; border: 1px solid rgba(255,255,255,0.22) !important; box-shadow: 0 8px 24px rgba(0,0,0,0.6) !important; color:#fff !important; backdrop-filter: blur(14px) !important; -webkit-backdrop-filter: blur(14px) !important; }
-      #emojiPicker button { color:#fff !important; }
-      #mentionSuggestions { background: rgba(5,6,10,0.75); border: 1px solid rgba(255,255,255,0.22); color:#fff; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
-      .mention-suggestion { border-bottom: 1px solid rgba(255,255,255,0.18); }
-      .mention-suggestion:hover, .mention-suggestion.selected { background: rgba(255,255,255,0.12); }
+      
+      .chat-input-bar textarea:focus {
+          outline: none;
+          border-color: #6a82fb;
+          box-shadow: 0 0 0 3px rgba(106, 130, 251, 0.2);
+          background: rgba(255,255,255,0.12);
+      }
+      
+      .chat-input-bar textarea::placeholder { 
+          color: rgba(255,255,255,0.6); 
+      }
+      
+      #forumSendBtn { 
+          background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%); 
+          color:#fff;
+          border-radius: 12px;
+          padding: 1rem 1.5rem;
+          font-weight: 600;
+          transition: all 0.3s ease;
+      }
+      
+      #forumSendBtn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(106, 130, 251, 0.3);
+      }
+      
+      #emojiPicker { 
+          background: rgba(5,6,10,0.9) !important; 
+          border: 1px solid rgba(255,255,255,0.22) !important; 
+          box-shadow: 0 16px 48px rgba(0,0,0,0.8) !important; 
+          color:#fff !important; 
+          backdrop-filter: blur(20px) !important; 
+          -webkit-backdrop-filter: blur(20px) !important;
+          border-radius: 16px !important;
+      } 
+      
+      #emojiPicker button { 
+          color:#fff !important; 
+          border-radius: 8px !important;
+          transition: all 0.2s ease !important;
+      }
+      
+      #emojiPicker button:hover {
+          background: rgba(255,255,255,0.1) !important;
+          transform: translateY(-1px) !important;
+      }
+      
+      #mentionSuggestions { 
+          background: rgba(5,6,10,0.9); 
+          border: 1px solid rgba(255,255,255,0.22); 
+          color:#fff; 
+          backdrop-filter: blur(20px); 
+          -webkit-backdrop-filter: blur(20px);
+          border-radius: 16px;
+          box-shadow: 0 16px 48px rgba(0,0,0,0.8);
+      } 
+      
+      .mention-suggestion { 
+          border-bottom: 1px solid rgba(255,255,255,0.15); 
+          padding: 0.75rem 1rem;
+          transition: all 0.2s ease;
+          cursor: pointer;
+      }
+      
+      .mention-suggestion:hover, 
+      .mention-suggestion.selected { 
+          background: rgba(255,255,255,0.12); 
+          transform: translateX(4px);
+      }
 
       /* ChatGPT-style vertical popup */
       .category-popup {
@@ -278,6 +439,25 @@
       <div class="category-popup-header">
         <h2>Forum Topics</h2>
         <p>Select a topic to start chatting</p>
+        <div class="user-info-section" style="margin-top: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+          <div style="margin-bottom: 1rem;">
+            <strong style="color: #8fa3ff; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">User Info</strong>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Username:</span>
+              <span style="color: #fff; font-weight: 600;">{{ username }}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Role:</span>
+              <span class="class-chip" style="margin: 0;">{{ role }}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Status:</span>
+              <span class="status-chip {{ 'unpaid' if (user_paid_status != 'paid') else '' }}" style="margin: 0;">{{ user_paid_status or 'unpaid' }}</span>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="category-list" id="categoryList">
         {% if paid_topics and paid_topics|length > 0 %}
@@ -317,11 +497,7 @@
     <div class="forum-shell" id="forumShell">
       <header class="forum-header black-glass" style="margin-top: 5rem; padding:1.2rem 1.2rem 0.8rem 1.2rem;">
         <h1 style="margin:0;">Forum</h1>
-        <p style="margin:0.4rem 0 0 0;">Logged in as <strong>{{ username }}</strong> • Role: <strong>{{ role }}</strong> • Paid: <strong>{{ user_paid_status or 'unknown' }}</strong></p>
-        <div class="class-strip">
-          <span class="class-chip">Class: {{ role }}</span>
-          <span class="status-chip {{ 'unpaid' if (user_paid_status != 'paid') else '' }}">{{ user_paid_status or 'unpaid' }}</span>
-        </div>
+        <p style="margin:0.4rem 0 0 0;">Logged in as <strong>{{ username }}</strong></p>
       </header>
 
       <section class="messages-container black-glass" id="forumMessages">

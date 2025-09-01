@@ -80,10 +80,58 @@
             <li><a href="/auth" class="btn-primary">Log in</a></li>
             {% endif %}
             
-            <!-- Search Button -->
-            <li><button class="search-btn" onclick="openSearch()">Search</button></li>
         </ul>
     </nav>
+
+    <!-- ChatGPT-style Vertical Slider for Class & Status -->
+    <div class="vertical-slider" id="verticalSlider">
+      <div class="slider-header">
+        <h3>📚 Study Resources</h3>
+        <button class="slider-toggle" id="sliderToggle">◀</button>
+      </div>
+      <div class="slider-content">
+        <div class="user-info-section">
+          <div class="info-item">
+            <span class="info-label">Class:</span>
+            <span class="class-chip">{{ class_name|title }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Status:</span>
+            {% if paid_status == 'paid' %}
+              <span class="status-chip">Premium Access</span>
+            {% else %}
+              <span class="status-chip unpaid">Basic Access</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="category-filters">
+          <h4>Categories</h4>
+          <div class="filter-options">
+            <label class="filter-option">
+              <input type="checkbox" checked> Notes
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" checked> Sample Papers
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" checked> Worksheets
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" checked> PYQs
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" checked> Case-Base
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" checked> Assertion/Reasoning
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" checked> Formula
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Page Header with Glassmorphism -->
     <header class="page-header">
