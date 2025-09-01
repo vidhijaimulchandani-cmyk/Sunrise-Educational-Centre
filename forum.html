@@ -16,7 +16,8 @@
           color: #fff;
           border-radius: 16px;
       }
-      .forum-shell { max-width: 1100px; margin: 0 auto; padding: 0 1rem; min-height: 100vh; display: flex; flex-direction: column; }
+      .forum-shell { max-width: 1100px; margin: 0 auto; padding: 0 1rem; min-height: 100vh; display: flex; flex-direction: column; transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+      .forum-shell.popup-open { margin-left: 320px; }
       .forum-header.black-glass { border-radius: 18px; }
       .forum-header h1 { color: #fff; }
       .forum-header p { color: rgba(255,255,255,0.85); }
@@ -24,10 +25,6 @@
       .class-chip { background: rgba(255,255,255,0.14); color: #fff; border: 1px solid rgba(255,255,255,0.25); padding: .3rem .7rem; border-radius: 999px; font-weight: 600; }
       .status-chip { background: rgba(0, 200, 140, 0.2); color:#aef9e4; border:1px solid rgba(0,200,140,0.35); padding: .25rem .6rem; border-radius:999px; font-weight:600; }
       .status-chip.unpaid { background: rgba(255, 255, 255, 0.12); color:#ffd2d2; border-color: rgba(255,255,255,0.25); }
-      .tabs.black-glass { border-radius: 14px; padding: .4rem; border:1px solid rgba(255,255,255,0.22); }
-      .tab-button { color:#fff; }
-      .tab-button:hover { background: rgba(255,255,255,0.10); color:#fff; }
-      .tab-button.active { background: rgba(255,255,255,0.14); color:#fff; border-bottom-color: rgba(255,255,255,0.3); }
       .messages-container.black-glass { padding: 1rem; border-radius: 16px; flex: 1; overflow-y: auto; }
       .message-content { background: rgba(5,6,10,0.6); color:#fff; border: 1px solid rgba(255,255,255,0.22); box-shadow: 0 8px 24px rgba(0,0,0,0.45); }
       .message-content.own-message { background: rgba(255,255,255,0.12); color:#fff; }
@@ -49,10 +46,275 @@
       #mentionSuggestions { background: rgba(5,6,10,0.75); border: 1px solid rgba(255,255,255,0.22); color:#fff; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
       .mention-suggestion { border-bottom: 1px solid rgba(255,255,255,0.18); }
       .mention-suggestion:hover, .mention-suggestion.selected { background: rgba(255,255,255,0.12); }
+
+      /* ChatGPT-style vertical popup */
+      .category-popup {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 320px;
+          height: 100vh;
+          background: rgba(10, 12, 20, 0.95);
+          backdrop-filter: blur(20px) saturate(120%);
+          -webkit-backdrop-filter: blur(20px) saturate(120%);
+          border-right: 1px solid rgba(255, 255, 255, 0.15);
+          z-index: 1000;
+          transform: translateX(-100%);
+          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          overflow-y: auto;
+          box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+      }
+
+      .category-popup.open {
+          transform: translateX(0);
+      }
+
+      .category-popup-header {
+          padding: 1.5rem;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+          position: relative;
+          overflow: hidden;
+      }
+
+      .category-popup-header::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, #6a82fb, #fc5c7d, #6a82fb);
+          background-size: 200% 100%;
+          animation: shimmer 3s ease-in-out infinite;
+      }
+
+      @keyframes shimmer {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+      }
+
+      .category-popup-header h2 {
+          color: #fff;
+          margin: 0;
+          font-size: 1.25rem;
+          font-weight: 600;
+          position: relative;
+          z-index: 1;
+      }
+
+      .category-popup-header p {
+          color: rgba(255, 255, 255, 0.7);
+          margin: 0.5rem 0 0 0;
+          font-size: 0.9rem;
+          position: relative;
+          z-index: 1;
+      }
+
+      .category-list {
+          padding: 1rem;
+      }
+
+      .category-item {
+          display: flex;
+          align-items: center;
+          padding: 0.75rem 1rem;
+          margin-bottom: 0.5rem;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          color: #fff;
+          position: relative;
+          overflow: hidden;
+      }
+
+      .category-item::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+          transition: left 0.5s ease;
+      }
+
+      .category-item:hover::before {
+          left: 100%;
+      }
+
+      .category-item:hover {
+          background: rgba(255, 255, 255, 0.1);
+          border-color: rgba(255, 255, 255, 0.2);
+          transform: translateX(4px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      .category-item.active {
+          background: linear-gradient(135deg, rgba(106, 130, 251, 0.2), rgba(252, 92, 125, 0.2));
+          border-color: rgba(106, 130, 251, 0.4);
+          box-shadow: 0 4px 12px rgba(106, 130, 251, 0.2);
+          transform: translateX(4px);
+      }
+
+      .category-item.active::after {
+          content: '✓';
+          position: absolute;
+          right: 1rem;
+          color: #aef9e4;
+          font-weight: bold;
+          font-size: 1.1rem;
+      }
+
+      .category-item-content {
+          flex: 1;
+      }
+
+      .category-name {
+          font-weight: 600;
+          margin-bottom: 0.25rem;
+      }
+
+      .category-badge {
+          font-size: 0.75rem;
+          padding: 0.2rem 0.5rem;
+          border-radius: 6px;
+          font-weight: 500;
+          margin-left: 0.5rem;
+      }
+
+      .category-badge.paid {
+          background: rgba(0, 200, 140, 0.2);
+          color: #aef9e4;
+          border: 1px solid rgba(0, 200, 140, 0.3);
+      }
+
+      .category-badge.unpaid {
+          background: rgba(255, 255, 255, 0.15);
+          color: #ffd2d2;
+          border: 1px solid rgba(255, 255, 255, 0.25);
+      }
+
+      .category-toggle {
+          position: fixed;
+          top: 2rem;
+          left: 2rem;
+          z-index: 1001;
+          background: rgba(10, 12, 20, 0.9);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 12px;
+          padding: 0.75rem 1rem;
+          cursor: pointer;
+          color: #fff;
+          font-weight: 500;
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+      }
+
+      .category-toggle:hover {
+          background: rgba(255, 255, 255, 0.1);
+          transform: translateY(-1px);
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+      }
+
+      .category-toggle.open {
+          left: 340px;
+          background: rgba(106, 130, 251, 0.2);
+          border-color: rgba(106, 130, 251, 0.4);
+      }
+
+      .category-toggle::before {
+          content: "📋";
+          font-size: 1.1rem;
+      }
+
+      .category-toggle.open::before {
+          content: "✕";
+          font-size: 1.2rem;
+      }
+
+      .overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 999;
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.3s ease;
+      }
+
+      .overlay.open {
+          opacity: 1;
+          visibility: visible;
+      }
+
+      @media (max-width: 768px) {
+          .category-popup {
+              width: 100vw;
+          }
+          .forum-shell.popup-open {
+              margin-left: 0;
+          }
+          .category-toggle.open {
+              left: auto;
+              right: 2rem;
+          }
+      }
     </style>
   </head>
   <body data-user-role="{{ role|default('') }}">
-    <div class="forum-shell">
+    <!-- Category Popup -->
+    <div class="category-popup" id="categoryPopup">
+      <div class="category-popup-header">
+        <h2>Forum Topics</h2>
+        <p>Select a topic to start chatting</p>
+      </div>
+      <div class="category-list" id="categoryList">
+        {% if paid_topics and paid_topics|length > 0 %}
+          {% for t in paid_topics %}
+            <div class="category-item" data-topic="{{ t[0] }}" data-topic-name="{{ t[1] }}">
+              <div class="category-item-content">
+                <div class="category-name">{{ t[1] }}</div>
+              </div>
+              <span class="category-badge paid">PAID</span>
+            </div>
+          {% endfor %}
+        {% endif %}
+        {% if unpaid_topics and unpaid_topics|length > 0 %}
+          {% for t in unpaid_topics %}
+            <div class="category-item" data-topic="{{ t[0] }}" data-topic-name="{{ t[1] }}">
+              <div class="category-item-content">
+                <div class="category-name">{{ t[1] }}</div>
+              </div>
+              <span class="category-badge unpaid">FREE</span>
+            </div>
+          {% endfor %}
+        {% endif %}
+        {% if (not paid_topics or paid_topics|length == 0) and (not unpaid_topics or unpaid_topics|length == 0) %}
+          <div style="color:#e2e8f0; text-align:center; padding:2rem;">No topics available.</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Category Toggle Button -->
+    <button class="category-toggle" id="categoryToggle">
+      Topics
+    </button>
+
+    <div class="forum-shell" id="forumShell">
       <header class="forum-header black-glass" style="margin-top: 5rem; padding:1.2rem 1.2rem 0.8rem 1.2rem;">
         <h1 style="margin:0;">Forum</h1>
         <p style="margin:0.4rem 0 0 0;">Logged in as <strong>{{ username }}</strong> • Role: <strong>{{ role }}</strong> • Paid: <strong>{{ user_paid_status or 'unknown' }}</strong></p>
@@ -61,30 +323,6 @@
           <span class="status-chip {{ 'unpaid' if (user_paid_status != 'paid') else '' }}">{{ user_paid_status or 'unpaid' }}</span>
         </div>
       </header>
-
-      <section class="tabs black-glass" style="margin:1rem 0; overflow:auto;">
-        <div style="display:flex; gap:.5rem; white-space:nowrap; padding:.25rem .25rem;">
-          {% if paid_topics and paid_topics|length > 0 %}
-            {% for t in paid_topics %}
-              <button class="tab-button" data-topic="{{ t[0] }}" data-topic-name="{{ t[1] }}">
-                {{ t[1] }}
-                <span class="topic-badge paid" style="margin-left:.4rem;">PAID</span>
-              </button>
-            {% endfor %}
-          {% endif %}
-          {% if unpaid_topics and unpaid_topics|length > 0 %}
-            {% for t in unpaid_topics %}
-              <button class="tab-button" data-topic="{{ t[0] }}" data-topic-name="{{ t[1] }}">
-                {{ t[1] }}
-                <span class="topic-badge unpaid" style="margin-left:.4rem;">FREE</span>
-              </button>
-            {% endfor %}
-          {% endif %}
-          {% if (not paid_topics or paid_topics|length == 0) and (not unpaid_topics or unpaid_topics|length == 0) %}
-            <div style="color:#e2e8f0;">No topics available.</div>
-          {% endif %}
-        </div>
-      </section>
 
       <section class="messages-container black-glass" id="forumMessages">
         <div id="emptyForumMsg" style="color:#888; text-align:center; padding:2rem;">

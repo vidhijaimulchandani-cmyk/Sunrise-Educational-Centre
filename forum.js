@@ -29,21 +29,56 @@ document.addEventListener('DOMContentLoaded', function() {
 function setupEventListeners() {
     console.log('Setting up event listeners');
     
-    // Topic selection buttons
-    const topicButtons = document.querySelectorAll('.tab-button');
-    topicButtons.forEach(button => {
-        button.addEventListener('click', function() {
+    // Category popup toggle
+    const categoryToggle = document.getElementById('categoryToggle');
+    const categoryPopup = document.getElementById('categoryPopup');
+    const overlay = document.getElementById('overlay');
+    const forumShell = document.getElementById('forumShell');
+    
+    if (categoryToggle && categoryPopup && overlay) {
+        categoryToggle.addEventListener('click', function() {
+            const isOpen = categoryPopup.classList.contains('open');
+            if (isOpen) {
+                closeCategoryPopup();
+            } else {
+                openCategoryPopup();
+            }
+        });
+        
+        // Close popup when clicking overlay
+        overlay.addEventListener('click', closeCategoryPopup);
+        
+        // Close popup with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && categoryPopup.classList.contains('open')) {
+                closeCategoryPopup();
+            }
+        });
+    }
+    
+    // Category item selection (new popup format)
+    const categoryItems = document.querySelectorAll('.category-item');
+    categoryItems.forEach(item => {
+        item.addEventListener('click', function() {
             const topicId = this.getAttribute('data-topic');
             const topicName = this.getAttribute('data-topic-name');
             console.log('Topic selected:', topicId, topicName);
             
             // Update active state
-            topicButtons.forEach(btn => btn.classList.remove('active'));
+            categoryItems.forEach(cat => cat.classList.remove('active'));
             this.classList.add('active');
             
             // Update current topic
             currentTopic = topicId;
             currentTopicName = topicName;
+            
+            // Update current topic display
+            updateCurrentTopicDisplay(topicName);
+            
+            // Close popup on mobile
+            if (window.innerWidth <= 768) {
+                closeCategoryPopup();
+            }
             
             // Fetch messages for this topic
             fetchMessages(topicId);
@@ -86,7 +121,44 @@ function setupEventListeners() {
         uploadBtn.addEventListener('click', () => mediaInput.click());
         mediaInput.addEventListener('change', handleMediaUpload);
     }
+}
+
+// Open category popup
+function openCategoryPopup() {
+    const categoryPopup = document.getElementById('categoryPopup');
+    const categoryToggle = document.getElementById('categoryToggle');
+    const overlay = document.getElementById('overlay');
+    const forumShell = document.getElementById('forumShell');
     
+    if (categoryPopup && categoryToggle && overlay && forumShell) {
+        categoryPopup.classList.add('open');
+        categoryToggle.classList.add('open');
+        overlay.classList.add('open');
+        forumShell.classList.add('popup-open');
+    }
+}
+
+// Close category popup
+function closeCategoryPopup() {
+    const categoryPopup = document.getElementById('categoryPopup');
+    const categoryToggle = document.getElementById('categoryToggle');
+    const overlay = document.getElementById('overlay');
+    const forumShell = document.getElementById('forumShell');
+    
+    if (categoryPopup && categoryToggle && overlay && forumShell) {
+        categoryPopup.classList.remove('open');
+        categoryToggle.classList.remove('open');
+        overlay.classList.remove('open');
+        forumShell.classList.remove('popup-open');
+    }
+}
+
+// Update current topic display in header
+function updateCurrentTopicDisplay(topicName) {
+    const forumHeader = document.querySelector('.forum-header h1');
+    if (forumHeader && topicName) {
+        forumHeader.textContent = `Forum - ${topicName}`;
+    }
 }
 
 // Auto-select topic based on user role
@@ -96,25 +168,25 @@ function autoSelectTopic() {
     
     if (userRole && userRole !== 'admin' && userRole !== 'teacher') {
         // Try to find a topic that matches the user's class
-        const topicButtons = document.querySelectorAll('.tab-button');
-        let selectedButton = null;
+        const categoryItems = document.querySelectorAll('.category-item');
+        let selectedItem = null;
         
         // First try exact match
-        for (let btn of topicButtons) {
-            const topicName = btn.getAttribute('data-topic-name');
+        for (let item of categoryItems) {
+            const topicName = item.getAttribute('data-topic-name');
             if (topicName && topicName.toLowerCase().includes(userRole.toLowerCase())) {
-                selectedButton = btn;
+                selectedItem = item;
                 break;
             }
         }
         
         // If no match found, select first available topic
-        if (!selectedButton && topicButtons.length > 0) {
-            selectedButton = topicButtons[0];
+        if (!selectedItem && categoryItems.length > 0) {
+            selectedItem = categoryItems[0];
         }
         
-        if (selectedButton) {
-            selectedButton.click();
+        if (selectedItem) {
+            selectedItem.click();
         } else {
             // Fallback: fetch all messages
             console.log('No topics available, fetching all messages');
@@ -122,9 +194,9 @@ function autoSelectTopic() {
         }
     } else {
         // Admin/teacher: select first topic or fetch all
-        const firstButton = document.querySelector('.tab-button');
-        if (firstButton) {
-            firstButton.click();
+        const firstItem = document.querySelector('.category-item');
+        if (firstItem) {
+            firstItem.click();
         } else {
             fetchMessages('all');
         }
