@@ -93,16 +93,29 @@
       </div>
     </header>
 
-    <main class="container main-content">
+    <main class="container main-content study-resources-shell">
       <!-- Search and Filter Section -->
       <section class="search-filter-section">
         <input type="text" class="search-input" placeholder="Search resources by title, description, or category..." id="searchInput">
       </section>
 
+      <!-- Forum-style Category Header -->
+      <section class="forum-categories">
+        <h3>📚 Study Resources Categories</h3>
+        <div class="class-strip">
+          <span class="class-chip">{{ class_name|title }}</span>
+          {% if paid_status == 'paid' %}
+            <span class="status-chip">Premium Access</span>
+          {% else %}
+            <span class="status-chip unpaid">Basic Access</span>
+          {% endif %}
+        </div>
+      </section>
+
       <!-- Resources Section -->
       <section id="resources" class="resources-section">
         <div class="glassmorphic-container" style="padding: 2rem;">
-          <h2 style="text-align: center; margin-bottom: 2rem; color: #667eea; font-size: 2rem;">Resources for {{ class_name|title }}</h2>
+          <h2 style="text-align: center; margin-bottom: 2rem; color: #6a82fb; font-size: 2rem;">Resources for {{ class_name|title }}</h2>
           
           <!-- Category Sub-Tabs -->
           <div class="sub-tabs">
@@ -157,16 +170,19 @@
                           <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1rem;">{{ description }}</p>
                         {% endif %}
                         <div style="margin-bottom: 1rem;">
-                          <span class="status-indicator status-free" style="margin-right: 0.5rem;">File</span>
+                          <span class="status-indicator status-free">File</span>
                           <span style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">{{ filename }}</span>
                         </div>
-                        <a href="/preview/{{ filename }}" class="btn btn-primary" style="display: inline-block; text-decoration: none; padding: 0.8rem 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px; border: none; transition: all 0.3s ease;">Preview Document</a>
+                        <div class="resource-actions">
+                          <a href="/preview/{{ filename }}" class="btn btn-primary">📖 Preview Document</a>
+                          <span class="category-badge">{{ category|title }}</span>
+                        </div>
                       </div>
                     {% endif %}
                   {% endfor %}
                   {% if not has_resources %}
-                    <div style="color: rgba(255, 255, 255, 0.7); text-align: center; grid-column: 1 / -1; padding: 2rem; background: rgba(255, 255, 255, 0.05); border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1);">
-                      <h3 style="color: #667eea; margin-bottom: 1rem;">📚 No Resources Available</h3>
+                    <div class="empty-state">
+                      <h3>📚 No Resources Available</h3>
                       <p>No resources available in this category yet. Check back soon!</p>
                     </div>
                   {% endif %}
@@ -175,8 +191,8 @@
             {% else %}
               <div id="cat-{{ cat_key }}" class="category-content">
                 <div class="resource-grid">
-                  <div style="color: rgba(255, 255, 255, 0.7); text-align: center; grid-column: 1 / -1; padding: 2rem; background: rgba(255, 255, 255, 0.05); border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1);">
-                    <h3 style="color: #667eea; margin-bottom: 1rem;">🔒 Premium Content</h3>
+                  <div class="premium-notice">
+                    <h3>🔒 Premium Content</h3>
                     <p>This category contains premium content that requires a paid subscription.</p>
                     <p style="font-size: 0.9rem; margin-top: 1rem;">Contact your administrator to upgrade your account.</p>
                   </div>
@@ -287,6 +303,33 @@
         const firstCategoryTab = document.querySelector('.sub-tab-button');
         if (firstCategoryTab) {
           firstCategoryTab.click();
+        }
+
+        // Add category switching functionality
+        function showCategory(event, categoryId) {
+          // Hide all category content
+          const categoryContents = document.querySelectorAll('.category-content');
+          categoryContents.forEach(content => {
+            content.style.display = 'none';
+          });
+
+          // Remove active class from all tabs
+          const tabButtons = document.querySelectorAll('.sub-tab-button');
+          tabButtons.forEach(button => {
+            button.classList.remove('active');
+          });
+
+          // Show selected category and activate tab
+          const selectedCategory = document.getElementById(categoryId);
+          if (selectedCategory) {
+            selectedCategory.style.display = 'block';
+            selectedCategory.classList.add('active');
+          }
+
+          // Add active class to clicked tab
+          if (event && event.target) {
+            event.target.classList.add('active');
+          }
         }
       });
 
