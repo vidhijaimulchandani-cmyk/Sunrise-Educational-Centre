@@ -92,7 +92,73 @@ document.addEventListener('DOMContentLoaded', function() {
   if (firstCategoryTab) {
     firstCategoryTab.click();
   }
+  
+  // Initialize vertical slider functionality
+  initializeVerticalSlider();
 });
+
+// Vertical Slider Functionality
+function initializeVerticalSlider() {
+  const slider = document.getElementById('verticalSlider');
+  const sliderToggle = document.getElementById('sliderToggle');
+  const studyResourcesShell = document.querySelector('.study-resources-shell');
+  
+  if (!slider || !sliderToggle) return;
+  
+  // Toggle slider
+  sliderToggle.addEventListener('click', function() {
+    slider.classList.toggle('open');
+    studyResourcesShell.classList.toggle('slider-open');
+    
+    // Update toggle button text
+    if (slider.classList.contains('open')) {
+      sliderToggle.textContent = '▶';
+    } else {
+      sliderToggle.textContent = '◀';
+    }
+  });
+  
+  // Close slider when clicking outside (mobile)
+  document.addEventListener('click', function(event) {
+    if (window.innerWidth <= 768) {
+      if (!slider.contains(event.target) && !sliderToggle.contains(event.target)) {
+        slider.classList.remove('open');
+        studyResourcesShell.classList.remove('slider-open');
+        sliderToggle.textContent = '◀';
+      }
+    }
+  });
+  
+  // Handle category filter changes
+  const filterOptions = document.querySelectorAll('.filter-option input[type="checkbox"]');
+  filterOptions.forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      const categoryName = this.parentElement.textContent.trim();
+      const isChecked = this.checked;
+      
+      // Filter resources based on checkbox state
+      filterResourcesByCategory(categoryName, isChecked);
+    });
+  });
+}
+
+// Filter resources by category
+function filterResourcesByCategory(categoryName, show) {
+  const categoryContents = document.querySelectorAll('.category-content');
+  
+  categoryContents.forEach(content => {
+    const contentTitle = content.querySelector('h2, h3')?.textContent || '';
+    if (contentTitle.toLowerCase().includes(categoryName.toLowerCase())) {
+      if (show) {
+        content.style.display = 'block';
+        content.style.opacity = '1';
+      } else {
+        content.style.display = 'none';
+        content.style.opacity = '0.3';
+      }
+    }
+  });
+}
 
 // Utility function to format resource names for file paths
 function formatResourceName(name) {
