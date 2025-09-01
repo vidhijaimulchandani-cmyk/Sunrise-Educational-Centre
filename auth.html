@@ -40,6 +40,9 @@
             {% endfor %}
           </select>
           <input type="text" name="admin_code" id="loginAdminCodeInput" placeholder="Admin Code" style="display:none;" />
+          {% if request.args.get('next') %}
+          <input type="hidden" name="next" value="{{ request.args.get('next') }}" />
+          {% endif %}
           <button type="submit" class="btn btn-primary">Login</button>
           <div style="font-size: 0.85rem; color: #6b7280; margin-top: 0.5rem; text-align: center;">
             💡 You can login using your email address or phone number instead of username

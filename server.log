@@ -45,3 +45,133 @@ INFO:werkzeug:[33mPress CTRL+C to quit[0m
 2025-08-28 16:30:57,937 [INFO] werkzeug: 127.0.0.1 - - [28/Aug/2025 16:30:57] "GET /auth HTTP/1.1" 200 -
 2025-08-28 16:44:12,824 [INFO] werkzeug: 127.0.0.1 - - [28/Aug/2025 16:44:12] "GET / HTTP/1.1" 200 -
 2025-08-28 16:44:12,824 [INFO] werkzeug: 127.0.0.1 - - [28/Aug/2025 16:44:12] "GET / HTTP/1.1" 200 -
+2025-09-01 11:01:36,713 [INFO] root: 📜 Logging initialized. Writing to /workspace/server.log
+🧹 Session cleanup service started
+🚀 Session cleanup service started
+🚀 Starting server with HTTP...
+🌐 Access your app at: http://localhost:10000
+⚠️  Note: WebRTC features will not work without HTTPS!
+🧹 Session cleanup service started - will clean stale sessions every hour
+🧹 Session cleanup service started
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-01 11:01:36,715 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://172.30.0.2:10000
+2025-09-01 11:01:36,715 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://172.30.0.2:10000
+2025-09-01 11:01:36,716 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-01 11:01:36,716 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-01 11:01:46,330 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:01:46] "[32mHEAD /study-resources HTTP/1.1[0m" 302 -
+2025-09-01 11:01:46,330 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:01:46] "[32mHEAD /study-resources HTTP/1.1[0m" 302 -
+2025-09-01 11:03:03,749 [INFO] root: 📜 Logging initialized. Writing to /workspace/server.log
+🧹 Session cleanup service started
+🚀 Session cleanup service started
+🚀 Starting server with HTTP...
+🌐 Access your app at: http://localhost:10000
+⚠️  Note: WebRTC features will not work without HTTPS!
+🧹 Session cleanup service started - will clean stale sessions every hour
+🧹 Session cleanup service started
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-01 11:03:03,752 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://172.30.0.2:10000
+2025-09-01 11:03:03,752 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://172.30.0.2:10000
+2025-09-01 11:03:03,752 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-01 11:03:03,752 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-01 11:03:06,339 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:03:06] "HEAD /auth HTTP/1.1" 200 -
+2025-09-01 11:03:06,339 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:03:06] "HEAD /auth HTTP/1.1" 200 -
+2025-09-01 11:03:13,297 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:03:13] "[32mHEAD /study-resources HTTP/1.1[0m" 302 -
+2025-09-01 11:03:13,297 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:03:13] "[32mHEAD /study-resources HTTP/1.1[0m" 302 -
+2025-09-01 11:04:02,343 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:04:02] "POST /auth HTTP/1.1" 200 -
+2025-09-01 11:04:02,343 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:04:02] "POST /auth HTTP/1.1" 200 -
+2025-09-01 11:04:25,011 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:04:25] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-01 11:04:25,011 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:04:25] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-01 11:04:29,381 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:04:29] "[32mHEAD /study-resources HTTP/1.1[0m" 302 -
+2025-09-01 11:04:29,381 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:04:29] "[32mHEAD /study-resources HTTP/1.1[0m" 302 -
+2025-09-01 11:04:45,707 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:04:45] "[32mHEAD /study-resources HTTP/1.1[0m" 302 -
+2025-09-01 11:04:45,707 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:04:45] "[32mHEAD /study-resources HTTP/1.1[0m" 302 -
+2025-09-01 11:04:51,069 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:04:51] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-01 11:04:51,069 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:04:51] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-01 11:04:58,929 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:04:58] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-01 11:04:58,929 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:04:58] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-01 11:07:24,489 [INFO] root: 📜 Logging initialized. Writing to /workspace/server.log
+🧹 Session cleanup service started
+🚀 Session cleanup service started
+🚀 Starting server with HTTP...
+🌐 Access your app at: http://localhost:10000
+⚠️  Note: WebRTC features will not work without HTTPS!
+🧹 Session cleanup service started - will clean stale sessions every hour
+🧹 Session cleanup service started
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-01 11:07:24,492 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://172.30.0.2:10000
+2025-09-01 11:07:24,492 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://172.30.0.2:10000
+2025-09-01 11:07:24,492 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-01 11:07:24,492 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-01 11:08:19,133 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:08:19] "[32mHEAD /study-resources HTTP/1.1[0m" 302 -
+2025-09-01 11:08:19,133 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:08:19] "[32mHEAD /study-resources HTTP/1.1[0m" 302 -
+2025-09-01 11:09:14,355 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:09:14] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-01 11:09:14,355 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:09:14] "[32mPOST /auth HTTP/1.1[0m" 302 -
+Unexpected error in study_resources route: too many values to unpack (expected 6)
+2025-09-01 11:12:48,968 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:12:48] "[32mHEAD /study-resources HTTP/1.1[0m" 302 -
+2025-09-01 11:12:48,968 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:12:48] "[32mHEAD /study-resources HTTP/1.1[0m" 302 -
+2025-09-01 11:20:56,369 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:20:56] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-01 11:20:56,369 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:20:56] "[32mPOST /auth HTTP/1.1[0m" 302 -
+Unexpected error in study_resources route: too many values to unpack (expected 6)
+2025-09-01 11:20:59,955 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:20:59] "[32mHEAD /study-resources HTTP/1.1[0m" 302 -
+2025-09-01 11:20:59,955 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:20:59] "[32mHEAD /study-resources HTTP/1.1[0m" 302 -
+2025-09-01 11:21:12,547 [INFO] root: 📜 Logging initialized. Writing to /workspace/server.log
+🧹 Session cleanup service started
+🚀 Session cleanup service started
+🚀 Starting server with HTTP...
+🌐 Access your app at: http://localhost:10000
+⚠️  Note: WebRTC features will not work without HTTPS!
+🧹 Session cleanup service started - will clean stale sessions every hour
+ * Serving Flask app 'app'
+ * Debug mode: off
+🧹 Session cleanup service started
+2025-09-01 11:21:12,550 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://172.30.0.2:10000
+2025-09-01 11:21:12,550 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://172.30.0.2:10000
+2025-09-01 11:21:12,550 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-01 11:21:12,550 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-01 11:21:17,033 [INFO] root: 📜 Logging initialized. Writing to /workspace/server.log
+🧹 Session cleanup service started
+🚀 Session cleanup service started
+🚀 Starting server with HTTP...
+🌐 Access your app at: http://localhost:10000
+⚠️  Note: WebRTC features will not work without HTTPS!
+🧹 Session cleanup service started - will clean stale sessions every hour
+🧹 Session cleanup service started
+ * Serving Flask app 'app'
+ * Debug mode: off
+Address already in use
+Port 10000 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2025-09-01 11:21:18,454 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:21:18] "HEAD / HTTP/1.1" 200 -
+2025-09-01 11:21:18,454 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:21:18] "HEAD / HTTP/1.1" 200 -
+2025-09-01 11:21:20,878 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:21:20] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-01 11:21:20,878 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:21:20] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-01 11:21:22,942 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:21:22] "HEAD /study-resources HTTP/1.1" 200 -
+2025-09-01 11:21:22,942 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:21:22] "HEAD /study-resources HTTP/1.1" 200 -
+2025-09-01 11:21:25,383 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:21:25] "GET /study-resources HTTP/1.1" 200 -
+2025-09-01 11:21:25,383 [INFO] werkzeug: 127.0.0.1 - - [01/Sep/2025 11:21:25] "GET /study-resources HTTP/1.1" 200 -

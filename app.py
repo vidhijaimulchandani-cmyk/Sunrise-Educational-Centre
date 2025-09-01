@@ -1564,7 +1564,8 @@ def auth():
         if selected_role == 'admin':
             if admin_code != 'sec@011':
                 error = 'Invalid admin code. Login denied.'
-                return render_template('auth.html', error=error)
+                all_classes = get_all_classes()
+                return render_template('auth.html', error=error, all_classes=all_classes)
         user_data = authenticate_user(username, password)
         if user_data:
             user_id, user_role = user_data
@@ -1572,7 +1573,8 @@ def auth():
             user = get_user_by_id(user_id)
             if user and len(user) > 4 and user[4] == 1:
                 error = 'Your account has been banned. Please contact Mohit Sir or admin to be unbanned.'
-                return render_template('auth.html', error=error)
+                all_classes = get_all_classes()
+                return render_template('auth.html', error=error, all_classes=all_classes)
             if user_role == selected_role:
                 # Get client IP and user agent
                 xff = request.headers.get('X-Forwarded-For', '')
@@ -1588,7 +1590,7 @@ def auth():
                     session['session_id'] = session_id
                     
                     # After successful login, honor any next param to avoid perceived loops
-                    next_page = request.args.get('next')
+                    next_page = request.args.get('next') or request.form.get('next')
                     if user_role in ['admin', 'teacher']:
                         return redirect(url_for('admin_panel'))
                     if next_page == 'study_resources':
@@ -1597,9 +1599,11 @@ def auth():
                     return redirect(url_for('home'))
                 else:
                     error = 'Failed to create session. Please try again.'
-                    return render_template('auth.html', error=error)
+                    all_classes = get_all_classes()
+                    return render_template('auth.html', error=error, all_classes=all_classes)
         error = 'Wrong credentials. Contact the institute.'
-    return render_template('auth.html', error=error)
+    all_classes = get_all_classes()
+    return render_template('auth.html', error=error, all_classes=all_classes)
 # Placeholder Google OAuth start (UI only)
 @app.route('/auth/google')
 def auth_google_start():
