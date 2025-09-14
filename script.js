@@ -85,6 +85,46 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
+    // Auto-enhance all floating navbars across pages
+    try {
+      const navbars = document.querySelectorAll('.floating-navbar');
+      navbars.forEach(nav => {
+        // Ensure black-glass styling for consistency
+        if (!nav.classList.contains('black-glass')) {
+          nav.classList.add('black-glass');
+        }
+
+        // Ensure a hamburger exists for mobile
+        let burger = nav.querySelector('.hamburger');
+        if (!burger) {
+          burger = document.createElement('button');
+          burger.className = 'hamburger';
+          burger.setAttribute('aria-label', 'Menu');
+          burger.setAttribute('aria-expanded', 'false');
+          burger.innerHTML = '<span class="bar"></span><span class="bar"></span><span class="bar"></span>';
+          // Prepend the hamburger before nav-links
+          const links = nav.querySelector('.nav-links');
+          if (links) {
+            nav.insertBefore(burger, links);
+          } else {
+            nav.appendChild(burger);
+          }
+        }
+
+        // Wire up hamburger toggle to corresponding nav-links within same nav
+        const links = nav.querySelector('.nav-links');
+        if (burger && links) {
+          burger.addEventListener('click', () => {
+            const isActive = links.classList.toggle('active');
+            burger.classList.toggle('active', isActive);
+            burger.setAttribute('aria-expanded', String(isActive));
+          });
+        }
+      });
+    } catch (e) {
+      // no-op: defensive guard for pages without nav
+    }
+    
     // Setup profile dropdown
     setupProfileDropdown();
     
