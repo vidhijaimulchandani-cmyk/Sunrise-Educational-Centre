@@ -120,6 +120,16 @@ document.addEventListener('DOMContentLoaded', () => {
             burger.setAttribute('aria-expanded', String(isActive));
           });
         }
+
+        // Ensure Scholars link exists
+        if (links && !links.querySelector('a[href="/scholars"]')) {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = '/scholars';
+          a.textContent = 'Scholars';
+          li.appendChild(a);
+          links.appendChild(li);
+        }
       });
     } catch (e) {
       // no-op: defensive guard for pages without nav
