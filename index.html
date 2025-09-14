@@ -114,7 +114,7 @@
         /* Hero Section */
         .hero-section {
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('attached_assets/image_1750584670920.png') center/cover no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -136,23 +136,7 @@
             z-index: 0;
         }
 
-        /* Coaching logo watermark over gradient */
-        .hero-section::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: url('attached_assets/image_1750584670920.png');
-            background-repeat: no-repeat;
-            background-position: center 15%;
-            background-size: clamp(140px, 24vw, 320px);
-            opacity: 0.08;
-            filter: grayscale(100%) contrast(110%) brightness(150%);
-            z-index: 1;
-            pointer-events: none;
-        }
+        /* Coaching logo watermark removed in favor of full hero background */
 
         /* Black Glassy Theme */
         .black-glass {
@@ -842,9 +826,7 @@
     <!-- Hero Section with Logo -->
     <section class="hero-section">
         <div class="hero-content">
-            <div class="hero-logo">
-                <img src="attached_assets/image_1750584670920.png" alt="Sunrise Educational Centre Logo" class="main-logo">
-            </div>
+            
             <h1 id="typing-hero" style="border-right: 2px solid rgba(255,255,255,0.8); white-space: nowrap; overflow: hidden; display: inline-block; padding-right: 8px; min-height: 1em;"> </h1>
             <p>Empowering students from Class 9 to 12 with expert coaching, personalized attention, and a proven track record of success. Join our vibrant learning community and unlock your full potential!</p>
             <div class="hero-buttons">
