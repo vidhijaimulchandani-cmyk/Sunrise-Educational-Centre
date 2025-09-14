@@ -1150,6 +1150,12 @@ def home():
                          username=username, 
                          user_notifications=user_notifications)
 
+# Scholars page route
+@app.route('/scholars')
+def scholars_page():
+    username = session.get('username')
+    return render_template('scholars.html', username=username)
+
 # Route for study resources
 @app.route('/study-resources')
 def study_resources():

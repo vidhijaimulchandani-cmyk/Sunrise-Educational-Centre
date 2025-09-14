@@ -21,6 +21,16 @@ body.dark-mode .nav-links a:hover, body.dark-mode .nav-links .btn-primary {
   background: linear-gradient(90deg, #232946 0%, #6a82fb 100%);
   color: #fff;
 }
+/* Global Black Glass utility (matches homepage aesthetic) */
+.black-glass {
+  background: rgba(5, 6, 10, 0.72) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(18px) saturate(110%);
+  -webkit-backdrop-filter: blur(18px) saturate(110%);
+  color: #fff !important;
+  border-radius: 20px;
+}
 body.dark-mode .hero-section {
   color: #fff;
 }
