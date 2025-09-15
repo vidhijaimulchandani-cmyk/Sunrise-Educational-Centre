@@ -1208,6 +1208,35 @@ def scholars_page():
     username = session.get('username')
     return render_template('scholars.html', username=username)
 
+@app.route('/notifications')
+def notifications_page():
+    if 'user_id' not in session:
+        return redirect(url_for('auth'))
+    try:
+        notifications = get_unread_notifications_for_user(session['user_id'])
+    except Exception:
+        notifications = []
+    return render_template('notifications.html', notifications=notifications)
+
+@app.route('/api/live-classes/status')
+def api_live_classes_status():
+    """Return active, upcoming, and completed live classes for client polling"""
+    if 'user_id' not in session:
+        return jsonify({'success': False, 'error': 'Not logged in'}), 401
+    try:
+        from auth_handler import get_active_live_classes, get_upcoming_live_classes, get_completed_live_classes
+        active_classes = get_active_live_classes() or []
+        upcoming_classes = get_upcoming_live_classes() or []
+        completed_classes = get_completed_live_classes() or []
+        return jsonify({
+            'success': True,
+            'active': active_classes,
+            'upcoming': upcoming_classes,
+            'completed': completed_classes
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 # Route for study resources
 @app.route('/study-resources')
 def study_resources():
@@ -1586,7 +1615,6 @@ def api_vote_on_message(message_id):
     # Assuming it was meant to be a placeholder for a voting mechanism.
     # For now, we'll just return success.
     return jsonify({'success': True})
-
 @app.route('/api/forum/messages/<int:message_id>', methods=['DELETE'])
 def api_delete_forum_message(message_id):
     user_id = session.get('user_id')
@@ -2380,7 +2408,6 @@ def mark_notification_seen_route():
     # For now, we'll use 'general' as default, but this should be improved
     mark_notification_as_read(user_id, notification_id, 'general')
     return {'status': 'success'}
-
 @app.route('/delete-notification/<int:notification_id>', methods=['POST'])
 def delete_notification_route(notification_id):
     if session.get('role') not in ['admin', 'teacher']:
@@ -2388,7 +2415,6 @@ def delete_notification_route(notification_id):
     delete_notification(notification_id)
     flash('Notification deleted!', 'success')
     return redirect(url_for('admin_panel'))
-
 @app.route('/admin/classes/add', methods=['POST'])
 def admin_add_class():
     if session.get('role') not in ['admin', 'teacher']:
@@ -4715,7 +4741,6 @@ def edit_resource():
         flash(f'Error updating resource: {str(e)}', 'error')
         return redirect(url_for('upload_resource'))
 # --- SOCKET.IO EVENTS FOR CHAT, POLLS AND DOUBTS ---
-
 @socketio.on('chat_message')
 def handle_chat_message(data):
     try:

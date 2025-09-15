@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notifications - Sunrise Educational Centre</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="floating-navbar.css" />
+</head>
+<body>
+    <nav class="floating-navbar black-glass">
+        <button class="hamburger" aria-label="Menu" aria-expanded="false">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/online-class">Live Classes</a></li>
+            <li><a href="/batch">Batches</a></li>
+            <li><a href="/study-resources">Study Resources</a></li>
+            <li><a href="/forum">Forum</a></li>
+            <li><a href="/admission">Admission</a></li>
+        </ul>
+    </nav>
+
+    <section class="card-section black-glass" style="max-width:900px; margin: 2rem auto; padding: 1.5rem;">
+        <h2 style="text-align:center; margin-bottom: 1rem;">Your Notifications</h2>
+        {% if notifications and notifications|length > 0 %}
+            <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.8rem;">
+                {% for n in notifications %}
+                    {% set id = n[0] %}
+                    {% set message = n[1] %}
+                    {% set created_at = n[2] %}
+                    {% set notification_type = n[4] if n|length > 4 else 'general' %}
+                    <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:1rem; border-radius:12px; background:#fff; color:#232946; border:1px solid #e0e7ff;">
+                        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem;">
+                            <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.8rem; font-weight:600;">{{ notification_type }}</span>
+                            <span style="font-size:0.9rem; color:#888;">{{ created_at }}</span>
+                        </div>
+                        <div style="word-wrap: break-word;">{{ message }}</div>
+                        <div style="margin-top:0.6rem;">
+                            <button class="btn btn-secondary" onclick="markNotificationAsSeen('{{ id }}')">Mark as seen</button>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p style="text-align:center; color:#888;">No new notifications.</p>
+        {% endif %}
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>

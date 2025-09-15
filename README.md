@@ -67,6 +67,14 @@ python3 app.py
 
 The application will start on `http://localhost:10000`
 
+### Useful Routes
+
+- `/` homepage
+- `/auth` login/registration
+- `/online-class` live classes (requires login)
+- `/notifications` user notifications (requires login)
+- `/api/live-classes/status` JSON status for live classes (requires login)
+
 ## 🔧 Configuration
 
 ### Environment Variables
