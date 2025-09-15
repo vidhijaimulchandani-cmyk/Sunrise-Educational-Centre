@@ -12,7 +12,7 @@
     border-radius: 50px;
     padding: 15px 30px;
     box-shadow: 0 12px 48px rgba(0, 0, 0, 0.35);
-    transition: all 0.3s ease;
+    transition: none;
     /* Stabilize width to prevent left-right shifting when content toggles */
     width: min(92%, 960px);
     margin: 0 auto;
@@ -20,10 +20,7 @@
     backface-visibility: hidden;
 }
 
-.floating-navbar:hover {
-    background: rgba(5, 6, 10, 0.72);
-    box-shadow: 0 16px 56px rgba(0, 0, 0, 0.45);
-}
+.floating-navbar:hover { background: rgba(5, 6, 10, 0.6); box-shadow: 0 12px 48px rgba(0, 0, 0, 0.35); }
 
 .floating-navbar .nav-links {
     display: flex;
@@ -41,15 +38,11 @@
     font-size: 16px;
     padding: 8px 16px;
     border-radius: 25px;
-    transition: all 0.3s ease;
+    transition: none;
     position: relative;
 }
 
-.floating-navbar .nav-links a:hover {
-    background: rgba(255, 255, 255, 0.14);
-    color: #ffffff;
-    transform: translateY(-2px);
-}
+.floating-navbar .nav-links a:hover { background: rgba(255, 255, 255, 0.14); color: #ffffff; transform: none; }
 
 .floating-navbar .nav-links .btn-primary {
     background: rgba(255,255,255,0.14);
@@ -58,10 +51,7 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
 }
 
-.floating-navbar .nav-links .btn-primary:hover {
-    background: rgba(255,255,255,0.22);
-    transform: translateY(-2px) scale(1.05);
-}
+.floating-navbar .nav-links .btn-primary:hover { background: rgba(255,255,255,0.22); transform: none; }
 
 /* Search Button Styles */
 .search-btn {
@@ -72,13 +62,10 @@
     border-radius: 25px;
     cursor: pointer;
     font-weight: 600;
-    transition: all 0.3s ease;
+    transition: none;
 }
 
-.search-btn:hover {
-    background: rgba(255,255,255,0.18);
-    transform: translateY(-2px);
-}
+.search-btn:hover { background: rgba(255,255,255,0.18); transform: none; }
 
 /* Notification Bell Styles */
 .notification-bell {
@@ -90,13 +77,10 @@
     font-size: 18px;
     padding: 8px;
     border-radius: 50%;
-    transition: all 0.3s ease;
+    transition: none;
 }
 
-.notification-bell:hover {
-    background: rgba(255,255,255,0.14);
-    transform: translateY(-2px);
-}
+.notification-bell:hover { background: rgba(255,255,255,0.14); transform: none; }
 
 .notification-badge {
     position: absolute;
@@ -122,12 +106,10 @@
     content: '▼';
     margin-left: 5px;
     font-size: 10px;
-    transition: transform 0.3s ease;
+    transition: none;
 }
 
-.dropdown:hover .dropdown-toggle::after {
-    transform: rotate(180deg);
-}
+.dropdown:hover .dropdown-toggle::after { transform: none; }
 
 .dropdown-menu {
     position: absolute;
@@ -142,18 +124,14 @@
     min-width: 200px;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
+    transform: none;
+    transition: none;
     z-index: 1000;
     padding: 10px 0;
     margin-top: 10px;
 }
 
-.dropdown:hover .dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
+.dropdown:hover .dropdown-menu { opacity: 1; visibility: visible; transform: none; }
 
 .dropdown-menu li {
     list-style: none;
@@ -200,7 +178,7 @@
         height: 2px;
         margin: 4px 0;
         background: #ffffff;
-        transition: all .2s ease;
+        transition: none;
     }
     .floating-navbar .nav-links {
         display: none;

@@ -633,7 +633,7 @@ body.dark-mode .wall-of-fame-section div[style*="color: #666"] {
   font-weight: 500;
   padding: 0.5rem 1rem;
   border-radius: 12px;
-  transition: all 0.3s ease;
+  transition: none;
   position: relative;
   overflow: hidden;
 }
@@ -646,18 +646,16 @@ body.dark-mode .wall-of-fame-section div[style*="color: #666"] {
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  transition: left 0.5s;
+  transition: none;
 }
 
-.nav-links a:hover::before {
-  left: 100%;
-}
+.nav-links a:hover::before { left: -100%; }
 
 .nav-links a:hover {
   color: #ffffff;
   background: rgba(255, 255, 255, 0.1);
-  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
+  text-shadow: none;
+  transform: none;
 }
 
 .nav-links .btn {
@@ -669,16 +667,10 @@ body.dark-mode .wall-of-fame-section div[style*="color: #666"] {
   box-shadow: 
     0 4px 15px rgba(102, 126, 234, 0.3),
     0 2px 8px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
+  transition: none;
 }
 
-.nav-links .btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 
-    0 8px 25px rgba(102, 126, 234, 0.4),
-    0 4px 15px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
-}
+.nav-links .btn:hover { transform: none; box-shadow: none; background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%); }
 
 .nav-links .btn-primary {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
