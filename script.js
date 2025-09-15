@@ -121,6 +121,46 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         }
 
+        // Ensure Notification bell exists (and dropdown container)
+        if (links && !document.getElementById('notifBell')) {
+          const notifLi = document.createElement('li');
+          notifLi.style.position = 'relative';
+          notifLi.innerHTML = `
+            <button id="notifBell" title="Notifications" style="background:none;border:none;cursor:pointer;position:relative;color:#fff;">
+              🔔
+              <span id="notificationCount" style="position:absolute;top:0;right:0;width:18px;height:18px;background:#fc5c7d;border-radius:50%;color:white;font-size:10px;font-weight:bold;display:none;align-items:center;justify-content:center;">0</span>
+            </button>
+            <div id="notifDropdown" style="display:none;">
+              <strong style="color:#6a82fb;">Notifications</strong>
+              <ul style="list-style:none; padding:0; margin:0;"></ul>
+            </div>`;
+          links.appendChild(notifLi);
+        }
+
+        // Ensure Profile dropdown exists
+        if (links && !document.getElementById('profileLink')) {
+          const profileLi = document.createElement('li');
+          profileLi.className = 'profile-dropdown';
+          profileLi.innerHTML = `
+            <a href="#" id="profileLink">Profile ▾</a>
+            <div class="profile-dropdown-menu" id="profileDropdown">
+              <a href="/profile" class="dropdown-item">My Profile</a>
+              <a href="/notifications" class="dropdown-item">Notifications</a>
+              <a href="/logout" class="dropdown-item">Logout</a>
+            </div>`;
+          links.appendChild(profileLi);
+        }
+
+        // Ensure core links consistency (Home present)
+        if (links && !links.querySelector('a[href="/"]')) {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = '/';
+          a.textContent = 'Home';
+          li.appendChild(a);
+          links.insertBefore(li, links.firstChild);
+        }
+
         // Ensure Scholars link exists
         if (links && !links.querySelector('a[href="/scholars"]')) {
           const li = document.createElement('li');

@@ -572,7 +572,23 @@
       <li><a href="/study-resources">Study Resources</a></li>
       <li><a href="/batch">Batch</a></li>
       <li><a href="/forum">Forum</a></li>
-      <li><a href="/logout" class="btn-primary">Logout</a></li>
+      <li class="profile-dropdown">
+        <a href="#" id="profileLink">{{ user.username }} ▾</a>
+        <div class="profile-dropdown-menu" id="profileDropdown">
+          <a href="/profile" class="dropdown-item">My Profile</a>
+          <a href="/notifications" class="dropdown-item">Notifications</a>
+          <a href="/logout" class="dropdown-item">Logout</a>
+        </div>
+      </li>
+      <li style="position:relative;">
+        <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative; color:#fff;">🔔
+          <span id="notificationCount" style="position:absolute;top:0;right:0;width:18px;height:18px;background:#fc5c7d;border-radius:50%;color:white;font-size:10px;font-weight:bold;display:none;align-items:center;justify-content:center;">0</span>
+        </button>
+        <div id="notifDropdown" style="display:none;">
+          <strong style="color:#6a82fb;">Notifications</strong>
+          <ul style="list-style:none; padding:0; margin:0;"></ul>
+        </div>
+      </li>
     </ul>
   </nav>
   <script>
@@ -586,13 +602,26 @@
         document.body.classList.toggle('dark-mode');
         try{localStorage.setItem('preferredTheme', document.body.classList.contains('dark-mode')?'dark':'light');}catch(e){}
       }
-      document.addEventListener('DOMContentLoaded',function(){applySaved(); if(btn){btn.addEventListener('click', toggle);}});
+      document.addEventListener('DOMContentLoaded',function(){
+        applySaved();
+        if(btn){btn.addEventListener('click', toggle);}        
+        // Greeting
+        try{
+          var g=document.getElementById('greeting');
+          if(g){
+            var hrs=new Date().getHours();
+            var msg = hrs<12? 'Good morning' : hrs<17? 'Good afternoon' : hrs<21? 'Good evening' : 'Good night';
+            g.textContent = msg + ', ' + ("{{ user.username }}"||'User') + '!';
+          }
+        }catch(e){}
+      });
     })();
   </script>
   
   <main class="profile-container">
     <div class="profile-card black-glass">
       <div class="profile-header">
+        <div id="greeting" style="font-size:1.1rem;color:#e0e7ff;margin-bottom:0.5rem;"></div>
         <div class="profile-avatar">
           {{ user.username[0].upper() }}
         </div>
