@@ -138,18 +138,6 @@
       <div class="container">
         <h1>Study Resources</h1>
         <p>Access comprehensive notes, worksheets, practice problems, and solutions for your class with our premium glassmorphic interface!</p>
-      </div>
-    </header>
-
-    <main class="container main-content study-resources-shell">
-      <!-- Search and Filter Section -->
-      <section class="search-filter-section">
-        <input type="text" class="search-input" placeholder="Search resources by title, description, or category..." id="searchInput">
-      </section>
-
-      <!-- Forum-style Category Header -->
-      <section class="forum-categories">
-        <h3>📚 Study Resources Categories</h3>
         <div class="class-strip">
           <span class="class-chip">{{ class_name|title }}</span>
           {% if paid_status == 'paid' %}
@@ -157,6 +145,42 @@
           {% else %}
             <span class="status-chip unpaid">Basic Access</span>
           {% endif %}
+        </div>
+      </div>
+    </header>
+
+    <main class="container main-content study-resources-shell">
+      <!-- Floating Search Button and Panel -->
+      <button id="floatingSearchBtn" class="floating-search-btn" title="Search resources">🔎</button>
+      <div id="floatingSearchPanel" class="floating-search-panel" style="display:none;">
+        <input type="text" class="search-input" placeholder="Search resources..." id="searchInput">
+      </div>
+
+      <!-- Forum-style Category Header -->
+      <section class="forum-categories">
+        <h3>📚 Study Resources Categories</h3>
+      </section>
+
+      <!-- Quick Access Section (moved to top) -->
+      <section class="quick-access">
+        <h2>Quick Access</h2>
+        <div class="quick-access-grid">
+          <a href="/online-class" class="quick-access-item">
+            <h3>🎥 Live Classes</h3>
+            <p>Join interactive live sessions with expert teachers</p>
+          </a>
+          <a href="/batch" class="quick-access-item">
+            <h3>📋 Batch Information</h3>
+            <p>View available batches and schedules</p>
+          </a>
+          <a href="/forum" class="quick-access-item">
+            <h3>💬 Discussion Forum</h3>
+            <p>Connect with peers and ask questions</p>
+          </a>
+          <a href="/admission" class="quick-access-item">
+            <h3>📝 Admission</h3>
+            <p>Apply for admission to our programs</p>
+          </a>
         </div>
       </section>
 
@@ -251,28 +275,6 @@
         </div>
       </section>
 
-      <!-- Quick Access Section -->
-      <section class="quick-access">
-        <h2>Quick Access</h2>
-        <div class="quick-access-grid">
-          <a href="/online-class" class="quick-access-item">
-            <h3>🎥 Live Classes</h3>
-            <p>Join interactive live sessions with expert teachers</p>
-          </a>
-          <a href="/batch" class="quick-access-item">
-            <h3>📋 Batch Information</h3>
-            <p>View available batches and schedules</p>
-          </a>
-          <a href="/forum" class="quick-access-item">
-            <h3>💬 Discussion Forum</h3>
-            <p>Connect with peers and ask questions</p>
-          </a>
-          <a href="/admission" class="quick-access-item">
-            <h3>📝 Admission</h3>
-            <p>Apply for admission to our programs</p>
-          </a>
-        </div>
-      </section>
 
       <!-- Dark Mode Toggle -->
       <div style="text-align:center; margin: 2rem 0;">
