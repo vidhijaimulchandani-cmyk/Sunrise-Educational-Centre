@@ -1160,15 +1160,7 @@
             });
         });
 
-        // Add navbar scroll effect
-        window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.floating-navbar');
-            if (window.scrollY > 100) {
-                navbar.style.background = 'rgba(255, 255, 255, 0.2)';
-            } else {
-                navbar.style.background = 'rgba(255, 255, 255, 0.1)';
-            }
-        });
+        // Removed navbar scroll background animation for consistency
 
         // Fame slider scroll helper
         function scrollFame(id, dir) {
