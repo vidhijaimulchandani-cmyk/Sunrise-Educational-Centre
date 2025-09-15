@@ -623,6 +623,8 @@ body.dark-mode .wall-of-fame-section div[style*="color: #666"] {
   padding: 0;
   gap: 1.5rem;
   align-items: center;
+  /* Prevent layout jumps when items toggle */
+  min-height: 40px;
 }
 
 .nav-links a {

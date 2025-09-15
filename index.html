@@ -766,12 +766,13 @@
             
             <!-- User Dropdown -->
             {% if username %}
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">{{ username }}</a>
-                <ul class="dropdown-menu">
-                    <li><a href="/profile">Profile</a></li>
-                    <li><a href="/logout">Logout</a></li>
-                </ul>
+            <li class="profile-dropdown">
+                <a href="#" id="profileLink">{{ username }} ▾</a>
+                <div class="profile-dropdown-menu" id="profileDropdown">
+                    <a href="/profile" class="dropdown-item">My Profile</a>
+                    <a href="/notifications" class="dropdown-item">Notifications</a>
+                    <a href="/logout" class="dropdown-item">Logout</a>
+                </div>
             </li>
             {% else %}
             <li><a href="/auth" class="btn-primary">Login</a></li>
@@ -781,11 +782,15 @@
             <li><button class="search-btn" onclick="openSearch()">Search</button></li>
             
             <!-- Notification Button -->
-            <li>
-                <button class="notification-bell" onclick="toggleNotifications()" title="Notifications">
-                    Notifications
-                    <span class="notification-badge" id="notification-count" style="display: none;">0</span>
+            <li style="position:relative;">
+                <button id="notifBell" class="notification-bell" title="Notifications">
+                    🔔
+                    <span class="notification-badge" id="notificationCount" style="display:none; align-items:center; justify-content:center;">0</span>
                 </button>
+                <div id="notifDropdown" style="display:none;">
+                    <strong style="color:#6a82fb;">Notifications</strong>
+                    <ul style="list-style:none; padding:0; margin:0;"></ul>
+                </div>
             </li>
         </ul>
     </nav>
