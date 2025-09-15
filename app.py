@@ -67,7 +67,7 @@ import uuid
 from time_config import (
     get_current_ist_time, format_ist_time, format_relative_time, 
     get_date_for_display, get_time_for_display, get_timezone_info,
-    is_business_hours, get_available_class_slots
+    is_business_hours, get_available_class_slots, get_ist_datetime_from_utc
 )
 
 # Import bulk upload routes
@@ -97,6 +97,44 @@ os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'recordings'), exist_ok=Tr
 os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'recordings', 'temp'), exist_ok=True)
 
 DATABASE = 'users.db'
+# --- Site last-updated (IST) computation ---
+def _compute_site_last_updated():
+    """Compute the most recent modification time across key project files.
+    Returns a timezone-aware datetime in IST.
+    """
+    try:
+        search_root = os.path.dirname(os.path.abspath(__file__))
+        exclude_dirs = {'.git', '__pycache__', 'uploads', 'sunrise_pdfs', 'xlsx', 'img'}
+        include_exts = {'.html', '.css', '.js', '.py'}
+
+        latest_mtime = 0.0
+        for root, dirs, files in os.walk(search_root):
+            # prune directories
+            dirs[:] = [d for d in dirs if d not in exclude_dirs]
+            for fname in files:
+                _, ext = os.path.splitext(fname)
+                if ext.lower() in include_exts:
+                    fpath = os.path.join(root, fname)
+                    try:
+                        mtime = os.path.getmtime(fpath)
+                        if mtime > latest_mtime:
+                            latest_mtime = mtime
+                    except Exception:
+                        # ignore unreadable files
+                        pass
+
+        if latest_mtime <= 0.0:
+            # fallback to current time if nothing found
+            return get_current_ist_time()
+
+        utc_dt = datetime.fromtimestamp(latest_mtime, tz=timezone.utc)
+        return get_ist_datetime_from_utc(utc_dt)
+    except Exception:
+        # robust fallback
+        return get_current_ist_time()
+
+SITE_LAST_UPDATED_IST = _compute_site_last_updated()
+
 # Register blueprint(s)
 try:
     from live_class_routes import live_classes_bp
@@ -1149,6 +1187,20 @@ def home():
                          queries=queries, 
                          username=username, 
                          user_notifications=user_notifications)
+
+# Public API: site last-updated time (IST)
+@app.route('/api/site-last-updated')
+def api_site_last_updated():
+    try:
+        ist_dt = SITE_LAST_UPDATED_IST
+        return jsonify({
+            'success': True,
+            'last_updated_iso': ist_dt.isoformat(),
+            'formatted': ist_dt.strftime('%d %B %Y at %I:%M %p IST'),
+            'epoch': int(ist_dt.timestamp())
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 # Scholars page route
 @app.route('/scholars')

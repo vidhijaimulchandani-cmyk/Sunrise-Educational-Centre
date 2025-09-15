@@ -897,6 +897,16 @@ body.dark-mode .wall-of-fame-section div[style*="color: #666"] {
   margin-top: 1rem;
 }
 
+/* Last updated footer text */
+.footer-updated {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+body.dark-mode .footer-updated {
+  color: #b8c5d6;
+}
+
 /* Hamburger Menu */
 .hamburger {
     display: none;
