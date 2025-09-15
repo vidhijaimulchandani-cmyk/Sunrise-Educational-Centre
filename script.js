@@ -703,6 +703,50 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Inject "Last updated" time (IST) into footer across all pages
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        initLastUpdatedFooter();
+    } catch (e) {
+        console.error('Error initializing last-updated footer:', e);
+    }
+});
+
+function initLastUpdatedFooter() {
+    // Ensure a footer exists; if not, create a minimal one
+    let footer = document.querySelector('footer.footer');
+    if (!footer) {
+        footer = document.createElement('footer');
+        footer.className = 'footer';
+        const container = document.createElement('div');
+        container.className = 'container footer-content';
+        footer.appendChild(container);
+        document.body.appendChild(footer);
+    }
+
+    const container = footer.querySelector('.footer-content') || footer;
+    let updatedEl = footer.querySelector('#footerLastUpdated');
+    if (!updatedEl) {
+        updatedEl = document.createElement('div');
+        updatedEl.id = 'footerLastUpdated';
+        updatedEl.className = 'footer-updated';
+        container.appendChild(updatedEl);
+    }
+
+    fetch('/api/site-last-updated')
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (data && data.success && data.formatted) {
+                updatedEl.textContent = 'Last updated: ' + data.formatted;
+            } else {
+                updatedEl.textContent = 'Last updated: ' + (new Date()).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) + ' IST';
+            }
+        })
+        .catch(function() {
+            updatedEl.textContent = 'Last updated: ' + (new Date()).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) + ' IST';
+        });
+}
+
 // Setup mobile touch handling for better dropdown experience
 function setupMobileTouchHandling() {
     // Add touch event listeners for mobile devices
