@@ -287,68 +287,31 @@
   </head>
   <body>
     <!-- Floating Navbar -->
-    <nav class="floating-navbar">
+    <nav class="floating-navbar black-glass">
+        <button class="hamburger" aria-label="Menu" aria-expanded="false">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
         <ul class="nav-links">
             <li><a href="/">Home</a></li>
             
-            <!-- Learning Dropdown -->
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">Learning</a>
-                <ul class="dropdown-menu">
-                    <li><a href="/online-class">Live Classes</a></li>
-                    <li><a href="/batch">Batches</a></li>
-                    <li><a href="/study-resources">Study Resources</a></li>
-                    <li><a href="/forum">Forum</a></li>
-                </ul>
-            </li>
+            <!-- Direct Page Links -->
+            <li><a href="/online-class">Live Classes</a></li>
+            <li><a href="/batch">Batches</a></li>
+            <li><a href="/study-resources">Study Resources</a></li>
+            <li><a href="/forum">Forum</a></li>
+            <li><a href="/admission">Admission</a></li>
             
-            <!-- Services Dropdown -->
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">Services</a>
-                <ul class="dropdown-menu">
-                    <li><a href="/admission">Admission</a></li>
-                    <li><a href="/check-admission-status">Check Status</a></li>
-                </ul>
-            </li>
-            
-            <!-- Admin Dropdown (for admin users) -->
-            {% if username and role == 'admin' %}
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">Admin</a>
-                <ul class="dropdown-menu">
-                    <li><a href="/admin">Admin Panel</a></li>
-                    <li><a href="/admin/admissions">Admissions</a></li>
-                    <li><a href="/content-management">Content Management</a></li>
-                    <li><a href="/live-class-management">Live Class Management</a></li>
-                    <li><a href="/upload-resource">Upload Resource</a></li>
-                    <li><a href="/create-live-class">Create Live Class</a></li>
-                    <li><a href="/bulk-upload">Bulk Upload</a></li>
-                </ul>
-            </li>
-            {% endif %}
-            
-            <!-- Notifications Bell -->
-            {% if username %}
-            <li id="notifBellContainer" style="position:relative; z-index:9999;">
-              <button id="notifBell" class="notification-bell" title="Notifications" style="padding:0; position:relative;">
-                <span style="font-size:22px; color:#0066cc; line-height:1;">🔔</span>
-                <span id="notificationCount" class="notification-badge" style="display:none; position:absolute; top:-4px; right:-4px;">0</span>
-              </button>
-              <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:#fff; min-width:320px; box-shadow:0 4px 24px rgba(100,100,255,0.13); border-radius:12px; z-index:10001; padding:1rem;">
-                <strong style="color:#6a82fb; font-size:1.15rem;">Notifications</strong>
-                <ul style="list-style:none; padding:0; margin:0; max-height:320px; overflow-y:auto;"></ul>
-              </div>
-            </li>
-            {% endif %}
-
             <!-- User Dropdown -->
             {% if username %}
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle">{{ username }}</a>
-                <ul class="dropdown-menu">
-                    <li><a href="/profile">Profile</a></li>
-                    <li><a href="/logout">Logout</a></li>
-                </ul>
+            <li class="profile-dropdown">
+                <a href="#" id="profileLink">{{ username }} ▾</a>
+                <div class="profile-dropdown-menu" id="profileDropdown">
+                    <a href="/profile" class="dropdown-item">My Profile</a>
+                    <a href="/notifications" class="dropdown-item">Notifications</a>
+                    <a href="/logout" class="dropdown-item">Logout</a>
+                </div>
             </li>
             {% else %}
             <li><a href="/auth" class="btn-primary">Login</a></li>
@@ -356,6 +319,24 @@
             
             <!-- Search Button -->
             <li><button class="search-btn" onclick="openSearch()">Search</button></li>
+            
+            <!-- Notification Button -->
+            <li style="position:relative;">
+                <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative; color:#fff;">🔔
+                    <span id="notificationCount" style="position:absolute;top:0;right:0;width:18px;height:18px;background:#fc5c7d;border-radius:50%;color:white;font-size:10px;font-weight:bold;display:none;align-items:center;justify-content:center;">0</span>
+                </button>
+                <div id="notifDropdown" style="display:none;">
+                    <strong style="color:#6a82fb;">Notifications</strong>
+                    <ul style="list-style:none; padding:0; margin:0;"></ul>
+                </div>
+            </li>
+            
+            <!-- Theme Toggle Button -->
+            <li>
+                <button id="darkModeToggle" class="theme-toggle-btn" title="Toggle Dark Mode">
+                    🌙
+                </button>
+            </li>
         </ul>
     </nav>
 
@@ -525,6 +506,21 @@
       });
     </script>
     <script src="script.js"></script>
+    
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-content">
+        <div class="footer-social">
+          <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">Instagram</a>
+          <a href="https://www.youtube.com/@MohitNariyani" target="_blank">YouTube</a>
+        </div>
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Contact Us</a>
+        </div>
+        <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
+      </div>
+    </footer>
   </body>
   <script src="attached_assets/theme.js"></script>
 </html>

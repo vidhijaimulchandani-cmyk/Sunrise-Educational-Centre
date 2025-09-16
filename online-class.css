@@ -1,11 +1,17 @@
 
 /* Online Class Glassmorphic Styling */
 body {
+  background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+  color: #1e293b;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Dark mode styles */
+body.dark-mode {
   background: radial-gradient(1000px 600px at 10% -10%, rgba(106,130,251,0.12) 0%, transparent 60%), 
               radial-gradient(800px 500px at 110% 10%, rgba(252,92,125,0.08) 0%, transparent 60%), 
               linear-gradient(135deg, #0d0f16 0%, #10131d 50%, #0b0e15 100%);
   color: #fff;
-  font-family: 'Inter', sans-serif;
 }
 
 .online-class-shell {
@@ -16,28 +22,52 @@ body {
 }
 
 .black-glass {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.1),
+    0 8px 32px rgba(106, 130, 251, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(24px) saturate(120%);
+  -webkit-backdrop-filter: blur(24px) saturate(120%);
+  color: #1e293b;
+  border-radius: 20px;
+}
+
+/* Dark mode black-glass */
+body.dark-mode .black-glass {
   background: rgba(5, 6, 10, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 
     0 20px 60px rgba(0, 0, 0, 0.8),
     0 8px 32px rgba(106, 130, 251, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(24px) saturate(120%);
-  -webkit-backdrop-filter: blur(24px) saturate(120%);
   color: #fff;
-  border-radius: 20px;
 }
 
 .hero-section .hero-content h1,
 .hero-section .hero-content p {
+  color: #1e293b;
+}
+
+body.dark-mode .hero-section .hero-content h1,
+body.dark-mode .hero-section .hero-content p {
   color: #fff;
 }
 
 .card-section.black-glass h3 {
-  color: #8fa3ff;
+  color: #2563eb;
 }
 
 .card-section.black-glass {
+  color: #1e293b;
+}
+
+body.dark-mode .card-section.black-glass h3 {
+  color: #8fa3ff;
+}
+
+body.dark-mode .card-section.black-glass {
   color: #fff;
 }
 
@@ -330,4 +360,32 @@ body.dark-mode .participant-item:hover {
   .students-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* Theme Toggle Button Styles */
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  color: #1e293b;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  transform: scale(1.1);
+}
+
+body.dark-mode .theme-toggle-btn {
+  color: #fff;
+}
+
+body.dark-mode .theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
 }

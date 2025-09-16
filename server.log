@@ -273,3 +273,60 @@ Port 10000 is in use by another program. Either identify and stop that program, 
 2025-09-15 17:06:39,362 [INFO] werkzeug: 127.0.0.1 - - [15/Sep/2025 17:06:39] "[32mGET /api/live-classes/status HTTP/1.1[0m" 302 -
 2025-09-15 17:06:39,369 [INFO] werkzeug: 127.0.0.1 - - [15/Sep/2025 17:06:39] "[32mGET /online-class HTTP/1.1[0m" 302 -
 2025-09-15 17:06:39,369 [INFO] werkzeug: 127.0.0.1 - - [15/Sep/2025 17:06:39] "[32mGET /online-class HTTP/1.1[0m" 302 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\handlers.py", line 81, in emit
+    logging.FileHandler.emit(self, record)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1265, in emit
+    StreamHandler.emit(self, record)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1159, in emit
+    self.handleError(record)
+    ~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1085, in handleError
+    traceback.print_stack(frame, file=sys.stderr)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\traceback.py", line 239, in print_stack
+    print_list(extract_stack(f, limit=limit), file=file)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\traceback.py", line 31, in print_list
+    print(item, file=file, end="")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 119: character maps to <undefined>
+Call stack:
+Traceback (most recent call last):
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7168, in <module>
+    cleanup_stale_sessions()
+    ~~~~~~~~~~~~~~~~~~~~~~^^
+Traceback (most recent call last):
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7168, in <module>
+    cleanup_stale_sessions()
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 5979, in cleanup_stale_sessions
+      File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f9f9' in position 0: character maps to <undefined>

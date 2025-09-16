@@ -43,7 +43,8 @@
     if (!toggle) return;
     var isDark = document.body.classList.contains(CLASS_DARK);
     toggle.setAttribute('aria-pressed', String(isDark));
-    toggle.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+    toggle.textContent = isDark ? '☀️' : '🌙';
+    toggle.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
   }
 
   // Initialize ASAP after DOM is ready

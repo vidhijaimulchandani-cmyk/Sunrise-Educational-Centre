@@ -184,6 +184,17 @@
         border: 1px solid #10b981 !important;
       }
       
+      body.dark-mode .btn-secondary {
+        background: #44476a !important;
+        color: #e0e7ff !important;
+        border: 1px solid #6a82fb !important;
+      }
+      
+      body.dark-mode .btn-secondary:hover {
+        background: #6a82fb !important;
+        color: #fff !important;
+      }
+      
       /* Mobile Responsive Styles */
       @media (max-width: 768px) {
         .profile-container {
@@ -382,7 +393,11 @@
     
     .profile-actions {
       margin-top: 2rem;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
     }
     
     .btn {
@@ -412,7 +427,6 @@
     .btn-secondary {
       background: #f1f5f9;
       color: #475569;
-      margin-left: 1rem;
     }
     
     .btn-secondary:hover {
@@ -547,9 +561,9 @@
       }
       
       .profile-actions {
-        display: flex;
         flex-direction: column;
         gap: 1rem;
+        align-items: center;
       }
       
       .btn-secondary {
@@ -592,30 +606,17 @@
     </ul>
   </nav>
   <script>
-    (function(){
-      var btn=document.getElementById('toggleThemeBtn');
-      function applySaved(){
-        try{var t=localStorage.getItem('preferredTheme'); if(t==='dark'){document.body.classList.add('dark-mode');}}
-        catch(e){}
-      }
-      function toggle(){
-        document.body.classList.toggle('dark-mode');
-        try{localStorage.setItem('preferredTheme', document.body.classList.contains('dark-mode')?'dark':'light');}catch(e){}
-      }
-      document.addEventListener('DOMContentLoaded',function(){
-        applySaved();
-        if(btn){btn.addEventListener('click', toggle);}        
-        // Greeting
-        try{
-          var g=document.getElementById('greeting');
-          if(g){
-            var hrs=new Date().getHours();
-            var msg = hrs<12? 'Good morning' : hrs<17? 'Good afternoon' : hrs<21? 'Good evening' : 'Good night';
-            g.textContent = msg + ', ' + ("{{ user.username }}"||'User') + '!';
-          }
-        }catch(e){}
-      });
-    })();
+    // Greeting functionality
+    document.addEventListener('DOMContentLoaded', function(){
+      try{
+        var g=document.getElementById('greeting');
+        if(g){
+          var hrs=new Date().getHours();
+          var msg = hrs<12? 'Good morning' : hrs<17? 'Good afternoon' : hrs<21? 'Good evening' : 'Good night';
+          g.textContent = msg + ', ' + ("{{ user.username }}"||'User') + '!';
+        }
+      }catch(e){}
+    });
   </script>
   
   <main class="profile-container">
@@ -691,7 +692,7 @@
           <div class="info-item">
             <span class="info-label">Theme</span>
             <span class="info-value">
-              <button id="toggleThemeBtn" class="btn btn-secondary" type="button">Toggle Dark Mode</button>
+              <button id="darkModeToggle" class="btn btn-secondary" type="button">Dark Mode</button>
             </span>
           </div>
           <div class="info-item">
@@ -778,45 +779,8 @@
 
   </script>
   <script src="script.js"></script>
+  <script src="attached_assets/theme.js"></script>
   
-  <script>
-    // Dark Mode functionality
-    function setupDarkMode() {
-        const isDarkMode = localStorage.getItem('darkMode') === 'true';
-        if (isDarkMode) {
-            document.body.classList.add('dark-mode');
-            updateToggleButton();
-        }
-    }
-
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-        const isDarkMode = document.body.classList.contains('dark-mode');
-        localStorage.setItem('darkMode', isDarkMode);
-        updateToggleButton();
-    }
-
-    function updateToggleButton() {
-        const button = document.getElementById('darkModeToggle');
-        if (button) {
-            const isDark = document.body.classList.contains('dark-mode');
-            button.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
-            button.style.background = isDark ? 'rgba(255,255,255,0.1)' : 'transparent';
-            button.style.color = isDark ? '#fff' : '#6a82fb';
-            button.style.borderColor = isDark ? '#fff' : '#6a82fb';
-        }
-    }
-
-    // Initialize dark mode on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        setupDarkMode();
-        
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        if (darkModeToggle) {
-            darkModeToggle.addEventListener('click', toggleDarkMode);
-        }
-    });
-  </script>
   
   <footer class="footer">
     <div class="container footer-content">

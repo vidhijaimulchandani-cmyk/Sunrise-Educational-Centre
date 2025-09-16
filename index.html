@@ -278,6 +278,34 @@
             border: 1px solid rgba(255,255,255,0.22) !important;
         }
         .floating-navbar.black-glass .dropdown-menu a { color: #fff !important; }
+        
+        /* Theme Toggle Button Styles */
+        .theme-toggle-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.14);
+            transform: scale(1.1);
+        }
+        
+        .floating-navbar.black-glass .theme-toggle-btn {
+            color: #fff !important;
+        }
+        
+        .floating-navbar.black-glass .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.14) !important;
+        }
 
         /* Black-glass arrows for Wall of Fame slider */
         .fame-arrow {
@@ -792,6 +820,13 @@
                     <ul style="list-style:none; padding:0; margin:0;"></ul>
                 </div>
             </li>
+            
+            <!-- Theme Toggle Button -->
+            <li>
+                <button id="darkModeToggle" class="theme-toggle-btn" title="Toggle Dark Mode">
+                    🌙
+                </button>
+            </li>
         </ul>
     </nav>
 
@@ -1245,6 +1280,21 @@
         });
     </script>
     <script src="script.js"></script>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-social">
+                <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">Instagram</a>
+                <a href="https://www.youtube.com/@MohitNariyani" target="_blank">YouTube</a>
+            </div>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Contact Us</a>
+            </div>
+            <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
+        </div>
+    </footer>
 </body>
 <script src="attached_assets/theme.js"></script>
 </html>
