@@ -43,7 +43,14 @@
     if (!toggle) return;
     var isDark = document.body.classList.contains(CLASS_DARK);
     toggle.setAttribute('aria-pressed', String(isDark));
-    toggle.textContent = isDark ? '☀️' : '🌙';
+
+    // Prefer explicit data attribute to decide label style
+    var wantsTextLabel = toggle.getAttribute('data-label') === 'text' || toggle.classList.contains('btn');
+    if (wantsTextLabel) {
+      toggle.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+    } else {
+      toggle.textContent = isDark ? '☀️' : '🌙';
+    }
     toggle.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
   }
 

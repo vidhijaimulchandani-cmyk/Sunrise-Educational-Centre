@@ -594,8 +594,8 @@
             max-width: 220px;
             color: #232946 !important;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            background: #fff;
-            border: none;
+            background: #fff !important; /* force white default inside black-glass */
+            border: none !important;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -619,6 +619,27 @@
         .contact-card a.btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Active (pressed) brand-color states */
+        .instagram-bg a.btn:active {
+            background: linear-gradient(45deg, #E4405F, #833AB4, #FCAF45) !important;
+            color: #fff !important;
+        }
+        .youtube-bg a.btn:active {
+            background: #FF0000 !important;
+            color: #fff !important;
+        }
+        .phone-bg a.btn:active {
+            background: #10b981 !important; /* emerald green */
+            color: #fff !important;
+        }
+
+        /* Ensure black-glass does not override contact button colors */
+        .black-glass .contact-card a.btn {
+            background: #fff !important;
+            color: #232946 !important;
+            border: none !important;
         }
 
         /* FAQ Section */
