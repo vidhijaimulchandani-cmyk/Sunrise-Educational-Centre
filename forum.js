@@ -323,6 +323,7 @@ function createMessageElement(message) {
         timeDisplay = timestamp.toLocaleDateString();
     }
     
+    const pollHtml = renderPollBlockIfAny(message);
     messageDiv.innerHTML = `
         <div class="message-content ${messageClass}">
             <div class="message-avatar">${userInitials}</div>
@@ -343,7 +344,7 @@ function createMessageElement(message) {
                 </div>
             </div>
             ${replyHtml}
-            <div class="message-text">${escapeHtml(message.message)}</div>
+            ${pollHtml || `<div class="message-text">${escapeHtml(message.message)}</div>`}
             ${mediaHtml}
             <div class="message-votes">
                 <button onclick="voteMessage(${message.id}, 'up')" class="vote-btn">
@@ -357,6 +358,81 @@ function createMessageElement(message) {
     `;
     
     return messageDiv;
+}
+
+function renderPollBlockIfAny(message) {
+    if (!message || !message.message) return '';
+    const raw = String(message.message).trim();
+    const isPollText = raw.toLowerCase().startsWith('/poll');
+    // Prefer structured poll data from backend
+    if (message.poll && message.poll.question && Array.isArray(message.poll.options)) {
+        const poll = message.poll;
+        const voted = !!poll.has_voted;
+        const resultsById = new Map();
+        (poll.results || []).forEach(r => resultsById.set(r.option_id, r.votes));
+        const total = poll.total_votes || 0;
+        const optionsHtml = poll.options.map(opt => {
+            const votes = resultsById.get(opt.id) || 0;
+            const pct = total > 0 ? Math.round((votes / total) * 100) : 0;
+            return `
+                <div class="poll-option" style="margin:.4rem 0;">
+                    ${voted ? `
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:.6rem;">
+                            <div style="flex:1;">
+                                <div style="font-weight:600; color:var(--forum-text);">${escapeHtml(opt.option_text)}</div>
+                                <div style="height:8px; background:rgba(255,255,255,0.12); border-radius:999px; overflow:hidden; margin-top:.25rem;">
+                                    <div style="width:${pct}%; height:100%; background:linear-gradient(90deg, #6a82fb, #fc5c7d);"></div>
+                                </div>
+                            </div>
+                            <div style="min-width:48px; text-align:right; color:var(--forum-text-muted);">${pct}%</div>
+                        </div>
+                    ` : `
+                        <button data-message-id="${message.id}" data-option-id="${opt.id}" class="poll-vote-btn" style="width:100%; text-align:left; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.18); color:var(--forum-text); padding:.55rem .7rem; border-radius:10px; cursor:pointer;">
+                            ${escapeHtml(opt.option_text)}
+                        </button>
+                    `}
+                </div>`;
+        }).join('');
+        const containerId = `poll-${message.id}`;
+        setTimeout(() => attachPollVoteHandlers(containerId), 0);
+        return `
+            <div id="${containerId}" class="forum-poll" style="border:1px solid rgba(255,255,255,0.15); border-radius:12px; padding:.75rem; margin:.35rem 0;">
+                <div style="font-weight:700; margin-bottom:.5rem; color:var(--forum-text);">${escapeHtml(poll.question)}</div>
+                ${optionsHtml}
+                <div style="margin-top:.5rem; font-size:.85rem; color:var(--forum-text-muted);">${total} votes</div>
+            </div>
+        `;
+    }
+    // Fallback: render as plain text if no structured poll attached
+    if (isPollText) {
+        return `<pre class="message-text" style="white-space:pre-wrap;">${escapeHtml(raw)}</pre>`;
+    }
+    return '';
+}
+
+function attachPollVoteHandlers(containerId) {
+    const root = document.getElementById(containerId);
+    if (!root) return;
+    root.querySelectorAll('.poll-vote-btn').forEach(btn => {
+        btn.onclick = async () => {
+            const messageId = btn.getAttribute('data-message-id');
+            const optionId = btn.getAttribute('data-option-id');
+            try {
+                const res = await fetch(`/api/forum/messages/${messageId}/poll/vote`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ option_id: Number(optionId) })
+                });
+                const data = await res.json();
+                if (data && data.success) {
+                    // Refresh messages to show updated results
+                    if (currentTopic) fetchMessages(currentTopic);
+                }
+            } catch (e) {
+                console.error('Vote failed', e);
+            }
+        };
+    });
 }
 
 // Send a new message

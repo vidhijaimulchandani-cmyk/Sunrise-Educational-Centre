@@ -151,6 +151,37 @@ def init_db():
             paid TEXT DEFAULT 'unpaid'
         )
     ''')
+    # Forum Polls linked to forum messages
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS forum_polls (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            message_id INTEGER UNIQUE NOT NULL,
+            question TEXT NOT NULL,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY(message_id) REFERENCES forum_messages(id) ON DELETE CASCADE
+        )
+    ''')
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS forum_poll_options (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            poll_id INTEGER NOT NULL,
+            option_text TEXT NOT NULL,
+            FOREIGN KEY(poll_id) REFERENCES forum_polls(id) ON DELETE CASCADE
+        )
+    ''')
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS forum_poll_votes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            poll_id INTEGER NOT NULL,
+            option_id INTEGER NOT NULL,
+            user_id INTEGER NOT NULL,
+            voted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            UNIQUE(poll_id, user_id),
+            FOREIGN KEY(poll_id) REFERENCES forum_polls(id) ON DELETE CASCADE,
+            FOREIGN KEY(option_id) REFERENCES forum_poll_options(id) ON DELETE CASCADE,
+            FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+        )
+    ''')
     
     # Create personal chat tables
     c.execute('''
@@ -282,6 +313,42 @@ def init_db():
         except sqlite3.OperationalError as e:
             if "duplicate column" not in str(e):
                 raise e
+
+    # Forum polls tables are additive and idempotent; ensure they exist for older versions
+    try:
+        c.execute('SELECT 1 FROM forum_polls LIMIT 1')
+    except sqlite3.OperationalError:
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS forum_polls (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                message_id INTEGER UNIQUE NOT NULL,
+                question TEXT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY(message_id) REFERENCES forum_messages(id) ON DELETE CASCADE
+            )
+        ''')
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS forum_poll_options (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                poll_id INTEGER NOT NULL,
+                option_text TEXT NOT NULL,
+                FOREIGN KEY(poll_id) REFERENCES forum_polls(id) ON DELETE CASCADE
+            )
+        ''')
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS forum_poll_votes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                poll_id INTEGER NOT NULL,
+                option_id INTEGER NOT NULL,
+                user_id INTEGER NOT NULL,
+                voted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(poll_id, user_id),
+                FOREIGN KEY(poll_id) REFERENCES forum_polls(id) ON DELETE CASCADE,
+                FOREIGN KEY(option_id) REFERENCES forum_poll_options(id) ON DELETE CASCADE,
+                FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+            )
+        ''')
+        conn.commit()
     
     # --- Seed Admin User ---
     # Ensure the default admin user 'yash' exists.
@@ -1020,9 +1087,10 @@ def save_forum_message(user_id, username, message, parent_id=None, topic_id=None
         "INSERT INTO forum_messages (user_id, username, message, parent_id, topic_id, media_url) VALUES (?, ?, ?, ?, ?, ?)",
         (user_id, username, message, parent_id, topic_id, media_url)
     )
+    message_id = c.lastrowid
     conn.commit()
     conn.close()
-    return True
+    return message_id
 
 def get_forum_messages(parent_id=None, topic_id=None):
     conn = sqlite3.connect(DATABASE)
@@ -1063,6 +1131,86 @@ def get_forum_messages(parent_id=None, topic_id=None):
     messages = c.fetchall()
     conn.close()
     return messages
+
+# ==========================
+# Forum Poll helper functions
+# ==========================
+
+def create_forum_poll(message_id: int, question: str, options: list[str]):
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+    try:
+        c.execute('INSERT INTO forum_polls (message_id, question) VALUES (?, ?)', (message_id, question))
+        poll_id = c.lastrowid
+        for opt in options:
+            c.execute('INSERT INTO forum_poll_options (poll_id, option_text) VALUES (?, ?)', (poll_id, opt))
+        conn.commit()
+        return poll_id
+    finally:
+        conn.close()
+
+def get_forum_poll_by_message(message_id: int):
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+    c.execute('SELECT * FROM forum_polls WHERE message_id=?', (message_id,))
+    poll = c.fetchone()
+    if not poll:
+        conn.close()
+        return None
+    c.execute('SELECT id, option_text FROM forum_poll_options WHERE poll_id=?', (poll['id'],))
+    options = [dict(row) for row in c.fetchall()]
+    # Votes per option
+    results = []
+    total_votes = 0
+    for opt in options:
+        c.execute('SELECT COUNT(*) FROM forum_poll_votes WHERE option_id=?', (opt['id'],))
+        count = c.fetchone()[0]
+        total_votes += count
+        results.append({'option_id': opt['id'], 'option_text': opt['option_text'], 'votes': count})
+    conn.close()
+    return {
+        'poll_id': poll['id'],
+        'message_id': message_id,
+        'question': poll['question'],
+        'options': options,
+        'results': results,
+        'total_votes': total_votes
+    }
+
+def has_user_voted_forum_poll(poll_id: int, user_id: int) -> bool:
+    conn = sqlite3.connect(DATABASE)
+    c = conn.cursor()
+    c.execute('SELECT 1 FROM forum_poll_votes WHERE poll_id=? AND user_id=? LIMIT 1', (poll_id, user_id))
+    voted = c.fetchone() is not None
+    conn.close()
+    return voted
+
+def vote_forum_poll(message_id: int, option_id: int, user_id: int):
+    conn = sqlite3.connect(DATABASE)
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+    # Verify poll and option
+    c.execute('SELECT id FROM forum_polls WHERE message_id=?', (message_id,))
+    row = c.fetchone()
+    if not row:
+        conn.close()
+        return False, 'Poll not found'
+    poll_id = row['id']
+    c.execute('SELECT 1 FROM forum_poll_options WHERE id=? AND poll_id=?', (option_id, poll_id))
+    if not c.fetchone():
+        conn.close()
+        return False, 'Invalid option'
+    # Prevent duplicate votes
+    c.execute('SELECT 1 FROM forum_poll_votes WHERE poll_id=? AND user_id=?', (poll_id, user_id))
+    if c.fetchone():
+        conn.close()
+        return False, 'Already voted'
+    # Insert vote
+    c.execute('INSERT INTO forum_poll_votes (poll_id, option_id, user_id) VALUES (?, ?, ?)', (poll_id, option_id, user_id))
+    conn.commit()
+    conn.close()
+    return True, None
 
 def vote_on_message(message_id, vote_type):
     conn = sqlite3.connect(DATABASE)

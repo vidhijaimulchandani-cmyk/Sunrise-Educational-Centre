@@ -41,7 +41,9 @@ from auth_handler import (
     create_topic, delete_topic, get_all_topics, get_topics_for_user, can_user_access_topic,
     update_user_with_password, add_personal_notification, get_forum_messages,
     format_datetime_for_display, mark_messages_as_read,
-    get_user_by_username, get_user_by_email
+    get_user_by_username, get_user_by_email,
+    create_forum_poll, get_forum_poll_by_message, vote_forum_poll, has_user_voted_forum_poll,
+    vote_on_message
 )
 from study_resources import (
     save_resource, get_all_resources, delete_resource, get_resources_for_class_id,
@@ -1539,14 +1541,29 @@ def api_get_forum_messages():
             else:
                 messages = []
     
-    return jsonify([
-        {
+    enriched = []
+    for m in messages:
+        msg = {
             'id': m[0], 'user_id': m[1], 'username': m[2], 'message': m[3],
             'parent_id': m[4], 'upvotes': m[5], 'downvotes': m[6], 'timestamp': m[7], 
             'topic_id': m[8] if len(m) > 8 else None, 'media_url': m[9] if len(m) > 9 else None,
             'reply_to_username': m[10] if len(m) > 10 else None, 'reply_to_message': m[11] if len(m) > 11 else None
-        } for m in messages
-    ])
+        }
+        # Attach poll info if this message contains a poll
+        try:
+            text = msg['message'] or ''
+            if text.strip().lower().startswith('/poll'):
+                poll = get_forum_poll_by_message(msg['id'])
+                if poll:
+                    # Add whether current user voted
+                    uid = session.get('user_id')
+                    if uid:
+                        poll['has_voted'] = has_user_voted_forum_poll(poll['poll_id'], uid)
+                    msg['poll'] = poll
+        except Exception as _:
+            pass
+        enriched.append(msg)
+    return jsonify(enriched)
 
 @app.route('/api/forum/messages', methods=['POST'])
 def api_post_forum_message():
@@ -1589,15 +1606,32 @@ def api_post_forum_message():
                 return jsonify({'error': 'Access denied to this topic'}), 403
 
     # Save the forum message
-    success = save_forum_message(user_id, username, message, parent_id, topic_id, media_url)
-    if success:
+    message_id = save_forum_message(user_id, username, message, parent_id, topic_id, media_url)
+    if message_id:
+        # If message contains a poll block, persist poll structures
+        if message and message.strip().lower().startswith('/poll'):
+            try:
+                lines = [l.strip() for l in (message or '').split('\n') if l.strip()]
+                # First line: /poll question
+                first = lines[0]
+                question = first[5:].strip() if first.lower().startswith('/poll') else None
+                options = []
+                for line in lines[1:]:
+                    if line.startswith('-'):
+                        opt = line[1:].strip()
+                        if opt:
+                            options.append(opt)
+                if question and len(options) >= 2:
+                    create_forum_poll(message_id, question, options)
+            except Exception as _:
+                pass
         # Handle mentions in the message
         if message:
             mentioned_users = extract_mentions(message)
             if mentioned_users:
                 create_mention_notifications(user_id, username, mentioned_users, topic_id, message[:100])
         
-        return jsonify({'success': True}), 201
+        return jsonify({'success': True, 'message_id': message_id}), 201
     else:
         return jsonify({'error': 'Access denied or invalid topic'}), 403
 
@@ -1621,10 +1655,27 @@ def api_vote_on_message(message_id):
     vote_type = data.get('vote_type')
     if vote_type not in ['upvote', 'downvote']:
         return jsonify({'error': 'Invalid vote type'}), 400
-    # The original code had vote_on_message, which is not defined.
-    # Assuming it was meant to be a placeholder for a voting mechanism.
-    # For now, we'll just return success.
+    from auth_handler import vote_on_message as _vote_on_message
+    _vote_on_message(message_id, vote_type)
     return jsonify({'success': True})
+
+@app.route('/api/forum/messages/<int:message_id>/poll/vote', methods=['POST'])
+def api_vote_forum_poll(message_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'Unauthorized'}), 401
+    data = request.json or {}
+    option_id = data.get('option_id')
+    if not option_id:
+        return jsonify({'error': 'option_id required'}), 400
+    ok, err = vote_forum_poll(message_id, int(option_id), int(user_id))
+    if not ok:
+        return jsonify({'success': False, 'error': err}), 400
+    # Return updated poll snapshot
+    poll = get_forum_poll_by_message(message_id)
+    if poll:
+        poll['has_voted'] = True
+    return jsonify({'success': True, 'poll': poll})
 @app.route('/api/forum/messages/<int:message_id>', methods=['DELETE'])
 def api_delete_forum_message(message_id):
     user_id = session.get('user_id')

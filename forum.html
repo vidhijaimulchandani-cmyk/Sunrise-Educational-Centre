@@ -433,7 +433,7 @@
       }
     </style>
   </head>
-  <body data-user-role="{{ role|default('') }}">
+  <body data-user-role="{{ role|default('') }}" data-username="{{ username }}">
     <!-- Category Popup -->
     <div class="category-popup" id="categoryPopup">
       <div class="category-popup-header">
@@ -555,9 +555,6 @@
       </div>
     </div>
 
-    <script>
-      window.currentUsername = {{ username|tojson }};
-    </script>
     <script src="attached_assets/theme.js"></script>
     <script src="forum.js"></script>
     
