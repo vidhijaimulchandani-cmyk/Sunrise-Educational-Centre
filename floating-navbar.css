@@ -161,7 +161,7 @@
 .dropdown-menu a:hover {
     background: rgba(255,255,255,0.12);
     color: #ffffff;
-    transform: translateX(5px);
+    transform: none;
 }
 
 /* Profile dropdown styles (used on home page) */

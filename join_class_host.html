@@ -2005,6 +2005,109 @@
     }
 
     // --- Chat Control Functions ---
+
+    // -------- Host /poll Modal (slash command) --------
+    (function setupHostPollSlashCommand() {
+      const chatInputEl = document.getElementById('chatInput');
+      if (!chatInputEl) return;
+      chatInputEl.addEventListener('input', function() {
+        const cursorPos = this.selectionStart;
+        const textUpToCursor = this.value.substring(0, cursorPos);
+        const slashMatch = textUpToCursor.match(/\/(\w*)$/);
+        if (!slashMatch) return;
+        const command = (slashMatch[1] || '').toLowerCase();
+        if (command === 'poll') {
+          openHostPollModal();
+        }
+      });
+    })();
+
+    function openHostPollModal() {
+      const modal = document.getElementById('hostPollModal');
+      if (!modal) return;
+      modal.style.display = 'block';
+      bindHostPollModalEvents();
+    }
+
+    function closeHostPollModal() {
+      const modal = document.getElementById('hostPollModal');
+      if (!modal) return;
+      modal.style.display = 'none';
+    }
+
+    function bindHostPollModalEvents() {
+      const backdrop = document.getElementById('hostPollModalBackdrop');
+      const closeBtn = document.getElementById('hostPollCloseBtn');
+      const cancelBtn = document.getElementById('hostPollCancelBtn');
+      const createBtn = document.getElementById('hostPollCreateBtn');
+      const addOptionBtn = document.getElementById('hostPollAddOptionBtn');
+      const optionsContainer = document.getElementById('hostPollOptionsContainer');
+
+      const ensureRemoveHandlers = () => {
+        optionsContainer.querySelectorAll('.poll-remove').forEach(btn => {
+          btn.onclick = (e) => {
+            e.preventDefault();
+            const row = btn.closest('.poll-option-row');
+            if (row && optionsContainer.children.length > 2) {
+              row.remove();
+            }
+          };
+        });
+      };
+
+      const addOption = () => {
+        const idx = optionsContainer.children.length + 1;
+        const row = document.createElement('div');
+        row.className = 'poll-option-row';
+        row.style.display = 'flex';
+        row.style.gap = '0.5rem';
+        row.innerHTML = `
+          <input type="text" class="poll-option" placeholder="Option ${idx}" style="flex:1; background:#fff; border:1px solid #e2e8f0; color:#111; border-radius:10px; padding:0.6rem;">
+          <button class="poll-remove" style="background:#f3f4f6; border:1px solid #e5e7eb; color:#111; border-radius:10px; padding:0.4rem 0.6rem; cursor:pointer;">🗑️</button>
+        `;
+        optionsContainer.appendChild(row);
+        ensureRemoveHandlers();
+      };
+
+      ensureRemoveHandlers();
+      if (addOptionBtn) addOptionBtn.onclick = (e) => { e.preventDefault(); addOption(); };
+      if (backdrop) backdrop.onclick = closeHostPollModal;
+      if (closeBtn) closeBtn.onclick = closeHostPollModal;
+      if (cancelBtn) cancelBtn.onclick = closeHostPollModal;
+      if (createBtn) createBtn.onclick = insertHostPollAndEmit;
+    }
+
+    function insertHostPollAndEmit() {
+      const questionEl = document.getElementById('hostPollQuestion');
+      const optionsEls = document.querySelectorAll('#hostPollOptionsContainer .poll-option');
+      const question = (questionEl?.value || '').trim();
+      const options = Array.from(optionsEls).map(i => i.value.trim()).filter(Boolean);
+      if (!question || options.length < 2) {
+        alert('Please add a question and at least 2 options.');
+        return;
+      }
+      const pollData = {
+        class_id: classId,
+        question: question,
+        options: options,
+        created_by: 'host',
+        duration: 15
+      };
+      socket.emit('create_poll', pollData);
+      closeHostPollModal();
+      document.getElementById('hostPollQuestion').value = '';
+      const container = document.getElementById('hostPollOptionsContainer');
+      container.innerHTML = `
+        <div class="poll-option-row" style="display:flex; gap:0.5rem;">
+          <input type="text" class="poll-option" placeholder="Option 1" style="flex:1; background:#fff; border:1px solid #e2e8f0; color:#111; border-radius:10px; padding:0.6rem;">
+          <button class="poll-remove" style="background:#f3f4f6; border:1px solid #e5e7eb; color:#111; border-radius:10px; padding:0.4rem 0.6rem; cursor:pointer;">🗑️</button>
+        </div>
+        <div class="poll-option-row" style="display:flex; gap:0.5rem;">
+          <input type="text" class="poll-option" placeholder="Option 2" style="flex:1; background:#fff; border:1px solid #e2e8f0; color:#111; border-radius:10px; padding:0.6rem;">
+          <button class="poll-remove" style="background:#f3f4f6; border:1px solid #e5e7eb; color:#111; border-radius:10px; padding:0.4rem 0.6rem; cursor:pointer;">🗑️</button>
+        </div>
+      `;
+    }
     let isChatLocked = false;
     let isChatPrivate = false;
     
@@ -2390,7 +2493,39 @@
     loadRecordings();
     
     // --- Chat Control Functions ---
-  </script>
+</script>
+
+<!-- Host Poll Modal (Slash /poll) -->
+<div id="hostPollModal" style="display:none; position:fixed; inset:0; z-index:1100;">
+  <div id="hostPollModalBackdrop" style="position:absolute; inset:0; background: rgba(0,0,0,0.6);"></div>
+  <div style="position:relative; max-width:560px; margin:10vh auto; background:#ffffff; color:#111; border:1px solid #e5e7eb; border-radius:16px; box-shadow: 0 20px 60px rgba(0,0,0,0.2);">
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:1rem 1.25rem; border-bottom:1px solid #f1f5f9;">
+      <h3 style="margin:0; font-size:1.1rem; color:#111827;">Create Poll</h3>
+      <button id="hostPollCloseBtn" style="background:none; border:none; color:#111; font-size:1.4rem; cursor:pointer;">×</button>
+    </div>
+    <div style="padding:1rem 1.25rem; display:flex; flex-direction:column; gap:0.75rem;">
+      <label style="font-size:0.9rem; color:#374151;">Question</label>
+      <input id="hostPollQuestion" type="text" placeholder="Type your poll question" style="background:#fff; border:1px solid #e5e7eb; color:#111; border-radius:10px; padding:0.7rem;">
+      <div id="hostPollOptionsContainer" style="display:flex; flex-direction:column; gap:0.5rem; margin-top:0.5rem;">
+        <div class="poll-option-row" style="display:flex; gap:0.5rem;">
+          <input type="text" class="poll-option" placeholder="Option 1" style="flex:1; background:#fff; border:1px solid #e2e8f0; color:#111; border-radius:10px; padding:0.6rem;">
+          <button class="poll-remove" style="background:#f3f4f6; border:1px solid #e5e7eb; color:#111; border-radius:10px; padding:0.4rem 0.6rem; cursor:pointer;">🗑️</button>
+        </div>
+        <div class="poll-option-row" style="display:flex; gap:0.5rem;">
+          <input type="text" class="poll-option" placeholder="Option 2" style="flex:1; background:#fff; border:1px solid #e2e8f0; color:#111; border-radius:10px; padding:0.6rem;">
+          <button class="poll-remove" style="background:#f3f4f6; border:1px solid #e5e7eb; color:#111; border-radius:10px; padding:0.4rem 0.6rem; cursor:pointer;">🗑️</button>
+        </div>
+      </div>
+      <div style="display:flex; gap:0.5rem;">
+        <button id="hostPollAddOptionBtn" style="background:#e5e7eb; border:1px solid #e5e7eb; color:#111; border-radius:10px; padding:0.5rem 0.8rem; cursor:pointer;">+ Add option</button>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:0.6rem; margin-top:0.5rem;">
+        <button id="hostPollCancelBtn" style="background:#f3f4f6; border:1px solid #e5e7eb; color:#111; border-radius:10px; padding:0.6rem 0.9rem; cursor:pointer;">Cancel</button>
+        <button id="hostPollCreateBtn" style="background:linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%); border:none; color:#fff; border-radius:10px; padding:0.6rem 0.95rem; cursor:pointer; font-weight:600;">Create poll</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 <script src="attached_assets/theme.js"></script>
 </html> 

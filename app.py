@@ -395,6 +395,15 @@ def init_poll_and_doubt_tables():
         FOREIGN KEY(poll_id) REFERENCES polls(id),
         FOREIGN KEY(option_id) REFERENCES poll_options(id)
     )''')
+    
+    # Ensure topic_id column exists on polls for forum linkage
+    try:
+        c.execute("PRAGMA table_info(polls)")
+        cols = [row[1] for row in c.fetchall()]
+        if 'topic_id' not in cols:
+            c.execute("ALTER TABLE polls ADD COLUMN topic_id INTEGER")
+    except Exception as _e:
+        pass
     # Doubts
     c.execute('''CREATE TABLE IF NOT EXISTS doubts (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -1588,6 +1597,40 @@ def api_post_forum_message():
             if not can_user_access_topic(user_class_name, user_paid_status, topic_id):
                 return jsonify({'error': 'Access denied to this topic'}), 403
 
+    # Detect and create poll if message contains a /poll block
+    def _parse_poll_block(text):
+        if not text:
+            return None
+        lines = [ln.rstrip() for ln in text.splitlines() if ln.strip()]
+        if not lines:
+            return None
+        if not lines[0].lower().startswith('/poll '):
+            return None
+        question = lines[0][6:].strip()
+        options = []
+        for ln in lines[1:]:
+            if ln.lstrip().startswith('- '):
+                options.append(ln.lstrip()[2:].strip())
+        options = [opt for opt in options if opt]
+        if question and len(options) >= 2:
+            return {'question': question, 'options': options}
+        return None
+
+    poll_data = _parse_poll_block(message or '')
+    if poll_data and topic_id:
+        try:
+            db = get_db()
+            c = db.cursor()
+            c.execute('INSERT INTO polls (class_id, question, created_by, topic_id) VALUES (?, ?, ?, ?)', (None, poll_data['question'], str(username or user_id), int(topic_id)))
+            new_poll_id = c.lastrowid
+            for opt in poll_data['options']:
+                c.execute('INSERT INTO poll_options (poll_id, option_text) VALUES (?, ?)', (new_poll_id, opt))
+            db.commit()
+            options_str = ', '.join(poll_data['options'])
+            message = f"[POLL #{new_poll_id}] {poll_data['question']}\nOptions: {options_str}"
+        except Exception as _e:
+            pass
+
     # Save the forum message
     success = save_forum_message(user_id, username, message, parent_id, topic_id, media_url)
     if success:
@@ -1602,6 +1645,87 @@ def api_post_forum_message():
         return jsonify({'error': 'Access denied or invalid topic'}), 403
 
 # Note: extract_mentions and create_mention_notifications functions are now imported from notifications.py
+
+# ---------- Forum Poll REST Endpoints ----------
+@app.route('/api/forum/polls/<int:poll_id>', methods=['GET'])
+def api_get_forum_poll(poll_id: int):
+    if 'user_id' not in session:
+        return jsonify({'error': 'Unauthorized'}), 401
+    try:
+        db = get_db()
+        c = db.cursor()
+        c.execute('SELECT id, class_id, question, created_by, created_at, topic_id FROM polls WHERE id=?', (poll_id,))
+        row = c.fetchone()
+        if not row:
+            return jsonify({'error': 'Poll not found'}), 404
+        poll = {
+            'id': row['id'],
+            'class_id': row['class_id'],
+            'question': row['question'],
+            'created_by': row['created_by'],
+            'created_at': row['created_at'],
+            'topic_id': row['topic_id']
+        }
+        c.execute('SELECT id, option_text FROM poll_options WHERE poll_id=?', (poll_id,))
+        options = [dict(row) for row in c.fetchall()]
+        # Results
+        results = []
+        for opt in options:
+            c.execute('SELECT COUNT(*) as votes FROM poll_votes WHERE option_id=?', (opt['id'],))
+            votes = c.fetchone()['votes']
+            results.append({'option_id': opt['id'], 'option_text': opt['option_text'], 'votes': votes})
+        # User vote
+        user_id = str(session.get('user_id'))
+        c.execute('SELECT option_id FROM poll_votes WHERE poll_id=? AND user_id=?', (poll_id, user_id))
+        uv = c.fetchone()
+        return jsonify({'poll': poll, 'options': options, 'results': results, 'user_vote_option_id': uv['option_id'] if uv else None})
+    except Exception as e:
+        print(f"Error fetching forum poll: {e}")
+        return jsonify({'error': 'Failed to fetch poll'}), 500
+
+@app.route('/api/forum/polls/<int:poll_id>/vote', methods=['POST'])
+def api_vote_forum_poll(poll_id: int):
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({'error': 'Unauthorized'}), 401
+    try:
+        data = request.get_json(silent=True) or {}
+        option_id = data.get('option_id')
+        if not option_id:
+            return jsonify({'error': 'option_id required'}), 400
+        db = get_db()
+        c = db.cursor()
+        # Validate option belongs to poll
+        c.execute('SELECT 1 FROM poll_options WHERE id=? AND poll_id=?', (option_id, poll_id))
+        if not c.fetchone():
+            return jsonify({'error': 'Invalid option'}), 400
+        # Prevent double vote
+        c.execute('SELECT 1 FROM poll_votes WHERE poll_id=? AND user_id=?', (poll_id, str(user_id)))
+        if c.fetchone():
+            # Return current results
+            c.execute('SELECT id, option_text FROM poll_options WHERE poll_id=?', (poll_id,))
+            options = [dict(row) for row in c.fetchall()]
+            results = []
+            for opt in options:
+                c.execute('SELECT COUNT(*) as votes FROM poll_votes WHERE option_id=?', (opt['id'],))
+                votes = c.fetchone()['votes']
+                results.append({'option_id': opt['id'], 'option_text': opt['option_text'], 'votes': votes})
+            return jsonify({'success': True, 'already_voted': True, 'results': results})
+        # Insert vote
+        c.execute('INSERT INTO poll_votes (poll_id, option_id, user_id) VALUES (?, ?, ?)', (poll_id, option_id, str(user_id)))
+        db.commit()
+        # Return updated results
+        c.execute('SELECT id, option_text FROM poll_options WHERE poll_id=?', (poll_id,))
+        options = [dict(row) for row in c.fetchall()]
+        results = []
+        for opt in options:
+            c.execute('SELECT COUNT(*) as votes FROM poll_votes WHERE option_id=?', (opt['id'],))
+            votes = c.fetchone()['votes']
+            results.append({'option_id': opt['id'], 'option_text': opt['option_text'], 'votes': votes})
+        return jsonify({'success': True, 'results': results})
+    except Exception as e:
+        print(f"Error voting on forum poll: {e}")
+        return jsonify({'error': 'Failed to vote'}), 500
 
 @app.route('/api/forum/messages/<int:message_id>/replies', methods=['GET'])
 def api_get_message_replies(message_id):

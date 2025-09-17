@@ -552,18 +552,7 @@
       <div id="polls-tab" class="tab-content">
         <div class="poll-section">
           <h3 style="margin-bottom: 1rem; color: #fc5c7d;">Active Polls</h3>
-          <div id="activePolls">
-            <div class="poll-item" style="background: #fff; border-radius: 8px; padding: 0.8rem; margin-bottom: 0.5rem; border: 1px solid #ffd6d6;">
-              <div class="poll-question" style="font-weight:600;">(Sample) Which topic do you want next?</div>
-              <div class="poll-options">
-                <label><input type="radio" name="poll1"> Algebra</label><br>
-                <label><input type="radio" name="poll1"> Geometry</label><br>
-                <label><input type="radio" name="poll1"> Trigonometry</label>
-              </div>
-              <button class="poll-btn" style="margin-top:0.5rem;">Vote</button>
-            </div>
-          </div>
-          <div style="margin-top:1rem; color:#888; font-size:0.95rem;">Polls created by the host will appear here.</div>
+          <div id="activePolls"></div>
         </div>
       </div>
       <!-- Doubts Tab -->
@@ -1434,34 +1423,78 @@ function renderPolls(polls) {
   polls.forEach(poll => {
     const pollDiv = document.createElement('div');
     pollDiv.className = 'poll-item';
+    pollDiv.style.cssText = 'background:#fff; border-radius:12px; padding:0.9rem; margin-bottom:0.75rem; border:1px solid #ffd6d6;';
+    const votedOption = localStorage.getItem('voted_poll_' + poll.id + '_option');
+    const optionsHtml = (poll.options || []).map(opt => {
+      const voted = votedOption && String(votedOption) === String(opt.id);
+      return `
+        <div class="poll-option-row" data-option-id="${opt.id}" style="margin:.4rem 0;">
+          <button class="poll-vote-btn" ${votedOption ? 'disabled' : ''} style="display:block; width:100%; text-align:left; background:#fff; border:1px solid #ffd6d6; border-radius:10px; padding:0.6rem; cursor:${votedOption ? 'default' : 'pointer'};">
+            <div style=\"display:flex; justify-content:space-between; align-items:center; gap:.75rem;\">
+              <span>${opt.option_text}</span>
+              <span class="poll-vote-meta" style="opacity:.8;">0</span>
+            </div>
+            <div class="poll-bar" style="height:6px; background:#ffecec; border-radius:6px; margin-top:.5rem; overflow:hidden;">
+              <div class="poll-bar-fill" style="height:100%; width:0%; background:linear-gradient(90deg,#6a82fb,#fc5c7d);"></div>
+            </div>
+          </button>
+          ${voted ? `<div class="your-vote" style="font-size:.85rem; color:#6a82fb; margin-top:0.25rem;">Your vote</div>` : ''}
+        </div>`;
+    }).join('');
     pollDiv.innerHTML = `
-      <div class="poll-question" style="font-weight:600;">${poll.question}</div>
-      <div class="poll-options">
-        ${poll.options.map(opt => `<label><input type="radio" name="poll${poll.id}" value="${opt.id}"> ${opt.option_text} <span class='poll-votes' id='poll-votes-${opt.id}'>0</span></label><br>`).join('')}
-      </div>
-      <button class="poll-btn" style="margin-top:0.5rem;" onclick="votePoll(${poll.id})">Vote</button>
+      <div class="poll-question" style="font-weight:600; margin-bottom:.35rem;">${poll.question}</div>
+      <div class="poll-options" id="poll-${poll.id}-options">${optionsHtml}</div>
+      <div class="poll-meta" id="poll-${poll.id}-total" style="margin-top:.25rem; color:#666; font-size:.9rem;">Total: 0 votes</div>
     `;
     pollsContainer.appendChild(pollDiv);
+    if (!votedOption) {
+      pollDiv.querySelectorAll('.poll-option-row').forEach(row => {
+        const btn = row.querySelector('.poll-vote-btn');
+        btn.addEventListener('click', () => {
+          const optionId = row.getAttribute('data-option-id');
+          votePoll(${`poll.id`}, optionId, pollDiv);
+        });
+      });
+    }
   });
 }
-function votePoll(pollId) {
-  const selected = document.querySelector(`input[name='poll${pollId}']:checked`);
-  if (!selected) return alert('Select an option!');
-  const optionId = selected.value;
-  // Use localStorage to prevent double voting (client-side only, server also checks)
+function votePoll(pollId, optionId, pollDiv) {
   if (localStorage.getItem('voted_poll_' + pollId)) return alert('You already voted!');
   socket.emit('vote_poll', { poll_id: pollId, option_id: optionId, user_id: getUserId(), class_id: classId });
   localStorage.setItem('voted_poll_' + pollId, '1');
+  localStorage.setItem('voted_poll_' + pollId + '_option', String(optionId));
+  // Disable buttons immediately and mark "Your vote"
+  pollDiv.querySelectorAll('.poll-vote-btn').forEach(b => b.disabled = true);
+  const row = pollDiv.querySelector(`.poll-option-row[data-option-id='${optionId}']`);
+  if (row && !row.querySelector('.your-vote')) {
+    const tag = document.createElement('div');
+    tag.className = 'your-vote';
+    tag.style.cssText = 'font-size:.85rem; color:#6a82fb; margin-top:0.25rem;';
+    tag.textContent = 'Your vote';
+    row.appendChild(tag);
+  }
 }
 socket.on('new_poll', poll => {
   socket.emit('get_polls_and_doubts', { class_id: classId });
 });
 socket.on('poll_results', data => {
   if (data && data.results) {
+    // Compute totals
+    let totalVotes = 0;
+    data.results.forEach(opt => { totalVotes += (opt.votes || 0); });
+    // Update each option bar and meta
     data.results.forEach(opt => {
-      const el = document.getElementById('poll-votes-' + opt.option_id);
-      if (el) el.textContent = `(${opt.votes} votes)`;
+      const optionRow = document.querySelector(`.poll-option-row[data-option-id='${opt.option_id}']`);
+      if (!optionRow) return;
+      const pct = totalVotes > 0 ? Math.round((opt.votes / totalVotes) * 100) : 0;
+      const meta = optionRow.querySelector('.poll-vote-meta');
+      if (meta) meta.textContent = `${opt.votes}${totalVotes ? ` • ${pct}%` : ''}`;
+      const bar = optionRow.querySelector('.poll-bar-fill');
+      if (bar) bar.style.width = pct + '%';
     });
+    // Update total line
+    const totalEl = document.getElementById('poll-' + data.poll_id + '-total');
+    if (totalEl) totalEl.textContent = `Total: ${totalVotes} vote${totalVotes===1?'':'s'}`;
   }
 });
 

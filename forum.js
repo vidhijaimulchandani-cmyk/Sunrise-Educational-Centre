@@ -323,6 +323,25 @@ function createMessageElement(message) {
         timeDisplay = timestamp.toLocaleDateString();
     }
     
+    const isPoll = /^\[POLL #(?<pid>\d+)\]/.test(message.message || '');
+    let pollHtml = '';
+    if (isPoll) {
+        const pidMatch = message.message.match(/^\[POLL #(\d+)\]/);
+        const pollId = pidMatch ? parseInt(pidMatch[1], 10) : null;
+        pollHtml = `<div class="forum-poll" data-poll-id="${pollId}" style="margin-top:0.5rem; border:1px solid rgba(255,255,255,0.18); border-radius:12px; padding:0.75rem;">
+            <div class="poll-loading" style="color:#9aa4b2;">Loading poll…</div>
+        </div>`;
+        // Defer fetch to next tick so element is in DOM
+        setTimeout(() => {
+            if (pollId) {
+                const container = messageDiv.querySelector(`.forum-poll[data-poll-id='${pollId}']`);
+                if (container) {
+                    renderPollInto(container, pollId);
+                }
+            }
+        }, 0);
+    }
+
     messageDiv.innerHTML = `
         <div class="message-content ${messageClass}">
             <div class="message-avatar">${userInitials}</div>
@@ -344,6 +363,7 @@ function createMessageElement(message) {
             </div>
             ${replyHtml}
             <div class="message-text">${escapeHtml(message.message)}</div>
+            ${pollHtml}
             ${mediaHtml}
             <div class="message-votes">
                 <button onclick="voteMessage(${message.id}, 'up')" class="vote-btn">
@@ -357,6 +377,75 @@ function createMessageElement(message) {
     `;
     
     return messageDiv;
+}
+
+async function renderPollInto(container, pollId) {
+    try {
+        const res = await fetch(`/api/forum/polls/${pollId}`);
+        if (!res.ok) {
+            container.innerHTML = `<div style="color:#ff6b6b;">Failed to load poll.</div>`;
+            return;
+        }
+        const data = await res.json();
+        const poll = data.poll;
+        const options = data.options || [];
+        const results = data.results || [];
+        const userVote = data.user_vote_option_id;
+
+        const totalVotes = results.reduce((a, b) => a + (b.votes || 0), 0) || 0;
+        const resultsMap = new Map(results.map(r => [r.option_id, r.votes]));
+
+        const optionsHtml = options.map(opt => {
+            const votes = resultsMap.get(opt.id) || 0;
+            const pct = totalVotes ? Math.round((votes / totalVotes) * 100) : 0;
+            const voted = userVote === opt.id;
+            return `
+                <div class="poll-option-row" data-option-id="${opt.id}" style="margin:.5rem 0;">
+                    <button class="poll-vote-btn" ${userVote ? 'disabled' : ''} style="display:block; width:100%; text-align:left; background:rgba(255,255,255,0.06); color:#fff; border:1px solid rgba(255,255,255,0.2); border-radius:10px; padding:0.6rem; cursor:${userVote ? 'default' : 'pointer'};">
+                        <div style="display:flex; justify-content:space-between; align-items:center; gap:.75rem;">
+                            <span>${opt.option_text}</span>
+                            <span style="opacity:.8;">${votes}${totalVotes ? ` • ${pct}%` : ''}${voted ? ' • Your vote' : ''}</span>
+                        </div>
+                        <div style="height:6px; background:rgba(255,255,255,0.08); border-radius:6px; margin-top:.5rem; overflow:hidden;">
+                            <div style="height:100%; width:${pct}%; background:linear-gradient(90deg,#6a82fb,#fc5c7d);"></div>
+                        </div>
+                    </button>
+                </div>`;
+        }).join('');
+
+        container.innerHTML = `
+            <div class="poll-question" style="font-weight:600; margin-bottom:.5rem;">${escapeHtml(poll.question)}</div>
+            <div class="poll-options">${optionsHtml}</div>
+            <div class="poll-meta" style="margin-top:.25rem; color:#9aa4b2; font-size:.9rem;">${totalVotes} vote${totalVotes===1?'':'s'}</div>
+        `;
+
+        if (!userVote) {
+            container.querySelectorAll('.poll-option-row').forEach(row => {
+                row.querySelector('.poll-vote-btn').addEventListener('click', async () => {
+                    const optionId = parseInt(row.getAttribute('data-option-id'), 10);
+                    await voteOnPoll(pollId, optionId, container);
+                });
+            });
+        }
+    } catch (e) {
+        console.error('Error rendering poll', e);
+        container.innerHTML = `<div style="color:#ff6b6b;">Error loading poll.</div>`;
+    }
+}
+
+async function voteOnPoll(pollId, optionId, container) {
+    try {
+        const res = await fetch(`/api/forum/polls/${pollId}/vote`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ option_id: optionId })
+        });
+        if (!res.ok) return;
+        // Re-render to show results and lock buttons
+        await renderPollInto(container, pollId);
+    } catch (e) {
+        console.error('Error voting on poll', e);
+    }
 }
 
 // Send a new message

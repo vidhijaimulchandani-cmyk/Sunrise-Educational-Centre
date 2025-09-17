@@ -428,9 +428,9 @@ body {
 /* Forum-style resource grid */
 .resource-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 0.8rem; /* was 1rem */
-  margin-top: 1rem; /* was 1.5rem */
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.2rem;
+  margin-top: 1.25rem;
 }
 
 /* Forum-style resource cards */
@@ -438,12 +438,12 @@ body {
   background: rgba(15, 18, 28, 0.55);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  padding: 0.9rem; /* was 1rem */
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 1.4rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
   transition: all 0.3s ease;
-  margin-bottom: 0.6rem; /* was 1rem */
-  box-shadow: 0 10px 36px rgba(0,0,0,0.35);
+  margin-bottom: 0.8rem;
+  box-shadow: 0 14px 48px rgba(0,0,0,0.4);
   position: relative;
   overflow: hidden;
 }
@@ -473,12 +473,12 @@ body {
 }
 
 .resource-card header {
-  font-size: 1.02rem; /* was 1.05rem */
-  font-weight: 600;
-  margin-bottom: 0.5rem; /* was 0.6rem */
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 0.7rem;
   color: #6a82fb;
   border-bottom: 1px solid rgba(106, 130, 251, 0.3);
-  padding-bottom: 0.35rem; /* was 0.4rem */
+  padding-bottom: 0.45rem;
   position: relative;
   z-index: 1;
 }
@@ -551,7 +551,7 @@ body {
   background: rgba(102, 126, 234, 0.2);
   color: #ffffff;
   border-color: rgba(102, 126, 234, 0.5);
-  transform: translateX(5px);
+  transform: none;
 }
 
 /* Forum-style quick access */

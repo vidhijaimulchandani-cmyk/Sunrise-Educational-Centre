@@ -92,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <li><a href="/batch">Batches</a></li>
             <li><a href="/study-resources">Study Resources</a></li>
             <li><a href="/forum">Forum</a></li>
+            <li><button id="darkModeToggle" title="Toggle theme" style="background:none;border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:6px 10px;cursor:pointer;">🌙</button></li>
             <li class="profile-dropdown">
               <a href="#" id="profileLink">Profile ▾</a>
               <div class="profile-dropdown-menu" id="profileDropdown">
@@ -158,6 +159,13 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         }
 
+        // Ensure theme toggle exists
+        if (links && !nav.querySelector('#darkModeToggle')) {
+          const li = document.createElement('li');
+          li.innerHTML = '<button id="darkModeToggle" title="Toggle theme" style="background:none;border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:6px 10px;cursor:pointer;">🌙</button>';
+          links.appendChild(li);
+        }
+
         // Ensure Notification bell exists (and dropdown container)
         if (links && !document.getElementById('notifBell')) {
           const notifLi = document.createElement('li');
@@ -219,19 +227,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Setup notification dropdown
     setupNotificationDropdown();
 
-    // Remove Admission and theme toggle from all navbars
+    // Remove Admission from all navbars (keep theme toggle)
     try {
       document.querySelectorAll('.floating-navbar .nav-links a[href="/admission"]').forEach(a => {
         const li = a.closest('li');
         if (li && li.parentElement) li.parentElement.removeChild(li);
         else a.remove();
       });
-      const themeBtn = document.getElementById('darkModeToggle');
-      if (themeBtn) {
-        const li = themeBtn.closest('li');
-        if (li && li.parentElement) li.parentElement.removeChild(li);
-        else themeBtn.remove();
-      }
     } catch (e) {}
 
     // Mark active link based on current path
@@ -678,36 +680,8 @@ function updateNotificationCount(count) {
     }
 }
 
-// Unified Dark Mode Implementation
-function setupDarkMode() {
-    const isDarkMode = localStorage.getItem('darkMode') === 'true';
-    if (isDarkMode) {
-        document.body.classList.add('dark-mode');
-        updateToggleButton();
-    }
-}
-
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-    const isDarkMode = document.body.classList.contains('dark-mode');
-    localStorage.setItem('darkMode', isDarkMode);
-    updateToggleButton();
-}
-
-function updateToggleButton() {
-    const button = document.getElementById('darkModeToggle');
-    if (button) {
-        const isDark = document.body.classList.contains('dark-mode');
-        button.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
-        button.style.background = isDark ? 'rgba(255,255,255,0.1)' : 'transparent';
-        button.style.color = isDark ? '#fff' : '#6a82fb';
-        button.style.borderColor = isDark ? '#fff' : '#6a82fb';
-    }
-}
-
-// Initialize dark mode on page load
+// Initialize theme via attached_assets/theme.js; no-op here to avoid double toggles
 document.addEventListener('DOMContentLoaded', function() {
-    setupDarkMode();
     
     // Setup mobile touch handling for dropdowns
     setupMobileTouchHandling();
@@ -765,11 +739,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Setup dark mode toggle button if it exists
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    if (darkModeToggle) {
-        darkModeToggle.addEventListener('click', toggleDarkMode);
-    }
+    // Theme toggle is handled by attached_assets/theme.js
 });
 
 // Inject "Last updated" time (IST) into footer across all pages
