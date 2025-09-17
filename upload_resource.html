@@ -619,7 +619,13 @@
         </div>
         
         <div class="resource-grid" id="resourcesGrid">
-          {% for filename, class_id, filepath, title, description, category in resources %}
+          {% for r in resources %}
+          {% set filename = r[1] %}
+          {% set class_id = r[2] %}
+          {% set filepath = r[3] %}
+          {% set title = r[4] %}
+          {% set description = r[5] %}
+          {% set category = r[6] %}
           <div class="resource-card" 
                data-filename="{{ filename }}" 
                data-title="{{ title or filename }}" 

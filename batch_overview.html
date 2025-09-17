@@ -1,5 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Batch Overview</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="floating-navbar.css" />
+</head>
+<body>
+  <nav class="floating-navbar black-glass">
+    <button class="hamburger" aria-label="Menu" aria-expanded="false">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/batch">Batches</a></li>
+      <li><a href="/admission">Admission</a></li>
+    </ul>
+  </nav>
+
+  <main class="container main-content">
+    <section class="card animated-card black-glass" style="padding:1rem;">
+      <h2 style="margin-top:0;">Available Batches</h2>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:1rem;">
+        {% for cls in classes %}
+        <div class="batch-card black-glass" style="border-radius:16px;">
+          <div class="batch-image" style="height:140px;">
+            <img src="{{ cls.meta.image or 'img/default-banner.jpg' }}" alt="{{ cls.name }}" />
+          </div>
+          <div class="batch-info">
+            <h3 style="margin-top:0;">{{ cls.name }}</h3>
+            <div class="batch-meta" style="grid-template-columns:repeat(2, 1fr);">
+              <div><strong>Start</strong>: {{ cls.meta.start_date or '-' }}</div>
+              <div><strong>End</strong>: {{ cls.meta.end_date or '-' }}</div>
+            </div>
+            <div class="batch-actions" style="margin-top:0.8rem;">
+              <a class="btn btn-primary" href="/batch/{{ cls.id }}">Explore</a>
+              <a class="btn" href="/admission?class_id={{ cls.id }}">Enroll</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

@@ -341,6 +341,21 @@
     </nav>
 
     <main class="container main-content">
+      <header class="black-glass" style="position:relative; margin:100px auto 24px; width:min(1100px,92%); padding:18px 20px; border-radius:20px;">
+        <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+          <div style="flex:1; min-width:240px;">
+            <h1 style="margin:0; font-size:1.8rem; font-weight:800; letter-spacing:-0.02em; color:#8fa3ff;">Batches</h1>
+            <p style="margin:4px 0 0; color:rgba(255,255,255,0.8);">Choose a batch that matches your class and schedule. Limited seats available.</p>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button class="tab-btn active" data-filter-all style="white-space:nowrap;">All</button>
+            <button class="tab-btn" data-filter-class="9">Class 9</button>
+            <button class="tab-btn" data-filter-class="10">Class 10</button>
+            <button class="tab-btn" data-filter-class="11">Class 11</button>
+            <button class="tab-btn" data-filter-class="12">Class 12</button>
+          </div>
+        </div>
+      </header>
       {% if is_logged_in %}
       <section class="card animated-card black-glass" style="padding: 1.2rem 1rem;">
         <div style="display:flex; gap:0.6rem; align-items:center; justify-content:space-between; flex-wrap:wrap;">
@@ -353,7 +368,7 @@
         <div id="paid-section" class="batch-grid" style="margin-top:0.8rem;">
           {% if paid_cards and paid_cards|length > 0 %}
             {% for card in paid_cards %}
-            <div class="batch-card black-glass">
+            <div class="batch-card black-glass" data-class-name="{{ card.class_name }}" data-class-id="{{ card.class_id }}">
               <div class="batch-image">
                 <img src="{{ card.image }}" alt="{{ card.batch_name }}" />
               </div>
@@ -364,13 +379,26 @@
                   <div><strong>ID</strong>: {{ card.class_id }}</div>
                   <div><strong>Start</strong>: {{ card.start_date }}</div>
                   <div><strong>End</strong>: {{ card.end_date }}</div>
+                  {% if card.days or card.time %}
+                  <div style="grid-column:1 / -1"><strong>Schedule</strong>: {{ card.days or 'Mon-Fri' }} {{ card.time or '5:00 PM – 6:00 PM' }}</div>
+                  {% endif %}
+                  {% if card.mentor %}
+                  <div style="grid-column:1 / -1"><strong>Mentor</strong>: {{ card.mentor }}</div>
+                  {% endif %}
+                  {% if card.price %}
+                  <div><strong>Price</strong>: ₹{{ card.price }}</div>
+                  {% endif %}
+                  {% if card.seats_left is defined %}
+                  <div><strong>Seats Left</strong>: {{ card.seats_left }}</div>
+                  {% endif %}
                 </div>
                 <div class="batch-actions">
                   {% if user_paid_status == 'paid' %}
                   <a class="btn btn-primary" href="/batch/{{ card.class_id }}">Explore</a>
                   {% else %}
-                  <a class="btn btn-primary" href="/admission">Buy Now</a>
+                  <a class="btn btn-primary" href="/admission?class_id={{ card.class_id }}">Enroll Now</a>
                   {% endif %}
+                  <a class="btn" href="/study-resources?class_id={{ card.class_id }}">Resources</a>
                 </div>
               </div>
             </div>
@@ -382,7 +410,7 @@
         <div id="free-section" class="batch-grid" style="display:none; margin-top:0.8rem;">
           {% if free_cards and free_cards|length > 0 %}
             {% for card in free_cards %}
-            <div class="batch-card black-glass">
+            <div class="batch-card black-glass" data-class-name="{{ card.class_name }}" data-class-id="{{ card.class_id }}">
               <div class="batch-image">
                 <img src="{{ card.image }}" alt="{{ card.batch_name }}" />
               </div>
@@ -393,9 +421,16 @@
                   <div><strong>ID</strong>: {{ card.class_id }}</div>
                   <div><strong>Start</strong>: {{ card.start_date }}</div>
                   <div><strong>End</strong>: {{ card.end_date }}</div>
+                  {% if card.days or card.time %}
+                  <div style="grid-column:1 / -1"><strong>Schedule</strong>: {{ card.days or 'Mon-Fri' }} {{ card.time or '5:00 PM – 6:00 PM' }}</div>
+                  {% endif %}
+                  {% if card.mentor %}
+                  <div style="grid-column:1 / -1"><strong>Mentor</strong>: {{ card.mentor }}</div>
+                  {% endif %}
                 </div>
                 <div class="batch-actions">
                   <a class="btn btn-secondary" href="/batch/{{ card.class_id }}">Explore</a>
+                  <a class="btn btn-primary" href="/admission?class_id={{ card.class_id }}">Enroll</a>
                 </div>
               </div>
             </div>
@@ -410,7 +445,7 @@
         <h2 style="margin:0 0 0.8rem 0;">All Batches</h2>
         <div style="display:flex; flex-direction:column; gap:0.8rem;">
           {% for card in all_cards %}
-          <div class="batch-card" style="display:flex; gap:0.8rem;">
+          <div class="batch-card" style="display:flex; gap:0.8rem;" data-class-name="{{ card.class_name }}" data-class-id="{{ card.class_id }}">
             <div class="batch-image" style="flex:0 0 180px; height:120px;">
               <img src="{{ card.image }}" alt="{{ card.batch_name }}" />
             </div>
@@ -421,9 +456,15 @@
                 <div><strong>ID</strong>: {{ card.class_id }}</div>
                 <div><strong>Start</strong>: {{ card.start_date }}</div>
                 <div><strong>End</strong>: {{ card.end_date }}</div>
+                {% if card.days or card.time %}
+                <div style="grid-column:1 / -1"><strong>Schedule</strong>: {{ card.days or 'Mon-Fri' }} {{ card.time or '5:00 PM – 6:00 PM' }}</div>
+                {% endif %}
+                {% if card.price %}
+                <div><strong>Price</strong>: ₹{{ card.price }}</div>
+                {% endif %}
               </div>
               <div class="batch-actions">
-                <a class="btn btn-primary" href="/admission">Buy Now</a>
+                <a class="btn btn-primary" href="/admission?class_id={{ card.class_id }}">Enroll Now</a>
               </div>
             </div>
           </div>
@@ -503,6 +544,40 @@
             });
           });
         }
+
+        // Header class filters
+        const headerFilterAll = document.querySelector('[data-filter-all]');
+        const headerClassFilters = document.querySelectorAll('[data-filter-class]');
+        const allCards = document.querySelectorAll('.batch-card');
+        function applyClassFilter(className) {
+          allCards.forEach(card => {
+            const cname = (card.getAttribute('data-class-name') || '').toLowerCase();
+            const cid = (card.getAttribute('data-class-id') || '').toString();
+            if (!className) {
+              card.style.display = '';
+            } else {
+              if (cname.includes(className) || cid === className) {
+                card.style.display = '';
+              } else {
+                card.style.display = 'none';
+              }
+            }
+          });
+        }
+        if (headerFilterAll) {
+          headerFilterAll.addEventListener('click', function() {
+            document.querySelectorAll('header .tab-btn').forEach(b=>b.classList.remove('active'));
+            this.classList.add('active');
+            applyClassFilter('');
+          });
+        }
+        headerClassFilters.forEach(btn => {
+          btn.addEventListener('click', function() {
+            document.querySelectorAll('header .tab-btn').forEach(b=>b.classList.remove('active'));
+            this.classList.add('active');
+            applyClassFilter(this.getAttribute('data-filter-class'));
+          });
+        });
       });
     </script>
     <script src="script.js"></script>

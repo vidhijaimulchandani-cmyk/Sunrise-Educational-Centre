@@ -9,6 +9,7 @@ import re
 from datetime import datetime, timezone
 from typing import List, Dict, Optional, Tuple, Union
 from flask import session
+import sys
 try:
     from werkzeug.utils import secure_filename
     from werkzeug.datastructures import FileStorage
@@ -24,6 +25,13 @@ except ImportError:
 # Database configuration
 DATABASE = 'users.db'
 UPLOAD_FOLDER = 'uploads'
+
+# Ensure stdout can handle UTF-8 (Windows consoles may default to cp1252)
+try:
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(encoding='utf-8', errors='ignore')
+except Exception:
+    pass
 
 def get_ist_timestamp():
     """Get current timestamp in IST format"""

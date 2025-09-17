@@ -77,6 +77,21 @@ document.addEventListener('DOMContentLoaded', function() {
   if (searchInput) {
     searchInput.addEventListener('input', searchResources);
   }
+
+  // Floating search toggle
+  const floatingSearchBtn = document.getElementById('floatingSearchBtn');
+  const floatingSearchPanel = document.getElementById('floatingSearchPanel');
+  if (floatingSearchBtn && floatingSearchPanel) {
+    floatingSearchBtn.addEventListener('click', function() {
+      const isHidden = floatingSearchPanel.style.display === 'none' || !floatingSearchPanel.style.display;
+      floatingSearchPanel.style.display = isHidden ? 'block' : 'none';
+      if (!isHidden) return;
+      const input = floatingSearchPanel.querySelector('#searchInput');
+      if (input) {
+        input.focus();
+      }
+    });
+  }
   
   // Add click tracking for analytics (optional)
   const resourceLinks = document.querySelectorAll('.card a');

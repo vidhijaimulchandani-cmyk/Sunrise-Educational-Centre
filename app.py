@@ -79,6 +79,14 @@ try:
 except Exception as _e:
     print(f"Bulk upload blueprint not loaded: {_e}")
 
+# Import batch routes blueprint
+batch_bp = None
+try:
+    from batch_routes import batch_bp as _batch_bp
+    batch_bp = _batch_bp
+except Exception as _e:
+    print(f"Batch blueprint not loaded: {_e}")
+
 # Initialize Flask app
 app = Flask(__name__, static_folder='.', template_folder='.')
 
@@ -898,8 +906,10 @@ app.secret_key = 'your_secret_key_here'  # Change this to a secure random value 
 try:
     if bulk_upload_bp is not None:
         app.register_blueprint(bulk_upload_bp)
+    if batch_bp is not None:
+        app.register_blueprint(batch_bp)
 except Exception as _e:
-    print(f"Failed to register bulk upload blueprint: {_e}")
+    print(f"Failed to register blueprints: {_e}")
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'pdf', 'docx', 'png', 'jpg', 'jpeg'}

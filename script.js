@@ -75,6 +75,43 @@ if (!document.getElementById('ripple-style')) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Inject a universal navbar if missing
+    try {
+      if (!document.querySelector('.floating-navbar')) {
+        const nav = document.createElement('nav');
+        nav.className = 'floating-navbar black-glass';
+        nav.innerHTML = `
+          <button class="hamburger" aria-label="Menu" aria-expanded="false">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+          </button>
+          <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/online-class">Live Classes</a></li>
+            <li><a href="/batch">Batches</a></li>
+            <li><a href="/study-resources">Study Resources</a></li>
+            <li><a href="/forum">Forum</a></li>
+            <li class="profile-dropdown">
+              <a href="#" id="profileLink">Profile ▾</a>
+              <div class="profile-dropdown-menu" id="profileDropdown">
+                <a href="/profile" class="dropdown-item">My Profile</a>
+                <a href="/notifications" class="dropdown-item">Notifications</a>
+                <a href="/auth" class="dropdown-item" id="loginLink">Login</a>
+                <a href="/logout" class="dropdown-item" id="logoutLink" style="display:none;">Logout</a>
+              </div>
+            </li>
+            <li style="position:relative;">
+              <button id="notifBell" class="notification-bell" title="Notifications">🔔
+                <span id="notificationCount" class="notification-badge" style="display:none;"></span>
+              </button>
+              <div id="notifDropdown" style="display:none;"><strong style="color:#6a82fb;">Notifications</strong><ul style="list-style:none; padding:0; margin:0;"></ul></div>
+            </li>
+          </ul>`;
+        document.body.insertBefore(nav, document.body.firstChild);
+      }
+    } catch (e) {}
+
     const hamburger = document.querySelector(".hamburger");
     const navLinks = document.querySelector(".nav-links");
 
@@ -146,7 +183,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="profile-dropdown-menu" id="profileDropdown">
               <a href="/profile" class="dropdown-item">My Profile</a>
               <a href="/notifications" class="dropdown-item">Notifications</a>
-              <a href="/logout" class="dropdown-item">Logout</a>
+              <a href="/auth" class="dropdown-item" id="loginLink">Login</a>
+              <a href="/logout" class="dropdown-item" id="logoutLink" style="display:none;">Logout</a>
             </div>`;
           links.appendChild(profileLi);
         }
@@ -180,6 +218,37 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Setup notification dropdown
     setupNotificationDropdown();
+
+    // Remove Admission and theme toggle from all navbars
+    try {
+      document.querySelectorAll('.floating-navbar .nav-links a[href="/admission"]').forEach(a => {
+        const li = a.closest('li');
+        if (li && li.parentElement) li.parentElement.removeChild(li);
+        else a.remove();
+      });
+      const themeBtn = document.getElementById('darkModeToggle');
+      if (themeBtn) {
+        const li = themeBtn.closest('li');
+        if (li && li.parentElement) li.parentElement.removeChild(li);
+        else themeBtn.remove();
+      }
+    } catch (e) {}
+
+    // Mark active link based on current path
+    try {
+      const currentPath = window.location.pathname;
+      document.querySelectorAll('.floating-navbar .nav-links a').forEach(a => {
+        const href = a.getAttribute('href');
+        if (!href) return;
+        if (href === '/' && currentPath === '/') {
+          a.classList.add('active');
+        } else if (href !== '/' && currentPath.startsWith(href)) {
+          a.classList.add('active');
+        } else {
+          a.classList.remove('active');
+        }
+      });
+    } catch (e) {}
 });
 
 // Profile Dropdown Functionality
