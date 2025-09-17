@@ -105,6 +105,7 @@ function setupEventListeners() {
         forumInput.addEventListener('input', function() {
             this.style.height = 'auto';
             this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            handleSlashCommands(this);
         });
     }
     
@@ -1017,3 +1018,110 @@ function selectMentionSuggestion(username = null) {
     
     hideMentionSuggestions();
 } 
+
+// ----------- Poll Builder (/poll) -----------
+function handleSlashCommands(textareaEl) {
+    const cursorPos = textareaEl.selectionStart;
+    const textUpToCursor = textareaEl.value.substring(0, cursorPos);
+    const slashMatch = textUpToCursor.match(/\/(\w*)$/);
+    if (!slashMatch) return;
+    const command = slashMatch[1].toLowerCase();
+    if (command === 'poll') {
+        openPollModal();
+    }
+}
+
+function openPollModal() {
+    const modal = document.getElementById('pollModal');
+    if (!modal) return;
+    modal.style.display = 'block';
+    bindPollModalEvents();
+}
+
+function closePollModal() {
+    const modal = document.getElementById('pollModal');
+    if (!modal) return;
+    modal.style.display = 'none';
+}
+
+function bindPollModalEvents() {
+    const modal = document.getElementById('pollModal');
+    if (!modal) return;
+
+    const backdrop = document.getElementById('pollModalBackdrop');
+    const closeBtn = document.getElementById('pollCloseBtn');
+    const cancelBtn = document.getElementById('pollCancelBtn');
+    const createBtn = document.getElementById('pollCreateBtn');
+    const addOptionBtn = document.getElementById('pollAddOptionBtn');
+    const optionsContainer = document.getElementById('pollOptionsContainer');
+
+    const ensureRemoveHandlers = () => {
+        optionsContainer.querySelectorAll('.poll-remove').forEach(btn => {
+            btn.onclick = (e) => {
+                e.preventDefault();
+                const row = btn.closest('.poll-option-row');
+                if (row && optionsContainer.children.length > 2) {
+                    row.remove();
+                }
+            };
+        });
+    };
+
+    ensureRemoveHandlers();
+
+    const addOption = () => {
+        const idx = optionsContainer.children.length + 1;
+        const row = document.createElement('div');
+        row.className = 'poll-option-row';
+        row.style.display = 'flex';
+        row.style.gap = '0.5rem';
+        row.innerHTML = `
+          <input type="text" class="poll-option" placeholder="Option ${idx}" style="flex:1; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:10px; padding:0.6rem;">
+          <button class="poll-remove" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:10px; padding:0.4rem 0.6rem; cursor:pointer;">🗑️</button>
+        `;
+        optionsContainer.appendChild(row);
+        ensureRemoveHandlers();
+    };
+
+    if (addOptionBtn) addOptionBtn.onclick = (e) => { e.preventDefault(); addOption(); };
+    if (backdrop) backdrop.onclick = closePollModal;
+    if (closeBtn) closeBtn.onclick = closePollModal;
+    if (cancelBtn) cancelBtn.onclick = closePollModal;
+    if (createBtn) createBtn.onclick = insertPollIntoMessage;
+}
+
+function insertPollIntoMessage() {
+    const questionEl = document.getElementById('pollQuestion');
+    const optionsEls = document.querySelectorAll('#pollOptionsContainer .poll-option');
+    const forumInput = document.getElementById('forumInput');
+    const question = (questionEl?.value || '').trim();
+    const options = Array.from(optionsEls).map(i => i.value.trim()).filter(Boolean);
+
+    if (!question || options.length < 2) {
+        alert('Please add a question and at least 2 options.');
+        return;
+    }
+
+    // Insert a simple poll markup into the textarea. Backend can parse or render as plain text.
+    const pollLines = [
+        `/poll ${question}`,
+        ...options.map((opt, i) => `- ${opt}`)
+    ];
+    const pollText = pollLines.join('\n');
+
+    // Replace trailing "/poll" command typed by user with the full poll block
+    const cursorPos = forumInput.selectionStart;
+    const text = forumInput.value;
+    const beforeCursor = text.substring(0, cursorPos);
+    const afterCursor = text.substring(cursorPos);
+    const match = beforeCursor.match(/\/(poll)$/i);
+    if (match) {
+        const newBefore = beforeCursor.replace(/\/(poll)$/i, '');
+        forumInput.value = `${newBefore}${pollText}\n${afterCursor}`.trimStart();
+    } else {
+        forumInput.value = `${text}${(text && !text.endsWith('\n')) ? '\n' : ''}${pollText}`;
+    }
+
+    forumInput.focus();
+    closePollModal();
+}

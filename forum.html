@@ -523,6 +523,38 @@
       </div>
     </div>
 
+    <!-- Poll Builder Modal -->
+    <div id="pollModal" style="display:none; position:fixed; inset:0; z-index:1100;">
+      <div id="pollModalBackdrop" style="position:absolute; inset:0; background: rgba(0,0,0,0.6);"></div>
+      <div style="position:relative; max-width:560px; margin:10vh auto; background: rgba(15,18,28,0.9); color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:16px; box-shadow: 0 20px 60px rgba(0,0,0,0.6);">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:1rem 1.25rem; border-bottom:1px solid rgba(255,255,255,0.12);">
+          <h3 style="margin:0; font-size:1.1rem;">Create Poll</h3>
+          <button id="pollCloseBtn" style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer;">×</button>
+        </div>
+        <div style="padding:1rem 1.25rem; display:flex; flex-direction:column; gap:0.75rem;">
+          <label style="font-size:0.9rem; opacity:0.9;">Question</label>
+          <input id="pollQuestion" type="text" placeholder="Type your poll question" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:10px; padding:0.7rem;">
+          <div id="pollOptionsContainer" style="display:flex; flex-direction:column; gap:0.5rem; margin-top:0.5rem;">
+            <div class="poll-option-row" style="display:flex; gap:0.5rem;">
+              <input type="text" class="poll-option" placeholder="Option 1" style="flex:1; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:10px; padding:0.6rem;">
+              <button class="poll-remove" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:10px; padding:0.4rem 0.6rem; cursor:pointer;">🗑️</button>
+            </div>
+            <div class="poll-option-row" style="display:flex; gap:0.5rem;">
+              <input type="text" class="poll-option" placeholder="Option 2" style="flex:1; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:10px; padding:0.6rem;">
+              <button class="poll-remove" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:10px; padding:0.4rem 0.6rem; cursor:pointer;">🗑️</button>
+            </div>
+          </div>
+          <div style="display:flex; gap:0.5rem;">
+            <button id="pollAddOptionBtn" style="background:rgba(106,130,251,0.2); border:1px solid rgba(106,130,251,0.5); color:#aef; border-radius:10px; padding:0.5rem 0.8rem; cursor:pointer;">+ Add option</button>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:0.6rem; margin-top:0.5rem;">
+            <button id="pollCancelBtn" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:10px; padding:0.6rem 0.9rem; cursor:pointer;">Cancel</button>
+            <button id="pollCreateBtn" style="background:linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%); border:none; color:#fff; border-radius:10px; padding:0.6rem 0.95rem; cursor:pointer; font-weight:600;">Insert poll</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
       window.currentUsername = {{ username|tojson }};
     </script>

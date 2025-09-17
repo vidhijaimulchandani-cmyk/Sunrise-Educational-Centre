@@ -1315,6 +1315,15 @@ body.dark-mode {
   }
 }
 
+/* Poll Modal quick styles (kept minimal; main inline in HTML) */
+#pollModal h3 {
+  color: var(--forum-text);
+}
+
+#pollModal input[type="text"]::placeholder {
+  color: var(--forum-placeholder);
+}
+
 /* Accessibility Improvements */
 @media (prefers-reduced-motion: reduce) {
   .forum-bubble,
