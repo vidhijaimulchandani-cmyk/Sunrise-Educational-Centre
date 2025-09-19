@@ -14,6 +14,7 @@
     }
     try { localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light'); } catch (e) {}
     updateToggleLabel();
+    updateFooterToggleLabel();
   }
 
   function detectInitialTheme() {
@@ -38,6 +39,17 @@
     updateToggleLabel();
   }
 
+  function bindFooterToggleIfPresent() {
+    var footerToggle = document.getElementById('footerThemeToggle');
+    if (!footerToggle) return;
+    footerToggle.addEventListener('click', function () {
+      var isDark = document.body.classList.toggle(CLASS_DARK);
+      try { localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light'); } catch (e) {}
+      updateFooterToggleLabel();
+    });
+    updateFooterToggleLabel();
+  }
+
   function updateToggleLabel() {
     var toggle = document.getElementById('darkModeToggle');
     if (!toggle) return;
@@ -54,6 +66,17 @@
     toggle.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
   }
 
+  function updateFooterToggleLabel() {
+    var footerToggle = document.getElementById('footerThemeToggle');
+    if (!footerToggle) return;
+    var isDark = document.body.classList.contains(CLASS_DARK);
+    footerToggle.setAttribute('aria-pressed', String(isDark));
+    
+    // Footer toggle always shows text labels
+    footerToggle.innerHTML = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
+    footerToggle.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+  }
+
   // Initialize ASAP after DOM is ready
   function ready(fn) {
     if (document.readyState === 'loading') {
@@ -64,6 +87,7 @@
   ready(function () {
     applyTheme(detectInitialTheme());
     bindToggleIfPresent();
+    bindFooterToggleIfPresent();
   });
 })();
 

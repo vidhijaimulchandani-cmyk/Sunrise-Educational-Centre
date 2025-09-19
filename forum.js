@@ -33,11 +33,22 @@ function setupEventListeners() {
     const categoryToggle = document.getElementById('categoryToggle');
     const categoryPopup = document.getElementById('categoryPopup');
     const overlay = document.getElementById('overlay');
-    const forumShell = document.getElementById('forumShell');
+    
+    console.log('Forum elements check:', {
+        categoryToggle: !!categoryToggle,
+        categoryPopup: !!categoryPopup,
+        overlay: !!overlay
+    });
     
     if (categoryToggle && categoryPopup && overlay) {
-        categoryToggle.addEventListener('click', function() {
+        console.log('Setting up category popup event listeners');
+        
+        categoryToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Category toggle clicked');
             const isOpen = categoryPopup.classList.contains('open');
+            console.log('Popup is currently open:', isOpen);
+            
             if (isOpen) {
                 closeCategoryPopup();
             } else {
@@ -46,13 +57,25 @@ function setupEventListeners() {
         });
         
         // Close popup when clicking overlay
-        overlay.addEventListener('click', closeCategoryPopup);
+        overlay.addEventListener('click', function(e) {
+            console.log('Overlay clicked');
+            closeCategoryPopup();
+        });
         
         // Close popup with Escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && categoryPopup.classList.contains('open')) {
+                console.log('Escape key pressed, closing popup');
                 closeCategoryPopup();
             }
+        });
+        
+        console.log('Category popup event listeners set up successfully');
+    } else {
+        console.error('Failed to find required elements for category popup:', {
+            categoryToggle: categoryToggle ? 'found' : 'missing',
+            categoryPopup: categoryPopup ? 'found' : 'missing',
+            overlay: overlay ? 'found' : 'missing'
         });
     }
     
@@ -126,31 +149,43 @@ function setupEventListeners() {
 
 // Open category popup
 function openCategoryPopup() {
+    console.log('Opening category popup');
     const categoryPopup = document.getElementById('categoryPopup');
     const categoryToggle = document.getElementById('categoryToggle');
     const overlay = document.getElementById('overlay');
-    const forumShell = document.getElementById('forumShell');
     
-    if (categoryPopup && categoryToggle && overlay && forumShell) {
+    console.log('Elements found:', {
+        popup: !!categoryPopup,
+        toggle: !!categoryToggle,
+        overlay: !!overlay
+    });
+    
+    if (categoryPopup && categoryToggle && overlay) {
         categoryPopup.classList.add('open');
         categoryToggle.classList.add('open');
         overlay.classList.add('open');
-        forumShell.classList.add('popup-open');
+        document.body.classList.add('popup-open');
+        console.log('Category popup opened successfully');
+    } else {
+        console.error('Missing elements for category popup');
     }
 }
 
 // Close category popup
 function closeCategoryPopup() {
+    console.log('Closing category popup');
     const categoryPopup = document.getElementById('categoryPopup');
     const categoryToggle = document.getElementById('categoryToggle');
     const overlay = document.getElementById('overlay');
-    const forumShell = document.getElementById('forumShell');
     
-    if (categoryPopup && categoryToggle && overlay && forumShell) {
+    if (categoryPopup && categoryToggle && overlay) {
         categoryPopup.classList.remove('open');
         categoryToggle.classList.remove('open');
         overlay.classList.remove('open');
-        forumShell.classList.remove('popup-open');
+        document.body.classList.remove('popup-open');
+        console.log('Category popup closed successfully');
+    } else {
+        console.error('Missing elements for category popup close');
     }
 }
 

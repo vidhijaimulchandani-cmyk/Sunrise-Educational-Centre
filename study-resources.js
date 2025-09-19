@@ -112,24 +112,153 @@ document.addEventListener('DOMContentLoaded', function() {
   initializeVerticalSlider();
 });
 
+// Fallback initialization in case DOM isn't ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeVerticalSlider);
+} else {
+  // DOM is already ready
+  setTimeout(initializeVerticalSlider, 100);
+}
+
+// Manual toggle button for testing
+document.addEventListener('DOMContentLoaded', function() {
+  const manualToggle = document.getElementById('manualSliderToggle');
+  const slider = document.getElementById('verticalSlider');
+  const studyResourcesShell = document.querySelector('.study-resources-shell');
+  const debugInfo = document.getElementById('debugInfo');
+  
+  // Show debug info
+  if (debugInfo) {
+    debugInfo.style.display = 'block';
+    debugInfo.innerHTML = `
+      Slider: ${slider ? 'Found' : 'Not found'}<br>
+      Shell: ${studyResourcesShell ? 'Found' : 'Not found'}<br>
+      Toggle: ${manualToggle ? 'Found' : 'Not found'}
+    `;
+  }
+  
+  if (manualToggle && slider) {
+    manualToggle.addEventListener('click', function() {
+      console.log('Manual toggle clicked');
+      
+      const wasOpen = slider.classList.contains('open');
+      slider.classList.toggle('open');
+      
+      if (studyResourcesShell) {
+        studyResourcesShell.classList.toggle('slider-open');
+      }
+      
+      // Update debug info
+      if (debugInfo) {
+        debugInfo.innerHTML = `
+          Slider: ${slider ? 'Found' : 'Not found'}<br>
+          Shell: ${studyResourcesShell ? 'Found' : 'Not found'}<br>
+          Was Open: ${wasOpen}<br>
+          Now Open: ${slider.classList.contains('open')}<br>
+          Classes: ${slider.className}
+        `;
+      }
+      
+      // Handle overlay for mobile
+      const overlay = document.getElementById('sliderOverlay');
+      if (overlay) {
+        if (slider.classList.contains('open')) {
+          overlay.style.opacity = '1';
+          overlay.style.visibility = 'visible';
+          overlay.style.pointerEvents = 'auto';
+        } else {
+          overlay.style.opacity = '0';
+          overlay.style.visibility = 'hidden';
+          overlay.style.pointerEvents = 'none';
+        }
+      }
+      
+      // Update button text
+      if (slider.classList.contains('open')) {
+        manualToggle.innerHTML = '🔧 Close Slider';
+        manualToggle.style.background = '#10b981';
+      } else {
+        manualToggle.innerHTML = '🔧 Test Slider';
+        manualToggle.style.background = '#fc5c7d';
+      }
+    });
+    
+    // Add overlay click handler
+    const overlay = document.getElementById('sliderOverlay');
+    if (overlay) {
+      overlay.addEventListener('click', function() {
+        console.log('Overlay clicked, closing slider');
+        if (slider.classList.contains('open')) {
+          slider.classList.remove('open');
+          document.body.classList.remove('slider-open');
+          if (studyResourcesShell) {
+            studyResourcesShell.classList.remove('slider-open');
+          }
+          overlay.style.opacity = '0';
+          overlay.style.visibility = 'hidden';
+          overlay.style.pointerEvents = 'none';
+          manualToggle.innerHTML = '🔧 Test Slider';
+          manualToggle.style.background = '#fc5c7d';
+        }
+      });
+    }
+  } else {
+    console.error('Manual toggle elements not found:', {
+      manualToggle: !!manualToggle,
+      slider: !!slider
+    });
+  }
+});
+
 // Vertical Slider Functionality
 function initializeVerticalSlider() {
   const slider = document.getElementById('verticalSlider');
   const sliderToggle = document.getElementById('sliderToggle');
   const studyResourcesShell = document.querySelector('.study-resources-shell');
   
-  if (!slider || !sliderToggle) return;
+  console.log('Initializing slider...', { slider, sliderToggle, studyResourcesShell });
+  
+  if (!slider || !sliderToggle) {
+    console.error('Slider elements not found!', { slider, sliderToggle });
+    return;
+  }
   
   // Toggle slider
-  sliderToggle.addEventListener('click', function() {
+  sliderToggle.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    console.log('Slider toggle clicked');
+    
+    const wasOpen = slider.classList.contains('open');
     slider.classList.toggle('open');
-    studyResourcesShell.classList.toggle('slider-open');
+    document.body.classList.toggle('slider-open');
+    
+    if (studyResourcesShell) {
+      studyResourcesShell.classList.toggle('slider-open');
+    }
+    
+    // Handle overlay
+    const overlay = document.getElementById('sliderOverlay');
+    if (overlay) {
+      if (slider.classList.contains('open')) {
+        overlay.style.opacity = '1';
+        overlay.style.visibility = 'visible';
+        overlay.style.pointerEvents = 'auto';
+      } else {
+        overlay.style.opacity = '0';
+        overlay.style.visibility = 'hidden';
+        overlay.style.pointerEvents = 'none';
+      }
+    }
     
     // Update toggle button text
     if (slider.classList.contains('open')) {
       sliderToggle.textContent = '▶';
+      console.log('Slider opened');
     } else {
       sliderToggle.textContent = '◀';
+      console.log('Slider closed');
     }
   });
   

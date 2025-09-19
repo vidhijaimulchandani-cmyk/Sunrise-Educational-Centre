@@ -217,7 +217,7 @@ def cleanup_stale_sessions():
         conn.close()
         
         if deleted_sessions > 0:
-            print(f"🧹 Cleaned up {deleted_sessions} stale sessions and old records")
+            print(f"Cleaned up {deleted_sessions} stale sessions and old records")
         
         return deleted_sessions
     except Exception as e:
@@ -237,7 +237,7 @@ def start_session_cleanup_service():
     
     cleanup_thread = threading.Thread(target=cleanup_worker, daemon=True)
     cleanup_thread.start()
-    print("🚀 Session cleanup service started")
+    print("Session cleanup service started")
 
 def generate_complex_password(length=12):
     """Generate a complex password with mixed characters"""
@@ -1265,7 +1265,7 @@ def study_resources():
         # Redirect if not logged in – preserve intended destination to prevent loops
         if not role:
             flash('You must be logged in to view resources.', 'error')
-            return redirect(url_for('auth', next='study_resources'))
+            return redirect(url_for('auth', next='study-resources'))
         
         # Redirect admin/teacher to their own panel, as this page is for students
         if role in ['admin', 'teacher']:
@@ -1771,16 +1771,41 @@ def api_delete_forum_message(message_id):
 ## Live class routes moved to blueprint `live_class_routes.live_classes_bp`
 
 # Route for authentication (login)
+@app.route('/test-auth')
+def test_auth_page():
+    """Simple test page for authentication without modern styling"""
+    return send_from_directory('.', 'test_auth_simple.html')
+
+@app.route('/test-form')
+def test_form_page():
+    """Minimal form submission test"""
+    return send_from_directory('.', 'test_form_submission.html')
+
+
+
 @app.route('/auth', methods=['GET', 'POST'])
 def auth():
     error = None
     if request.method == 'POST':
+        # Debug logging
+        print(f"Auth POST request received")
+        print(f"Form data: {dict(request.form)}")
+        
         class_id = request.form.get('class_id')
         all_classes_dict = {str(c[0]): c[1] for c in get_all_classes()}
         selected_role = all_classes_dict.get(class_id)
         username = request.form.get('username')
         password = request.form.get('password')
         admin_code = request.form.get('admin_code')
+        
+        print(f"Parsed data - Username: {username}, Class ID: {class_id}, Selected Role: {selected_role}")
+        
+        # Validate required fields
+        if not username or not password or not class_id:
+            error = f'Missing required fields. Username: {bool(username)}, Password: {bool(password)}, Class: {bool(class_id)}'
+            print(f"Validation failed: {error}")
+            all_classes = get_all_classes()
+            return render_template('auth.html', error=error, all_classes=all_classes)
         if selected_role == 'admin':
             if admin_code != 'sec@011':
                 error = 'Invalid admin code. Login denied.'
@@ -1813,7 +1838,7 @@ def auth():
                     next_page = request.args.get('next') or request.form.get('next')
                     if user_role in ['admin', 'teacher']:
                         return redirect(url_for('admin_panel'))
-                    if next_page == 'study_resources':
+                    if next_page == 'study-resources':
                         return redirect(url_for('study_resources'))
                     # Fallback
                     return redirect(url_for('home'))
@@ -7303,19 +7328,19 @@ if __name__ == '__main__':
     start_session_cleanup_service()
     
     # Default to HTTP mode to avoid SSL issues
-    print("🚀 Starting server with HTTP...")
-    print("🌐 Access your app at: http://localhost:10000")
-    print("⚠️  Note: WebRTC features will not work without HTTPS!")
-    print("🧹 Session cleanup service started - will clean stale sessions every hour")
+    print("Starting server with HTTP...")
+    print("Access your app at: http://localhost:10000")
+    print("Note: WebRTC features will not work without HTTPS!")
+    print("Session cleanup service started - will clean stale sessions every hour")
     
     try:
         socketio.run(app, host='0.0.0.0', port=port, debug=False, log_output=False, allow_unsafe_werkzeug=True)
     except Exception as e:
-        print(f"❌ Server Error: {e}")
-        print("🔄 Trying alternative configuration...")
+        print(f"Server Error: {e}")
+        print("Trying alternative configuration...")
         try:
             socketio.run(app, host='127.0.0.1', port=port, debug=False, log_output=False, allow_unsafe_werkzeug=True)
         except Exception as e2:
-            print(f"❌ Alternative configuration failed: {e2}")
-            print("🔄 Trying with different settings...")
+            print(f"Alternative configuration failed: {e2}")
+            print("Trying with different settings...")
             socketio.run(app, host='localhost', port=port, debug=False, log_output=False, allow_unsafe_werkzeug=True)

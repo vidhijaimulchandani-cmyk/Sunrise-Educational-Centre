@@ -1,579 +1,747 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forum</title>
+    <title>Forum - Sunrise Educational Centre</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="floating-navbar.css">
+    <link rel="stylesheet" href="uiverse-components.css">
     <link rel="stylesheet" href="forum.css">
+    <link rel="stylesheet" href="enhanced-aesthetic.css">
+    <link rel="stylesheet" href="modern-components.css">
+    <link rel="stylesheet" href="modern-navbar.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-      .black-glass {
-          background: rgba(5, 6, 10, 0.72);
-          border: 1px solid rgba(255, 255, 255, 0.22);
-          box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
-          backdrop-filter: blur(18px) saturate(110%);
-          -webkit-backdrop-filter: blur(18px) saturate(110%);
-          color: #fff;
-          border-radius: 16px;
-      }
-      .forum-shell { max-width: 1100px; margin: 0 auto; padding: 0 1rem; min-height: 100vh; display: flex; flex-direction: column; transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-      .forum-shell.popup-open { margin-left: 320px; }
-      .forum-header.black-glass { border-radius: 18px; }
-      .forum-header h1 { color: #fff; }
-      .forum-header p { color: rgba(255,255,255,0.85); }
-      .class-strip { display:flex; align-items:center; justify-content:center; gap:.8rem; margin: 1rem 0 0 0; }
-      .class-chip { background: rgba(255,255,255,0.14); color: #fff; border: 1px solid rgba(255,255,255,0.25); padding: .3rem .7rem; border-radius: 999px; font-weight: 600; }
-      .status-chip { background: rgba(0, 200, 140, 0.2); color:#aef9e4; border:1px solid rgba(0,200,140,0.35); padding: .25rem .6rem; border-radius:999px; font-weight:600; }
-      .status-chip.unpaid { background: rgba(255, 255, 255, 0.12); color:#ffd2d2; border-color: rgba(255,255,255,0.25); }
-      /* Enhanced Message Container - ChatGPT Style */
-      .messages-container.black-glass { 
-        padding: 1.5rem; 
-        border-radius: 20px; 
-        flex: 1; 
-        overflow-y: auto; 
-        min-height: 60vh;
-        max-height: 70vh;
-        background: rgba(5, 6, 10, 0.85);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 
-          0 20px 60px rgba(0, 0, 0, 0.8),
-          0 8px 32px rgba(106, 130, 251, 0.1),
-          inset 0 1px 0 rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(24px) saturate(120%);
-        -webkit-backdrop-filter: blur(24px) saturate(120%);
-      }
-      
-      .message-content { 
-        background: rgba(5,6,10,0.8); 
-        color:#fff; 
-        border: 1px solid rgba(255,255,255,0.15); 
-        box-shadow: 0 12px 32px rgba(0,0,0,0.6);
-        border-radius: 16px;
-        margin-bottom: 1rem;
-        padding: 1rem;
-        transition: all 0.3s ease;
-      }
-      
-      .message-content:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 16px 40px rgba(0,0,0,0.7);
-      }
-      
-      .message-content.own-message { 
-        background: rgba(106, 130, 251, 0.15); 
-        color:#fff;
-        border-color: rgba(106, 130, 251, 0.3);
-      }
-      
-      .message-text { 
-        color:#fff; 
-        font-size: 1rem;
-        line-height: 1.6;
-        margin: 0.5rem 0;
-      }
-      
-      .message-avatar { 
-        background: rgba(255,255,255,0.14); 
-        color:#fff; 
-        border: 1px solid rgba(255,255,255,0.25);
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        margin-right: 1rem;
-      }
-      
-      .message-header { 
-        border-bottom-color: rgba(255,255,255,0.15); 
-        padding-bottom: 0.5rem;
-        margin-bottom: 0.5rem;
-        display: flex;
-        align-items: center;
-      }
-      
-      .message-info span { 
-        color: rgba(255,255,255,0.8); 
-        font-size: 0.9rem;
-        margin-right: 1rem;
-      }
-      
-      .message-actions button { 
-        background: rgba(255,255,255,0.12); 
-        color:#fff; 
-        border:1px solid rgba(255,255,255,0.2);
-        border-radius: 8px;
-        padding: 0.5rem 0.75rem;
-        margin: 0.25rem;
-        transition: all 0.2s ease;
-      }
-      
-      .message-actions button:hover {
-        background: rgba(255,255,255,0.2);
-        transform: translateY(-1px);
-      }
-      
-      .chat-input-bar.black-glass { 
-        padding: 1.2rem; 
-        border-radius: 20px;
-        background: rgba(5, 6, 10, 0.85);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 
-          0 20px 60px rgba(0, 0, 0, 0.8),
-          0 8px 32px rgba(106, 130, 251, 0.1);
-        backdrop-filter: blur(24px) saturate(120%);
-        -webkit-backdrop-filter: blur(24px) saturate(120%);
-      }
-      
-      .chat-input-bar textarea {
-          background: rgba(255,255,255,0.08);
-          border: 1px solid rgba(255,255,255,0.2);
-          color:#fff;
-          border-radius: 12px;
-          padding: 1rem;
-          font-size: 1rem;
-          resize: none;
-          min-height: 60px;
-          transition: all 0.3s ease;
-      }
-      
-      .chat-input-bar textarea:focus {
-          outline: none;
-          border-color: #6a82fb;
-          box-shadow: 0 0 0 3px rgba(106, 130, 251, 0.2);
-          background: rgba(255,255,255,0.12);
-      }
-      
-      .chat-input-bar textarea::placeholder { 
-          color: rgba(255,255,255,0.6); 
-      }
-      
-      #forumSendBtn { 
-          background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%); 
-          color:#fff;
-          border-radius: 12px;
-          padding: 1rem 1.5rem;
-          font-weight: 600;
-          transition: all 0.3s ease;
-      }
-      
-      #forumSendBtn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(106, 130, 251, 0.3);
-      }
-      
-      #emojiPicker { 
-          background: rgba(5,6,10,0.9) !important; 
-          border: 1px solid rgba(255,255,255,0.22) !important; 
-          box-shadow: 0 16px 48px rgba(0,0,0,0.8) !important; 
-          color:#fff !important; 
-          backdrop-filter: blur(20px) !important; 
-          -webkit-backdrop-filter: blur(20px) !important;
-          border-radius: 16px !important;
-      } 
-      
-      #emojiPicker button { 
-          color:#fff !important; 
-          border-radius: 8px !important;
-          transition: all 0.2s ease !important;
-      }
-      
-      #emojiPicker button:hover {
-          background: rgba(255,255,255,0.1) !important;
-          transform: translateY(-1px) !important;
-      }
-      
-      #mentionSuggestions { 
-          background: rgba(5,6,10,0.9); 
-          border: 1px solid rgba(255,255,255,0.22); 
-          color:#fff; 
-          backdrop-filter: blur(20px); 
-          -webkit-backdrop-filter: blur(20px);
-          border-radius: 16px;
-          box-shadow: 0 16px 48px rgba(0,0,0,0.8);
-      } 
-      
-      .mention-suggestion { 
-          border-bottom: 1px solid rgba(255,255,255,0.15); 
-          padding: 0.75rem 1rem;
-          transition: all 0.2s ease;
-          cursor: pointer;
-      }
-      
-      .mention-suggestion:hover, 
-      .mention-suggestion.selected { 
-          background: rgba(255,255,255,0.12); 
-          transform: translateX(4px);
-      }
+        /* Optimized Forum Styles */
+        .forum-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            overflow-x: hidden;
+        }
 
-      /* ChatGPT-style vertical popup */
-      .category-popup {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 320px;
-          height: 100vh;
-          background: rgba(10, 12, 20, 0.95);
-          backdrop-filter: blur(20px) saturate(120%);
-          -webkit-backdrop-filter: blur(20px) saturate(120%);
-          border-right: 1px solid rgba(255, 255, 255, 0.15);
-          z-index: 1000;
-          transform: translateX(-100%);
-          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          overflow-y: auto;
-          box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
-      }
+        .forum-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 10;
+        }
 
-      .category-popup.open {
-          transform: translateX(0);
-      }
+        .forum-hero {
+            padding: 8rem 0 4rem 0;
+            text-align: center;
+            position: relative;
+            z-index: 20;
+        }
 
-      .category-popup-header {
-          padding: 1.5rem;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-          background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-          position: relative;
-          overflow: hidden;
-      }
+        .forum-hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
 
-      .category-popup-header::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 2px;
-          background: linear-gradient(90deg, #6a82fb, #fc5c7d, #6a82fb);
-          background-size: 200% 100%;
-          animation: shimmer 3s ease-in-out infinite;
-      }
+        .forum-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 50%, #ff6b35 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 3rem;
+            animation: logoFloat 3s ease-in-out infinite;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 40px rgba(106,130,251,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
 
-      @keyframes shimmer {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-      }
+        .forum-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #e0e7ff 50%, #c7d2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
 
-      .category-popup-header h2 {
-          color: #fff;
-          margin: 0;
-          font-size: 1.25rem;
-          font-weight: 600;
-          position: relative;
-          z-index: 1;
-      }
+        .forum-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
 
-      .category-popup-header p {
-          color: rgba(255, 255, 255, 0.7);
-          margin: 0.5rem 0 0 0;
-          font-size: 0.9rem;
-          position: relative;
-          z-index: 1;
-      }
+        .user-info-card {
+            background: rgba(5, 6, 10, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 20px;
+            padding: 1.5rem 2rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            backdrop-filter: blur(18px) saturate(110%);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
 
-      .category-list {
-          padding: 1rem;
-      }
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
 
-      .category-item {
-          display: flex;
-          align-items: center;
-          padding: 0.75rem 1rem;
-          margin-bottom: 0.5rem;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 12px;
-          cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          color: #fff;
-          position: relative;
-          overflow: hidden;
-      }
+        .user-details h3 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
 
-      .category-item::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: -100%;
-          width: 100%;
-          height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-          transition: left 0.5s ease;
-      }
+        .user-details p {
+            margin: 0;
+            color: rgba(255,255,255,0.7);
+            font-size: 1rem;
+        }
 
-      .category-item:hover::before {
-          left: 100%;
-      }
+        .user-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
 
-      .category-item:hover {
-          background: rgba(255, 255, 255, 0.1);
-          border-color: rgba(255, 255, 255, 0.2);
-          transform: translateX(4px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      }
+        .status-paid {
+            background: rgba(0,200,140,0.2);
+            border: 1px solid rgba(0,200,140,0.4);
+            color: #aef9e4;
+        }
 
-      .category-item.active {
-          background: linear-gradient(135deg, rgba(106, 130, 251, 0.2), rgba(252, 92, 125, 0.2));
-          border-color: rgba(106, 130, 251, 0.4);
-          box-shadow: 0 4px 12px rgba(106, 130, 251, 0.2);
-          transform: translateX(4px);
-      }
+        .status-free {
+            background: rgba(255,215,0,0.2);
+            border: 1px solid rgba(255,215,0,0.4);
+            color: #ffd700;
+        }
 
-      .category-item.active::after {
-          content: '✓';
-          position: absolute;
-          right: 1rem;
-          color: #aef9e4;
-          font-weight: bold;
-          font-size: 1.1rem;
-      }
+        .forum-main {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            z-index: 15;
+        }
 
-      .category-item-content {
-          flex: 1;
-      }
+        .messages-area {
+            background: rgba(5, 6, 10, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 24px;
+            padding: 2rem;
+            min-height: 60vh;
+            max-height: 75vh;
+            overflow-y: auto;
+            backdrop-filter: blur(18px) saturate(110%);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
 
-      .category-name {
-          font-weight: 600;
-          margin-bottom: 0.25rem;
-      }
+        .messages-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #6a82fb, #fc5c7d, #ff6b35, #6a82fb);
+            background-size: 300% 100%;
+            animation: shimmer 3s ease infinite;
+            border-radius: 24px 24px 0 0;
+        }
 
-      .category-badge {
-          font-size: 0.75rem;
-          padding: 0.2rem 0.5rem;
-          border-radius: 6px;
-          font-weight: 500;
-          margin-left: 0.5rem;
-      }
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
 
-      .category-badge.paid {
-          background: rgba(0, 200, 140, 0.2);
-          color: #aef9e4;
-          border: 1px solid rgba(0, 200, 140, 0.3);
-      }
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            animation: bounce 2s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+        }
 
-      .category-badge.unpaid {
-          background: rgba(255, 255, 255, 0.15);
-          color: #ffd2d2;
-          border: 1px solid rgba(255, 255, 255, 0.25);
-      }
+        .empty-state h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-      .category-toggle {
-          position: fixed;
-          top: 2rem;
-          left: 2rem;
-          z-index: 1001;
-          background: rgba(10, 12, 20, 0.9);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          border-radius: 12px;
-          padding: 0.75rem 1rem;
-          cursor: pointer;
-          color: #fff;
-          font-weight: 500;
-          backdrop-filter: blur(10px);
-          -webkit-backdrop-filter: blur(10px);
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-      }
+        .empty-state p {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            max-width: 500px;
+        }
 
-      .category-toggle:hover {
-          background: rgba(255, 255, 255, 0.1);
-          transform: translateY(-1px);
-          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-      }
+        .input-area {
+            background: rgba(5, 6, 10, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            backdrop-filter: blur(18px) saturate(110%);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+            position: relative;
+        }
 
-      .category-toggle.open {
-          left: 340px;
-          background: rgba(106, 130, 251, 0.2);
-          border-color: rgba(106, 130, 251, 0.4);
-      }
+        .input-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #6a82fb, #fc5c7d);
+            border-radius: 20px 20px 0 0;
+        }
 
-      .category-toggle::before {
-          content: "📋";
-          font-size: 1.1rem;
-      }
+        .input-container {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+        }
 
-      .category-toggle.open::before {
-          content: "✕";
-          font-size: 1.2rem;
-      }
+        .input-field {
+            flex: 1;
+        }
 
-      .overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          background: rgba(0, 0, 0, 0.5);
-          z-index: 999;
-          opacity: 0;
-          visibility: hidden;
-          transition: all 0.3s ease;
-      }
+        .input-field label {
+            display: block;
+            color: rgba(255,255,255,0.9);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
 
-      .overlay.open {
-          opacity: 1;
-          visibility: visible;
-      }
+        .input-field textarea {
+            width: 100%;
+            min-height: 60px;
+            max-height: 120px;
+            padding: 1rem;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 1rem;
+            line-height: 1.5;
+            resize: vertical;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
 
-      @media (max-width: 768px) {
-          .category-popup {
-              width: 100vw;
-          }
-          .forum-shell.popup-open {
-              margin-left: 0;
-          }
-          .category-toggle.open {
-              left: auto;
-              right: 2rem;
-          }
-      }
+        .input-field textarea:focus {
+            outline: none;
+            border-color: #6a82fb;
+            box-shadow: 0 0 0 3px rgba(106,130,251,0.2);
+            background: rgba(255,255,255,0.12);
+        }
+
+        .input-field textarea::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .input-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .action-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .action-btn-glass {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+        }
+
+        .action-btn-glass:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+
+        .action-btn-primary {
+            background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(106,130,251,0.3);
+        }
+
+        .action-btn-primary:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(106,130,251,0.4);
+        }
+
+        .topics-toggle {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 1001;
+            background: rgba(5, 6, 10, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 1rem 1.5rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .topics-toggle:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @media (max-width: 768px) {
+            .forum-hero {
+                padding: 6rem 0 3rem 0;
+            }
+            
+            .forum-logo {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+            
+            .user-info-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .input-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .input-actions {
+                flex-direction: row;
+                justify-content: center;
+            }
+            
+            .topics-toggle {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .messages-area {
+                min-height: 50vh;
+                max-height: 60vh;
+            }
+        }
     </style>
-  </head>
-  <body data-user-role="{{ role|default('') }}">
-    <!-- Category Popup -->
-    <div class="category-popup" id="categoryPopup">
-      <div class="category-popup-header">
-        <h2>Forum Topics</h2>
-        <p>Select a topic to start chatting</p>
-        <div class="user-info-section" style="margin-top: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-          <div style="margin-bottom: 1rem;">
-            <strong style="color: #8fa3ff; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">User Info</strong>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Username:</span>
-              <span style="color: #fff; font-weight: 600;">{{ username }}</span>
+</head>
+<body class="forum-page" data-user-role="{{ role|default('') }}">
+    
+    <!-- Enhanced Floating Particles Background -->
+    <div class="floating-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Topics Toggle Button -->
+    <button class="topics-toggle" id="categoryToggle">
+        <span>💬</span>
+        <span>Browse Topics</span>
+    </button>
+
+    <!-- Enhanced Category Popup -->
+    <div class="category-popup glass-card" id="categoryPopup">
+        <div class="category-popup-header glass-card" style="margin: 0; border-radius: 20px 20px 0 0;">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <h2 style="background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-size: 1.5rem; margin-bottom: 0.5rem;">💬 Forum Topics</h2>
+                <p style="color: rgba(255,255,255,0.8); font-size: 1rem;">Select a topic to start chatting</p>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Role:</span>
-              <span class="class-chip" style="margin: 0;">{{ role }}</span>
+            
+            <div class="user-info-section glass-card" style="margin-top: 1.5rem; padding: 1.5rem; background: rgba(255,255,255,0.08); border-radius: 16px; border: 1px solid rgba(255,255,255,0.15); position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--primary-gradient);"></div>
+                <div style="margin-bottom: 1.2rem; text-align: center;">
+                    <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--primary-gradient); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.5rem; font-weight: 700; color: white;">{{ username[0]|upper if username else 'U' }}</div>
+                    <strong style="color: #fff; font-size: 1rem; text-transform: uppercase; letter-spacing: 0.05em;">{{ username }}</strong>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 12px;">
+                        <div style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin-bottom: 0.5rem;">Role</div>
+                        <span class="class-chip" style="margin: 0; padding: 0.5rem 1rem; background: rgba(106,130,251,0.2); border: 1px solid rgba(106,130,251,0.4);">{{ role }}</span>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 12px;">
+                        <div style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin-bottom: 0.5rem;">Status</div>
+                        <span class="status-chip {{ 'unpaid' if (user_paid_status != 'paid') else '' }}" style="margin: 0; padding: 0.5rem 1rem;">{{ user_paid_status or 'unpaid' }}</span>
+                    </div>
+                </div>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Status:</span>
-              <span class="status-chip {{ 'unpaid' if (user_paid_status != 'paid') else '' }}" style="margin: 0;">{{ user_paid_status or 'unpaid' }}</span>
-            </div>
-          </div>
         </div>
-      </div>
-      <div class="category-list" id="categoryList">
-        {% if paid_topics and paid_topics|length > 0 %}
-          {% for t in paid_topics %}
-            <div class="category-item" data-topic="{{ t[0] }}" data-topic-name="{{ t[1] }}">
-              <div class="category-item-content">
-                <div class="category-name">{{ t[1] }}</div>
-              </div>
-              <span class="category-badge paid">PAID</span>
-            </div>
-          {% endfor %}
-        {% endif %}
-        {% if unpaid_topics and unpaid_topics|length > 0 %}
-          {% for t in unpaid_topics %}
-            <div class="category-item" data-topic="{{ t[0] }}" data-topic-name="{{ t[1] }}">
-              <div class="category-item-content">
-                <div class="category-name">{{ t[1] }}</div>
-              </div>
-              <span class="category-badge unpaid">FREE</span>
-            </div>
-          {% endfor %}
-        {% endif %}
-        {% if (not paid_topics or paid_topics|length == 0) and (not unpaid_topics or unpaid_topics|length == 0) %}
-          <div style="color:#e2e8f0; text-align:center; padding:2rem;">No topics available.</div>
-        {% endif %}
-      </div>
+        
+        <div class="category-list" id="categoryList">
+            {% if paid_topics and paid_topics|length > 0 %}
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: #aef9e4; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>💎</span> Premium Topics
+                    </h4>
+                    {% for t in paid_topics %}
+                        <div class="category-item glass-card" data-topic="{{ t[0] }}" data-topic-name="{{ t[1] }}" style="margin-bottom: 0.75rem; background: rgba(0, 200, 140, 0.1); border: 1px solid rgba(0, 200, 140, 0.3);">
+                            <div class="category-item-content">
+                                <div class="category-name" style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <span style="font-size: 1.2rem;">💬</span>
+                                    <span>{{ t[1] }}</span>
+                                </div>
+                            </div>
+                            <span class="category-badge paid" style="background: rgba(0, 200, 140, 0.3); color: #aef9e4; border: 1px solid rgba(0, 200, 140, 0.5); padding: 0.25rem 0.75rem; border-radius: 12px;">PREMIUM</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            {% if unpaid_topics and unpaid_topics|length > 0 %}
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="color: rgba(255,255,255,0.8); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>🆓</span> Free Topics
+                    </h4>
+                    {% for t in unpaid_topics %}
+                        <div class="category-item glass-card" data-topic="{{ t[0] }}" data-topic-name="{{ t[1] }}" style="margin-bottom: 0.75rem;">
+                            <div class="category-item-content">
+                                <div class="category-name" style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <span style="font-size: 1.2rem;">💭</span>
+                                    <span>{{ t[1] }}</span>
+                                </div>
+                            </div>
+                            <span class="category-badge unpaid" style="background: rgba(255, 255, 255, 0.15); color: #ffd2d2; border: 1px solid rgba(255, 255, 255, 0.25); padding: 0.25rem 0.75rem; border-radius: 12px;">FREE</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            {% if (not paid_topics or paid_topics|length == 0) and (not unpaid_topics or unpaid_topics|length == 0) %}
+                <div class="glass-card" style="color: rgba(255,255,255,0.8); text-align: center; padding: 2rem; background: rgba(255,255,255,0.05);">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">💬</div>
+                    <div style="font-size: 1.1rem; margin-bottom: 0.5rem;">No topics available</div>
+                    <div style="font-size: 0.9rem; opacity: 0.7;">Check back later for new discussion topics</div>
+                </div>
+            {% endif %}
+        </div>
     </div>
 
     <!-- Overlay -->
     <div class="overlay" id="overlay"></div>
 
-    <!-- Category Toggle Button -->
-    <button class="category-toggle" id="categoryToggle">
-      Topics
-    </button>
+    <!-- Main Forum Container -->
+    <div class="forum-container">
+        
+        <!-- Hero Section -->
+        <section class="forum-hero">
+            <div class="forum-hero-content">
+                <div class="forum-logo">💬</div>
+                <h1 class="forum-title">Community Forum</h1>
+                <p class="forum-subtitle">Connect, discuss, and learn together in our vibrant educational community</p>
+                
+                <!-- User Info Card -->
+                <div class="user-info-card">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div class="user-avatar">{{ username[0]|upper if username else 'U' }}</div>
+                        <div class="user-details">
+                            <h3>{{ username }}</h3>
+                            <p>{{ role|title }}</p>
+                        </div>
+                    </div>
+                    <div class="user-status {{ 'status-paid' if user_paid_status == 'paid' else 'status-free' }}">
+                        {{ '💎 Premium' if user_paid_status == 'paid' else '🆓 Free' }}
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <div class="forum-shell" id="forumShell">
-      <header class="forum-header black-glass" style="margin-top: 5rem; padding:1.2rem 1.2rem 0.8rem 1.2rem;">
-        <h1 style="margin:0;">Forum</h1>
-        <p style="margin:0.4rem 0 0 0;">Logged in as <strong>{{ username }}</strong></p>
-      </header>
+        <!-- Main Forum Content -->
+        <main class="forum-main">
+            
+            <!-- Messages Display Area -->
+            <section class="messages-area" id="forumMessages">
+                <div id="emptyForumMsg" class="empty-state">
+                    <div class="empty-state-icon">💭</div>
+                    <h3>Ready to Start Chatting?</h3>
+                    <p>Select a topic from the sidebar to join conversations, share knowledge, and connect with your classmates and teachers in real-time discussions.</p>
+                    <button onclick="document.getElementById('categoryToggle').click()" class="action-btn action-btn-primary" style="width: auto; height: auto; padding: 1rem 2rem; border-radius: 50px; font-size: 1.1rem;">
+                        <span style="margin-right: 0.5rem;">💬</span>
+                        Browse Topics
+                    </button>
+                </div>
+            </section>
 
-      <section class="messages-container black-glass" id="forumMessages">
-        <div id="emptyForumMsg" style="color:#888; text-align:center; padding:2rem;">
-          Select a topic to view messages
-        </div>
-      </section>
+            <!-- Input Area -->
+            <section class="input-area">
+                <div class="input-container">
+                    <div class="input-field">
+                        <label for="forumInput">💬 Share your thoughts</label>
+                        <textarea id="forumInput" placeholder="Type your message here... Share ideas, ask questions, or join the discussion!" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="input-actions">
+                        <input type="file" id="forumMediaInput" accept="image/*,video/*" style="display:none;" />
+                        <button id="forumUploadBtn" class="action-btn action-btn-glass" title="Upload media">📎</button>
+                        <button id="forumEmojiBtn" class="action-btn action-btn-glass" title="Add emoji">😊</button>
+                        <button id="forumSendBtn" class="action-btn action-btn-primary" title="Send message">➤</button>
+                    </div>
+                </div>
+            </section>
 
-      <section class="chat-input-bar black-glass" style="margin:1rem 0; display:flex; gap:.6rem; align-items:flex-end;">
-        <textarea id="forumInput" placeholder="Type your message..." rows="1" style="flex:1; resize:none; border-radius:8px; padding:.6rem 0.8rem;"></textarea>
-        <input type="file" id="forumMediaInput" accept="image/*,video/*" style="display:none;" />
-        <button id="forumUploadBtn" class="btn" title="Upload media">📎</button>
-        <button id="forumEmojiBtn" class="btn" title="Add emoji">😊</button>
-        <button id="forumSendBtn" class="btn btn-primary" title="Send">➤</button>
-      </section>
-
-      <div id="forumMediaPreview" style="margin:0 0 1rem 0;"></div>
-
-      <div id="mentionIndicator" style="display:none; color:#e2e8f0; font-size:0.9rem;">Type @ to mention someone</div>
-      <div id="mentionHelp" style="display:none; color:#a0aec0; font-size:0.85rem; margin-top:0.25rem;">Use Arrow keys and Enter/Tab to select</div>
-      <div id="mentionSuggestions" style="display:none; position:fixed; z-index:1000; border-radius:8px; overflow:hidden;">
-        <div id="mentionSuggestionsList"></div>
-      </div>
+        </main>
     </div>
 
-    <!-- Poll Builder Modal -->
-    <div id="pollModal" style="display:none; position:fixed; inset:0; z-index:1100;">
-      <div id="pollModalBackdrop" style="position:absolute; inset:0; background: rgba(0,0,0,0.6);"></div>
-      <div style="position:relative; max-width:560px; margin:10vh auto; background: rgba(15,18,28,0.9); color:#fff; border:1px solid rgba(255,255,255,0.15); border-radius:16px; box-shadow: 0 20px 60px rgba(0,0,0,0.6);">
-        <div style="display:flex; justify-content:space-between; align-items:center; padding:1rem 1.25rem; border-bottom:1px solid rgba(255,255,255,0.12);">
-          <h3 style="margin:0; font-size:1.1rem;">Create Poll</h3>
-          <button id="pollCloseBtn" style="background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer;">×</button>
-        </div>
-        <div style="padding:1rem 1.25rem; display:flex; flex-direction:column; gap:0.75rem;">
-          <label style="font-size:0.9rem; opacity:0.9;">Question</label>
-          <input id="pollQuestion" type="text" placeholder="Type your poll question" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:10px; padding:0.7rem;">
-          <div id="pollOptionsContainer" style="display:flex; flex-direction:column; gap:0.5rem; margin-top:0.5rem;">
-            <div class="poll-option-row" style="display:flex; gap:0.5rem;">
-              <input type="text" class="poll-option" placeholder="Option 1" style="flex:1; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:10px; padding:0.6rem;">
-              <button class="poll-remove" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:10px; padding:0.4rem 0.6rem; cursor:pointer;">🗑️</button>
+    <!-- Enhanced Footer -->
+    <footer class="footer-modern">
+        <div class="container">
+            <div class="footer-content-modern">
+                <div class="footer-section">
+                    <h3>Community Forum</h3>
+                    <p>Connect, learn, and grow together in our educational community.</p>
+                    <div class="footer-social-modern">
+                        <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank" class="social-link-modern">📸</a>
+                        <a href="https://www.youtube.com/@MohitNariyani" target="_blank" class="social-link-modern">🎥</a>
+                        <a href="/" class="social-link-modern">🏠</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <a href="/">Home</a>
+                        <a href="/study-resources">Study Resources</a>
+                        <a href="/online-class">Live Classes</a>
+                        <a href="/admission">Admission</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Forum Guidelines</h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <span>💬 Be respectful</span>
+                        <span>📚 Stay on topic</span>
+                        <span>🤝 Help others</span>
+                        <span>🚫 No spam</span>
+                    </div>
+                </div>
             </div>
-            <div class="poll-option-row" style="display:flex; gap:0.5rem;">
-              <input type="text" class="poll-option" placeholder="Option 2" style="flex:1; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:10px; padding:0.6rem;">
-              <button class="poll-remove" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:10px; padding:0.4rem 0.6rem; cursor:pointer;">🗑️</button>
+            
+            <div class="footer-bottom">
+                <div>&copy; 2024 Sunrise Educational Centre. All rights reserved.</div>
             </div>
-          </div>
-          <div style="display:flex; gap:0.5rem;">
-            <button id="pollAddOptionBtn" style="background:rgba(106,130,251,0.2); border:1px solid rgba(106,130,251,0.5); color:#aef; border-radius:10px; padding:0.5rem 0.8rem; cursor:pointer;">+ Add option</button>
-          </div>
-          <div style="display:flex; justify-content:flex-end; gap:0.6rem; margin-top:0.5rem;">
-            <button id="pollCancelBtn" style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:10px; padding:0.6rem 0.9rem; cursor:pointer;">Cancel</button>
-            <button id="pollCreateBtn" style="background:linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%); border:none; color:#fff; border-radius:10px; padding:0.6rem 0.95rem; cursor:pointer; font-weight:600;">Insert poll</button>
-          </div>
         </div>
-      </div>
-    </div>
+    </footer>
 
+    <!-- Scripts -->
     <script>
-      window.currentUsername = {{ username|tojson }};
+        window.currentUsername = {{ username|tojson }};
+        
+        // Forum page debugging and fallback
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Forum page loaded');
+            
+            // Test if all elements are present
+            const requiredElements = {
+                categoryToggle: document.getElementById('categoryToggle'),
+                categoryPopup: document.getElementById('categoryPopup'),
+                overlay: document.getElementById('overlay'),
+                forumMessages: document.getElementById('forumMessages')
+            };
+            
+            console.log('Required elements check:', requiredElements);
+            
+            // Fallback event listener if forum.js fails
+            setTimeout(() => {
+                const toggle = document.getElementById('categoryToggle');
+                const popup = document.getElementById('categoryPopup');
+                const overlay = document.getElementById('overlay');
+                
+                if (toggle && popup && overlay && !toggle.hasAttribute('data-listener-added')) {
+                    console.log('Adding fallback event listeners');
+                    
+                    toggle.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        console.log('Fallback: Toggle clicked');
+                        
+                        const isOpen = popup.classList.contains('open');
+                        if (isOpen) {
+                            popup.classList.remove('open');
+                            overlay.classList.remove('open');
+                            document.body.classList.remove('popup-open');
+                        } else {
+                            popup.classList.add('open');
+                            overlay.classList.add('open');
+                            document.body.classList.add('popup-open');
+                        }
+                    });
+                    
+                    overlay.addEventListener('click', function() {
+                        console.log('Fallback: Overlay clicked');
+                        popup.classList.remove('open');
+                        overlay.classList.remove('open');
+                        document.body.classList.remove('popup-open');
+                    });
+                    
+                    toggle.setAttribute('data-listener-added', 'true');
+                    console.log('Fallback event listeners added successfully');
+                }
+            }, 1000);
+        });
     </script>
     <script src="attached_assets/theme.js"></script>
+    <script src="modern-interactions.js"></script>
+    <script src="modern-navbar.js"></script>
     <script src="forum.js"></script>
-    
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="container footer-content">
-        <div class="footer-social">
-          <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">Instagram</a>
-          <a href="https://www.youtube.com/@MohitNariyani" target="_blank">YouTube</a>
+
+    <!-- Modern Button Navbar (User Pages Only) -->
+    {% if username and role not in ['admin', 'teacher'] %}
+    <nav class="modern-navbar">
+        <div class="button-container">
+            <!-- Home Button -->
+            <button class="button" data-tooltip="Home" onclick="navigateTo('/')">
+                <svg class="icon" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M946.5 505L560.1 118.8l-25.9-25.9a31.5 31.5 0 0 0-44.4 0L77.5 505a63.9 63.9 0 0 0-18.8 46c.4 35.2 29.7 63.3 64.9 63.3h42.5V940h691.8V614.3h43.4c17.1 0 33.2-6.7 45.3-18.8a63.6 63.6 0 0 0 18.7-45.3c0-17-6.7-33.1-18.8-45.2zM568 868H456V664h112v204zm217.9-325.7V868H632V640c0-22.1-17.9-40-40-40H432c-22.1 0-40 17.9-40 40v228H238.1V542.3h-96l370-369.7 23.1 23.1L882 542.3h-96.1z"></path>
+                </svg>
+            </button>
+            
+            <!-- Search Button -->
+            <button class="button" data-tooltip="Search" onclick="openSearch()">
+                <svg class="icon" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
+            
+            <!-- Profile Button -->
+            <button class="button" data-tooltip="Profile" onclick="navigateTo('/profile')">
+                <svg class="icon" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.9 8.181.75.75 0 1 1-1.499.044 7.5 7.5 0 0 0-14.993 0 .75.75 0 0 1-1.5-.045 9.005 9.005 0 0 1 5.9-8.18A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"></path>
+                </svg>
+            </button>
+            
+            <!-- Resources Button -->
+            <button class="button" data-tooltip="Resources" onclick="navigateTo('/study-resources')">
+                <svg class="icon" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+            </button>
+            
+            <!-- Forum Button -->
+            <button class="button active" data-tooltip="Forum" onclick="navigateTo('/forum')">
+                <svg class="icon" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"></path>
+                </svg>
+            </button>
         </div>
-        <div class="footer-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Contact Us</a>
+    </nav>
+    {% endif %}
+
+
+    <!-- Search Modal -->
+    <div id="searchModal" class="modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+        <div class="modal-content black-glass" style="margin: 10% auto; padding: 2rem; border-radius: 20px; width: 90%; max-width: 600px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="color: white; margin: 0;">🔍 Search</h2>
+                <button onclick="closeSearch()" style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">✕</button>
+            </div>
+            <input type="text" id="searchInput" placeholder="Search courses, resources, or topics..." style="width: 100%; padding: 15px; border: none; border-radius: 10px; background: rgba(255,255,255,0.1); color: white; font-size: 1rem; margin-bottom: 1rem;">
+            <div id="searchResults" style="max-height: 300px; overflow-y: auto;"></div>
         </div>
-        <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
-      </div>
-    </footer>
-  </body>
+    </div>
+
+    <!-- Notification Panel -->
+    <div id="notification-panel" class="notification-panel black-glass" style="display: none; position: fixed; top: 100px; right: 20px; width: 350px; max-height: 500px; overflow-y: auto; z-index: 999; border-radius: 16px; padding: 1rem; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.2);">
+            <h3 style="margin: 0; font-size: 1.2rem; color: white;">🔔 Notifications</h3>
+            <button onclick="toggleNotifications()" style="background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; padding: 0.2rem;">✕</button>
+        </div>
+        <div class="notification-list">
+            <div class="notification-item" style="padding: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 0.5rem;">
+                <div style="font-weight: 600; margin-bottom: 0.3rem; color: white;">📚 Latest Updates</div>
+                <div style="font-size: 0.9rem; opacity: 0.8; color: rgba(255,255,255,0.8);">Check out new features and content</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="navbar-functions.js"></script>
+</body>
 </html>

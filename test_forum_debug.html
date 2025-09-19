@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum Debug Test</title>
+    <link rel="stylesheet" href="enhanced-aesthetic.css">
+    <link rel="stylesheet" href="modern-components.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            margin: 0;
+            padding: 2rem;
+        }
+        
+        .debug-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .debug-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: white;
+        }
+        
+        .debug-section {
+            background: rgba(5, 6, 10, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(18px) saturate(110%);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(106,130,251,0.4);
+        }
+        
+        .status {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1 class="debug-title">🔧 Forum Debug Test</h1>
+        
+        <div class="debug-section">
+            <h3>Test Forum Components</h3>
+            <button class="test-button" onclick="testCategoryToggle()">Test Category Toggle</button>
+            <button class="test-button" onclick="testForumJS()">Test Forum JS</button>
+            <button class="test-button" onclick="testAPIEndpoints()">Test API Endpoints</button>
+            <div id="testStatus" class="status">Ready to test...</div>
+        </div>
+        
+        <!-- Test Category Toggle -->
+        <button class="topics-toggle" id="categoryToggle" style="position: fixed; top: 2rem; left: 2rem; z-index: 1001; background: rgba(5, 6, 10, 0.9); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50px; padding: 1rem 1.5rem; color: white; font-weight: 600; cursor: pointer;">
+            <span>💬</span>
+            <span>Browse Topics</span>
+        </button>
+
+        <!-- Test Category Popup -->
+        <div class="category-popup glass-card" id="categoryPopup" style="position: fixed; top: 0; left: -400px; width: 380px; height: 100vh; background: rgba(5, 6, 10, 0.95); border-right: 1px solid rgba(255, 255, 255, 0.22); backdrop-filter: blur(20px); z-index: 1000; transition: all 0.4s ease; overflow-y: auto;">
+            <div style="padding: 2rem;">
+                <h3 style="color: white; margin-bottom: 1rem;">Test Topics</h3>
+                <div class="category-item" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.25rem; margin-bottom: 1rem; cursor: pointer; color: white;">
+                    <div>📚 Mathematics</div>
+                </div>
+                <div class="category-item" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 16px; padding: 1.25rem; margin-bottom: 1rem; cursor: pointer; color: white;">
+                    <div>🔬 Physics</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Overlay -->
+        <div class="overlay" id="overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 999; opacity: 0; visibility: hidden; transition: all 0.3s ease;"></div>
+    </div>
+
+    <script>
+        function testCategoryToggle() {
+            const status = document.getElementById('testStatus');
+            status.innerHTML = '🔧 Testing category toggle...';
+            
+            const toggle = document.getElementById('categoryToggle');
+            const popup = document.getElementById('categoryPopup');
+            const overlay = document.getElementById('overlay');
+            
+            let results = [];
+            
+            // Test element existence
+            if (toggle) results.push('✅ Toggle button found');
+            else results.push('❌ Toggle button missing');
+            
+            if (popup) results.push('✅ Popup found');
+            else results.push('❌ Popup missing');
+            
+            if (overlay) results.push('✅ Overlay found');
+            else results.push('❌ Overlay missing');
+            
+            // Test click functionality
+            if (toggle && popup && overlay) {
+                toggle.addEventListener('click', function() {
+                    const isOpen = popup.style.left === '0px';
+                    if (isOpen) {
+                        popup.style.left = '-400px';
+                        overlay.style.opacity = '0';
+                        overlay.style.visibility = 'hidden';
+                        results.push('✅ Popup closed');
+                    } else {
+                        popup.style.left = '0px';
+                        overlay.style.opacity = '1';
+                        overlay.style.visibility = 'visible';
+                        results.push('✅ Popup opened');
+                    }
+                    status.innerHTML = results.map(r => `<div>${r}</div>`).join('');
+                });
+                
+                results.push('✅ Click handler attached');
+                results.push('🎯 Click the toggle button to test!');
+            }
+            
+            status.innerHTML = results.map(r => `<div style="margin: 0.5rem 0;">${r}</div>`).join('');
+        }
+        
+        function testForumJS() {
+            const status = document.getElementById('testStatus');
+            status.innerHTML = '🔧 Testing Forum JavaScript...';
+            
+            let results = [];
+            
+            // Test if forum.js functions exist
+            if (typeof setupEventListeners === 'function') {
+                results.push('✅ setupEventListeners function exists');
+            } else {
+                results.push('❌ setupEventListeners function missing');
+            }
+            
+            if (typeof openCategoryPopup === 'function') {
+                results.push('✅ openCategoryPopup function exists');
+            } else {
+                results.push('❌ openCategoryPopup function missing');
+            }
+            
+            if (typeof closeCategoryPopup === 'function') {
+                results.push('✅ closeCategoryPopup function exists');
+            } else {
+                results.push('❌ closeCategoryPopup function missing');
+            }
+            
+            // Test console for errors
+            results.push('📝 Check browser console for JavaScript errors');
+            
+            status.innerHTML = results.map(r => `<div style="margin: 0.5rem 0;">${r}</div>`).join('');
+        }
+        
+        async function testAPIEndpoints() {
+            const status = document.getElementById('testStatus');
+            status.innerHTML = '🔧 Testing API endpoints...';
+            
+            let results = [];
+            
+            try {
+                // Test forum messages API
+                const response = await fetch('/api/forum/messages');
+                if (response.ok) {
+                    results.push('✅ Forum messages API working');
+                    const data = await response.json();
+                    results.push(`📊 Received ${data.length || 0} messages`);
+                } else if (response.status === 401) {
+                    results.push('⚠️ Forum messages API requires login');
+                } else {
+                    results.push(`❌ Forum messages API error: ${response.status}`);
+                }
+            } catch (error) {
+                results.push(`❌ Forum messages API error: ${error.message}`);
+            }
+            
+            status.innerHTML = results.map(r => `<div style="margin: 0.5rem 0;">${r}</div>`).join('');
+        }
+        
+        // Auto-run basic tests
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Forum debug page loaded');
+            setTimeout(() => {
+                testCategoryToggle();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

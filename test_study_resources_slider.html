@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Resources Slider Test</title>
+    <link rel="stylesheet" href="enhanced-aesthetic.css">
+    <link rel="stylesheet" href="modern-components.css">
+    <link rel="stylesheet" href="study-resources.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            margin: 0;
+            padding: 2rem;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .test-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: white;
+        }
+        
+        .test-section {
+            background: rgba(5, 6, 10, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            backdrop-filter: blur(18px) saturate(110%);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(106,130,251,0.4);
+        }
+        
+        .status {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="test-title">🔧 Study Resources Slider Test</h1>
+        
+        <div class="test-section">
+            <h3>Test Slider Components</h3>
+            <button class="test-button" onclick="testSliderElements()">Test Elements</button>
+            <button class="test-button" onclick="testSliderToggle()">Test Toggle</button>
+            <button class="test-button" onclick="testSliderCSS()">Test CSS</button>
+            <div id="testStatus" class="status">Ready to test...</div>
+        </div>
+    </div>
+
+    <!-- Test Vertical Slider -->
+    <div class="vertical-slider" id="verticalSlider">
+        <div class="slider-header">
+            <h3>📚 Study Resources</h3>
+            <p>Filter and browse your materials</p>
+            <button class="slider-toggle" id="sliderToggle">◀</button>
+        </div>
+        <div class="slider-content">
+            <div class="user-info-section">
+                <div class="info-item">
+                    <span class="info-label">Class:</span>
+                    <span class="class-chip">Test Class</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Status:</span>
+                    <span class="status-chip">Premium Access</span>
+                </div>
+            </div>
+            <div class="category-filters">
+                <h4>Categories</h4>
+                <div class="filter-options">
+                    <label class="filter-option">
+                        <input type="checkbox" checked> Notes
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" checked> Sample Papers
+                    </label>
+                    <label class="filter-option">
+                        <input type="checkbox" checked> Worksheets
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Main Content -->
+    <main class="study-resources-shell" style="padding: 2rem; margin-top: 2rem;">
+        <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 12px;">
+            <h3>Main Content Area</h3>
+            <p>This content should shift when the slider opens.</p>
+        </div>
+    </main>
+
+    <!-- Test Overlay -->
+    <div id="sliderOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; opacity: 0; visibility: hidden; transition: all 0.3s ease; pointer-events: none;"></div>
+
+    <script>
+        function testSliderElements() {
+            const status = document.getElementById('testStatus');
+            status.innerHTML = '🔧 Testing slider elements...';
+            
+            const slider = document.getElementById('verticalSlider');
+            const toggle = document.getElementById('sliderToggle');
+            const overlay = document.getElementById('sliderOverlay');
+            const shell = document.querySelector('.study-resources-shell');
+            
+            let results = [];
+            
+            if (slider) results.push('✅ Vertical slider found');
+            else results.push('❌ Vertical slider missing');
+            
+            if (toggle) results.push('✅ Slider toggle found');
+            else results.push('❌ Slider toggle missing');
+            
+            if (overlay) results.push('✅ Overlay found');
+            else results.push('❌ Overlay missing');
+            
+            if (shell) results.push('✅ Shell container found');
+            else results.push('❌ Shell container missing');
+            
+            status.innerHTML = results.map(r => `<div style="margin: 0.5rem 0;">${r}</div>`).join('');
+        }
+        
+        function testSliderToggle() {
+            const status = document.getElementById('testStatus');
+            const slider = document.getElementById('verticalSlider');
+            const toggle = document.getElementById('sliderToggle');
+            
+            if (!slider || !toggle) {
+                status.innerHTML = '❌ Required elements missing for toggle test';
+                return;
+            }
+            
+            status.innerHTML = '🔧 Testing slider toggle...';
+            
+            // Simulate toggle click
+            toggle.click();
+            
+            setTimeout(() => {
+                const isOpen = slider.classList.contains('open');
+                status.innerHTML = `
+                    <div>Toggle test completed:</div>
+                    <div style="margin: 0.5rem 0;">Slider is ${isOpen ? 'OPEN' : 'CLOSED'}</div>
+                    <div style="margin: 0.5rem 0;">Classes: ${slider.className}</div>
+                    <div style="margin: 0.5rem 0;">🎯 Click the arrow button to test manually!</div>
+                `;
+            }, 500);
+        }
+        
+        function testSliderCSS() {
+            const status = document.getElementById('testStatus');
+            const slider = document.getElementById('verticalSlider');
+            
+            if (!slider) {
+                status.innerHTML = '❌ Slider element missing for CSS test';
+                return;
+            }
+            
+            status.innerHTML = '🔧 Testing slider CSS...';
+            
+            const styles = window.getComputedStyle(slider);
+            const results = [];
+            
+            if (styles.position === 'fixed') results.push('✅ Position: fixed');
+            else results.push(`❌ Position: ${styles.position} (should be fixed)`);
+            
+            if (styles.zIndex >= '1000') results.push('✅ Z-index: high');
+            else results.push(`❌ Z-index: ${styles.zIndex} (should be >= 1000)`);
+            
+            const transform = styles.transform;
+            if (transform.includes('translateX')) results.push('✅ Transform: translateX found');
+            else results.push('❌ Transform: translateX missing');
+            
+            status.innerHTML = results.map(r => `<div style="margin: 0.5rem 0;">${r}</div>`).join('');
+        }
+        
+        // Initialize slider functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Test page loaded');
+            
+            const slider = document.getElementById('verticalSlider');
+            const toggle = document.getElementById('sliderToggle');
+            const overlay = document.getElementById('sliderOverlay');
+            const shell = document.querySelector('.study-resources-shell');
+            
+            if (toggle && slider) {
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Test toggle clicked');
+                    
+                    slider.classList.toggle('open');
+                    document.body.classList.toggle('slider-open');
+                    
+                    if (shell) {
+                        shell.classList.toggle('slider-open');
+                    }
+                    
+                    if (overlay) {
+                        if (slider.classList.contains('open')) {
+                            overlay.style.opacity = '1';
+                            overlay.style.visibility = 'visible';
+                            overlay.style.pointerEvents = 'auto';
+                        } else {
+                            overlay.style.opacity = '0';
+                            overlay.style.visibility = 'hidden';
+                            overlay.style.pointerEvents = 'none';
+                        }
+                    }
+                    
+                    toggle.textContent = slider.classList.contains('open') ? '▶' : '◀';
+                });
+            }
+            
+            if (overlay) {
+                overlay.addEventListener('click', function() {
+                    console.log('Test overlay clicked');
+                    slider.classList.remove('open');
+                    document.body.classList.remove('slider-open');
+                    if (shell) shell.classList.remove('slider-open');
+                    overlay.style.opacity = '0';
+                    overlay.style.visibility = 'hidden';
+                    overlay.style.pointerEvents = 'none';
+                    if (toggle) toggle.textContent = '◀';
+                });
+            }
+            
+            // Auto-run element test
+            setTimeout(() => {
+                testSliderElements();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

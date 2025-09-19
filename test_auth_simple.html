@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Auth Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .success {
+            color: green;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>🔐 Simple Authentication Test</h2>
+    <p>This is a simplified version to test if authentication works without the modern styling.</p>
+    
+    <form id="testForm" method="POST" action="/auth">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" value="yash" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" value="yash" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="class_id">Class:</label>
+            <select id="class_id" name="class_id" required>
+                <option value="">Select Class</option>
+                <option value="1">Class 9</option>
+                <option value="2">Class 10</option>
+                <option value="4">Class 11 Applied</option>
+                <option value="5">Class 11 Core</option>
+                <option value="6">Class 12 Applied</option>
+                <option value="7">Class 12 Core</option>
+                <option value="8" selected>Admin</option>
+                <option value="9">Teacher</option>
+            </select>
+        </div>
+        
+        <div class="form-group" id="adminCodeGroup" style="display: block;">
+            <label for="admin_code">Admin Code:</label>
+            <input type="text" id="admin_code" name="admin_code" value="sec@011">
+        </div>
+        
+        <button type="submit">🚀 Test Login</button>
+    </form>
+    
+    <div id="result"></div>
+    
+    <script>
+        // Show/hide admin code based on selection
+        document.getElementById('class_id').addEventListener('change', function() {
+            const adminCodeGroup = document.getElementById('adminCodeGroup');
+            const adminCode = document.getElementById('admin_code');
+            
+            if (this.value === '8') { // Admin class
+                adminCodeGroup.style.display = 'block';
+                adminCode.required = true;
+            } else {
+                adminCodeGroup.style.display = 'none';
+                adminCode.required = false;
+            }
+        });
+        
+        // Form submission logging
+        document.getElementById('testForm').addEventListener('submit', function(e) {
+            console.log('Form submitted with:');
+            console.log('Username:', document.getElementById('username').value);
+            console.log('Password:', document.getElementById('password').value ? '***' : 'empty');
+            console.log('Class ID:', document.getElementById('class_id').value);
+            console.log('Admin Code:', document.getElementById('admin_code').value || 'not provided');
+            
+            document.getElementById('result').innerHTML = '<div class="success">Form submitted! Check server response...</div>';
+        });
+    </script>
+</body>
+</html>

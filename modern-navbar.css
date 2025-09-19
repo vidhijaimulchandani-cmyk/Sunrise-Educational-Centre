@@ -1,0 +1,172 @@
+/* Modern Button Navbar Styles */
+.modern-navbar {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    animation: slideUpFade 0.6s ease-out;
+}
+
+.button-container {
+    display: flex;
+    background-color: rgba(0, 0, 0, 0.9);
+    width: 250px;
+    height: 50px;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 25px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.button-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.button {
+    outline: 0 !important;
+    border: 0 !important;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: all ease-in-out 0.3s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s ease;
+}
+
+.button:hover::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.button:hover {
+    transform: translateY(-3px);
+    color: white;
+}
+
+.button.active::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.button.active {
+    color: white;
+}
+
+.icon {
+    font-size: 20px;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.button:hover .icon {
+    transform: scale(1.1);
+}
+
+/* Tooltip styles */
+.button[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.button[data-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+/* Animation for navbar appearance */
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .modern-navbar {
+        bottom: 1rem;
+    }
+    
+    .button-container {
+        width: 280px;
+        height: 55px;
+    }
+    
+    .button {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .icon {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+    .button-container {
+        width: 260px;
+        height: 50px;
+    }
+    
+    .button {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .icon {
+        font-size: 20px;
+    }
+}
+
+/* Hide on very small screens if needed */
+@media (max-width: 320px) {
+    .button-container {
+        width: 240px;
+    }
+}

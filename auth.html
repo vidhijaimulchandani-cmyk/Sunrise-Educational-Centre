@@ -3,211 +3,805 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Login - Sunrise Education Centre</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body class="login-bg">
-    <div class="login-container">
-      <div class="login-card">
-        <div class="login-logo">
-          <img src="attached_assets/image_1750584670920.png" alt="Logo">
-          <h2 id="formTitle">Login</h2>
-        </div>
-        <form id="loginForm" method="POST" action="/auth" class="login-form">
-          <div style="text-align: left; margin-bottom: 0.5rem;">
-            <label for="login-username" style="font-size: 0.9rem; color: #6b7280; font-weight: 500;">Login with:</label>
-          </div>
-          <input type="text" name="username" id="login-username" placeholder="Username, Email, or Phone Number" required autocomplete="username" />
-          <input type="password" name="password" placeholder="Password" required autocomplete="current-password" />
-          <select name="class_id" id="loginRole" required style="border-radius:20px; padding:0.7rem 1.1rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
-            {% for id, name in all_classes %}
-              <option value="{{ id }}" style="background: rgba(0, 0, 0, 0.8); color: #fff;">{{ name|title }}</option>
-            {% endfor %}
-          </select>
-          <input type="text" name="admin_code" id="loginAdminCodeInput" placeholder="Admin Code" style="display:none;" />
-          {% if request.args.get('next') %}
-          <input type="hidden" name="next" value="{{ request.args.get('next') }}" />
-          {% endif %}
-          <button type="submit" class="btn btn-primary">Login</button>
-          <div style="font-size: 0.85rem; color: #6b7280; margin-top: 0.5rem; text-align: center;">
-            💡 You can login using your email address or phone number instead of username
-          </div>
-          <div style="display:flex; align-items:center; gap:0.6rem; margin:0.8rem 0; color:#9ca3af;">
-            <span style="height:1px; background:#e5e7eb; flex:1;"></span>
-            <span>or</span>
-            <span style="height:1px; background:#e5e7eb; flex:1;"></span>
-          </div>
-          <div id="googleButtonLogin" style="margin-top:0.6rem;"></div>
-        </form>
-        <form id="signupForm" method="POST" action="/register" class="login-form" style="display:none;">
-          <div style="text-align: left; margin-bottom: 0.5rem;">
-            <label for="signup-username" style="font-size: 0.9rem; color: #6b7280; font-weight: 500;">Username:</label>
-          </div>
-          <input type="text" id="signup-username" name="username" placeholder="Choose a unique username" required autocomplete="username" />
-          <div style="text-align: left; margin-bottom: 0.5rem;">
-            <label for="signup-password" style="font-size: 0.9rem; color: #6b7280; font-weight: 500;">Password:</label>
-          </div>
-          <input type="password" id="signup-password" name="password" placeholder="Create a strong password" required autocomplete="new-password" />
-          <div style="text-align: left; margin-bottom: 0.5rem;">
-            <label for="signup-email" style="font-size: 0.9rem; color: #6b7280; font-weight: 500;">Email Address:</label>
-          </div>
-          <input type="email" id="signup-email" name="email" placeholder="Enter your email address" required autocomplete="email" />
-          <div style="text-align: left; margin-bottom: 0.5rem;">
-            <label for="signup-phone" style="font-size: 0.9rem; color: #6b7280; font-weight: 500;">Phone Number:</label>
-          </div>
-          <input type="tel" id="signup-phone" name="phone" placeholder="Enter your phone number" required autocomplete="tel" />
-          <select name="class_id" id="signupRole" required style="border-radius:20px; padding:0.7rem 1.1rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);">
-            {% for id, name in all_classes %}
-              <option value="{{ id }}" style="background: rgba(0, 0, 0, 0.8); color: #fff;">{{ name|title }}</option>
-            {% endfor %}
-          </select>
-          <input type="text" name="admin_code" id="signupAdminCodeInput" placeholder="Admin Code" style="display:none;" />
-          <button type="submit" class="btn btn-primary">Sign Up</button>
-              </form>
-        <div class="login-links">
-          <a href="/">&larr; Back to Home</a> |
-          <a href="#" id="toggleForm">Don't have an account? Sign Up</a>
-        </div>
-        {% if error %}
-        <div class="login-error">{{ error }}</div>
-        {% else %}
-        <div class="login-hint" style="margin-top:0.75rem; font-size:0.95rem; color:#6b7280;">
-          💡 <strong>Login Options:</strong> You can use your username, email address, or phone number to login.<br>
-          📧 <strong>Need help?</strong> Contact the institute if you face any login issues.
-        </div>
-        {% endif %}
-      </div>
-    </div>
-    <div style="text-align:center; margin: 1.5rem 0 2rem 0;">
-      <div style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem;">
-        ✨ Enhanced Login Experience with Glassmorphism Design
-      </div>
-    </div>
-  </body>
-  <script src="attached_assets/theme.js"></script>
-  <script src="script.js"></script>
-  <!-- Google Identity Services -->
-  <script>
-    // Safer, idempotent GIS initialization
-    window.__gis_btn_rendered = false;
-    function initGoogleSignIn() {
-      try {
-        const clientId = '{{ google_client_id }}';
-        if (!clientId || clientId === 'None') return;
-        if (!(window.google && google.accounts && google.accounts.id)) return;
-        if (window.__gis_btn_rendered) return;
-
-        google.accounts.id.initialize({
-          client_id: clientId,
-          callback: function(response) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/auth/google/callback';
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'credential';
-            input.value = response.credential;
-            form.appendChild(input);
-            document.body.appendChild(form);
-            form.submit();
-          },
-          auto_select: false
-        });
-        const btnOpts = { type: 'standard', theme: 'outline', size: 'large', text: 'continue_with', shape: 'pill', logo_alignment: 'left', width: 320 };
-        const loginBtn = document.getElementById('googleButtonLogin');
-        if (loginBtn) {
-          google.accounts.id.renderButton(loginBtn, btnOpts);
-          window.__gis_btn_rendered = true;
-        }
-        google.accounts.id.prompt();
-      } catch (e) {
-        console.log('GIS init error:', e);
-      }
-    }
-  </script>
-  <script src="https://accounts.google.com/gsi/client" async defer onload="initGoogleSignIn()"></script>
-  <script>
-    // Toggle between Login and Sign Up forms
-    const loginForm = document.getElementById('loginForm');
-    const signupForm = document.getElementById('signupForm');
-    const toggleForm = document.getElementById('toggleForm');
-    const formTitle = document.getElementById('formTitle');
-    let isLogin = true;
-    toggleForm.addEventListener('click', function(e) {
-      e.preventDefault();
-      isLogin = !isLogin;
-      loginForm.style.display = isLogin ? '' : 'none';
-      signupForm.style.display = isLogin ? 'none' : '';
-      formTitle.textContent = isLogin ? 'Login' : 'Sign Up';
-      toggleForm.textContent = isLogin ? "Don't have an account? Sign Up" : "Already have an account? Login";
-    });
-    // Show/hide admin code input on role change
-    const signupRole = document.getElementById('signupRole');
-    const signupAdminCodeInput = document.getElementById('signupAdminCodeInput');
-    signupRole.addEventListener('change', function() {
-      if (signupRole.value === 'admin') {
-        signupAdminCodeInput.style.display = '';
-        signupAdminCodeInput.required = true;
-      } else {
-        signupAdminCodeInput.style.display = 'none';
-        signupAdminCodeInput.required = false;
-      }
-    });
+    <title>Authentication - Sunrise Educational Centre</title>
+    <link rel="icon" type="image/png" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="floating-navbar.css">
+    <link rel="stylesheet" href="uiverse-components.css">
+    <link rel="stylesheet" href="enhanced-aesthetic.css">
+    <link rel="stylesheet" href="modern-components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    // Add form validation for signup
-    const signupForm = document.getElementById('signupForm');
-    signupForm.addEventListener('submit', function(e) {
-      const email = document.getElementById('signup-email').value;
-      const phone = document.getElementById('signup-phone').value;
-      
-      // Basic email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        e.preventDefault();
-        alert('Please enter a valid email address.');
-        return false;
-      }
-      
-      // Basic phone validation (allows digits, spaces, dashes, parentheses, plus)
-      const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-      if (!phoneRegex.test(phone) || phone.replace(/[\d]/g, '').length < 7) {
-        e.preventDefault();
-        alert('Please enter a valid phone number.');
-        return false;
-      }
-    });
-    // Show/hide admin code input on login role change
-    const loginRole = document.getElementById('loginRole');
-    const loginAdminCodeInput = document.getElementById('loginAdminCodeInput');
-    const all_classes_dict = {
-        {% for id, name in all_classes %}'{{ id }}': '{{ name }}',{% endfor %}
-    };
-    loginRole.addEventListener('change', function() {
-      const selectedRoleName = all_classes_dict[loginRole.value];
-      if (selectedRoleName === 'admin') {
-        loginAdminCodeInput.style.display = '';
-        loginAdminCodeInput.required = true;
-      } else {
-        loginAdminCodeInput.style.display = 'none';
-        loginAdminCodeInput.required = false;
-      }
-    });
-  </script>
-  <script>
-    // Fallback polling if GIS script not yet ready
-    document.addEventListener('DOMContentLoaded', function() {
-      let tries = 0;
-      const iv = setInterval(function(){
-        tries++;
-        if (window.google && google.accounts && google.accounts.id) {
-          clearInterval(iv);
-          initGoogleSignIn();
+    <style>
+        /* Auth Page Specific Styles */
+        .auth-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
         }
-        if (tries > 40) clearInterval(iv);
-      }, 150);
-    });
-  </script>
-  
+
+        .auth-container {
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .auth-card {
+            background: rgba(5, 6, 10, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 24px;
+            padding: 3rem;
+            backdrop-filter: blur(18px) saturate(110%);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #6a82fb, #fc5c7d, #ff6b35, #6a82fb);
+            background-size: 300% 100%;
+            animation: shimmer 3s ease infinite;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-logo-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 50%, #ff6b35 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            animation: logoFloat 3s ease-in-out infinite;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3), 0 0 24px rgba(106,130,251,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .auth-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff 0%, #e0e7ff 50%, #c7d2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .auth-subtitle {
+            color: rgba(255,255,255,0.8);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.9);
+            font-weight: 600;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #6a82fb;
+            box-shadow: 0 0 0 3px rgba(106,130,251,0.2);
+            background: rgba(255,255,255,0.12);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #6a82fb;
+            box-shadow: 0 0 0 3px rgba(106,130,251,0.2);
+            background: rgba(255,255,255,0.12);
+        }
+
+        .form-select option {
+            background: #1a1a2e;
+            color: white;
+            padding: 0.5rem;
+        }
+
+        .auth-button {
+            width: 100%;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+            border: none;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(106,130,251,0.3);
+        }
+
+        .auth-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(106,130,251,0.4);
+        }
+
+        .auth-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-divider {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .form-divider::before,
+        .form-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .google-button-container {
+            margin: 1rem 0;
+        }
+
+        .form-toggle {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .form-toggle a {
+            color: #6a82fb;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .form-toggle a:hover {
+            color: #fc5c7d;
+            text-shadow: 0 0 8px rgba(252,92,125,0.3);
+        }
+
+        .back-link {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: white;
+        }
+
+        .auth-hint {
+            background: rgba(106, 130, 251, 0.1);
+            border: 1px solid rgba(106, 130, 251, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.5;
+        }
+
+        .auth-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: #fca5a5;
+            font-size: 0.9rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @media (max-width: 768px) {
+            .auth-page {
+                padding: 1rem;
+            }
+            
+            .auth-card {
+                padding: 2rem;
+            }
+            
+            .auth-logo-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            .auth-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 1.5rem;
+            }
+            
+            .form-input,
+            .form-select,
+            .auth-button {
+                padding: 0.875rem 1rem;
+            }
+        }
+    </style>
+  </head>
+  <body class="auth-page">
+    <!-- Floating Navbar -->
+    <nav class="floating-navbar black-glass">
+        <button class="hamburger" aria-label="Menu" aria-expanded="false">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/online-class">Live Classes</a></li>
+            <li><a href="/batch">Batches</a></li>
+            <li><a href="/study-resources">Study Resources</a></li>
+            <li><a href="/forum">Forum</a></li>
+            <li><a href="/admission">Admission</a></li>
+            
+            {% if username %}
+            <li class="profile-dropdown">
+                <a href="#" id="profileLink">{{ username }} ▾</a>
+                <div class="profile-dropdown-menu" id="profileDropdown">
+                    <a href="/profile" class="dropdown-item">My Profile</a>
+                    <a href="/notifications" class="dropdown-item">Notifications</a>
+                    <a href="/logout" class="dropdown-item">Logout</a>
+                </div>
+            </li>
+            {% else %}
+            <li><a href="/auth" class="btn-primary">Login</a></li>
+            {% endif %}
+            
+            <li><button class="search-btn" onclick="openSearch()">🔍</button></li>
+            <li style="position:relative;">
+                <button id="notifBell" class="notification-bell" title="Notifications">
+                    🔔
+                    <span class="notification-badge" id="notificationCount" style="display:none;">0</span>
+                </button>
+            </li>
+            <li>
+                <button id="darkModeToggle" class="theme-toggle-btn" title="Toggle Dark Mode">
+                    🌙
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Enhanced Floating Particles Background -->
+    <div class="floating-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Main Auth Container -->
+    <div class="auth-container">
+        <div class="auth-card">
+            <!-- Auth Header -->
+            <div class="auth-logo">
+                <div class="auth-logo-icon">🌅</div>
+                <h1 class="auth-title" id="formTitle">Welcome Back</h1>
+                <p class="auth-subtitle" id="formSubtitle">Sign in to your account to continue</p>
+            </div>
+            <!-- Login Form -->
+            <form id="loginForm" method="POST" action="/auth">
+                <div class="form-group">
+                    <label for="login-username" class="form-label">
+                        <span style="margin-right: 0.5rem;">👤</span>
+                        Username, Email, or Phone
+                    </label>
+                    <input 
+                        type="text" 
+                        name="username" 
+                        id="login-username" 
+                        class="form-input"
+                        placeholder="Enter your username, email, or phone" 
+                        required 
+                        autocomplete="username"
+                    />
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-password" class="form-label">
+                        <span style="margin-right: 0.5rem;">🔒</span>
+                        Password
+                    </label>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        id="login-password" 
+                        class="form-input"
+                        placeholder="Enter your password" 
+                        required 
+                        autocomplete="current-password"
+                    />
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginRole" class="form-label">
+                        <span style="margin-right: 0.5rem;">🎓</span>
+                        Select Class
+                    </label>
+                    <select name="class_id" id="loginRole" class="form-select" required>
+                        <option value="">Choose your class</option>
+                        {% for id, name in all_classes %}
+                            <option value="{{ id }}">{{ name|title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div id="adminCodeDiv" class="form-group hidden">
+                    <label for="loginAdminCodeInput" class="form-label">
+                        <span style="margin-right: 0.5rem;">🔑</span>
+                        Admin Code
+                    </label>
+                    <input 
+                        type="text" 
+                        name="admin_code" 
+                        id="loginAdminCodeInput" 
+                        class="form-input"
+                        placeholder="Enter admin code"
+                    />
+                </div>
+                
+                {% if request.args.get('next') %}
+                <input type="hidden" name="next" value="{{ request.args.get('next') }}" />
+                {% endif %}
+                
+                <button type="submit" id="loginSubmitBtn" class="auth-button">
+                    <span style="margin-right: 0.5rem;">🚀</span>
+                    Sign In
+                </button>
+                
+                <div class="form-divider">or</div>
+                
+                <div id="googleButtonLogin" class="google-button-container"></div>
+            </form>
+            <!-- Signup Form -->
+            <form id="signupForm" method="POST" action="/register" class="hidden">
+                <div class="form-group">
+                    <label for="signup-username" class="form-label">
+                        <span style="margin-right: 0.5rem;">👤</span>
+                        Username
+                    </label>
+                    <input 
+                        type="text" 
+                        id="signup-username" 
+                        name="username" 
+                        class="form-input"
+                        placeholder="Choose a unique username" 
+                        required 
+                        autocomplete="username"
+                    />
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-password" class="form-label">
+                        <span style="margin-right: 0.5rem;">🔒</span>
+                        Password
+                    </label>
+                    <input 
+                        type="password" 
+                        id="signup-password" 
+                        name="password" 
+                        class="form-input"
+                        placeholder="Create a strong password" 
+                        required 
+                        autocomplete="new-password"
+                    />
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-email" class="form-label">
+                        <span style="margin-right: 0.5rem;">📧</span>
+                        Email Address
+                    </label>
+                    <input 
+                        type="email" 
+                        id="signup-email" 
+                        name="email" 
+                        class="form-input"
+                        placeholder="Enter your email address" 
+                        required 
+                        autocomplete="email"
+                    />
+                </div>
+                
+                <div class="form-group">
+                    <label for="signup-phone" class="form-label">
+                        <span style="margin-right: 0.5rem;">📱</span>
+                        Phone Number
+                    </label>
+                    <input 
+                        type="tel" 
+                        id="signup-phone" 
+                        name="phone" 
+                        class="form-input"
+                        placeholder="Enter your phone number" 
+                        required 
+                        autocomplete="tel"
+                    />
+                </div>
+                
+                <div class="form-group">
+                    <label for="signupRole" class="form-label">
+                        <span style="margin-right: 0.5rem;">🎓</span>
+                        Select Class
+                    </label>
+                    <select name="class_id" id="signupRole" class="form-select" required>
+                        <option value="">Choose your class</option>
+                        {% for id, name in all_classes %}
+                            <option value="{{ id }}">{{ name|title }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <input 
+                        type="text" 
+                        name="admin_code" 
+                        id="signupAdminCodeInput" 
+                        class="form-input hidden"
+                        placeholder="Admin Code"
+                    />
+                </div>
+                
+                <button type="submit" class="auth-button">
+                    <span style="margin-right: 0.5rem;">✨</span>
+                    Create Account
+                </button>
+            </form>
+            <!-- Form Toggle -->
+            <div class="form-toggle">
+                <a href="/" class="back-link">
+                    <span style="margin-right: 0.5rem;">←</span>
+                    Back to Home
+                </a>
+                <span style="margin: 0 1rem; color: rgba(255,255,255,0.4);">|</span>
+                <a href="#" id="toggleForm">Don't have an account? Sign Up</a>
+            </div>
+            
+            <!-- Error Message -->
+            {% if error %}
+            <div class="auth-error">
+                <span style="margin-right: 0.5rem;">⚠️</span>
+                {{ error }}
+            </div>
+            {% endif %}
+            
+            <!-- Hint Message -->
+            <div class="auth-hint" id="authHint">
+                <div style="margin-bottom: 0.5rem;">
+                    <strong>💡 Login Options:</strong>
+                </div>
+                <div style="font-size: 0.85rem; line-height: 1.4;">
+                    • Use your username, email address, or phone number<br>
+                    • Select your class from the dropdown<br>
+                    • Contact support if you need assistance
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Scripts -->
+    <script>
+        window.currentUsername = null;
+    </script>
+    <script src="attached_assets/theme.js"></script>
+    <script src="modern-interactions.js"></script>
+    
+    <!-- Google Identity Services -->
+    <script>
+        // Google Sign-In initialization
+        window.__gis_btn_rendered = false;
+        function initGoogleSignIn() {
+            try {
+                const clientId = '{{ google_client_id }}';
+                if (!clientId || clientId === 'None') return;
+                if (!(window.google && google.accounts && google.accounts.id)) return;
+                if (window.__gis_btn_rendered) return;
+
+                google.accounts.id.initialize({
+                    client_id: clientId,
+                    callback: function(response) {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = '/auth/google/callback';
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'credential';
+                        input.value = response.credential;
+                        form.appendChild(input);
+                        document.body.appendChild(form);
+                        form.submit();
+                    },
+                    auto_select: false
+                });
+                
+                const btnOpts = { 
+                    type: 'standard', 
+                    theme: 'filled_blue', 
+                    size: 'large', 
+                    text: 'continue_with', 
+                    shape: 'pill', 
+                    logo_alignment: 'left',
+                    width: '100%'
+                };
+                
+                const loginBtn = document.getElementById('googleButtonLogin');
+                if (loginBtn) {
+                    google.accounts.id.renderButton(loginBtn, btnOpts);
+                    window.__gis_btn_rendered = true;
+                }
+            } catch (e) {
+                console.log('Google Sign-In initialization error:', e);
+            }
+        }
+    </script>
+    <script src="https://accounts.google.com/gsi/client" async defer onload="initGoogleSignIn()"></script>
+    
+    <script>
+        // Form toggle and validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const toggleForm = document.getElementById('toggleForm');
+            const formTitle = document.getElementById('formTitle');
+            const formSubtitle = document.getElementById('formSubtitle');
+            const authHint = document.getElementById('authHint');
+            
+            let isLogin = true;
+            
+            // Toggle between login and signup forms
+            toggleForm.addEventListener('click', function(e) {
+                e.preventDefault();
+                isLogin = !isLogin;
+                
+                if (isLogin) {
+                    loginForm.classList.remove('hidden');
+                    signupForm.classList.add('hidden');
+                    formTitle.textContent = 'Welcome Back';
+                    formSubtitle.textContent = 'Sign in to your account to continue';
+                    toggleForm.textContent = "Don't have an account? Sign Up";
+                    authHint.innerHTML = `
+                        <div style="margin-bottom: 0.5rem;">
+                            <strong>💡 Login Options:</strong>
+                        </div>
+                        <div style="font-size: 0.85rem; line-height: 1.4;">
+                            • Use your username, email address, or phone number<br>
+                            • Select your class from the dropdown<br>
+                            • Contact support if you need assistance
+                        </div>
+                    `;
+                } else {
+                    loginForm.classList.add('hidden');
+                    signupForm.classList.remove('hidden');
+                    formTitle.textContent = 'Join Us Today';
+                    formSubtitle.textContent = 'Create your account to get started';
+                    toggleForm.textContent = "Already have an account? Sign In";
+                    authHint.innerHTML = `
+                        <div style="margin-bottom: 0.5rem;">
+                            <strong>✨ Account Creation:</strong>
+                        </div>
+                        <div style="font-size: 0.85rem; line-height: 1.4;">
+                            • Choose a unique username<br>
+                            • Use a valid email and phone number<br>
+                            • Select your appropriate class level
+                        </div>
+                    `;
+                }
+            });
+            
+            // Admin code visibility for login
+            const loginRole = document.getElementById('loginRole');
+            const adminCodeDiv = document.getElementById('adminCodeDiv');
+            const loginAdminCodeInput = document.getElementById('loginAdminCodeInput');
+            const all_classes_dict = {
+                {% for id, name in all_classes %}'{{ id }}': '{{ name }}',{% endfor %}
+            };
+            
+            loginRole.addEventListener('change', function() {
+                const selectedRoleName = all_classes_dict[loginRole.value];
+                if (selectedRoleName === 'admin') {
+                    adminCodeDiv.classList.remove('hidden');
+                    loginAdminCodeInput.required = true;
+                } else {
+                    adminCodeDiv.classList.add('hidden');
+                    loginAdminCodeInput.required = false;
+                }
+            });
+            
+            // Admin code visibility for signup
+            const signupRole = document.getElementById('signupRole');
+            const signupAdminCodeInput = document.getElementById('signupAdminCodeInput');
+            
+            signupRole.addEventListener('change', function() {
+                const selectedRoleName = all_classes_dict[signupRole.value];
+                if (selectedRoleName === 'admin') {
+                    signupAdminCodeInput.classList.remove('hidden');
+                    signupAdminCodeInput.required = true;
+                } else {
+                    signupAdminCodeInput.classList.add('hidden');
+                    signupAdminCodeInput.required = false;
+                }
+            });
+            
+            // Login form submission
+            const loginSubmitBtn = document.getElementById('loginSubmitBtn');
+            loginForm.addEventListener('submit', function(e) {
+                loginSubmitBtn.disabled = true;
+                loginSubmitBtn.innerHTML = '<span style="margin-right: 0.5rem;">⏳</span>Signing In...';
+            });
+            
+            // Signup form validation
+            signupForm.addEventListener('submit', function(e) {
+                const email = document.getElementById('signup-email').value;
+                const phone = document.getElementById('signup-phone').value;
+                const password = document.getElementById('signup-password').value;
+                
+                // Email validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    e.preventDefault();
+                    alert('⚠️ Please enter a valid email address.');
+                    return false;
+                }
+                
+                // Phone validation
+                const phoneRegex = /^[\d\s\-\+\(\)]+$/;
+                if (!phoneRegex.test(phone) || phone.replace(/\D/g, '').length < 10) {
+                    e.preventDefault();
+                    alert('⚠️ Please enter a valid phone number (at least 10 digits).');
+                    return false;
+                }
+                
+                // Password strength validation
+                if (password.length < 6) {
+                    e.preventDefault();
+                    alert('⚠️ Password must be at least 6 characters long.');
+                    return false;
+                }
+                
+                // Show loading state
+                const submitBtn = signupForm.querySelector('.auth-button');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span style="margin-right: 0.5rem;">⏳</span>Creating Account...';
+            });
+            
+            // Fallback for Google Sign-In
+            let tries = 0;
+            const checkGoogleInterval = setInterval(function(){
+                tries++;
+                if (window.google && google.accounts && google.accounts.id) {
+                    clearInterval(checkGoogleInterval);
+                    initGoogleSignIn();
+                }
+                if (tries > 40) clearInterval(checkGoogleInterval);
+            }, 150);
+        });
+    </script>
+
+    <!-- Search Modal -->
+    <div id="searchModal" class="modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+        <div class="modal-content black-glass" style="margin: 10% auto; padding: 2rem; border-radius: 20px; width: 90%; max-width: 600px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="color: white; margin: 0;">🔍 Search</h2>
+                <button onclick="closeSearch()" style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">✕</button>
+            </div>
+            <input type="text" id="searchInput" placeholder="Search courses, resources, or topics..." style="width: 100%; padding: 15px; border: none; border-radius: 10px; background: rgba(255,255,255,0.1); color: white; font-size: 1rem; margin-bottom: 1rem;">
+            <div id="searchResults" style="max-height: 300px; overflow-y: auto;">
+                <!-- Search results will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Panel -->
+    <div id="notification-panel" class="notification-panel black-glass" style="display: none; position: fixed; top: 100px; right: 20px; width: 350px; max-height: 500px; overflow-y: auto; z-index: 999; border-radius: 16px; padding: 1rem; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.2);">
+            <h3 style="margin: 0; font-size: 1.2rem; color: white;">🔔 Notifications</h3>
+            <button onclick="toggleNotifications()" style="background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; padding: 0.2rem;">✕</button>
+        </div>
+        <div class="notification-list">
+            <div class="notification-item" style="padding: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 0.5rem;">
+                <div style="font-weight: 600; margin-bottom: 0.3rem; color: white;">📚 Welcome!</div>
+                <div style="font-size: 0.9rem; opacity: 0.8; color: rgba(255,255,255,0.8);">Complete your profile after login</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="navbar-functions.js"></script>
 </body>
 </html>

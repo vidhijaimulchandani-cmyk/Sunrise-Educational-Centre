@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum Slider Test</title>
+    <link rel="stylesheet" href="enhanced-aesthetic.css">
+    <link rel="stylesheet" href="modern-components.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            margin: 0;
+            padding: 2rem;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .test-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: white;
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(106,130,251,0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="test-title">Forum Browse Resource Slider Test</h1>
+        <button class="test-button" id="testToggle">🔧 Test Browse Topics Slider</button>
+        <div id="testStatus" style="margin-top: 2rem; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 12px;"></div>
+    </div>
+
+    <!-- Topics Toggle Button -->
+    <button class="topics-toggle" id="categoryToggle">
+        <span>💬</span>
+        <span>Browse Topics</span>
+    </button>
+
+    <!-- Enhanced Category Popup -->
+    <div class="category-popup glass-card" id="categoryPopup">
+        <div class="category-popup-header glass-card" style="margin: 0; border-radius: 20px 20px 0 0;">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <h2 style="background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-size: 1.5rem; margin-bottom: 0.5rem;">💬 Forum Topics</h2>
+                <p style="color: rgba(255,255,255,0.8); font-size: 1rem;">Select a topic to start chatting</p>
+            </div>
+        </div>
+        
+        <div class="category-list" id="categoryList">
+            <div style="margin-bottom: 1.5rem;">
+                <h4 style="color: #aef9e4; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>💎</span> Premium Topics
+                </h4>
+                <div class="category-item glass-card" data-topic="1" data-topic-name="Mathematics Advanced" style="margin-bottom: 0.75rem; background: rgba(0, 200, 140, 0.1); border: 1px solid rgba(0, 200, 140, 0.3);">
+                    <div class="category-item-content">
+                        <div class="category-name" style="display: flex; align-items: center; gap: 0.75rem;">
+                            <span style="font-size: 1.2rem;">💬</span>
+                            <span>Mathematics Advanced</span>
+                        </div>
+                    </div>
+                    <span class="category-badge paid" style="background: rgba(0, 200, 140, 0.3); color: #aef9e4; border: 1px solid rgba(0, 200, 140, 0.5); padding: 0.25rem 0.75rem; border-radius: 12px;">PREMIUM</span>
+                </div>
+                <div class="category-item glass-card" data-topic="2" data-topic-name="Physics Premium" style="margin-bottom: 0.75rem; background: rgba(0, 200, 140, 0.1); border: 1px solid rgba(0, 200, 140, 0.3);">
+                    <div class="category-item-content">
+                        <div class="category-name" style="display: flex; align-items: center; gap: 0.75rem;">
+                            <span style="font-size: 1.2rem;">💬</span>
+                            <span>Physics Premium</span>
+                        </div>
+                    </div>
+                    <span class="category-badge paid">PREMIUM</span>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 1.5rem;">
+                <h4 style="color: rgba(255,255,255,0.8); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>🆓</span> Free Topics
+                </h4>
+                <div class="category-item glass-card" data-topic="3" data-topic-name="General Discussion" style="margin-bottom: 0.75rem;">
+                    <div class="category-item-content">
+                        <div class="category-name" style="display: flex; align-items: center; gap: 0.75rem;">
+                            <span style="font-size: 1.2rem;">💭</span>
+                            <span>General Discussion</span>
+                        </div>
+                    </div>
+                    <span class="category-badge unpaid">FREE</span>
+                </div>
+                <div class="category-item glass-card" data-topic="4" data-topic-name="Study Tips" style="margin-bottom: 0.75rem;">
+                    <div class="category-item-content">
+                        <div class="category-name" style="display: flex; align-items: center; gap: 0.75rem;">
+                            <span style="font-size: 1.2rem;">💭</span>
+                            <span>Study Tips</span>
+                        </div>
+                    </div>
+                    <span class="category-badge unpaid">FREE</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <script>
+        // Test functionality
+        document.getElementById('testToggle').addEventListener('click', function() {
+            const status = document.getElementById('testStatus');
+            status.innerHTML = '<div style="color: #6a82fb;">🔧 Testing slider functionality...</div>';
+            
+            setTimeout(() => {
+                // Test if elements exist
+                const toggle = document.getElementById('categoryToggle');
+                const popup = document.getElementById('categoryPopup');
+                const overlay = document.getElementById('overlay');
+                
+                let results = [];
+                
+                if (toggle) {
+                    results.push('✅ Toggle button found');
+                } else {
+                    results.push('❌ Toggle button missing');
+                }
+                
+                if (popup) {
+                    results.push('✅ Popup container found');
+                } else {
+                    results.push('❌ Popup container missing');
+                }
+                
+                if (overlay) {
+                    results.push('✅ Overlay found');
+                } else {
+                    results.push('❌ Overlay missing');
+                }
+                
+                // Test CSS classes
+                const popupStyles = window.getComputedStyle(popup);
+                if (popupStyles.position === 'fixed') {
+                    results.push('✅ Popup positioning correct');
+                } else {
+                    results.push('❌ Popup positioning incorrect');
+                }
+                
+                status.innerHTML = results.map(r => `<div style="margin: 0.5rem 0;">${r}</div>`).join('');
+                
+                // Auto-trigger the slider
+                setTimeout(() => {
+                    if (toggle) {
+                        toggle.click();
+                        status.innerHTML += '<div style="color: #aef9e4; margin-top: 1rem;">🎉 Slider should now be open! Click the toggle button to test manually.</div>';
+                    }
+                }, 1000);
+            }, 500);
+        });
+
+        // Simplified slider functionality for testing
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryToggle = document.getElementById('categoryToggle');
+            const categoryPopup = document.getElementById('categoryPopup');
+            const overlay = document.getElementById('overlay');
+            
+            if (categoryToggle && categoryPopup && overlay) {
+                categoryToggle.addEventListener('click', function() {
+                    const isOpen = categoryPopup.classList.contains('open');
+                    if (isOpen) {
+                        categoryPopup.classList.remove('open');
+                        categoryToggle.classList.remove('open');
+                        overlay.classList.remove('open');
+                        document.body.classList.remove('popup-open');
+                    } else {
+                        categoryPopup.classList.add('open');
+                        categoryToggle.classList.add('open');
+                        overlay.classList.add('open');
+                        document.body.classList.add('popup-open');
+                    }
+                });
+                
+                overlay.addEventListener('click', function() {
+                    categoryPopup.classList.remove('open');
+                    categoryToggle.classList.remove('open');
+                    overlay.classList.remove('open');
+                    document.body.classList.remove('popup-open');
+                });
+                
+                // Test category item clicks
+                document.querySelectorAll('.category-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        const topicName = this.getAttribute('data-topic-name');
+                        alert(`Selected topic: ${topicName}`);
+                        
+                        // Update active state
+                        document.querySelectorAll('.category-item').forEach(cat => cat.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

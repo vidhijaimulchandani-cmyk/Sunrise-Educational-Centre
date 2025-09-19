@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Submission Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .debug {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>🔍 Form Submission Test</h2>
+        <p>This is a minimal form to test if form submission works without any modern styling.</p>
+        
+        <form id="testForm" method="POST" action="/auth">
+            <input type="text" name="username" placeholder="Username" value="yash" required>
+            <input type="password" name="password" placeholder="Password" value="yash" required>
+            <select name="class_id" required>
+                <option value="">Select Class</option>
+                <option value="8" selected>Admin</option>
+            </select>
+            <input type="text" name="admin_code" placeholder="Admin Code" value="sec@011">
+            <button type="submit">🚀 Submit Form</button>
+        </form>
+        
+        <div class="debug" id="debugInfo">
+            <strong>Debug Info:</strong><br>
+            Form not submitted yet...
+        </div>
+    </div>
+    
+    <script>
+        const form = document.getElementById('testForm');
+        const debugInfo = document.getElementById('debugInfo');
+        
+        form.addEventListener('submit', function(e) {
+            const formData = new FormData(form);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            
+            debugInfo.innerHTML = `
+                <strong>Form Submitted!</strong><br>
+                Method: ${form.method}<br>
+                Action: ${form.action}<br>
+                Data: ${JSON.stringify(data, null, 2)}
+            `;
+            
+            console.log('Form submitted with data:', data);
+            
+            // Don't prevent default - let it submit
+        });
+    </script>
+</body>
+</html>
