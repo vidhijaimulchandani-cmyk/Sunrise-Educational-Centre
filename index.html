@@ -6,6 +6,13 @@
     <title>Sunrise Educational Centre - Home</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="floating-navbar.css">
+    <link rel="stylesheet" href="enhanced-aesthetic.css">
+    <link rel="stylesheet" href="modern-components.css">
+    <link rel="stylesheet" href="modern-navbar.css">
+    <link rel="stylesheet" href="uiverse-components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         /* Professional Animation System */
         @keyframes fadeInUp {
@@ -279,6 +286,103 @@
         }
         .floating-navbar.black-glass .dropdown-menu a { color: #fff !important; }
         
+        /* Animated Admission Button */
+        .admission-btn {
+            position: relative;
+            width: 200px;
+            height: 55px;
+            border-radius: 45px;
+            border: none;
+            background-color: rgb(151, 95, 255);
+            color: white;
+            box-shadow: 0px 10px 10px rgb(210, 187, 253) inset,
+                        0px 5px 10px rgba(5, 5, 5, 0.212),
+                        0px -10px 10px rgb(124, 54, 255) inset;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            /* Auto-play animation on page load with delay */
+            animation: jello-horizontal 0.9s both 2s;
+        }
+
+        .admission-btn::before {
+            width: 70%;
+            height: 2px;
+            position: absolute;
+            background-color: rgba(250, 250, 250, 0.678);
+            content: "";
+            filter: blur(1px);
+            top: 7px;
+            border-radius: 50%;
+        }
+
+        .admission-btn::after {
+            width: 70%;
+            height: 2px;
+            position: absolute;
+            background-color: rgba(250, 250, 250, 0.137);
+            content: "";
+            filter: blur(1px);
+            bottom: 7px;
+            border-radius: 50%;
+        }
+
+        .admission-btn:hover {
+            animation: jello-horizontal 0.9s both;
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Continuous subtle pulse animation after initial jello */
+        .admission-btn {
+            animation: jello-horizontal 0.9s both 2s, admission-pulse 3s ease-in-out 3.5s infinite;
+        }
+
+        @keyframes jello-horizontal {
+            0% {
+                transform: scale3d(1, 1, 1);
+            }
+            30% {
+                transform: scale3d(1.25, 0.75, 1);
+            }
+            40% {
+                transform: scale3d(0.75, 1.25, 1);
+            }
+            50% {
+                transform: scale3d(1.15, 0.85, 1);
+            }
+            65% {
+                transform: scale3d(0.95, 1.05, 1);
+            }
+            75% {
+                transform: scale3d(1.05, 0.95, 1);
+            }
+            100% {
+                transform: scale3d(1, 1, 1);
+            }
+        }
+
+        @keyframes admission-pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0px 10px 10px rgb(210, 187, 253) inset,
+                           0px 5px 10px rgba(5, 5, 5, 0.212),
+                           0px -10px 10px rgb(124, 54, 255) inset;
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0px 10px 15px rgb(210, 187, 253) inset,
+                           0px 8px 15px rgba(5, 5, 5, 0.3),
+                           0px -10px 15px rgb(124, 54, 255) inset,
+                           0px 0px 20px rgba(151, 95, 255, 0.4);
+            }
+        }
+
         /* Theme Toggle Button Styles */
         .theme-toggle-btn {
             background: none;
@@ -789,6 +893,21 @@
             .hero-content p {
                 font-size: 1rem;
             }
+
+            /* Responsive Admission Button */
+            .admission-btn {
+                width: 180px;
+                height: 50px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .admission-btn {
+                width: 160px;
+                height: 45px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -884,23 +1003,63 @@
         </div>
     </div>
 
-    <!-- Hero Section with Logo -->
-    <section class="hero-section">
-        <div class="hero-content">
-            
-            <h1 id="typing-hero" style="border-right: 2px solid rgba(255,255,255,0.8); white-space: nowrap; overflow: hidden; display: inline-block; padding-right: 8px; min-height: 1em;"> </h1>
-            <p>Empowering students from Class 9 to 12 with expert coaching, personalized attention, and a proven track record of success. Join our vibrant learning community and unlock your full potential!</p>
-            <div class="hero-buttons">
-                <a href="/admission" class="btn-hero btn-primary-hero">Get Admission</a>
-                <a href="#subjects" class="btn-hero btn-secondary-hero">View Subjects</a>
-                <a href="#contact" class="btn-hero btn-secondary-hero">Contact Us</a>
+    <!-- Enhanced Hero Section with Floating Particles -->
+    <section class="hero-section hero-modern">
+        <div class="floating-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="hero-content hero-content-modern">
+            <div class="logo-container">
+                <img src="attached_assets/image_1750584670920.png" alt="Sunrise Educational Centre" class="main-logo">
+                <div class="logo-glow"></div>
+            </div>
+            <h1 id="typing-hero" class="hero-title-modern" style="border-right: 2px solid rgba(255,255,255,0.8); white-space: nowrap; overflow: hidden; display: inline-block; padding-right: 8px; min-height: 1em;"> </h1>
+            <p class="hero-subtitle-modern">Empowering students from Class 9 to 12 with expert coaching, personalized attention, and a proven track record of success. Join our vibrant learning community and unlock your full potential!</p>
+            <div class="hero-buttons hero-buttons-modern">
+                <a href="/admission" class="uiverse-btn" style="margin: 10px;">🎓 Get Admission</a>
+                <a href="#subjects" class="morph-btn" style="margin: 10px;">📚 View Subjects</a>
+                <a href="/online-class" class="pulse-btn" style="margin: 10px;">🎥 Live Classes</a>
+                <a href="#contact" class="btn-modern btn-glass">📞 Contact Us</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="stats-section scroll-reveal">
+        <div class="container">
+            <h2 class="heading-modern heading-lg text-center" style="color: white; margin-bottom: 3rem;">Our Impact in Numbers</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">500+</span>
+                    <span class="stat-label">Students Enrolled</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">95%</span>
+                    <span class="stat-label">Success Rate</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">50+</span>
+                    <span class="stat-label">Expert Teachers</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">10+</span>
+                    <span class="stat-label">Years Experience</span>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Welcome Section -->
     <section class="card-section fade-in-up" style="text-align:center; margin:2rem 0 2.5rem 0;">
-        <div class="card animated-card black-glass" style="max-width:800px; width:100%; margin:0 auto; padding:3rem; border-radius:24px; box-shadow:0 8px 32px rgba(106,130,251,0.15);">
+        <div class="card animated-card glass-card" style="max-width:800px; width:100%; margin:0 auto; padding:3rem; border-radius:24px; box-shadow:0 8px 32px rgba(106,130,251,0.15);">
             <h2 style="color:#232946; margin-bottom:1.5rem; font-size:2.5rem; font-weight:700;">Welcome to Sunrise Educational Centre</h2>
             <p style="color:#232946; font-size:1.2rem; line-height:1.6; margin-bottom:2rem; opacity:0.9;">Empowering students from Class 9 to 12 with expert coaching, personalized attention, and a proven track record of success. Join our vibrant learning community and unlock your full potential!</p>
             <a href="/admission" class="btn btn-primary" style="color:#fff; padding:1rem 2.5rem; border-radius:12px; font-weight:600; font-size:1.1rem; text-decoration:none; display:inline-block; transition:all 0.3s ease; box-shadow:0 4px 16px rgba(106,130,251,0.3);">Get Admission</a>
@@ -916,34 +1075,38 @@
         </div>
     </section>
 
-    <!-- Subjects We Offer Section -->
-    <section id="subjects" class="card-section fade-in-right" style="display:flex; justify-content:center;">
-        <div class="card animated-card black-glass" style="max-width:700px; width:100%; margin:0 auto; padding:2.5rem;">
-            <h2 style="text-align:center; margin-bottom:2rem;">Subjects We Offer</h2>
-            <div style="display: flex; flex-wrap: wrap; gap: 2.5rem; justify-content:center;">
-                <div class="black-glass" style="flex:1 1 260px; min-width:220px; background:#e6f9f3; border-radius:18px; padding:1.5rem;">
-                    <h3 style="color:#14213d; margin-bottom:1.2rem; text-align:center;">Foundation</h3>
-                    <div style="display:flex; flex-direction:column; gap:1rem; align-items:center;">
-                        <button onclick="showCategoriesForClass('9', 'Class 9')" class="subject-btn btn" style="width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #ffe082; cursor:pointer;">
-                            Class 9: Core Mathematics
-                            <div style='font-size:0.98rem; font-weight:400; color:#232946;'>4:00 PM – 5:00 PM</div>
+    <!-- Enhanced Subjects We Offer Section -->
+    <section id="subjects" class="card-section fade-in-right" style="margin: 4rem 0;">
+        <div class="container">
+            <h2 class="gradient-text text-center" style="margin-bottom: 3rem;">Subjects We Offer</h2>
+            <div class="card-grid-modern">
+                <div class="glow-card floating-element">
+                    <span class="subject-icon" style="font-size: 3rem; display: block; margin-bottom: 1rem;">🎯</span>
+                    <h3 class="subject-title">Foundation Classes</h3>
+                    <p class="subject-description">Build strong fundamentals with our comprehensive foundation courses for Classes 9 & 10.</p>
+                    <div style="display:flex; flex-direction:column; gap:1rem; margin-top:1.5rem;">
+                        <button onclick="showCategoriesForClass('9', 'Class 9')" class="btn-modern btn-secondary-modern" style="width:100%;">
+                            📐 Class 9: Core Mathematics
+                            <div style='font-size:0.9rem; opacity:0.8; margin-top:0.25rem;'>4:00 PM – 5:00 PM</div>
                         </button>
-                        <button onclick="showCategoriesForClass('2', 'Class 10')" class="subject-btn btn" style="width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #b2f0e6; cursor:pointer;">
-                            Class 10: Mathematics
-                            <div style='font-size:0.98rem; font-weight:400; color:#232946;'>5:00 PM – 6:00 PM</div>
+                        <button onclick="showCategoriesForClass('2', 'Class 10')" class="btn-modern btn-secondary-modern" style="width:100%;">
+                            📊 Class 10: Mathematics
+                            <div style='font-size:0.9rem; opacity:0.8; margin-top:0.25rem;'>5:00 PM – 6:00 PM</div>
                         </button>
                     </div>
                 </div>
-                <div class="black-glass" style="flex:1 1 260px; min-width:220px; background:#e3f7fc; border-radius:18px; padding:1.5rem;">
-                    <h3 style="color:#14213d; margin-bottom:1.2rem; text-align:center;">JEE Level</h3>
-                    <div style="display:flex; flex-direction:column; gap:1rem; align-items:center;">
-                        <button onclick="showCategoriesForClass('4', 'Class 11 Applied')" class="subject-btn btn" style="width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #d1c4e9; cursor:pointer;">
-                            Class 11: Applied Mathematics
-                            <div style='font-size:0.98rem; font-weight:400; color:#232946;'>6:00 PM – 7:00 PM</div>
+                <div class="glow-card floating-element" style="animation-delay: 1s;">
+                    <span class="subject-icon" style="font-size: 3rem; display: block; margin-bottom: 1rem;">🚀</span>
+                    <h3 class="subject-title">JEE Level</h3>
+                    <p class="subject-description">Advanced mathematics preparation for JEE and competitive exams with expert guidance.</p>
+                    <div style="display:flex; flex-direction:column; gap:1rem; margin-top:1.5rem;">
+                        <button onclick="showCategoriesForClass('4', 'Class 11 Applied')" class="btn-modern btn-secondary-modern" style="width:100%;">
+                            🔬 Class 11: Applied Mathematics
+                            <div style='font-size:0.9rem; opacity:0.8; margin-top:0.25rem;'>6:00 PM – 7:00 PM</div>
                         </button>
-                        <button onclick="showCategoriesForClass('6', 'Class 12 Applied')" class="subject-btn btn" style="width:100%; max-width:220px; border-radius:14px; font-weight:600; border:2px solid #ffcdd2; cursor:pointer;">
-                            Class 12: Core Mathematics
-                            <div style='font-size:0.98rem; font-weight:400; color:#232946;'>8:00 PM – 9:00 PM</div>
+                        <button onclick="showCategoriesForClass('6', 'Class 12 Applied')" class="btn-modern btn-secondary-modern" style="width:100%;">
+                            🎓 Class 12: Core Mathematics
+                            <div style='font-size:0.9rem; opacity:0.8; margin-top:0.25rem;'>8:00 PM – 9:00 PM</div>
                         </button>
                     </div>
                 </div>
@@ -986,21 +1149,41 @@
         </div>
     </section>
 
-    <!-- Contact Us Section -->
-    <section id="contact" class="contact-section slide-in-bottom">
-        <h2>Get in Touch</h2>
-        <div class="contact-grid">
-            <div class="contact-card instagram-bg black-glass">
-                <h4>Instagram</h4>
-                <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank" class="btn btn-instagram">Follow Us</a>
+    <!-- Enhanced CTA Section -->
+    <section class="cta-section scroll-reveal">
+        <div class="container">
+            <h2 class="cta-title">Ready to Excel in Your Studies?</h2>
+            <p class="cta-description">Join thousands of successful students who have transformed their academic journey with our expert guidance and personalized approach.</p>
+            <div class="cta-buttons">
+                <a href="/admission" class="btn-modern btn-primary-modern" style="font-size: 1.1rem; padding: 1rem 2rem;">🎓 Start Your Journey</a>
+                <a href="#contact" class="btn-modern btn-glass" style="font-size: 1.1rem; padding: 1rem 2rem;">💬 Talk to Us</a>
             </div>
-            <div class="contact-card youtube-bg black-glass">
-                <h4>YouTube</h4>
-                <a href="https://www.youtube.com/@MohitNariyani" target="_blank" class="btn btn-youtube">Subscribe</a>
-            </div>
-            <div class="contact-card phone-bg black-glass">
-                <h4>Phone</h4>
-                <a href="tel:+917224860881" class="btn btn-primary">+91 72248 60881</a>
+        </div>
+    </section>
+
+    <!-- Enhanced Contact Us Section -->
+    <section id="contact" class="contact-section slide-in-bottom" style="margin: 4rem 0;">
+        <div class="container">
+            <h2 class="neon-text text-center" style="margin-bottom: 3rem;">Get in Touch</h2>
+            <div class="card-grid-modern">
+                <div class="glass-card scroll-reveal text-center">
+                    <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">📸</span>
+                    <h4 style="color: white; font-size: 1.3rem; margin-bottom: 1rem;">Instagram</h4>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 1.5rem;">Follow us for daily updates, tips, and student success stories</p>
+                    <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank" class="btn-modern btn-secondary-modern">Follow Us</a>
+                </div>
+                <div class="glass-card scroll-reveal text-center">
+                    <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">🎥</span>
+                    <h4 style="color: white; font-size: 1.3rem; margin-bottom: 1rem;">YouTube</h4>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 1.5rem;">Watch our educational videos and live class recordings</p>
+                    <a href="https://www.youtube.com/@MohitNariyani" target="_blank" class="btn-modern btn-secondary-modern">Subscribe</a>
+                </div>
+                <div class="glass-card scroll-reveal text-center">
+                    <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">📞</span>
+                    <h4 style="color: white; font-size: 1.3rem; margin-bottom: 1rem;">Phone</h4>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 1.5rem;">Call us directly for admission queries and support</p>
+                    <a href="tel:+917224860881" class="btn-modern btn-primary-modern">+91 72248 60881</a>
+                </div>
             </div>
         </div>
     </section>
@@ -1301,21 +1484,257 @@
         });
     </script>
     <script src="script.js"></script>
+    <script src="modern-interactions.js"></script>
     
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container footer-content">
-            <div class="footer-social">
-                <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank">Instagram</a>
-                <a href="https://www.youtube.com/@MohitNariyani" target="_blank">YouTube</a>
+    <!-- Enhanced Modern Footer -->
+    <footer class="footer-modern">
+        <div class="container">
+            <div class="footer-content-modern">
+                <div class="footer-section">
+                    <h3>Sunrise Educational Centre</h3>
+                    <p>Empowering students with quality education and personalized attention. Your success is our mission.</p>
+                    <div class="footer-social-modern">
+                        <a href="https://www.instagram.com/sunrise_education_centre?igsh=OGc5enlsanE0eWJ2" target="_blank" class="social-link-modern" title="Instagram">📸</a>
+                        <a href="https://www.youtube.com/@MohitNariyani" target="_blank" class="social-link-modern" title="YouTube">🎥</a>
+                        <a href="tel:+917224860881" class="social-link-modern" title="Phone">📞</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <a href="/admission">Admission</a>
+                        <a href="/study-resources">Study Resources</a>
+                        <a href="/online-class">Live Classes</a>
+                        <a href="/forum">Forum</a>
+                        <a href="/batch">Batches</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span>📍</span>
+                            <span>Deepmala Pagarani Sanskar School, Bhopal, MP</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span>📞</span>
+                            <a href="tel:+917224860881">+91 72248 60881</a>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <span>⏰</span>
+                            <span>Mon-Sat: 4:00 PM - 9:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Our Subjects</h3>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <span>📐 Mathematics (Class 9-12)</span>
+                        <span>🎯 JEE Preparation</span>
+                        <span>📚 Foundation Courses</span>
+                        <span>🚀 Competitive Exams</span>
+                    </div>
+                </div>
             </div>
-            <div class="footer-links">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Contact Us</a>
+            
+            <div class="footer-bottom">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div>&copy; 2024 Sunrise Educational Centre. All rights reserved.</div>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <button id="footerThemeToggle" class="btn-modern btn-glass" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                            🌙 Theme
+                        </button>
+                        <span style="font-size: 0.9rem;">Last updated: December 2024</span>
+                    </div>
+                </div>
             </div>
-            <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
         </div>
     </footer>
+
+    <!-- Modern Button Navbar (User Pages Only) -->
+    {% if username and role not in ['admin', 'teacher'] %}
+    <nav class="modern-navbar">
+        <div class="button-container">
+            <!-- Home Button -->
+            <button class="button active" data-tooltip="Home" onclick="navigateTo('/')">
+                <svg class="icon" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M946.5 505L560.1 118.8l-25.9-25.9a31.5 31.5 0 0 0-44.4 0L77.5 505a63.9 63.9 0 0 0-18.8 46c.4 35.2 29.7 63.3 64.9 63.3h42.5V940h691.8V614.3h43.4c17.1 0 33.2-6.7 45.3-18.8a63.6 63.6 0 0 0 18.7-45.3c0-17-6.7-33.1-18.8-45.2zM568 868H456V664h112v204zm217.9-325.7V868H632V640c0-22.1-17.9-40-40-40H432c-22.1 0-40 17.9-40 40v228H238.1V542.3h-96l370-369.7 23.1 23.1L882 542.3h-96.1z"></path>
+                </svg>
+            </button>
+            
+            <!-- Search Button -->
+            <button class="button" data-tooltip="Search" onclick="openSearch()">
+                <svg class="icon" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
+            
+            <!-- Profile Button -->
+            <button class="button" data-tooltip="Profile" onclick="navigateTo('/profile')">
+                <svg class="icon" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.9 8.181.75.75 0 1 1-1.499.044 7.5 7.5 0 0 0-14.993 0 .75.75 0 0 1-1.5-.045 9.005 9.005 0 0 1 5.9-8.18A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"></path>
+                </svg>
+            </button>
+            
+            <!-- Resources Button -->
+            <button class="button" data-tooltip="Resources" onclick="navigateTo('/study-resources')">
+                <svg class="icon" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+            </button>
+            
+            <!-- Forum Button -->
+            <button class="button" data-tooltip="Forum" onclick="navigateTo('/forum')">
+                <svg class="icon" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"></path>
+                </svg>
+            </button>
+        </div>
+    </nav>
+    {% endif %}
+
+    <!-- Floating Action Button for Quick Actions -->
+    <button class="fab" onclick="toggleQuickActions()" title="Quick Actions">
+        ⚡
+    </button>
+
+    <!-- Quick Actions Menu -->
+    <div id="quickActionsMenu" style="display: none; position: fixed; bottom: 100px; right: 30px; z-index: 1001;">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            <button class="pulse-btn" onclick="window.location.href='/admission'" style="padding: 10px 20px; font-size: 14px;">
+                🎓 Admission
+            </button>
+            <button class="morph-btn" onclick="window.location.href='/online-class'" style="width: 120px; height: 35px; font-size: 14px;">
+                🎥 Live Class
+            </button>
+            <button class="uiverse-btn" onclick="window.location.href='/forum'" style="padding: 8px 16px; font-size: 14px;">
+                💬 Forum
+            </button>
+        </div>
+    </div>
+
+    <!-- Progress Bar for Page Loading -->
+    <div id="pageLoadProgress" class="progress-container" style="position: fixed; top: 0; left: 0; width: 100%; z-index: 10000; display: none;">
+        <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+    </div>
+
 </body>
+
 <script src="attached_assets/theme.js"></script>
+<script>
+    // Floating Action Button functionality
+    function toggleQuickActions() {
+        const menu = document.getElementById('quickActionsMenu');
+        if (menu.style.display === 'none' || menu.style.display === '') {
+            menu.style.display = 'block';
+            menu.style.animation = 'fadeInUp 0.3s ease-out';
+        } else {
+            menu.style.animation = 'fadeOut 0.3s ease-out';
+            setTimeout(() => {
+                menu.style.display = 'none';
+            }, 300);
+        }
+    }
+
+    // Close quick actions when clicking outside
+    document.addEventListener('click', function(event) {
+        const fab = document.querySelector('.fab');
+        const menu = document.getElementById('quickActionsMenu');
+        
+        if (!fab.contains(event.target) && !menu.contains(event.target)) {
+            menu.style.display = 'none';
+        }
+    });
+
+    // Page loading progress bar
+    function showLoadingProgress() {
+        const progressContainer = document.getElementById('pageLoadProgress');
+        const progressBar = document.getElementById('progressBar');
+        
+        progressContainer.style.display = 'block';
+        let width = 0;
+        const interval = setInterval(() => {
+            width += Math.random() * 15;
+            if (width >= 100) {
+                width = 100;
+                clearInterval(interval);
+                setTimeout(() => {
+                    progressContainer.style.display = 'none';
+                    progressBar.style.width = '0%';
+                }, 500);
+            }
+            progressBar.style.width = width + '%';
+        }, 100);
+    }
+
+    // Show loading progress on page navigation
+    document.querySelectorAll('a[href^="/"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            if (!this.target || this.target === '_self') {
+                showLoadingProgress();
+            }
+        });
+    });
+
+    // Add ripple effect to buttons
+    document.querySelectorAll('.uiverse-btn, .morph-btn, .pulse-btn').forEach(button => {
+        button.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple');
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+
+    // Add CSS for ripple effect
+    const rippleStyle = document.createElement('style');
+    rippleStyle.textContent = `
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+        
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(10px); }
+        }
+    `;
+    document.head.appendChild(rippleStyle);
+
+    // Initialize floating elements animation
+    document.addEventListener('DOMContentLoaded', function() {
+        const floatingElements = document.querySelectorAll('.floating-element');
+        floatingElements.forEach((element, index) => {
+            element.style.animationDelay = (index * 0.5) + 's';
+        });
+    });
+</script>
+<script src="modern-navbar.js"></script>
 </html>

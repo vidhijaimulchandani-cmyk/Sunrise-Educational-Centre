@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uiverse Components Demo - Sunrise Educational Centre</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="uiverse-components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .demo-section {
+            margin: 40px 0;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .demo-title {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .component-showcase {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .component-title {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1 class="demo-title neon-text">Uiverse Components Showcase</h1>
+        <p style="text-align: center; color: white; font-size: 1.2rem; margin-bottom: 40px;">
+            Modern UI components inspired by Uiverse for Sunrise Educational Centre
+        </p>
+
+        <!-- Buttons Section -->
+        <div class="demo-section">
+            <h2 class="gradient-text" style="text-align: center;">Interactive Buttons</h2>
+            <div class="component-grid">
+                <div class="component-showcase">
+                    <h3 class="component-title">Gradient Button</h3>
+                    <a href="#" class="uiverse-btn">Enroll Now</a>
+                </div>
+                
+                <div class="component-showcase">
+                    <h3 class="component-title">Morphing Button</h3>
+                    <a href="#" class="morph-btn">Learn More</a>
+                </div>
+                
+                <div class="component-showcase">
+                    <h3 class="component-title">Pulse Button</h3>
+                    <button class="pulse-btn">Join Class</button>
+                </div>
+                
+                <div class="component-showcase">
+                    <h3 class="component-title">Neumorphism Button</h3>
+                    <button class="neuro-btn">Download</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards Section -->
+        <div class="demo-section">
+            <h2 class="gradient-text" style="text-align: center;">Modern Cards</h2>
+            <div class="component-grid">
+                <div class="component-showcase">
+                    <h3 class="component-title">Glowing Card</h3>
+                    <div class="glow-card">
+                        <h3>Mathematics Course</h3>
+                        <p>Advanced calculus and algebra for Class 12 students</p>
+                        <div style="margin-top: 20px;">
+                            <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; font-size: 0.9rem;">Premium</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="component-showcase">
+                    <h3 class="component-title">Glass Card</h3>
+                    <div class="glass-card">
+                        <h3 style="color: #333;">Physics Lab</h3>
+                        <p style="color: #666;">Interactive experiments and simulations</p>
+                        <button class="uiverse-btn" style="margin-top: 15px; padding: 8px 20px; font-size: 14px;">Start Lab</button>
+                    </div>
+                </div>
+                
+                <div class="component-showcase">
+                    <h3 class="component-title">Tilt Card</h3>
+                    <div class="tilt-card">
+                        <h3 style="color: #333;">Chemistry Notes</h3>
+                        <p style="color: #666;">Complete study material for organic chemistry</p>
+                        <div style="margin-top: 15px;">
+                            <span style="background: #667eea; color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.8rem;">New</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Effects Section -->
+        <div class="demo-section">
+            <h2 class="gradient-text" style="text-align: center;">Visual Effects</h2>
+            <div class="component-grid">
+                <div class="component-showcase">
+                    <h3 class="component-title">Animated Border</h3>
+                    <div class="animated-border">
+                        <h4 style="color: #333; margin: 0;">Featured Course</h4>
+                        <p style="color: #666; margin: 10px 0 0 0;">JEE Main Preparation</p>
+                    </div>
+                </div>
+                
+                <div class="component-showcase">
+                    <h3 class="component-title">Progress Bar</h3>
+                    <div>
+                        <p style="color: white; margin-bottom: 10px;">Course Progress: 75%</p>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: 75%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="component-showcase">
+                    <h3 class="component-title">Floating Element</h3>
+                    <div class="floating-element" style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 15px; color: white; text-align: center;">
+                        <h4 style="margin: 0;">Live Class</h4>
+                        <p style="margin: 10px 0 0 0;">Starting in 5 minutes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Text Effects Section -->
+        <div class="demo-section">
+            <h2 class="gradient-text" style="text-align: center;">Text Effects</h2>
+            <div class="component-showcase">
+                <h3 class="component-title">Typewriter Effect</h3>
+                <div class="typewriter" style="color: white; font-size: 1.5rem; max-width: 600px;">
+                    Welcome to Sunrise Educational Centre
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Section -->
+        <div class="demo-section">
+            <h2 class="gradient-text" style="text-align: center;">Loading Indicators</h2>
+            <div class="component-showcase">
+                <h3 class="component-title">Loading Spinner</h3>
+                <div class="spinner"></div>
+                <p style="color: white;">Loading your courses...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="fab" onclick="scrollToTop()" title="Back to Top">
+        ↑
+    </button>
+
+    <script>
+        // Scroll to top functionality
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Show/hide FAB based on scroll position
+        window.addEventListener('scroll', function() {
+            const fab = document.querySelector('.fab');
+            if (window.scrollY > 300) {
+                fab.style.opacity = '1';
+                fab.style.visibility = 'visible';
+            } else {
+                fab.style.opacity = '0';
+                fab.style.visibility = 'hidden';
+            }
+        });
+
+        // Initialize FAB as hidden
+        document.addEventListener('DOMContentLoaded', function() {
+            const fab = document.querySelector('.fab');
+            fab.style.opacity = '0';
+            fab.style.visibility = 'hidden';
+            fab.style.transition = 'opacity 0.3s ease, visibility 0.3s ease';
+        });
+
+        // Add click sound effect (optional)
+        document.querySelectorAll('button, .uiverse-btn, .morph-btn').forEach(element => {
+            element.addEventListener('click', function(e) {
+                // Create ripple effect
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255,255,255,0.5)';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'ripple 0.6s linear';
+                ripple.style.pointerEvents = 'none';
+                
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

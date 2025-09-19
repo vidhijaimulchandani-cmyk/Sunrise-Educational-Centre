@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uiverse Components Showcase - Sunrise Educational Centre</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="floating-navbar.css">
+    <link rel="stylesheet" href="uiverse-components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding-top: 80px;
+        }
+        
+        .showcase-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 50px;
+            color: white;
+        }
+        
+        .showcase-section {
+            margin: 60px 0;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .section-title {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .component-demo {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .component-label {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .educational-context {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            text-align: left;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .implementation-guide {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: white;
+            border-left: 4px solid #667eea;
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Navbar -->
+    <nav class="floating-navbar black-glass">
+        <button class="hamburger" aria-label="Menu" aria-expanded="false">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+        <ul class="nav-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/uiverse-demo.html">Demo</a></li>
+            <li><a href="/uiverse-showcase.html">Showcase</a></li>
+            <li><a href="/admission">Admission</a></li>
+        </ul>
+    </nav>
+
+    <div class="showcase-container">
+        <!-- Header -->
+        <div class="showcase-header">
+            <h1 class="neon-text">Uiverse Components Integration</h1>
+            <p class="typewriter" style="font-size: 1.2rem; margin: 20px 0;">
+                Modern UI elements for educational excellence
+            </p>
+            <div class="stats-grid">
+                <div class="stat-card tilt-card">
+                    <div class="stat-number">15+</div>
+                    <div>UI Components</div>
+                </div>
+                <div class="stat-card tilt-card">
+                    <div class="stat-number">100%</div>
+                    <div>Responsive</div>
+                </div>
+                <div class="stat-card tilt-card">
+                    <div class="stat-number">⚡</div>
+                    <div>Performance</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Buttons Section -->
+        <div class="showcase-section">
+            <h2 class="gradient-text section-title">Interactive Buttons</h2>
+            <div class="component-grid">
+                <div class="component-demo">
+                    <div class="component-label">Gradient Button</div>
+                    <a href="#" class="uiverse-btn">Enroll in Course</a>
+                    <div class="educational-context">
+                        <strong>Use Case:</strong> Primary call-to-action buttons for course enrollment, admission applications, and important user actions.
+                    </div>
+                </div>
+                
+                <div class="component-demo">
+                    <div class="component-label">Morphing Button</div>
+                    <a href="#" class="morph-btn">View Syllabus</a>
+                    <div class="educational-context">
+                        <strong>Use Case:</strong> Secondary actions like viewing course details, downloading materials, or accessing resources.
+                    </div>
+                </div>
+                
+                <div class="component-demo">
+                    <div class="component-label">Pulse Button</div>
+                    <button class="pulse-btn">Join Live Class</button>
+                    <div class="educational-context">
+                        <strong>Use Case:</strong> Time-sensitive actions like joining live classes, submitting assignments, or urgent notifications.
+                    </div>
+                </div>
+                
+                <div class="component-demo">
+                    <div class="component-label">Neumorphism Button</div>
+                    <button class="neuro-btn">Download Notes</button>
+                    <div class="educational-context">
+                        <strong>Use Case:</strong> File downloads, resource access, and utility functions with a modern, tactile feel.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modern Cards Section -->
+        <div class="showcase-section">
+            <h2 class="gradient-text section-title">Educational Cards</h2>
+            <div class="component-grid">
+                <div class="component-demo">
+                    <div class="component-label">Glowing Course Card</div>
+                    <div class="glow-card">
+                        <h3>Advanced Mathematics</h3>
+                        <p>Complete JEE preparation with expert guidance and practice tests.</p>
+                        <div style="margin-top: 20px;">
+                            <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px; font-size: 0.9rem;">Premium Course</span>
+                        </div>
+                    </div>
+                    <div class="educational-context">
+                        <strong>Use Case:</strong> Featured courses, premium content, and highlighted educational programs.
+                    </div>
+                </div>
+                
+                <div class="component-demo">
+                    <div class="component-label">Glass Information Card</div>
+                    <div class="glass-card">
+                        <h3 style="color: #333;">Study Schedule</h3>
+                        <p style="color: #666;">Monday to Friday: 4:00 PM - 9:00 PM<br>Saturday: 2:00 PM - 6:00 PM</p>
+                        <button class="uiverse-btn" style="margin-top: 15px; padding: 8px 20px; font-size: 14px;">View Full Schedule</button>
+                    </div>
+                    <div class="educational-context">
+                        <strong>Use Case:</strong> Timetables, announcements, quick information displays, and dashboard widgets.
+                    </div>
+                </div>
+                
+                <div class="component-demo">
+                    <div class="component-label">Interactive Achievement Card</div>
+                    <div class="tilt-card">
+                        <h3 style="color: #333;">Student Achievement</h3>
+                        <p style="color: #666;">Rahul Sharma - 98% in Class 12 Mathematics</p>
+                        <div style="margin-top: 15px;">
+                            <span style="background: #667eea; color: white; padding: 5px 10px; border-radius: 10px; font-size: 0.8rem;">Top Performer</span>
+                        </div>
+                    </div>
+                    <div class="educational-context">
+                        <strong>Use Case:</strong> Student achievements, success stories, testimonials, and recognition displays.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visual Effects Section -->
+        <div class="showcase-section">
+            <h2 class="gradient-text section-title">Visual Effects & Indicators</h2>
+            <div class="component-grid">
+                <div class="component-demo">
+                    <div class="component-label">Animated Border Highlight</div>
+                    <div class="animated-border">
+                        <h4 style="color: #333; margin: 0;">Featured Announcement</h4>
+                        <p style="color: #666; margin: 10px 0 0 0;">New batch starting from March 1st</p>
+                    </div>
+                    <div class="educational-context">
+                        <strong>Use Case:</strong> Important announcements, featured content, and attention-grabbing notifications.
+                    </div>
+                </div>
+                
+                <div class="component-demo">
+                    <div class="component-label">Progress Tracking</div>
+                    <div>
+                        <p style="color: white; margin-bottom: 10px;">Course Completion: 75%</p>
+                        <div class="progress-container">
+                            <div class="progress-bar" style="width: 75%;"></div>
+                        </div>
+                        <p style="color: white; margin-top: 10px; font-size: 0.9rem;">Chapter 8 of 12 completed</p>
+                    </div>
+                    <div class="educational-context">
+                        <strong>Use Case:</strong> Course progress, assignment completion, skill development tracking, and learning milestones.
+                    </div>
+                </div>
+                
+                <div class="component-demo">
+                    <div class="component-label">Floating Notification</div>
+                    <div class="floating-element" style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 15px; color: white; text-align: center;">
+                        <h4 style="margin: 0;">📚 New Assignment</h4>
+                        <p style="margin: 10px 0 0 0;">Due in 2 days</p>
+                    </div>
+                    <div class="educational-context">
+                        <strong>Use Case:</strong> Assignment reminders, live class notifications, and important updates that need attention.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Text Effects Section -->
+        <div class="showcase-section">
+            <h2 class="gradient-text section-title">Typography & Text Effects</h2>
+            <div class="component-demo">
+                <div class="component-label">Dynamic Welcome Message</div>
+                <div class="typewriter" style="color: white; font-size: 1.5rem; max-width: 600px; margin: 0 auto;">
+                    Welcome to Sunrise Educational Centre - Your Success Partner
+                </div>
+                <div class="educational-context">
+                    <strong>Use Case:</strong> Welcome messages, dynamic announcements, and engaging introductory text for new students.
+                </div>
+            </div>
+        </div>
+
+        <!-- Implementation Guide -->
+        <div class="showcase-section">
+            <h2 class="gradient-text section-title">Implementation Guide</h2>
+            
+            <div class="implementation-guide">
+                <h3>🚀 Quick Start</h3>
+                <p>1. Include the <code>uiverse-components.css</code> file in your HTML</p>
+                <p>2. Add the desired component classes to your elements</p>
+                <p>3. Customize colors and animations to match your brand</p>
+            </div>
+            
+            <div class="implementation-guide">
+                <h3>📚 Educational Context</h3>
+                <p><strong>Course Cards:</strong> Use glow-card for premium courses, glass-card for information displays</p>
+                <p><strong>Action Buttons:</strong> uiverse-btn for enrollment, pulse-btn for urgent actions</p>
+                <p><strong>Progress Tracking:</strong> Implement progress bars for course completion and skill development</p>
+                <p><strong>Notifications:</strong> Use floating elements for important announcements and reminders</p>
+            </div>
+            
+            <div class="implementation-guide">
+                <h3>🎨 Customization Tips</h3>
+                <p>• Adjust gradient colors to match your educational brand</p>
+                <p>• Modify animation speeds for better user experience</p>
+                <p>• Use consistent spacing and typography throughout</p>
+                <p>• Test responsiveness on mobile devices</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="fab" onclick="scrollToTop()" title="Back to Top">
+        ↑
+    </button>
+
+    <script>
+        // Scroll to top functionality
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Show/hide FAB based on scroll position
+        window.addEventListener('scroll', function() {
+            const fab = document.querySelector('.fab');
+            if (window.scrollY > 300) {
+                fab.style.opacity = '1';
+                fab.style.visibility = 'visible';
+            } else {
+                fab.style.opacity = '0';
+                fab.style.visibility = 'hidden';
+            }
+        });
+
+        // Initialize FAB as hidden
+        document.addEventListener('DOMContentLoaded', function() {
+            const fab = document.querySelector('.fab');
+            fab.style.opacity = '0';
+            fab.style.visibility = 'hidden';
+            fab.style.transition = 'opacity 0.3s ease, visibility 0.3s ease';
+        });
+
+        // Add interactive effects
+        document.querySelectorAll('.tilt-card').forEach(card => {
+            card.addEventListener('mousemove', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+            });
+        });
+
+        // Hamburger menu functionality
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            this.classList.toggle('active');
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
