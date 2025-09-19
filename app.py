@@ -7323,24 +7323,86 @@ if __name__ == '__main__':
         # Fallback quietly if logging setup fails
         pass
     
-    # Start session cleanup service
-    cleanup_stale_sessions()
-    start_session_cleanup_service()
-    
-    # Default to HTTP mode to avoid SSL issues
-    print("Starting server with HTTP...")
-    print("Access your app at: http://localhost:10000")
-    print("Note: WebRTC features will not work without HTTPS!")
-    print("Session cleanup service started - will clean stale sessions every hour")
-    
+    # Initialize database and services
     try:
-        socketio.run(app, host='0.0.0.0', port=port, debug=False, log_output=False, allow_unsafe_werkzeug=True)
+        setup_db()
+        cleanup_stale_sessions()
+        start_session_cleanup_service()
+        print("✅ Database and services initialized successfully")
     except Exception as e:
-        print(f"Server Error: {e}")
-        print("Trying alternative configuration...")
+        print(f"⚠️  Warning: Service initialization error: {e}")
+    
+    # Server startup information
+    print("=" * 60)
+    print("🌅 SUNRISE EDUCATIONAL CENTRE SERVER")
+    print("=" * 60)
+    print(f"🌐 Server will start on: http://localhost:{port}")
+    print(f"🔗 External access: http://0.0.0.0:{port}")
+    print("📱 Mobile access: Use your computer's IP address")
+    print("⚠️  Note: WebRTC features require HTTPS in production")
+    print("🧹 Session cleanup service: Active (runs every hour)")
+    print("🔄 Auto-restart: Enabled (server will restart on errors)")
+    print("⏹️  To stop: Press Ctrl+C")
+    print("=" * 60)
+    
+    # Keep the server running with proper error handling and restart capability
+    while True:
         try:
-            socketio.run(app, host='127.0.0.1', port=port, debug=False, log_output=False, allow_unsafe_werkzeug=True)
-        except Exception as e2:
-            print(f"Alternative configuration failed: {e2}")
-            print("Trying with different settings...")
-            socketio.run(app, host='localhost', port=port, debug=False, log_output=False, allow_unsafe_werkzeug=True)
+            print(f"🚀 Starting Sunrise Educational Centre server on port {port}...")
+            socketio.run(
+                app, 
+                host='0.0.0.0', 
+                port=port, 
+                debug=False, 
+                log_output=True,
+                allow_unsafe_werkzeug=True,
+                use_reloader=False  # Disable reloader to prevent stopping
+            )
+        except KeyboardInterrupt:
+            print("\n⏹️  Server stopped by user (Ctrl+C)")
+            break
+        except OSError as e:
+            if "Address already in use" in str(e):
+                print(f"❌ Port {port} is already in use. Trying port {port + 1}...")
+                port += 1
+                continue
+            else:
+                print(f"❌ Network error: {e}")
+                print("🔄 Retrying in 5 seconds...")
+                import time
+                time.sleep(5)
+        except Exception as e:
+            print(f"❌ Server error: {e}")
+            print("🔄 Restarting server in 5 seconds...")
+            import time
+            time.sleep(5)
+            
+            # Try alternative configurations
+            try:
+                print("🔄 Trying alternative host configuration...")
+                socketio.run(
+                    app, 
+                    host='127.0.0.1', 
+                    port=port, 
+                    debug=False, 
+                    log_output=True,
+                    allow_unsafe_werkzeug=True,
+                    use_reloader=False
+                )
+            except Exception as e2:
+                print(f"❌ Alternative configuration failed: {e2}")
+                print("🔄 Trying localhost configuration...")
+                try:
+                    socketio.run(
+                        app, 
+                        host='localhost', 
+                        port=port, 
+                        debug=False, 
+                        log_output=True,
+                        allow_unsafe_werkzeug=True,
+                        use_reloader=False
+                    )
+                except Exception as e3:
+                    print(f"❌ All configurations failed: {e3}")
+                    print("🔄 Waiting 10 seconds before retry...")
+                    time.sleep(10)
