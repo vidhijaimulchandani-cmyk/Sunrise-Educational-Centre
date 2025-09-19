@@ -12,17 +12,55 @@ let currentMentionQuery = ''; // Current mention search query
 // Initialize forum when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Forum initialized');
-    setupEventListeners();
-    setupDarkMode();
-    setupDragAndDrop();
-    setupMentionSystem(); // Add mention system setup
     
-    // Auto-select first topic if user is not admin/teacher
-    setTimeout(() => {
-        if (!currentTopic) {
-            autoSelectTopic();
+    // Debug: Check if all required elements exist
+    const requiredElements = {
+        categoryToggle: document.getElementById('categoryToggle'),
+        categoryPopup: document.getElementById('categoryPopup'),
+        overlay: document.getElementById('overlay'),
+        forumMessages: document.getElementById('forumMessages')
+    };
+    
+    console.log('Required elements check:', requiredElements);
+    
+    // Force setup event listeners with retry mechanism
+    let retryCount = 0;
+    const maxRetries = 5;
+    
+    function initializeWithRetry() {
+        const toggle = document.getElementById('categoryToggle');
+        const popup = document.getElementById('categoryPopup');
+        const overlay = document.getElementById('overlay');
+        
+        if (toggle && popup && overlay) {
+            console.log('All elements found, setting up event listeners');
+            setupEventListeners();
+            setupDarkMode();
+            setupDragAndDrop();
+            setupMentionSystem();
+            
+            // Auto-select first topic if user is not admin/teacher
+            setTimeout(() => {
+                if (!currentTopic) {
+                    autoSelectTopic();
+                }
+            }, 500);
+        } else {
+            retryCount++;
+            if (retryCount < maxRetries) {
+                console.log(`Retry ${retryCount}/${maxRetries}: Some elements not found, retrying in 100ms...`);
+                setTimeout(initializeWithRetry, 100);
+            } else {
+                console.error('Failed to find required elements after', maxRetries, 'retries');
+                // Try to set up what we can
+                setupDarkMode();
+                setupDragAndDrop();
+                setupMentionSystem();
+            }
         }
-    }, 500);
+    }
+    
+    initializeWithRetry();
 });
 
 // Setup all event listeners
@@ -160,14 +198,36 @@ function openCategoryPopup() {
         overlay: !!overlay
     });
     
-    if (categoryPopup && categoryToggle && overlay) {
+    if (categoryPopup && overlay) {
+        // Force show the popup with inline styles as backup
+        categoryPopup.style.left = '0';
+        categoryPopup.style.visibility = 'visible';
+        categoryPopup.style.opacity = '1';
+        
+        // Add classes
         categoryPopup.classList.add('open');
-        categoryToggle.classList.add('open');
         overlay.classList.add('open');
         document.body.classList.add('popup-open');
+        
+        if (categoryToggle) {
+            categoryToggle.classList.add('open');
+        }
+        
         console.log('Category popup opened successfully');
+        
+        // Debug: Log current styles
+        const computedStyle = window.getComputedStyle(categoryPopup);
+        console.log('Popup computed styles:', {
+            left: computedStyle.left,
+            visibility: computedStyle.visibility,
+            opacity: computedStyle.opacity,
+            transform: computedStyle.transform
+        });
     } else {
-        console.error('Missing elements for category popup');
+        console.error('Missing elements for category popup:', {
+            popup: !!categoryPopup,
+            overlay: !!overlay
+        });
     }
 }
 
@@ -178,14 +238,27 @@ function closeCategoryPopup() {
     const categoryToggle = document.getElementById('categoryToggle');
     const overlay = document.getElementById('overlay');
     
-    if (categoryPopup && categoryToggle && overlay) {
+    if (categoryPopup && overlay) {
+        // Force hide the popup with inline styles as backup
+        categoryPopup.style.left = '-400px';
+        categoryPopup.style.visibility = 'hidden';
+        categoryPopup.style.opacity = '0';
+        
+        // Remove classes
         categoryPopup.classList.remove('open');
-        categoryToggle.classList.remove('open');
         overlay.classList.remove('open');
         document.body.classList.remove('popup-open');
+        
+        if (categoryToggle) {
+            categoryToggle.classList.remove('open');
+        }
+        
         console.log('Category popup closed successfully');
     } else {
-        console.error('Missing elements for category popup close');
+        console.error('Missing elements for category popup close:', {
+            popup: !!categoryPopup,
+            overlay: !!overlay
+        });
     }
 }
 
@@ -196,6 +269,50 @@ function updateCurrentTopicDisplay(topicName) {
         forumHeader.textContent = `Forum - ${topicName}`;
     }
 }
+
+// Test function for debugging popup
+function testPopup() {
+    console.log('=== POPUP TEST STARTED ===');
+    
+    const categoryToggle = document.getElementById('categoryToggle');
+    const categoryPopup = document.getElementById('categoryPopup');
+    const overlay = document.getElementById('overlay');
+    
+    console.log('Elements check:', {
+        toggle: !!categoryToggle,
+        popup: !!categoryPopup,
+        overlay: !!overlay
+    });
+    
+    if (categoryPopup) {
+        const isOpen = categoryPopup.classList.contains('open');
+        console.log('Current state - isOpen:', isOpen);
+        
+        if (isOpen) {
+            console.log('Closing popup...');
+            closeCategoryPopup();
+        } else {
+            console.log('Opening popup...');
+            openCategoryPopup();
+        }
+    } else {
+        console.error('categoryPopup element not found!');
+        
+        // Try to find it with different methods
+        const popupByClass = document.querySelector('.category-popup');
+        const popupByQuery = document.querySelector('[id="categoryPopup"]');
+        
+        console.log('Alternative search results:', {
+            byClass: !!popupByClass,
+            byQuery: !!popupByQuery
+        });
+    }
+    
+    console.log('=== POPUP TEST ENDED ===');
+}
+
+// Make testPopup available globally for the button
+window.testPopup = testPopup;
 
 // Auto-select topic based on user role
 function autoSelectTopic() {

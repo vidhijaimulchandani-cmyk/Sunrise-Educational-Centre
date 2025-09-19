@@ -786,3 +786,99 @@ Traceback (most recent call last):
       File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
     return codecs.charmap_encode(input,self.errors,encoding_table)[0]
 UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f9f9' in position 0: character maps to <undefined>
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\handlers.py", line 81, in emit
+    logging.FileHandler.emit(self, record)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1265, in emit
+    StreamHandler.emit(self, record)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1159, in emit
+    self.handleError(record)
+    ~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1085, in handleError
+    traceback.print_stack(frame, file=sys.stderr)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\traceback.py", line 239, in print_stack
+    print_list(extract_stack(f, limit=limit), file=file)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\traceback.py", line 31, in print_list
+    print(item, file=file, end="")
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 119: character maps to <undefined>
+Call stack:
+Traceback (most recent call last):
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7328, in <module>
+    setup_db()
+    ~~~~~~~~^^
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 422, in setup_db
+    init_poll_and_doubt_tables()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 334, in init_poll_and_doubt_tables
+    db = get_db()
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 321, in get_db
+    db = getattr(g, '_database', None)
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\werkzeug\local.py", line 318, in __get__
+    obj = instance._get_current_object()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\werkzeug\local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7328, in <module>
+    setup_db()
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 422, in setup_db
+    init_poll_and_doubt_tables()
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 334, in init_poll_and_doubt_tables
+    db = get_db()
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 321, in get_db
+    db = getattr(g, '_database', None)
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\werkzeug\local.py", line 318, in __get__
+    obj = instance._get_current_object()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\werkzeug\local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7333, in <module>
+      File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+UnicodeEncodeError: 'charmap' codec can't encode characters in position 0-1: character maps to <undefined>
