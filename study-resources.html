@@ -97,7 +97,9 @@
           </div>
           <div class="info-item">
             <span class="info-label">Status:</span>
-            {% if paid_status == 'paid' %}
+            {% if is_guest %}
+              <span class="status-chip guest">👤 Guest</span>
+            {% elif paid_status == 'paid' %}
               <span class="status-chip">Premium Access</span>
             {% else %}
               <span class="status-chip unpaid">Basic Access</span>
@@ -210,6 +212,29 @@
     </section>
 
     <main class="container main-content study-resources-shell" style="position: relative; z-index: 15;">
+      
+      <!-- Guest User Notice -->
+      {% if is_guest %}
+      <section class="glass-card scroll-reveal" style="margin: 2rem 0; padding: 2rem; text-align: center; background: rgba(106, 130, 251, 0.1); border: 1px solid rgba(106, 130, 251, 0.3);">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
+          <span style="font-size: 2rem;">👋</span>
+          <h3 style="color: white; margin: 0;">Welcome, Guest!</h3>
+        </div>
+        <p style="color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; font-size: 1.1rem;">
+          You're viewing study resources in preview mode. Some features are limited for guest users.
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+          <a href="/auth" class="uiverse-btn">🔐 Login for Full Access</a>
+          <a href="/admission" class="morph-btn">🎓 Get Admission</a>
+        </div>
+        <div style="margin-top: 1rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+          <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin: 0;">
+            💡 <strong>Login Benefits:</strong> Access all resources, download materials, join live classes, and participate in forums
+          </p>
+        </div>
+      </section>
+      {% endif %}
+      
       <!-- Enhanced Search Section -->
       <section class="glass-card scroll-reveal" style="margin: 2rem 0; padding: 2rem; text-align: center;">
         <h3 style="color: white; font-size: 1.5rem; margin-bottom: 1rem; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">🔍 Find Your Resources</h3>

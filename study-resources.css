@@ -99,6 +99,12 @@ body {
   border-color: rgba(255,255,255,0.25);
 }
 
+.status-chip.guest {
+  background: rgba(106, 130, 251, 0.2);
+  color: #c7d2fe;
+  border: 1px solid rgba(106, 130, 251, 0.4);
+}
+
 /* Enhanced Vertical Slider with Modern Aesthetic */
 .vertical-slider {
   position: fixed !important;

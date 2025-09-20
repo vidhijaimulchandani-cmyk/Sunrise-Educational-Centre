@@ -1261,11 +1261,11 @@ def api_live_classes_status():
 def study_resources():
     try:
         role = session.get('role')
-
-        # Redirect if not logged in – preserve intended destination to prevent loops
-        if not role:
-            flash('You must be logged in to view resources.', 'error')
-            return redirect(url_for('auth', next='study-resources'))
+        username = session.get('username')
+        user_id = session.get('user_id')
+        
+        # Allow guest access but with limited functionality
+        is_guest = not role
         
         # Redirect admin/teacher to their own panel, as this page is for students
         if role in ['admin', 'teacher']:
@@ -1273,33 +1273,49 @@ def study_resources():
             return redirect(url_for('admin_panel'))
 
         # Determine the user's class from the database (more reliable than mapping role string)
-        try:
-            user_id = session.get('user_id')
-            user = get_user_by_id(user_id) if user_id else None
-            # user tuple: (id, username, class_id, paid, class_name, banned, mobile_no, email_address)
-            class_id = user[2] if user and len(user) > 2 else None
-            class_name = user[4] if user and len(user) > 4 else role
-            if not class_id:
-                # Fallback: attempt to resolve by role name (case-insensitive)
-                try:
-                    from auth_handler import get_class_id_by_name
-                    resolved_class_id = get_class_id_by_name(role)
-                    class_id = resolved_class_id
-                except Exception as _:
-                    pass
-            if not class_id:
-                flash('Could not determine your class. Please contact administrator.', 'error')
+        class_id = None
+        class_name = "Guest"
+        paid_status = None
+        
+        if not is_guest:
+            try:
+                user = get_user_by_id(user_id) if user_id else None
+                # user tuple: (id, username, class_id, paid, class_name, banned, mobile_no, email_address)
+                class_id = user[2] if user and len(user) > 2 else None
+                class_name = user[4] if user and len(user) > 4 else role
+                paid_status = user[3] if user and len(user) > 3 else None
+                
+                if not class_id:
+                    # Fallback: attempt to resolve by role name (case-insensitive)
+                    try:
+                        from auth_handler import get_class_id_by_name
+                        resolved_class_id = get_class_id_by_name(role)
+                        class_id = resolved_class_id
+                    except Exception as _:
+                        pass
+                        
+                if not class_id:
+                    flash('Could not determine your class. Please contact administrator.', 'error')
+                    return redirect(url_for('home'))
+            except Exception as e:
+                print(f"Error determining user class: {e}")
+                flash('Error loading class information. Please try again.', 'error')
                 return redirect(url_for('home'))
-        except Exception as e:
-            print(f"Error determining user class: {e}")
-            flash('Error loading class information. Please try again.', 'error')
-            return redirect(url_for('home'))
+        else:
+            # For guests, show a default set of resources (e.g., Class 10 or general resources)
+            try:
+                from auth_handler import get_class_id_by_name
+                class_id = get_class_id_by_name("Class 10")  # Default to Class 10 for guests
+                class_name = "Class 10 (Preview)"
+            except Exception as _:
+                class_id = 2  # Fallback to a common class ID
+                class_name = "Preview Mode"
         
         # Fetch resources only for the user's class
         resources = []
         try:
             if class_id:
-                resources = get_resources_for_class_id(class_id)
+                resources = get_resources_for_class_id(class_id, paid_status)
         except Exception as e:
             print(f"Error fetching resources: {e}")
             resources = []
@@ -1315,18 +1331,7 @@ def study_resources():
             categories = []
             flash('Some categories could not be loaded.', 'warning')
 
-        paid_status = None
-        try:
-            if user_id:
-                user = get_user_by_id(user_id)
-                if user and len(user) > 3:
-                    paid_status = user[3]  # Assuming user[3] is the paid status
-        except Exception as e:
-            print(f"Error getting user paid status: {e}")
-            paid_status = None
-
-        # Pass username and role so navbar shows correct login state
-        username = session.get('username')
+        # Pass all necessary data to template
         return render_template(
             'study-resources.html',
             resources=resources,
@@ -1335,7 +1340,8 @@ def study_resources():
             class_id=class_id,
             paid_status=paid_status,
             username=username,
-            role=role
+            role=role,
+            is_guest=is_guest
         )
         
     except Exception as e:
@@ -7313,7 +7319,7 @@ if __name__ == '__main__':
                 lg.addHandler(file_handler)
         # Redirect stdout/stderr so print statements go to the file as well
         try:
-            stdout_file = open(log_file_path, 'a', buffering=1)
+            stdout_file = open(log_file_path, 'a', buffering=1, encoding='utf-8', errors='replace')
             sys.stdout = stdout_file
             sys.stderr = stdout_file
         except Exception:
@@ -7323,32 +7329,42 @@ if __name__ == '__main__':
         # Fallback quietly if logging setup fails
         pass
     
-    # Initialize database and services
+    # Initialize database and services within application context
     try:
-        setup_db()
-        cleanup_stale_sessions()
-        start_session_cleanup_service()
+        with app.app_context():
+            setup_db()
+            cleanup_stale_sessions()
+            start_session_cleanup_service()
         print("✅ Database and services initialized successfully")
     except Exception as e:
         print(f"⚠️  Warning: Service initialization error: {e}")
+        import traceback
+        traceback.print_exc()
     
     # Server startup information
-    print("=" * 60)
-    print("🌅 SUNRISE EDUCATIONAL CENTRE SERVER")
-    print("=" * 60)
-    print(f"🌐 Server will start on: http://localhost:{port}")
-    print(f"🔗 External access: http://0.0.0.0:{port}")
-    print("📱 Mobile access: Use your computer's IP address")
-    print("⚠️  Note: WebRTC features require HTTPS in production")
-    print("🧹 Session cleanup service: Active (runs every hour)")
-    print("🔄 Auto-restart: Enabled (server will restart on errors)")
-    print("⏹️  To stop: Press Ctrl+C")
-    print("=" * 60)
+    try:
+        print("=" * 60)
+        print("SUNRISE EDUCATIONAL CENTRE SERVER")
+        print("=" * 60)
+        print(f"Server will start on: http://localhost:{port}")
+        print(f"External access: http://0.0.0.0:{port}")
+        print("Mobile access: Use your computer's IP address")
+        print("Note: WebRTC features require HTTPS in production")
+        print("Session cleanup service: Active (runs every hour)")
+        print("Auto-restart: Enabled (server will restart on errors)")
+        print("To stop: Press Ctrl+C")
+        print("=" * 60)
+    except UnicodeEncodeError:
+        print("=" * 60)
+        print("SUNRISE EDUCATIONAL CENTRE SERVER")
+        print("=" * 60)
+        print(f"Server starting on port {port}")
+        print("=" * 60)
     
     # Keep the server running with proper error handling and restart capability
     while True:
         try:
-            print(f"🚀 Starting Sunrise Educational Centre server on port {port}...")
+            print(f"Starting Sunrise Educational Centre server on port {port}...")
             socketio.run(
                 app, 
                 host='0.0.0.0', 
@@ -7359,27 +7375,27 @@ if __name__ == '__main__':
                 use_reloader=False  # Disable reloader to prevent stopping
             )
         except KeyboardInterrupt:
-            print("\n⏹️  Server stopped by user (Ctrl+C)")
+            print("\nServer stopped by user (Ctrl+C)")
             break
         except OSError as e:
             if "Address already in use" in str(e):
-                print(f"❌ Port {port} is already in use. Trying port {port + 1}...")
+                print(f"Port {port} is already in use. Trying port {port + 1}...")
                 port += 1
                 continue
             else:
-                print(f"❌ Network error: {e}")
-                print("🔄 Retrying in 5 seconds...")
+                print(f"Network error: {e}")
+                print("Retrying in 5 seconds...")
                 import time
                 time.sleep(5)
         except Exception as e:
-            print(f"❌ Server error: {e}")
-            print("🔄 Restarting server in 5 seconds...")
+            print(f"Server error: {e}")
+            print("Restarting server in 5 seconds...")
             import time
             time.sleep(5)
             
             # Try alternative configurations
             try:
-                print("🔄 Trying alternative host configuration...")
+                print("Trying alternative host configuration...")
                 socketio.run(
                     app, 
                     host='127.0.0.1', 
@@ -7390,8 +7406,8 @@ if __name__ == '__main__':
                     use_reloader=False
                 )
             except Exception as e2:
-                print(f"❌ Alternative configuration failed: {e2}")
-                print("🔄 Trying localhost configuration...")
+                print(f"Alternative configuration failed: {e2}")
+                print("Trying localhost configuration...")
                 try:
                     socketio.run(
                         app, 
@@ -7403,6 +7419,6 @@ if __name__ == '__main__':
                         use_reloader=False
                     )
                 except Exception as e3:
-                    print(f"❌ All configurations failed: {e3}")
-                    print("🔄 Waiting 10 seconds before retry...")
+                    print(f"All configurations failed: {e3}")
+                    print("Waiting 10 seconds before retry...")
                     time.sleep(10)

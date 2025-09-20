@@ -4,64 +4,333 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Create Forum Topic - Sunrise Education Centre</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="admin-glassmorphic.css">
-    <link rel="stylesheet" href="floating-navbar.css">
-    <link rel="stylesheet" href="uiverse-components.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="admin-modern.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      color: #1a202c;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 2rem;
+      padding: 0.75rem 1rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: all 0.2s ease;
+    }
+    
+    .back-link:hover {
+      background: #667eea;
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102,126,234,0.3);
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+    
+    .header h1 i {
+      color: #667eea;
+    }
+    
+    .header p {
+      font-size: 1.1rem;
+      color: #718096;
+    }
+    
+    .form-container {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border: 1px solid #e2e8f0;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-label {
+      display: block;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .form-label i {
+      color: #667eea;
+    }
+    
+    .required {
+      color: #e53e3e;
+    }
+    
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      background: white;
+      font-family: inherit;
+    }
+    
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+    }
+    
+    .radio-group {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+    }
+    
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      padding: 0.75rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+      flex: 1;
+      justify-content: center;
+    }
+    
+    .radio-option:hover {
+      border-color: #cbd5e0;
+      background: #f7fafc;
+    }
+    
+    .radio-option input[type="radio"] {
+      margin: 0;
+    }
+    
+    .radio-option input[type="radio"]:checked + .radio-label {
+      color: #667eea;
+      font-weight: 600;
+    }
+    
+    .radio-option:has(input[type="radio"]:checked) {
+      border-color: #667eea;
+      background: #f0f9ff;
+    }
+    
+    .radio-label {
+      font-weight: 500;
+      color: #4a5568;
+    }
+    
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #e2e8f0;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.5rem;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 2px 8px rgba(102,126,234,0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+    }
+    
+    .btn-secondary {
+      background: #f7fafc;
+      color: #4a5568;
+      border: 2px solid #e2e8f0;
+    }
+    
+    .btn-secondary:hover {
+      background: #edf2f7;
+      border-color: #cbd5e0;
+    }
+    
+    .help-text {
+      font-size: 0.875rem;
+      color: #718096;
+      margin-top: 0.5rem;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+      
+      .form-container {
+        padding: 1.5rem;
+      }
+      
+      .radio-group {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .form-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Dark Mode Toggle Button -->
-  
-
   <div class="container">
-    <a href="/admin" class="back-link">← Back to Admin Panel</a>
+    <a href="/admin" class="back-link">
+      <i class="fas fa-arrow-left"></i>
+      Back to Admin Panel
+    </a>
     
     <div class="header">
-      <h1>Create Forum Topic</h1>
-      <p>Add a new topic to organize forum discussions</p>
+      <h1>
+        <i class="fas fa-plus-circle"></i>
+        Create Forum Topic
+      </h1>
+      <p>Add a new topic to organize forum discussions and enhance student engagement</p>
     </div>
 
-    <form method="POST" action="/admin/create-topic">
-      <div class="form-group">
-        <label for="name">Topic Name *</label>
-        <input type="text" id="name" name="name" placeholder="e.g., Mathematics Help, Science Discussion, Study Tips" required>
-      </div>
-
-      <div class="form-group">
-        <label for="description">Topic Description</label>
-        <textarea id="description" name="description" placeholder="Brief description of what this topic covers (optional)"></textarea>
-      </div>
-
-      <div class="form-group">
-        <label for="class_id">Class *</label>
-        <select id="class_id" name="class_id" required>
-          <option value="">Select a class</option>
-          {% for class_id, class_name in all_classes %}
-          <option value="{{ class_id }}">{{ class_name|title }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Paid Status *</label>
-        <div class="radio-group">
-          <label>
-            <input type="radio" name="paid" value="paid" required>
-            Paid
+    <div class="form-container">
+      <form method="POST" action="/admin/create-topic">
+        <div class="form-group">
+          <label for="name" class="form-label">
+            <i class="fas fa-tag"></i>
+            Topic Name <span class="required">*</span>
           </label>
-          <label>
-            <input type="radio" name="paid" value="unpaid" required>
-            Unpaid
-          </label>
+          <input type="text" id="name" name="name" class="form-input" placeholder="e.g., Mathematics Help, Science Discussion, Study Tips" required>
+          <div class="help-text">Choose a clear, descriptive name that students will easily understand</div>
         </div>
-      </div>
 
-      <div style="text-align: center;">
-        <a href="/admin" class="btn btn-secondary">Cancel</a>
-        <button type="submit" class="btn">Create Topic</button>
-      </div>
-    </form>
+        <div class="form-group">
+          <label for="description" class="form-label">
+            <i class="fas fa-align-left"></i>
+            Topic Description
+          </label>
+          <textarea id="description" name="description" class="form-textarea" placeholder="Brief description of what this topic covers (optional)"></textarea>
+          <div class="help-text">Optional: Provide additional context about what discussions this topic will contain</div>
+        </div>
+
+        <div class="form-group">
+          <label for="class_id" class="form-label">
+            <i class="fas fa-graduation-cap"></i>
+            Class <span class="required">*</span>
+          </label>
+          <select id="class_id" name="class_id" class="form-select" required>
+            <option value="">Select a class</option>
+            {% for class_id, class_name in all_classes %}
+            <option value="{{ class_id }}">{{ class_name|title }}</option>
+            {% endfor %}
+          </select>
+          <div class="help-text">Choose which class this topic belongs to</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">
+            <i class="fas fa-credit-card"></i>
+            Access Level <span class="required">*</span>
+          </label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="paid" value="paid" required>
+              <span class="radio-label">
+                <i class="fas fa-lock"></i>
+                Paid Access
+              </span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="paid" value="unpaid" required>
+              <span class="radio-label">
+                <i class="fas fa-unlock"></i>
+                Free Access
+              </span>
+            </label>
+          </div>
+          <div class="help-text">Determine whether this topic requires paid membership to access</div>
+        </div>
+
+        <div class="form-actions">
+          <a href="/admin" class="btn btn-secondary">
+            <i class="fas fa-times"></i>
+            Cancel
+          </a>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-plus"></i>
+            Create Topic
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script src="script.js"></script>
