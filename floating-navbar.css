@@ -1,9 +1,19 @@
-/* Floating Navbar Styles */
-.floating-navbar {
+/* Floating Navbar Container - Ensures perfect centering */
+.floating-navbar-container {
     position: fixed;
     top: 16px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none; /* Allow clicks to pass through to navbar */
+}
+
+/* Floating Navbar Styles */
+.floating-navbar {
+    position: relative;
     z-index: 9999;
     background: rgba(10, 12, 18, 0.72);
     backdrop-filter: blur(16px) saturate(120%);
@@ -13,11 +23,18 @@
     padding: 10px 14px;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
     transition: background 0.2s ease, box-shadow 0.2s ease;
-    /* Stabilize width to prevent left-right shifting when content toggles */
+    /* Fixed width to prevent shifting */
     width: min(95%, 1080px);
-    margin: 0 auto;
+    min-width: 600px; /* Ensure minimum width */
     will-change: transform;
     backface-visibility: hidden;
+    /* Prevent content from causing layout shifts */
+    overflow: hidden;
+    white-space: nowrap;
+    /* Ensure navbar stays perfectly centered */
+    box-sizing: border-box;
+    /* Re-enable pointer events for the navbar itself */
+    pointer-events: auto;
 }
 
 /* Hide hamburger on desktop by default; show via media query */
@@ -34,6 +51,11 @@
     list-style: none;
     margin: 0;
     padding: 0 4px;
+    /* Prevent flex items from causing layout shifts */
+    flex-wrap: nowrap;
+    justify-content: center;
+    width: 100%;
+    min-height: 40px; /* Fixed height to prevent vertical shifts */
 }
 
 .floating-navbar .nav-links a {
@@ -46,11 +68,28 @@
     transition: none;
     position: relative;
     border: 1px solid transparent;
+    /* Prevent layout shifts */
+    display: inline-block;
+    white-space: nowrap;
+    flex-shrink: 0; /* Prevent shrinking */
+    min-width: fit-content;
 }
 
-.floating-navbar .nav-links a:hover { background: rgba(255, 255, 255, 0.12); color: #ffffff; border-color: rgba(255,255,255,0.16); }
+.floating-navbar .nav-links a:hover { 
+    background: rgba(255, 255, 255, 0.12); 
+    color: #ffffff; 
+    border-color: rgba(255,255,255,0.16);
+    /* Prevent any layout shifts on hover */
+    transform: none;
+}
 
-.floating-navbar .nav-links a.active { background: rgba(255,255,255,0.14); color: #fff; border-color: rgba(255,255,255,0.2); }
+.floating-navbar .nav-links a.active { 
+    background: rgba(255,255,255,0.14); 
+    color: #fff; 
+    border-color: rgba(255,255,255,0.2);
+    /* Prevent any layout shifts on active state */
+    transform: none;
+}
 
 .floating-navbar .nav-links .btn-primary {
     background: rgba(255,255,255,0.14);
@@ -59,7 +98,12 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
 }
 
-.floating-navbar .nav-links .btn-primary:hover { background: rgba(255,255,255,0.22); transform: none; }
+.floating-navbar .nav-links .btn-primary:hover { 
+    background: rgba(255,255,255,0.22); 
+    transform: none;
+    /* Ensure no layout shifts */
+    border-color: rgba(255,255,255,0.4);
+}
 
 /* Search Button Styles */
 .search-btn {
@@ -73,7 +117,12 @@
     transition: none;
 }
 
-.search-btn:hover { background: rgba(255,255,255,0.18); transform: none; }
+.search-btn:hover { 
+    background: rgba(255,255,255,0.18); 
+    transform: none;
+    /* Prevent layout shifts */
+    border-color: rgba(255,255,255,0.35);
+}
 
 /* Notification Bell Styles */
 .notification-bell {
@@ -88,7 +137,12 @@
     transition: none;
 }
 
-.notification-bell:hover { background: rgba(255,255,255,0.14); transform: none; }
+.notification-bell:hover { 
+    background: rgba(255,255,255,0.14); 
+    transform: none;
+    /* Prevent layout shifts */
+    border-radius: 10px;
+}
 
 .notification-badge {
     position: absolute;
@@ -167,6 +221,8 @@
 /* Profile dropdown styles (used on home page) */
 .profile-dropdown {
     position: relative;
+    /* Prevent dropdown from affecting navbar layout */
+    display: inline-block;
 }
 .profile-dropdown-menu {
     position: absolute;
@@ -183,6 +239,9 @@
     padding: 8px 0;
     margin-top: 8px;
     display: none;
+    /* Ensure dropdown doesn't affect parent layout */
+    position: absolute;
+    top: calc(100% + 8px);
 }
 .profile-dropdown-menu .dropdown-item {
     display: block;
@@ -201,10 +260,14 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .floating-navbar {
+    .floating-navbar-container {
         top: 10px;
+    }
+    
+    .floating-navbar {
         padding: 8px 10px;
         width: min(96%, 560px);
+        min-width: 320px; /* Ensure minimum width on mobile */
     }
     /* Show hamburger and collapse menu for phones only */
     .floating-navbar .hamburger {
@@ -242,6 +305,9 @@
         flex-direction: column;
         gap: 6px;
         box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+        /* Prevent layout shifts on mobile */
+        width: 100%;
+        box-sizing: border-box;
     }
     .floating-navbar .nav-links.active { display: flex; animation: navbarSlideDown 0.18s ease-out; }
     .floating-navbar .nav-links a { font-size: 14px; padding: 8px 10px; color: #fff; }
@@ -266,6 +332,7 @@
 @media (max-width: 480px) {
     .floating-navbar {
         padding: 8px 12px;
+        min-width: 280px; /* Smaller minimum width for very small screens */
     }
 
     .floating-navbar .nav-links {
@@ -285,4 +352,34 @@
         padding: 6px 12px;
         font-size: 12px;
     }
+}
+
+/* Additional stability rules */
+.floating-navbar * {
+    /* Prevent any child elements from causing layout shifts */
+    box-sizing: border-box;
+}
+
+/* Ensure dropdowns don't affect navbar positioning */
+.floating-navbar .dropdown-menu,
+.floating-navbar .profile-dropdown-menu {
+    /* Remove from document flow to prevent layout shifts */
+    position: absolute;
+    top: 100%;
+    z-index: 10000;
+}
+
+/* Prevent any transform animations that could cause shifts */
+.floating-navbar,
+.floating-navbar * {
+    /* Disable any transforms that could cause layout shifts */
+    transform: none !important;
+}
+
+/* Ensure navbar container is always centered */
+.floating-navbar-container {
+    /* Force centering with flexbox */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
 }
