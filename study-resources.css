@@ -611,6 +611,7 @@ body.slider-open::before {
   padding: 1px;
   background: linear-gradient(135deg, rgba(106,130,251,0.35), rgba(252,92,125,0.25));
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
           mask-composite: exclude;
   pointer-events: none;
@@ -637,6 +638,66 @@ body.slider-open::before {
   padding-bottom: 0.45rem;
   position: relative;
   z-index: 1;
+}
+
+/* Uiverse-inspired resource card variant */
+.uiverse-card {
+  padding: 1.25rem 1.25rem 1rem 1.25rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: radial-gradient(120% 120% at -10% -10%, rgba(106,130,251,0.15) 0%, rgba(0,0,0,0) 50%), rgba(15,18,28,0.55);
+}
+
+.uiverse-card::after {
+  background: linear-gradient(135deg, rgba(106,130,251,0.35), rgba(252,92,125,0.25));
+}
+
+.uiverse-card .card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  margin-bottom: 0.6rem;
+}
+
+.uiverse-card .icon-chip {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+
+.uiverse-card .title-block header {
+  margin: 0 0 0.25rem 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.uiverse-card .description {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.uiverse-card .file-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0.5rem 0 0.25rem 0;
+}
+
+.uiverse-card .file-name {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+}
+
+.uiverse-card .preview-btn {
+  padding: 0.55rem 0.95rem;
+  font-size: 0.85rem;
 }
 
 /* File meta styling inside card (status + filename row) */
