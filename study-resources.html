@@ -291,17 +291,22 @@
                     {% set category = resource[6] %}
                     {% if res_class_id == class_id and category == cat_key %}
                       {% set has_resources = true %}
-                      <div class="resource-card">
-                        <header>{{ title }}</header>
-                        {% if description %}
-                          <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 0.75rem;">{{ description }}</p>
-                        {% endif %}
-                        <div style="margin-bottom: 0.6rem;">
+                      <div class="resource-card uiverse-card">
+                        <div class="card-header">
+                          <div class="icon-chip">📄</div>
+                          <div class="title-block">
+                            <header>{{ title }}</header>
+                            {% if description %}
+                              <p class="description">{{ description }}</p>
+                            {% endif %}
+                          </div>
+                        </div>
+                        <div class="file-row">
                           <span class="status-indicator status-free">File</span>
-                          <span style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">{{ filename }}</span>
+                          <span class="file-name">{{ filename }}</span>
                         </div>
                         <div class="resource-actions">
-                          <a href="/preview/{{ filename }}" class="btn btn-primary">📖 Preview Document</a>
+                          <a href="/preview/{{ filename }}" class="uiverse-btn preview-btn">📖 Preview</a>
                           <span class="category-badge">{{ category|title }}</span>
                         </div>
                       </div>
