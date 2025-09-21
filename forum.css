@@ -31,8 +31,12 @@
   --forum-scrollbar-thumb-hover: rgba(0,0,0,0.3);
 }
 
-/* Glassy dark backdrop for forum pages */
+/* Glassy backdrop for forum pages */
 body {
+  background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
+}
+
+body.dark-mode {
   background: radial-gradient(1000px 600px at 10% -10%, rgba(106,130,251,0.12) 0%, transparent 60%),
               radial-gradient(800px 500px at 110% 10%, rgba(252,92,125,0.08) 0%, transparent 60%),
               linear-gradient(135deg, #0d0f16 0%, #10131d 50%, #0b0e15 100%);
@@ -76,8 +80,8 @@ body {
 .tab-btn,
 .tab-button,
 .forum-action-btn {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: var(--forum-card-bg);
+  border: 1px solid var(--forum-border);
   color: var(--forum-text);
 }
 
@@ -90,11 +94,11 @@ body {
 
 /* Message bubbles with subtle glass */
 .forum-bubble {
-  background: rgba(20, 24, 36, 0.55);
+  background: var(--forum-bubble-bg);
 }
 
 .forum-bubble.own {
-  background: linear-gradient(135deg, rgba(0,92,75,0.55), rgba(0,92,75,0.35));
+  background: var(--forum-bubble-own);
 }
 
 /* Topics Toggle Button */

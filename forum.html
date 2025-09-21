@@ -19,12 +19,15 @@
         /* Optimized Forum Styles */
         .forum-page {
             min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        body.dark-mode .forum-page {
             background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
-            font-family: 'Inter', sans-serif;
             color: white;
-            overflow-x: hidden;
         }
 
         .forum-container {
@@ -733,7 +736,7 @@
             }, 1000);
         });
     </script>
-    <script src="/attached_assets/theme.js"></script>
+    
     <script src="modern-interactions.js"></script>
     <script src="modern-navbar.js"></script>
     <script src="forum.js"></script>

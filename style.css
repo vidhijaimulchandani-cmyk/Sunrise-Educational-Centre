@@ -9,6 +9,11 @@ body.dark-mode {
   background: linear-gradient(120deg, #232946 0%, #16161a 100%);
   color: #f4f4f4;
 }
+
+/* Ensure homepage hero black-glass looks right in dark mode */
+body.dark-mode .hero-section {
+  color: #fff;
+}
 body.dark-mode .navbar,
 body.dark-mode .glassmorphic {
   background: rgba(35, 41, 70, 0.85) !important;
