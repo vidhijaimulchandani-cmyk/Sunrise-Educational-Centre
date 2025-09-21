@@ -388,26 +388,40 @@ class ThemeSwitcher {
 
     init() {
         const toggles = document.querySelectorAll('#darkModeToggle, #footerThemeToggle');
-        
+
         toggles.forEach(toggle => {
-            toggle.addEventListener('click', () => this.toggleTheme());
+            if (!toggle.dataset.boundTheme) {
+                toggle.addEventListener('click', () => this.toggleTheme());
+                toggle.dataset.boundTheme = 'true';
+            }
         });
 
-        // Set initial theme based on user preference
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
+        // Set initial theme: prefer saved 'preferredTheme'/'theme', else system preference
+        let savedTheme = null;
+        try {
+            savedTheme = localStorage.getItem('preferredTheme') || localStorage.getItem('theme');
+        } catch (e) {}
+
+        if (savedTheme === 'dark' || savedTheme === 'light') {
             document.body.classList.toggle('dark-mode', savedTheme === 'dark');
-            this.updateToggleText();
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.classList.add('dark-mode');
         }
+        this.updateToggleText();
     }
 
     toggleTheme() {
         document.body.classList.toggle('dark-mode');
         const isDark = document.body.classList.contains('dark-mode');
-        
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+        try {
+            localStorage.setItem('preferredTheme', isDark ? 'dark' : 'light');
+            // keep legacy key in sync
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        } catch (e) {}
+
         this.updateToggleText();
-        
+
         // Add smooth transition
         document.body.style.transition = 'all 0.3s ease';
         setTimeout(() => {
