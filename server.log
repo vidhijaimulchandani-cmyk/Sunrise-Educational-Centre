@@ -3660,3 +3660,960 @@ Unexpected error in study_resources route: too many values to unpack (expected 2
 2025-09-19 16:06:03,231 [INFO] werkzeug: 127.0.0.1 - - [19/Sep/2025 16:06:03] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
 2025-09-19 16:06:03,246 [INFO] werkzeug: 127.0.0.1 - - [19/Sep/2025 16:06:03] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
 2025-09-19 16:06:03,246 [INFO] werkzeug: 127.0.0.1 - - [19/Sep/2025 16:06:03] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7327, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-21 11:09:29,050 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:09:29,050 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:09:29,051 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-21 11:09:29,051 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Unexpected error in study_resources route: too many values to unpack (expected 2)
+2025-09-21 11:10:16,616 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:16] "[32mGET /study-resources HTTP/1.1[0m" 302 -
+2025-09-21 11:10:16,616 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:16] "[32mGET /study-resources HTTP/1.1[0m" 302 -
+2025-09-21 11:10:16,704 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:16] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:10:16,704 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:16] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:10:17,305 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:17] "GET /style.css HTTP/1.1" 200 -
+2025-09-21 11:10:17,305 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:17] "GET /style.css HTTP/1.1" 200 -
+2025-09-21 11:10:17,317 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:17] "GET /floating-navbar.css HTTP/1.1" 200 -
+2025-09-21 11:10:17,317 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:17] "GET /floating-navbar.css HTTP/1.1" 200 -
+2025-09-21 11:10:17,323 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:17] "GET /enhanced-aesthetic.css HTTP/1.1" 200 -
+2025-09-21 11:10:17,323 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:17] "GET /enhanced-aesthetic.css HTTP/1.1" 200 -
+2025-09-21 11:10:17,332 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:17] "GET /attached_assets/theme.js HTTP/1.1" 200 -
+2025-09-21 11:10:17,332 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:17] "GET /attached_assets/theme.js HTTP/1.1" 200 -
+2025-09-21 11:10:17,335 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:17] "GET /modern-components.css HTTP/1.1" 200 -
+2025-09-21 11:10:17,335 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:17] "GET /modern-components.css HTTP/1.1" 200 -
+2025-09-21 11:10:17,342 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:17] "GET /modern-interactions.js HTTP/1.1" 200 -
+2025-09-21 11:10:17,342 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:17] "GET /modern-interactions.js HTTP/1.1" 200 -
+2025-09-21 11:10:17,344 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:17] "GET /uiverse-components.css HTTP/1.1" 200 -
+2025-09-21 11:10:17,344 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:17] "GET /uiverse-components.css HTTP/1.1" 200 -
+2025-09-21 11:10:17,356 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:17] "GET /navbar-functions.js HTTP/1.1" 200 -
+2025-09-21 11:10:17,356 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:17] "GET /navbar-functions.js HTTP/1.1" 200 -
+2025-09-21 11:10:18,118 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:18] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:10:18,118 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:18] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:10:18,155 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:18] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:10:18,155 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:18] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:10:21,975 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:21] "GET / HTTP/1.1" 200 -
+2025-09-21 11:10:21,975 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:21] "GET / HTTP/1.1" 200 -
+2025-09-21 11:10:22,016 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:10:22,016 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:10:22,020 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "GET /modern-navbar.css HTTP/1.1" 200 -
+2025-09-21 11:10:22,020 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "GET /modern-navbar.css HTTP/1.1" 200 -
+2025-09-21 11:10:22,031 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:10:22,031 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:10:22,034 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "GET /attached_assets/image_1750584670920.png HTTP/1.1" 200 -
+2025-09-21 11:10:22,034 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "GET /attached_assets/image_1750584670920.png HTTP/1.1" 200 -
+2025-09-21 11:10:22,039 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "GET /script.js HTTP/1.1" 200 -
+2025-09-21 11:10:22,039 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "GET /script.js HTTP/1.1" 200 -
+2025-09-21 11:10:22,050 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:10:22,052 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:10:22,050 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:10:22,052 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:10:22,060 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "GET /modern-navbar.js HTTP/1.1" 200 -
+2025-09-21 11:10:22,060 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "GET /modern-navbar.js HTTP/1.1" 200 -
+2025-09-21 11:10:22,065 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:10:22,065 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:10:22,094 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:10:22,094 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:10:22,189 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "[32mGET /api/site-last-updated HTTP/1.1[0m" 302 -
+2025-09-21 11:10:22,189 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "[32mGET /api/site-last-updated HTTP/1.1[0m" 302 -
+2025-09-21 11:10:22,414 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:10:22,414 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:22] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:10:23,599 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:23] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:10:23,599 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:23] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:10:23,655 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:23] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:10:23,655 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:23] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:10:52,192 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:52] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:10:52,192 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:52] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:10:52,210 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:52] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:10:52,210 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:10:52] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:11:22,198 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:22] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:11:22,198 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:22] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:11:22,261 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:22] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:11:22,261 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:22] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:11:51,696 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "GET / HTTP/1.1" 200 -
+2025-09-21 11:11:51,696 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "GET / HTTP/1.1" 200 -
+2025-09-21 11:11:51,735 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,735 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,737 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,737 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,747 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,747 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,752 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,752 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,758 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,758 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,766 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,766 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,770 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,770 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,786 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,786 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,804 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,804 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,818 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,818 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-21 11:11:51,834 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[32mGET /api/site-last-updated HTTP/1.1[0m" 302 -
+2025-09-21 11:11:51,834 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "[32mGET /api/site-last-updated HTTP/1.1[0m" 302 -
+2025-09-21 11:11:51,941 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:11:51,941 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:51] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:11:52,708 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:52] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:11:52,708 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:52] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:11:52,742 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:52] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:11:52,742 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:11:52] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:12:22,804 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:12:22] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:12:22,804 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:12:22] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:12:22,869 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:12:22] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:12:22,869 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:12:22] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:12:52,813 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:12:52] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:12:52,813 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:12:52] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:12:52,832 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:12:52] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:12:52,832 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:12:52] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:13:03,949 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:03] "GET / HTTP/1.1" 200 -
+2025-09-21 11:13:03,949 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:03] "GET / HTTP/1.1" 200 -
+2025-09-21 11:13:03,987 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:03] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:13:03,987 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:03] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:13:03,994 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:03] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:13:03,994 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:03] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:13:03,999 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:03] "GET /uiverse-components.css HTTP/1.1" 200 -
+2025-09-21 11:13:03,999 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:03] "GET /uiverse-components.css HTTP/1.1" 200 -
+2025-09-21 11:13:04,006 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-21 11:13:04,006 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-21 11:13:04,019 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:13:04,019 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:13:04,023 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-21 11:13:04,023 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-21 11:13:04,025 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:13:04,025 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:13:04,034 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:13:04,034 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:13:04,040 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:13:04,040 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:13:04,053 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-21 11:13:04,053 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-21 11:13:04,069 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[32mGET /api/site-last-updated HTTP/1.1[0m" 302 -
+2025-09-21 11:13:04,069 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[32mGET /api/site-last-updated HTTP/1.1[0m" 302 -
+2025-09-21 11:13:04,176 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:13:04,176 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:13:04,747 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:13:04,747 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:13:04,767 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:13:04,767 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:04] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:13:34,811 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:34] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:13:34,811 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:34] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:13:34,875 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:34] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:13:34,875 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:13:34] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:14:04,804 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:04] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:14:04,804 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:04] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:14:04,828 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:04] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:14:04,828 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:04] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:14:19,281 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "GET / HTTP/1.1" 200 -
+2025-09-21 11:14:19,281 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "GET / HTTP/1.1" 200 -
+2025-09-21 11:14:19,321 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,321 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,324 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,324 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,328 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,328 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,343 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,343 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,347 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,347 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,358 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,358 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,363 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,363 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,373 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,373 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,387 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,387 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,398 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[32mGET /api/site-last-updated HTTP/1.1[0m" 302 -
+2025-09-21 11:14:19,398 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[32mGET /api/site-last-updated HTTP/1.1[0m" 302 -
+2025-09-21 11:14:19,404 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,404 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-21 11:14:19,445 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:14:19,445 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:19] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:14:20,057 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:20] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:14:20,057 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:20] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:14:20,073 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:20] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:14:20,073 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:20] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:14:49,807 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:49] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:14:49,807 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:49] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:14:49,874 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:49] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:14:49,874 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:14:49] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:15:19,816 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:15:19] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:15:19,816 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:15:19] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:15:19,838 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:15:19] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:15:19,838 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:15:19] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:15:49,813 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:15:49] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:15:49,813 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:15:49] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:15:49,832 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:15:49] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:15:49,832 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:15:49] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:16:19,807 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:16:19] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:16:19,807 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:16:19] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:16:19,869 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:16:19] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:16:19,869 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:16:19] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:18:21,500 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:21] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:18:21,500 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:21] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-21 11:18:21,522 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:21] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:18:21,522 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:21] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:18:24,630 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:18:24,630 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:18:24,679 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:24,679 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:24,682 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:24,682 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:24,688 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:24,688 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:24,695 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:24,695 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:24,701 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:24,701 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:24,708 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:24,708 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:24,723 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:24,723 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:24,739 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:24,739 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:24] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:25,269 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:25] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:18:25,269 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:25] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:18:25,331 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:25] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:18:25,331 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:25] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:18:28,127 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:18:28,127 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:18:28,165 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:28,165 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:28,172 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:28,172 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:28,181 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:28,181 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:28,183 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:28,183 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:28,188 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:28,188 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:28,194 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:28,194 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:28,209 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:28,209 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:28,225 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:28,225 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:28,463 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:18:28,463 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:18:28,483 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:18:28,483 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:28] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:18:29,273 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:18:29,273 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:18:29,308 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:29,308 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:29,310 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:29,310 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:29,314 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:29,314 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:29,322 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:29,322 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:29,329 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:29,329 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:29,331 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:29,331 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:29,347 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:29,347 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:18:29,361 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:29,361 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:18:29,576 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:18:29,576 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:18:29,631 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:18:29,631 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:18:29] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:54,923 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:54] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:54,923 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:54] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:54,957 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:54] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:54,957 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:54] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:54,971 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:54] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:54,971 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:54] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:54,978 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:54] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:54,978 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:54] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:54,985 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:54] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:54,985 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:54] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:54,994 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:54] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:54,994 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:54] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:55,008 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:55] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:55,008 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:55] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:55,023 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:55] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:55,023 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:55] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:55,039 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:55] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:55,039 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:55] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:55,256 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:55] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:19:55,256 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:55] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:19:55,316 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:55] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:55,316 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:55] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:56,350 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:56,350 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:56,380 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:56,380 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:56,392 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:56,392 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:56,396 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:56,396 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:56,408 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:56,408 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:56,421 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:56,421 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:56,436 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:56,436 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:56,453 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:56,453 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:56,468 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:56,468 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:56,693 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:19:56,693 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:19:56,757 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:56,757 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:56] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:57,321 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:57,321 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:57,359 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,359 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,363 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,363 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,372 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,372 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,374 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,374 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,380 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,380 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,385 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,385 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,401 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,401 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,416 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,416 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,639 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:19:57,639 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:19:57,698 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:57,698 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:57,871 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:57,871 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:57,910 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,910 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,914 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,914 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,926 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,926 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,927 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,927 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,932 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,932 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,942 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,942 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,959 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,959 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,973 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:57,973 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:57] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:58,188 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:19:58,188 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:19:58,242 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:58,242 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:58,292 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:58,292 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:58,326 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:58,326 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:58,333 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:58,333 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:58,343 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:58,343 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:58,346 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:58,346 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:58,352 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:58,352 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:19:58,361 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:58,361 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:58,377 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:58,377 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:58,396 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:58,396 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:19:58,626 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:19:58,626 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:19:58,660 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:19:58,660 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:19:58] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:21:06,084 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:21:06,084 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:21:06,138 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:06,138 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:06,141 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:06,141 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:06,150 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:06,150 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:06,161 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:06,161 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:06,176 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:06,176 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:06,191 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:06,191 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:06,207 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:06,207 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:06,225 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:06,225 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:06,459 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:21:06,459 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:21:06,494 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:21:06,494 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:06] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:21:07,102 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:21:07,102 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:21:07,143 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:07,143 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:07,144 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:07,144 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:07,156 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:07,156 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:07,161 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:07,161 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:07,169 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:07,169 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:07,184 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:07,184 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:07,199 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:07,199 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:07,218 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:07,218 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:07,404 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:21:07,404 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:21:07,480 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:21:07,480 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:07] "GET /auth HTTP/1.1" 200 -
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-21 11:21:13,998 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:21:13,998 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:21:13,998 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-21 11:21:13,998 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-21 11:21:17,047 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:21:17,047 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:21:17,048 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-21 11:21:17,048 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-21 11:21:22,419 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:21:22,419 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:21:22,455 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:22,457 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:22,455 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:22,457 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:22,460 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:22,460 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:22,472 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:22,472 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:22,477 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:22,477 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:22,482 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:22,482 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:22,489 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:22,489 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:22,506 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:22,506 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:22,730 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:21:22,730 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:21:22,768 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:21:22,768 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:22] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:21:23,558 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:21:23,558 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:21:23,598 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:23,598 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:23,605 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:23,605 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:23,616 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:23,616 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:23,621 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:23,621 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:23,629 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:23,629 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:23,645 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:23,645 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:21:23,661 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:23,661 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:23,679 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:23,679 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:21:23,852 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:21:23,852 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:21:23,929 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:21:23,929 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:21:23] "GET /auth HTTP/1.1" 200 -
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-21 11:24:02,307 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:24:02,307 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:24:02,307 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-21 11:24:02,307 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-21 11:24:02,822 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:24:02,822 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:24:02,822 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-21 11:24:02,822 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-21 11:24:03,332 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:24:03,332 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:24:03,333 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-21 11:24:03,333 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-21 11:24:03,845 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:24:03,845 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:24:03,845 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-21 11:24:03,845 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-21 11:24:04,364 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:24:04,364 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:24:04,365 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-21 11:24:04,365 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-21 11:24:04,870 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:24:04,870 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:24:04,871 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-21 11:24:04,871 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7331, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-21 11:25:14,428 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:25:14,428 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-21 11:25:14,428 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-21 11:25:14,428 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-21 11:25:15,810 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:15] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:25:15,810 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:15] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:25:15,986 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:15] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:15,986 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:15] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:16,043 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:16] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:16,043 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:16] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:16,052 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:16] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:16,052 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:16] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:16,061 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:16] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:16,061 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:16] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:16,069 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:16] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:16,069 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:16] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:16,083 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:16] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:16,083 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:16] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:16,523 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:16] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:25:16,523 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:16] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-21 11:25:16,600 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:16] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:25:16,600 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:16] "GET /auth HTTP/1.1" 200 -
+Auth POST request received
+Form data: {'username': 'raj', 'password': 'raj', 'class_id': '4', 'admin_code': ''}
+Parsed data - Username: raj, Class ID: 4, Selected Role: class 11 applied
+2025-09-21 11:25:30,327 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-21 11:25:30,327 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-21 11:25:30,425 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "GET / HTTP/1.1" 200 -
+2025-09-21 11:25:30,425 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "GET / HTTP/1.1" 200 -
+2025-09-21 11:25:30,501 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,501 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,509 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,509 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,518 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,518 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,520 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,520 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,529 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,529 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,552 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,552 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,558 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,558 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,565 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,565 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,582 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,582 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,599 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,599 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-21 11:25:30,672 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-21 11:25:30,672 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:30] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-21 11:25:31,655 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:31] "GET /favicon.ico HTTP/1.1" 200 -
+2025-09-21 11:25:31,655 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:31] "GET /favicon.ico HTTP/1.1" 200 -
+Unexpected error in study_resources route: too many values to unpack (expected 2)
+2025-09-21 11:25:35,557 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:35] "[32mGET /study-resources HTTP/1.1[0m" 302 -
+2025-09-21 11:25:35,557 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:35] "[32mGET /study-resources HTTP/1.1[0m" 302 -
+2025-09-21 11:25:35,593 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:35] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:25:35,593 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:35] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:25:35,658 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:35] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:35,658 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:35] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:35,660 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:35] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:35,660 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:35] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:35,673 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:35] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:35,673 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:35] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:35,682 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:35] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:35,682 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:35] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:35,685 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:35] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:35,685 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:35] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:35,698 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:35] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:35,698 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:35] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+Auth POST request received
+Form data: {'username': 'raj', 'password': 'raj', 'class_id': '4', 'admin_code': ''}
+Parsed data - Username: raj, Class ID: 4, Selected Role: class 11 applied
+2025-09-21 11:25:45,786 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-21 11:25:45,786 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-21 11:25:45,830 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "GET / HTTP/1.1" 200 -
+2025-09-21 11:25:45,830 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "GET / HTTP/1.1" 200 -
+2025-09-21 11:25:45,906 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,906 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,909 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,909 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,913 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,913 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,923 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,923 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,933 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,933 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,947 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,947 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,952 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,952 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,956 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,956 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,962 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,962 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,979 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:45,979 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:45] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:46,157 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:46] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-21 11:25:46,157 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:46] "GET /api/site-last-updated HTTP/1.1" 200 -
+Unexpected error in study_resources route: too many values to unpack (expected 2)
+2025-09-21 11:25:47,820 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:47] "[32mGET /study-resources HTTP/1.1[0m" 302 -
+2025-09-21 11:25:47,820 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:47] "[32mGET /study-resources HTTP/1.1[0m" 302 -
+2025-09-21 11:25:47,851 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:47] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:25:47,851 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:47] "GET /auth HTTP/1.1" 200 -
+2025-09-21 11:25:47,912 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:47] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:47,912 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:47] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:47,914 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:47] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:47,914 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:47] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:47,916 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:47] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:47,916 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:47] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:47,926 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:47] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:47,926 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:47] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:25:47,942 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:47] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:47,942 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:47] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:47,957 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:47] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:25:47,957 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:25:47] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:26:16,191 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:16] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-21 11:26:16,191 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:16] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-21 11:26:31,806 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:31] "GET /profile HTTP/1.1" 200 -
+2025-09-21 11:26:31,806 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:31] "GET /profile HTTP/1.1" 200 -
+2025-09-21 11:26:31,887 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:31] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:26:31,887 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:31] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:26:31,897 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:31] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:26:31,897 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:31] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:26:31,913 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:31] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-21 11:26:31,913 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:31] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-21 11:26:31,918 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:31] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:26:31,918 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:31] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:26:31,935 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:31] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:26:31,935 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:31] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:26:31,942 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:31] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:26:31,942 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:31] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:26:31,969 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:31] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-21 11:26:31,969 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:31] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-21 11:26:38,372 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:38] "GET /notifications HTTP/1.1" 200 -
+2025-09-21 11:26:38,372 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:38] "GET /notifications HTTP/1.1" 200 -
+2025-09-21 11:26:38,422 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:38] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:26:38,422 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:38] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-21 11:26:38,433 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:38] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:26:38,433 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:38] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-21 11:26:38,439 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:38] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-21 11:26:38,439 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:38] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-21 11:26:38,445 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:38] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:26:38,445 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:38] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-21 11:26:38,460 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:38] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:26:38,460 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:38] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-21 11:26:38,475 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:38] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:26:38,475 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:38] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-21 11:26:38,534 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:38] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-21 11:26:38,534 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:38] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-21 11:26:47,138 [ERROR] app: Exception on /api/mark-notification-seen/57 [POST]
+Traceback (most recent call last):
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 6814, in mark_notification_seen_api
+    success = mark_notification_as_read(user_id, notification_id, 'general')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'mark_notification_as_read' is not defined. Did you mean: 'mark_notification_as_seen'?
+2025-09-21 11:26:47,144 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:47] "[35m[1mPOST /api/mark-notification-seen/57 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:47,144 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:47] "[35m[1mPOST /api/mark-notification-seen/57 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:47,154 [ERROR] app: Exception on /api/mark-notification-seen/57 [POST]
+Traceback (most recent call last):
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 6814, in mark_notification_seen_api
+    success = mark_notification_as_read(user_id, notification_id, 'general')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'mark_notification_as_read' is not defined. Did you mean: 'mark_notification_as_seen'?
+2025-09-21 11:26:47,157 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:47] "[35m[1mPOST /api/mark-notification-seen/57 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:47,157 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:47] "[35m[1mPOST /api/mark-notification-seen/57 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:48,631 [ERROR] app: Exception on /api/mark-notification-seen/57 [POST]
+Traceback (most recent call last):
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 6814, in mark_notification_seen_api
+    success = mark_notification_as_read(user_id, notification_id, 'general')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'mark_notification_as_read' is not defined. Did you mean: 'mark_notification_as_seen'?
+2025-09-21 11:26:48,635 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:48] "[35m[1mPOST /api/mark-notification-seen/57 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:48,635 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:48] "[35m[1mPOST /api/mark-notification-seen/57 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:48,646 [ERROR] app: Exception on /api/mark-notification-seen/57 [POST]
+Traceback (most recent call last):
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 6814, in mark_notification_seen_api
+    success = mark_notification_as_read(user_id, notification_id, 'general')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'mark_notification_as_read' is not defined. Did you mean: 'mark_notification_as_seen'?
+2025-09-21 11:26:48,649 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:48] "[35m[1mPOST /api/mark-notification-seen/57 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:48,649 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:48] "[35m[1mPOST /api/mark-notification-seen/57 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:48,899 [ERROR] app: Exception on /api/mark-notification-seen/57 [POST]
+Traceback (most recent call last):
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 6814, in mark_notification_seen_api
+    success = mark_notification_as_read(user_id, notification_id, 'general')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'mark_notification_as_read' is not defined. Did you mean: 'mark_notification_as_seen'?
+2025-09-21 11:26:48,903 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:48] "[35m[1mPOST /api/mark-notification-seen/57 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:48,903 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:48] "[35m[1mPOST /api/mark-notification-seen/57 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:48,904 [ERROR] app: Exception on /api/mark-notification-seen/57 [POST]
+Traceback (most recent call last):
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 6814, in mark_notification_seen_api
+    success = mark_notification_as_read(user_id, notification_id, 'general')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'mark_notification_as_read' is not defined. Did you mean: 'mark_notification_as_seen'?
+2025-09-21 11:26:48,908 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:48] "[35m[1mPOST /api/mark-notification-seen/57 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:48,908 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:48] "[35m[1mPOST /api/mark-notification-seen/57 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:49,122 [ERROR] app: Exception on /api/mark-notification-seen/57 [POST]
+Traceback (most recent call last):
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 6814, in mark_notification_seen_api
+    success = mark_notification_as_read(user_id, notification_id, 'general')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'mark_notification_as_read' is not defined. Did you mean: 'mark_notification_as_seen'?
+2025-09-21 11:26:49,126 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:49] "[35m[1mPOST /api/mark-notification-seen/57 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:49,126 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:49] "[35m[1mPOST /api/mark-notification-seen/57 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:49,144 [ERROR] app: Exception on /api/mark-notification-seen/57 [POST]
+Traceback (most recent call last):
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 6814, in mark_notification_seen_api
+    success = mark_notification_as_read(user_id, notification_id, 'general')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'mark_notification_as_read' is not defined. Did you mean: 'mark_notification_as_seen'?
+2025-09-21 11:26:49,147 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:49] "[35m[1mPOST /api/mark-notification-seen/57 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:49,147 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:49] "[35m[1mPOST /api/mark-notification-seen/57 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:51,064 [ERROR] app: Exception on /api/mark-notification-seen/56 [POST]
+Traceback (most recent call last):
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 6814, in mark_notification_seen_api
+    success = mark_notification_as_read(user_id, notification_id, 'general')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'mark_notification_as_read' is not defined. Did you mean: 'mark_notification_as_seen'?
+2025-09-21 11:26:51,067 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:51] "[35m[1mPOST /api/mark-notification-seen/56 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:51,067 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:51] "[35m[1mPOST /api/mark-notification-seen/56 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:51,087 [ERROR] app: Exception on /api/mark-notification-seen/56 [POST]
+Traceback (most recent call last):
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\YASH\AppData\Roaming\Python\Python313\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 6814, in mark_notification_seen_api
+    success = mark_notification_as_read(user_id, notification_id, 'general')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'mark_notification_as_read' is not defined. Did you mean: 'mark_notification_as_seen'?
+2025-09-21 11:26:51,090 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:51] "[35m[1mPOST /api/mark-notification-seen/56 HTTP/1.1[0m" 500 -
+2025-09-21 11:26:51,090 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:51] "[35m[1mPOST /api/mark-notification-seen/56 HTTP/1.1[0m" 500 -

@@ -48,7 +48,8 @@ from study_resources import (
     get_categories_for_class, get_all_categories, update_resource, add_category,
     update_category, delete_category, search_resources, track_resource_download,
     add_resource_rating, get_resource_ratings, get_average_rating, get_resource_statistics,
-    allowed_file, get_file_size, get_file_type, user_has_access_to_resource
+    allowed_file, get_file_size, get_file_type, user_has_access_to_resource,
+    ensure_resource_tables
 )
 from notifications import extract_mentions, create_mention_notifications
 import csv
@@ -926,6 +927,9 @@ if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
 init_db()
+
+# Initialize study resources tables
+ensure_resource_tables()
 
 # --- Queries DB Setup ---
 def init_queries_db():
