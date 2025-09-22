@@ -4617,3 +4617,159 @@ Traceback (most recent call last):
 NameError: name 'mark_notification_as_read' is not defined. Did you mean: 'mark_notification_as_seen'?
 2025-09-21 11:26:51,090 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:51] "[35m[1mPOST /api/mark-notification-seen/56 HTTP/1.1[0m" 500 -
 2025-09-21 11:26:51,090 [INFO] werkzeug: 127.0.0.1 - - [21/Sep/2025 11:26:51] "[35m[1mPOST /api/mark-notification-seen/56 HTTP/1.1[0m" 500 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7331, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 07:27:34,127 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 07:27:34,127 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 07:27:34,128 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 07:27:34,128 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 07:27:38,584 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:38] "GET / HTTP/1.1" 200 -
+2025-09-22 07:27:38,584 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:38] "GET / HTTP/1.1" 200 -
+2025-09-22 07:27:38,973 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:38] "GET /uiverse-components.css HTTP/1.1" 200 -
+2025-09-22 07:27:38,973 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:38] "GET /uiverse-components.css HTTP/1.1" 200 -
+2025-09-22 07:27:38,996 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:38] "GET /attached_assets/image_1750584670920.png HTTP/1.1" 200 -
+2025-09-22 07:27:38,996 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:38] "GET /attached_assets/image_1750584670920.png HTTP/1.1" 200 -
+2025-09-22 07:27:38,998 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:38] "GET /style.css HTTP/1.1" 200 -
+2025-09-22 07:27:38,998 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:38] "GET /style.css HTTP/1.1" 200 -
+2025-09-22 07:27:39,015 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /script.js HTTP/1.1" 200 -
+2025-09-22 07:27:39,015 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /script.js HTTP/1.1" 200 -
+2025-09-22 07:27:39,030 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /modern-interactions.js HTTP/1.1" 200 -
+2025-09-22 07:27:39,030 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /modern-interactions.js HTTP/1.1" 200 -
+2025-09-22 07:27:39,045 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /modern-navbar.js HTTP/1.1" 200 -
+2025-09-22 07:27:39,045 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /modern-navbar.js HTTP/1.1" 200 -
+2025-09-22 07:27:39,066 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /footer/instagram-brands-solid-full.svg HTTP/1.1" 200 -
+2025-09-22 07:27:39,066 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /footer/instagram-brands-solid-full.svg HTTP/1.1" 200 -
+2025-09-22 07:27:39,096 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /enhanced-aesthetic.css HTTP/1.1" 200 -
+2025-09-22 07:27:39,096 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /enhanced-aesthetic.css HTTP/1.1" 200 -
+2025-09-22 07:27:39,141 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /modern-components.css HTTP/1.1" 200 -
+2025-09-22 07:27:39,141 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /modern-components.css HTTP/1.1" 200 -
+2025-09-22 07:27:39,151 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /floating-navbar.css HTTP/1.1" 200 -
+2025-09-22 07:27:39,151 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /floating-navbar.css HTTP/1.1" 200 -
+2025-09-22 07:27:39,157 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /modern-navbar.css HTTP/1.1" 200 -
+2025-09-22 07:27:39,157 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /modern-navbar.css HTTP/1.1" 200 -
+2025-09-22 07:27:39,635 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "[32mGET /api/site-last-updated HTTP/1.1[0m" 302 -
+2025-09-22 07:27:39,635 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "[32mGET /api/site-last-updated HTTP/1.1[0m" 302 -
+2025-09-22 07:27:39,900 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /auth HTTP/1.1" 200 -
+2025-09-22 07:27:39,900 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:39] "GET /auth HTTP/1.1" 200 -
+2025-09-22 07:27:40,303 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:40] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-22 07:27:40,303 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:40] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-22 07:27:40,346 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:40] "GET /auth HTTP/1.1" 200 -
+2025-09-22 07:27:40,346 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:27:40] "GET /auth HTTP/1.1" 200 -
+2025-09-22 07:28:10,019 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:28:10] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-22 07:28:10,019 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:28:10] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-22 07:28:10,054 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:28:10] "GET /auth HTTP/1.1" 200 -
+2025-09-22 07:28:10,054 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 07:28:10] "GET /auth HTTP/1.1" 200 -
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 07:28:10,555 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 07:28:10,555 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 07:28:10,555 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 07:28:10,555 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 07:28:13,097 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 07:28:13,097 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 07:28:13,098 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 07:28:13,098 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 07:28:13,603 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 07:28:13,603 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 07:28:13,603 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 07:28:13,603 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 07:28:14,114 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 07:28:14,114 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 07:28:14,115 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 07:28:14,115 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 07:28:14,621 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 07:28:14,621 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 07:28:14,621 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 07:28:14,621 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 07:28:15,128 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 07:28:15,128 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 07:28:15,129 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 07:28:15,129 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
