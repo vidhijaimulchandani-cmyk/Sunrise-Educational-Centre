@@ -2,6 +2,8 @@
 (function () {
   var STORAGE_KEY = 'preferredTheme';
   var CLASS_DARK = 'dark-mode';
+  // Expose a lightweight flag so other scripts can detect a dedicated theme manager
+  try { window.__THEME_MANAGER_ACTIVE__ = true; } catch (e) {}
 
   function applyTheme(theme) {
     var isDark = theme === 'dark';
@@ -15,6 +17,7 @@
     try { localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light'); } catch (e) {}
     updateToggleLabel();
     updateFooterToggleLabel();
+    updateFooterSliderUI();
   }
 
   function detectInitialTheme() {
@@ -46,8 +49,41 @@
       var isDark = document.body.classList.toggle(CLASS_DARK);
       try { localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light'); } catch (e) {}
       updateFooterToggleLabel();
+      updateFooterSliderUI();
     });
     updateFooterToggleLabel();
+  }
+
+  // Footer slider (UIverse style) support
+  function bindFooterSliderIfPresent() {
+    var slider = document.getElementById('footerThemeSlider');
+    if (!slider) return;
+
+    // Initialize checked state from current theme
+    slider.checked = document.body.classList.contains(CLASS_DARK);
+
+    slider.addEventListener('change', function () {
+      var wantDark = !!slider.checked;
+      var isDark = document.body.classList.contains(CLASS_DARK);
+      if (wantDark !== isDark) {
+        document.body.classList.toggle(CLASS_DARK, wantDark);
+        try { localStorage.setItem(STORAGE_KEY, wantDark ? 'dark' : 'light'); } catch (e) {}
+      }
+      updateToggleLabel();
+      updateFooterToggleLabel();
+      updateFooterSliderUI();
+    });
+
+    updateFooterSliderUI();
+  }
+
+  function updateFooterSliderUI() {
+    var slider = document.getElementById('footerThemeSlider');
+    if (!slider) return;
+    var isDark = document.body.classList.contains(CLASS_DARK);
+    if (slider.checked !== isDark) slider.checked = isDark;
+    // Optional: update aria state for accessibility
+    slider.setAttribute('aria-pressed', String(isDark));
   }
 
   function updateToggleLabel() {
@@ -88,6 +124,7 @@
     applyTheme(detectInitialTheme());
     bindToggleIfPresent();
     bindFooterToggleIfPresent();
+    bindFooterSliderIfPresent();
   });
 })();
 

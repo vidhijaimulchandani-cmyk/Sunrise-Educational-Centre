@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <li><a href="/batch">Batches</a></li>
             <li><a href="/study-resources">Study Resources</a></li>
             <li><a href="/forum">Forum</a></li>
-            <li><button id="darkModeToggle" title="Toggle theme" style="background:none;border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:6px 10px;cursor:pointer;">🌙</button></li>
+            <!-- Theme toggle removed from navbar -->
             <li class="profile-dropdown">
               <a href="#" id="profileLink">Profile ▾</a>
               <div class="profile-dropdown-menu" id="profileDropdown">
@@ -159,12 +159,9 @@ document.addEventListener('DOMContentLoaded', () => {
           });
         }
 
-        // Ensure theme toggle exists
-        if (links && !nav.querySelector('#darkModeToggle')) {
-          const li = document.createElement('li');
-          li.innerHTML = '<button id="darkModeToggle" title="Toggle theme" style="background:none;border:1px solid rgba(255,255,255,0.3);color:#fff;border-radius:10px;padding:6px 10px;cursor:pointer;">🌙</button>';
-          links.appendChild(li);
-        }
+        // Remove theme toggle from navbar if present
+        const existingThemeBtn = nav.querySelector('#darkModeToggle');
+        if (existingThemeBtn) existingThemeBtn.remove();
 
         // Ensure Notification bell exists (and dropdown container)
         if (links && !document.getElementById('notifBell')) {
@@ -227,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Setup notification dropdown
     setupNotificationDropdown();
 
-    // Remove Admission from all navbars (keep theme toggle)
+    // Remove Admission from all navbars
     try {
       document.querySelectorAll('.floating-navbar .nav-links a[href="/admission"]').forEach(a => {
         const li = a.closest('li');
