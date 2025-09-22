@@ -402,6 +402,70 @@
       gap: 1rem;
       flex-wrap: wrap;
     }
+
+    /* Uiverse elements: stat chips, achievement badges, gradient cards */
+    .uiverse-stat-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 0.9rem;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25) inset, 0 2px 8px rgba(0,0,0,0.25);
+    }
+
+    .uiverse-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 0.8rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(106,130,251,0.25), rgba(252,92,125,0.25));
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .uiverse-card {
+      position: relative;
+      border-radius: 16px;
+      padding: 1.2rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.18);
+      overflow: hidden;
+    }
+
+    .uiverse-card::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      left: -20%;
+      width: 140%;
+      height: 180%;
+      background: radial-gradient(closest-side, rgba(106,130,251,0.25), transparent 60%);
+      transform: rotate(15deg);
+      pointer-events: none;
+    }
+
+    .uiverse-gradient-btn {
+      --bg: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+      background: var(--bg);
+      color: #fff;
+      border: 0;
+      border-radius: 14px;
+      padding: 0.9rem 1.4rem;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(106,130,251,0.35);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .uiverse-gradient-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 36px rgba(106,130,251,0.5);
+    }
     
     .btn {
       display: inline-block;
@@ -631,6 +695,11 @@
         </div>
         <h1 class="profile-name">{{ user.username }}</h1>
         <p class="profile-role">{{ user.role }}</p>
+        <div style="display:flex; gap:0.6rem; justify-content:center; flex-wrap:wrap; margin-top:0.75rem;">
+          <span class="uiverse-stat-chip">🎯 Class {{ user.class_name }}</span>
+          <span class="uiverse-stat-chip">📅 Joined {{ user.registration_date or '—' }}</span>
+          <span class="uiverse-stat-chip">🏷️ Status: {{ user.paid }}</span>
+        </div>
       </div>
       
       <div class="profile-info">
@@ -666,7 +735,7 @@
           {% endif %}
         </div>
         
-        <div class="info-section">
+        <div class="info-section uiverse-card">
           <h3>📞 Contact Information</h3>
           <div class="info-item">
             <span class="info-label">Mobile Number</span>
@@ -678,7 +747,7 @@
           </div>
         </div>
         
-        <div class="info-section">
+        <div class="info-section uiverse-card">
           <h3>🔐 Account Details</h3>
           <div class="info-item">
             <span class="info-label">Registration Date</span>
@@ -690,7 +759,7 @@
           </div>
         </div>
         
-        <div class="info-section">
+        <div class="info-section uiverse-card">
           <h3>⚙️ Settings</h3>
           <div class="info-item">
             <span class="info-label">Theme</span>
@@ -708,9 +777,15 @@
       </div>
       
       <div class="profile-actions">
-        <button onclick="showEditForm()" class="btn btn-primary">Edit Profile</button>
-        <a href="/" class="btn btn-secondary">Back to Home</a>
-        
+        <button onclick="showEditForm()" class="uiverse-gradient-btn">✏️ Edit Profile</button>
+        <a href="/study-resources" class="btn btn-secondary">📚 My Resources</a>
+        <a href="/forum" class="btn btn-secondary">💬 Forum</a>
+      </div>
+
+      <div style="margin-top:2rem; display:flex; gap:0.75rem; flex-wrap:wrap; justify-content:center;">
+        <span class="uiverse-badge">🏆 Top Performer</span>
+        <span class="uiverse-badge">📈 Consistent Learner</span>
+        <span class="uiverse-badge">⏱️ On-time Attendee</span>
       </div>
       
       <!-- Edit Profile Form (Hidden by default) -->

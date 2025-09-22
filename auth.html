@@ -18,11 +18,8 @@
         /* Auth Page Specific Styles */
         .auth-page {
             min-height: 100vh;
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+            background: #ffffff;
             font-family: 'Inter', sans-serif;
-            color: white;
             overflow-x: hidden;
             display: flex;
             align-items: center;
@@ -30,16 +27,50 @@
             padding: 2rem;
             position: relative;
         }
+
+        /* Dark mode keeps animated gradient */
+        body.dark-mode .auth-page {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: white;
+        }
         
         /* Watermark logo background */
         .auth-page::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: url('attached_assets/image_1750584670920.png') center/60vmin no-repeat;
-            opacity: 0.07;
+            /* Full-zoom watermark: large, centered logo */
+            background: url('/attached_assets/image_1750584670920.png') center/95vmin no-repeat;
+            opacity: 0.18;
             pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Slightly lower opacity in dark mode for balance */
+        body.dark-mode .auth-page::after {
+            opacity: 0.12;
+        }
+
+        /* Keep floating particles behind the watermark on auth page */
+        .auth-page .floating-particles {
+            position: absolute;
+            inset: 0;
             z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Responsive sizing for the watermark logo */
+        @media (max-width: 1024px) {
+            .auth-page::after {
+                background-size: 110vmin;
+            }
+        }
+        @media (max-width: 640px) {
+            .auth-page::after {
+                background-size: 130vmin;
+            }
         }
 
         /* Hide any navbar elements that might be created by CSS */

@@ -26,7 +26,14 @@
     </nav>
 
     <section class="card-section black-glass" style="max-width:900px; margin: 2rem auto; padding: 1.5rem;">
-        <h2 style="text-align:center; margin-bottom: 1rem;">Your Notifications</h2>
+        <div style="text-align:center; margin-bottom: 1rem;">
+            <h2 style="margin:0 0 .5rem 0;">Your Notifications</h2>
+            <div style="display:flex; gap:.5rem; justify-content:center; flex-wrap:wrap;">
+                <span class="uiverse-stat-chip">🔔 Unread: {{ unread_count or 0 }}</span>
+                <span class="uiverse-stat-chip">📅 Today: {{ today_count or 0 }}</span>
+                <span class="uiverse-stat-chip">📦 Total: {{ notifications|length if notifications else 0 }}</span>
+            </div>
+        </div>
         {% if notifications and notifications|length > 0 %}
             <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.8rem;">
                 {% for n in notifications %}
@@ -34,14 +41,15 @@
                     {% set message = n[1] %}
                     {% set created_at = n[2] %}
                     {% set notification_type = n[4] if n|length > 4 else 'general' %}
-                    <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:1rem; border-radius:12px; background:#fff; color:#232946; border:1px solid #e0e7ff;">
-                        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem;">
-                            <span style="background:#6a82fb; color:white; padding:0.1rem 0.4rem; border-radius:8px; font-size:0.8rem; font-weight:600;">{{ notification_type }}</span>
-                            <span style="font-size:0.9rem; color:#888;">{{ created_at }}</span>
+                    <li class="notification-item uiverse-card" data-notification-id="{{ id }}" data-type="notification" style="padding:1rem; border-radius:12px;">
+                        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem; flex-wrap:wrap;">
+                            <span class="uiverse-badge">{{ notification_type|title }}</span>
+                            <span class="uiverse-stat-chip">🕒 {{ created_at }}</span>
                         </div>
-                        <div style="word-wrap: break-word;">{{ message }}</div>
-                        <div style="margin-top:0.6rem;">
-                            <button class="btn btn-secondary" onclick="markNotificationAsSeen('{{ id }}')">Mark as seen</button>
+                        <div style="word-wrap: break-word; color:#fff;">{{ message }}</div>
+                        <div style="margin-top:0.6rem; display:flex; gap:.5rem; flex-wrap:wrap;">
+                            <button class="uiverse-gradient-btn" onclick="markNotificationAsSeen('{{ id }}')">✅ Mark as seen</button>
+                            <button class="btn btn-secondary" onclick="deleteNotification('{{ id }}')">🗑️ Delete</button>
                         </div>
                     </li>
                 {% endfor %}

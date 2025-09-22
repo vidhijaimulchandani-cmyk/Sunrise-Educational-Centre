@@ -685,7 +685,19 @@
             </div>
             
             <div class="footer-bottom">
-                <div>&copy; 2024 Sunrise Educational Centre. All rights reserved.</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div>&copy; 2024 Sunrise Educational Centre. All rights reserved.</div>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div class="uiverse-theme-slider" title="Theme">
+                            <label class="switch">
+                                <input id="footerThemeSlider" type="checkbox" />
+                                <span class="slider-round"></span>
+                            </label>
+                            <span id="footerThemeSliderLabel">Theme</span>
+                        </div>
+                        <button id="footerThemeToggle" class="btn-modern btn-glass" style="padding: 0.5rem 1rem; font-size: 0.9rem; display:none;">🌙 Theme</button>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
@@ -748,6 +760,7 @@
     </script>
     
     <script src="modern-interactions.js"></script>
+    <script src="/attached_assets/theme.js"></script>
     <script src="modern-navbar.js"></script>
     <script src="forum.js"></script>
 

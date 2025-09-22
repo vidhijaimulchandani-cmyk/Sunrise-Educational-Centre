@@ -269,12 +269,23 @@
         /* Online Class Specific Styles */
         .online-class-page {
             min-height: 100vh;
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
             font-family: 'Inter', sans-serif;
-            color: white;
             overflow-x: hidden;
+        }
+
+        /* Ensure blue gradient background in both themes */
+        /* Light theme: white background like home */
+        body.online-class-page {
+            background: #ffffff !important;
+            color: inherit;
+        }
+
+        /* Dark theme: keep blue animated gradient */
+        body.dark-mode.online-class-page {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%) !important;
+            background-size: 400% 400% !important;
+            animation: gradientShift 15s ease infinite !important;
+            color: white;
         }
 
         .online-class-container {
@@ -889,7 +900,19 @@
             </div>
             
             <div class="footer-bottom">
-                <div>&copy; 2024 Sunrise Educational Centre. All rights reserved.</div>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                    <div>&copy; 2024 Sunrise Educational Centre. All rights reserved.</div>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div class="uiverse-theme-slider" title="Theme">
+                            <label class="switch">
+                                <input id="footerThemeSlider" type="checkbox" />
+                                <span class="slider-round"></span>
+                            </label>
+                            <span id="footerThemeSliderLabel">Theme</span>
+                        </div>
+                        <button id="footerThemeToggle" class="btn-modern btn-glass" style="padding: 0.5rem 1rem; font-size: 0.9rem; display:none;">🌙 Theme</button>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>

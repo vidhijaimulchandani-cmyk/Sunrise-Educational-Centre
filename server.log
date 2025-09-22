@@ -4773,3 +4773,1014 @@ Starting Sunrise Educational Centre server on port 10000...
  * Running on http://192.168.1.42:10000
 2025-09-22 07:28:15,129 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
 2025-09-22 07:28:15,129 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7331, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 13:28:24,405 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 13:28:24,405 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 13:28:24,406 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 13:28:24,406 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 13:28:35,126 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "GET / HTTP/1.1" 200 -
+2025-09-22 13:28:35,126 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "GET / HTTP/1.1" 200 -
+2025-09-22 13:28:35,559 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 13:28:35,559 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 13:28:35,581 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 13:28:35,581 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 13:28:35,601 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "GET /script.js HTTP/1.1" 200 -
+2025-09-22 13:28:35,601 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "GET /script.js HTTP/1.1" 200 -
+2025-09-22 13:28:35,617 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 13:28:35,617 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 13:28:35,620 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 13:28:35,620 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 13:28:35,632 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "GET /modern-interactions.js HTTP/1.1" 200 -
+2025-09-22 13:28:35,632 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "GET /modern-interactions.js HTTP/1.1" 200 -
+2025-09-22 13:28:35,644 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "GET /footer/instagram-brands-solid-full.svg HTTP/1.1" 200 -
+2025-09-22 13:28:35,644 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "GET /footer/instagram-brands-solid-full.svg HTTP/1.1" 200 -
+2025-09-22 13:28:35,652 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "GET /footer/whatsapp-brands-solid-full.svg HTTP/1.1" 200 -
+2025-09-22 13:28:35,652 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "GET /footer/whatsapp-brands-solid-full.svg HTTP/1.1" 200 -
+2025-09-22 13:28:35,653 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "GET /uiverse-components.css HTTP/1.1" 200 -
+2025-09-22 13:28:35,653 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "GET /uiverse-components.css HTTP/1.1" 200 -
+2025-09-22 13:28:35,657 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "GET /footer/youtube-brands-solid-full.svg HTTP/1.1" 200 -
+2025-09-22 13:28:35,658 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 13:28:35,657 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "GET /footer/youtube-brands-solid-full.svg HTTP/1.1" 200 -
+2025-09-22 13:28:35,658 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 13:28:35,665 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 13:28:35,665 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 13:28:35,670 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 13:28:35,670 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:35] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 13:28:37,028 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:37] "[32mGET /api/site-last-updated HTTP/1.1[0m" 302 -
+2025-09-22 13:28:37,028 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:37] "[32mGET /api/site-last-updated HTTP/1.1[0m" 302 -
+2025-09-22 13:28:37,184 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:37] "GET /auth HTTP/1.1" 200 -
+2025-09-22 13:28:37,184 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:37] "GET /auth HTTP/1.1" 200 -
+2025-09-22 13:28:37,994 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:37] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-22 13:28:37,994 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:37] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-22 13:28:38,028 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:38] "GET /auth HTTP/1.1" 200 -
+2025-09-22 13:28:38,028 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:28:38] "GET /auth HTTP/1.1" 200 -
+2025-09-22 13:29:07,300 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:29:07] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-22 13:29:07,300 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:29:07] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-22 13:29:07,327 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:29:07] "GET /auth HTTP/1.1" 200 -
+2025-09-22 13:29:07,327 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 13:29:07] "GET /auth HTTP/1.1" 200 -
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 13:29:09,851 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 13:29:09,851 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 13:29:09,852 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 13:29:09,852 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7331, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 15:08:50,571 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:08:50,571 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:08:50,572 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:08:50,572 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:09:19,026 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "GET / HTTP/1.1" 200 -
+2025-09-22 15:09:19,026 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "GET / HTTP/1.1" 200 -
+2025-09-22 15:09:19,599 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,599 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,635 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,637 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,635 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,637 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,667 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,667 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,703 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,709 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,703 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,710 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,706 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,717 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,709 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,710 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,706 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,717 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,757 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,757 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,773 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,773 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,784 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,784 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,790 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,790 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:09:19,805 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "GET /attached_assets/theme.js HTTP/1.1" 200 -
+2025-09-22 15:09:19,805 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:19] "GET /attached_assets/theme.js HTTP/1.1" 200 -
+2025-09-22 15:09:21,601 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:21] "[32mGET /api/site-last-updated HTTP/1.1[0m" 302 -
+2025-09-22 15:09:21,601 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:21] "[32mGET /api/site-last-updated HTTP/1.1[0m" 302 -
+2025-09-22 15:09:22,011 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:22] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:09:22,011 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:22] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:09:22,636 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:22] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-22 15:09:22,636 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:22] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-22 15:09:22,710 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:22] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:09:22,710 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:22] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:09:52,329 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:52] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-22 15:09:52,329 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:52] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-22 15:09:52,370 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:52] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:09:52,370 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:09:52] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:10:22,300 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:10:22] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-22 15:10:22,300 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:10:22] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-22 15:10:22,352 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:10:22] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:10:22,352 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:10:22] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:11:28,404 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:28] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-22 15:11:28,404 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:28] "[32mGET /api/notifications HTTP/1.1[0m" 302 -
+2025-09-22 15:11:28,568 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:28] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:11:28,568 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:28] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:11:31,230 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:31] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:11:31,230 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:31] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:11:31,375 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:31] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:31,375 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:31] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:31,380 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:31] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:31,380 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:31] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:31,387 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:31] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:31,387 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:31] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:31,391 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:31] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:31,391 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:31] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:31,394 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:31] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:31,394 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:31] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:31,408 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:31] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:31,408 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:31] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:31,427 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:31] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:11:31,427 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:31] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:11:35,191 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:35] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-22 15:11:35,191 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:35] "[32mGET /favicon.ico HTTP/1.1[0m" 302 -
+2025-09-22 15:11:35,244 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:35] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:11:35,244 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:35] "GET /auth HTTP/1.1" 200 -
+Auth POST request received
+Form data: {'username': 'raj', 'password': 'raj', 'class_id': '4', 'admin_code': ''}
+Parsed data - Username: raj, Class ID: 4, Selected Role: class 11 applied
+2025-09-22 15:11:45,919 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:45] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-22 15:11:45,919 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:45] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-22 15:11:45,988 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:45] "GET / HTTP/1.1" 200 -
+2025-09-22 15:11:45,988 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:45] "GET / HTTP/1.1" 200 -
+2025-09-22 15:11:46,083 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,083 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,118 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,118 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,122 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,122 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,131 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,131 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,137 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,137 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,151 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,151 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,165 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,165 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,176 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,176 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,179 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,179 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,189 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,189 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,195 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,195 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,201 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,201 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,208 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,208 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,211 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:46,211 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:46] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:47,761 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:47] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-22 15:11:47,761 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:47] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-22 15:11:48,815 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:48] "GET /favicon.ico HTTP/1.1" 200 -
+2025-09-22 15:11:48,815 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:48] "GET /favicon.ico HTTP/1.1" 200 -
+User: raj, Role: class 11 applied, Paid: paid
+All topics: [(14, 'Class 11 Applied Advanced Math', 'Advanced mathematics discussions for Class 11 Applied students', '2025-08-02 09:03:00', 'paid'), (13, 'Class 11 Applied Math Help', 'Mathematics help for Class 11 Applied students', '2025-08-02 09:02:51', 'unpaid'), (9, 'Class 11 Applied Science', 'Science for Class 11 Applied', '2025-06-29 08:49:11', 'unpaid'), (5, 'General Discussion', 'General topics for all students', '2025-06-29 08:49:10', 'unpaid')]
+Paid topics: [(14, 'Class 11 Applied Advanced Math', 'Advanced mathematics discussions for Class 11 Applied students', '2025-08-02 09:03:00', 'paid')]
+Unpaid topics: [(13, 'Class 11 Applied Math Help', 'Mathematics help for Class 11 Applied students', '2025-08-02 09:02:51', 'unpaid'), (9, 'Class 11 Applied Science', 'Science for Class 11 Applied', '2025-06-29 08:49:11', 'unpaid'), (5, 'General Discussion', 'General topics for all students', '2025-06-29 08:49:10', 'unpaid')]
+2025-09-22 15:11:58,740 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "GET /forum HTTP/1.1" 200 -
+2025-09-22 15:11:58,740 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "GET /forum HTTP/1.1" 200 -
+2025-09-22 15:11:58,823 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,823 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,848 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "GET /forum.css HTTP/1.1" 200 -
+2025-09-22 15:11:58,848 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "GET /forum.css HTTP/1.1" 200 -
+2025-09-22 15:11:58,854 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,854 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,862 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,862 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,871 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,871 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,886 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,886 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,889 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,889 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,893 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,893 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,903 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,903 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,919 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,919 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,929 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,929 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,940 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "GET /forum.js HTTP/1.1" 200 -
+2025-09-22 15:11:58,940 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "GET /forum.js HTTP/1.1" 200 -
+2025-09-22 15:11:58,945 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,945 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,959 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,959 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:11:58,964 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "GET /navbar-functions.js HTTP/1.1" 200 -
+2025-09-22 15:11:58,964 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:11:58] "GET /navbar-functions.js HTTP/1.1" 200 -
+2025-09-22 15:12:00,039 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:00] "GET /api/forum/messages?topic_id=14 HTTP/1.1" 200 -
+2025-09-22 15:12:00,039 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:00] "GET /api/forum/messages?topic_id=14 HTTP/1.1" 200 -
+2025-09-22 15:12:00,075 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:00] "GET /api/forum/polls/2 HTTP/1.1" 200 -
+2025-09-22 15:12:00,075 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:00] "GET /api/forum/polls/2 HTTP/1.1" 200 -
+2025-09-22 15:12:27,858 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:27] "GET /online-class HTTP/1.1" 200 -
+2025-09-22 15:12:27,858 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:27] "GET /online-class HTTP/1.1" 200 -
+2025-09-22 15:12:27,952 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:27] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:12:27,952 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:27] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:12:27,973 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:27] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:12:27,973 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:27] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:12:27,976 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:27] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:12:27,976 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:27] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,000 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,000 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,010 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,010 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,013 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,013 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,024 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,024 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,041 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,041 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,049 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,049 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,053 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,053 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,061 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,061 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,070 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,070 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,085 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:12:28,085 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:28] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:12:59,377 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:59] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:12:59,377 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:59] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:12:59,412 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:59] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:12:59,412 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:12:59] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:13:29,375 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:29] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:13:29,375 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:29] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:13:29,417 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:29] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:13:29,417 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:29] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:13:40,946 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:40] "GET /online-class HTTP/1.1" 200 -
+2025-09-22 15:13:40,946 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:40] "GET /online-class HTTP/1.1" 200 -
+2025-09-22 15:13:41,034 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,034 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,054 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,054 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,070 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,070 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,074 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,074 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,089 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,089 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,100 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,100 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,107 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,107 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,119 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,119 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,126 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,126 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,134 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,134 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,138 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,138 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,152 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,152 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,182 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:41,182 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:41] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:42,120 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:42] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:13:42,120 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:42] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,269 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "GET /online-class HTTP/1.1" 200 -
+2025-09-22 15:13:58,269 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "GET /online-class HTTP/1.1" 200 -
+2025-09-22 15:13:58,345 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,345 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,360 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,360 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,365 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,365 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,371 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,371 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,377 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,377 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,391 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,391 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,406 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,406 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,416 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,416 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,419 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,419 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,422 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,422 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,431 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,431 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,439 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,439 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,459 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:58,459 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:58] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:13:59,428 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:59] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:13:59,428 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:13:59] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:14:29,374 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:29] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:14:29,374 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:29] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:14:30,330 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:30] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:14:30,330 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:30] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:14:59,059 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "GET /online-class HTTP/1.1" 200 -
+2025-09-22 15:14:59,059 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "GET /online-class HTTP/1.1" 200 -
+2025-09-22 15:14:59,166 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,166 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,187 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,187 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,191 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,191 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,204 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,204 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,208 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,208 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,227 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,227 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,236 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,236 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,244 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,244 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,256 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,256 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,263 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,263 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,267 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,267 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,272 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,272 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,285 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,285 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,331 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:14:59,331 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:14:59] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,354 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "GET /online-class HTTP/1.1" 200 -
+2025-09-22 15:15:00,354 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "GET /online-class HTTP/1.1" 200 -
+2025-09-22 15:15:00,464 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,464 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,495 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,495 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,504 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,504 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,519 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,519 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,523 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,523 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,534 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,534 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,551 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,551 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,561 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,561 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,565 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,565 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,571 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,571 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,588 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,588 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,592 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,592 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,598 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:15:00,598 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:00] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:15:01,101 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:01] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:15:01,101 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:01] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:15:31,381 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:31] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:15:31,381 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:31] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:15:31,417 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:31] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:15:31,417 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:15:31] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:16:00,940 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:00] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:16:00,940 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:00] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:16:00,986 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:00] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:16:00,986 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:00] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:16:02,808 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:02] "GET /online-class HTTP/1.1" 200 -
+2025-09-22 15:16:02,808 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:02] "GET /online-class HTTP/1.1" 200 -
+2025-09-22 15:16:02,949 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:02] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:16:02,949 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:02] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:16:02,971 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:02] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:16:02,971 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:02] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:16:02,979 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:02] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:16:02,979 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:02] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:16:02,990 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:02] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:16:02,990 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:02] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,003 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,003 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,030 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,030 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,035 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,035 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,048 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,048 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,053 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,053 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,062 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,062 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,069 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,069 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,084 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,084 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,100 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,100 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,224 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:16:03,224 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:03] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:16:33,356 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:33] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:16:33,356 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:33] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:16:33,399 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:33] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:16:33,399 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:16:33] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:17:03,350 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:03] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:17:03,350 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:03] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:17:03,430 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:03] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:17:03,430 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:03] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:17:29,443 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:29] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:17:29,443 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:29] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:17:29,528 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:29] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:17:29,528 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:29] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:17:29,551 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:29] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:17:29,551 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:29] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:17:29,560 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:29] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:17:29,560 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:29] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:17:29,563 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:29] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:17:29,563 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:29] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:17:29,567 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:29] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:17:29,567 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:29] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:17:29,581 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:29] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:17:29,581 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:29] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:17:29,621 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:29] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:17:29,621 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:17:29] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:18:46,982 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:46] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:18:46,982 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:46] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:18:47,063 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:47] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:18:47,063 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:47] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:18:47,080 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:47] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:18:47,080 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:47] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:18:47,082 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:47] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:18:47,082 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:47] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:18:47,084 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:47] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:18:47,084 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:47] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:18:47,091 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:47] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:18:47,091 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:47] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:18:47,096 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:47] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:18:47,096 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:47] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:18:47,189 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:47] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:18:47,189 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:47] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:18:49,475 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:49] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:18:49,475 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:18:49] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:19:40,892 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:40] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:19:40,892 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:40] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:19:40,988 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:40] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:19:40,988 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:40] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:19:41,009 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:41] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:19:41,009 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:41] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:19:41,011 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:41] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:19:41,011 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:41] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:19:41,027 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:41] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:19:41,027 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:41] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:19:41,034 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:41] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:19:41,034 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:41] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:19:41,049 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:41] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:19:41,049 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:41] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:19:41,959 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:41] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:19:41,959 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:41] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:19:42,221 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:42] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:19:42,221 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:19:42] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 15:20:13,389 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:20:13,389 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:20:13,390 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:20:13,390 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 15:20:13,906 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:20:13,906 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:20:13,907 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:20:13,907 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 15:20:14,430 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:20:14,430 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:20:14,432 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:20:14,432 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 15:20:14,941 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:20:14,941 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:20:14,942 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:20:14,942 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 15:20:15,456 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:20:15,456 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:20:15,457 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:20:15,457 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 15:20:15,975 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:20:15,975 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:20:15,976 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:20:15,976 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 15:20:16,484 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:20:16,484 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:20:16,484 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:20:16,484 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:20:19,959 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:19] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:20:19,959 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:19] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:20:20,042 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:20] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:20:20,042 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:20] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:20:20,051 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:20] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:20:20,051 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:20] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:20:20,060 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:20] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:20:20,060 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:20] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:20:20,063 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:20] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:20:20,063 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:20] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:20:20,072 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:20] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:20:20,072 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:20] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:20:20,088 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:20] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:20:20,088 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:20] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:20:20,141 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:20] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:20:20,141 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:20] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:20:21,306 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:21] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:20:21,306 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:21] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7331, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 15:20:41,541 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:20:41,541 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:20:41,543 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:20:41,543 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:20:44,373 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:44] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:20:44,373 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:44] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:20:44,901 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:44] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:20:44,901 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:44] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:20:44,927 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:44] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:20:44,927 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:44] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:20:44,936 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:44] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:20:44,936 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:44] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:20:45,012 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:45] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:20:45,012 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:45] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:20:45,015 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:45] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:20:45,015 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:45] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:20:45,023 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:45] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:20:45,023 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:45] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:20:45,188 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:45] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:20:45,188 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:45] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:20:47,138 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:47] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:20:47,138 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:20:47] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,395 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "GET /online-class HTTP/1.1" 200 -
+2025-09-22 15:21:39,395 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "GET /online-class HTTP/1.1" 200 -
+2025-09-22 15:21:39,473 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,473 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,514 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,514 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,518 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,518 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,528 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,528 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,542 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,542 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,549 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,549 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,559 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,562 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,559 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,562 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,572 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,572 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,584 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,584 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,588 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,588 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,604 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,604 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,628 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:21:39,628 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:21:39] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:22:10,598 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:10] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:22:10,598 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:10] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:22:10,662 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:10] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:22:10,662 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:10] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-22 15:22:14,338 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:14] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:22:14,338 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:14] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:22:14,438 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:14] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:14,438 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:14] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:14,469 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:14] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:14,469 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:14] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:14,473 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:14] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:22:14,473 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:14] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:22:14,479 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:14] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:14,479 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:14] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:14,495 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:14] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:14,495 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:14] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:14,510 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:14] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:22:14,510 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:14] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:22:14,585 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:14] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:22:14,585 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:14] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:22:17,895 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:17] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:22:17,895 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:17] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:22:17,978 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:17] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:17,978 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:17] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:17,996 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:17] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:17,996 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:17] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:18,001 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:18] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:22:18,001 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:18] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:22:18,005 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:18] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:18,005 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:18] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:18,021 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:18] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:18,021 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:18] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:18,037 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:18] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:22:18,037 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:18] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:22:18,440 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:18] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:22:18,440 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:18] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:22:18,684 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:18] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:22:18,684 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:18] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7331, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 15:22:42,420 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:22:42,420 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:22:42,420 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:22:42,420 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:22:42,974 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:42] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:22:42,974 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:42] "GET /auth HTTP/1.1" 200 -
+2025-09-22 15:22:43,562 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:43] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:43,562 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:43] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:43,657 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:43] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:43,657 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:43] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:43,690 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:43] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:43,690 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:43] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:43,698 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:43] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:43,698 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:43] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:22:43,712 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:43] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:22:43,712 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:43] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:22:43,721 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:43] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:22:43,721 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:43] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:22:44,371 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:44] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:22:44,371 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:44] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:22:44,573 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:44] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-22 15:22:44,573 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:22:44] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+Auth POST request received
+Form data: {'username': 'raj', 'password': 'raj', 'class_id': '4', 'admin_code': ''}
+Parsed data - Username: raj, Class ID: 4, Selected Role: class 11 applied
+2025-09-22 15:24:22,102 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-22 15:24:22,102 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[32mPOST /auth HTTP/1.1[0m" 302 -
+2025-09-22 15:24:22,193 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "GET / HTTP/1.1" 200 -
+2025-09-22 15:24:22,193 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "GET / HTTP/1.1" 200 -
+2025-09-22 15:24:22,270 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,270 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,314 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,314 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,317 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,317 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,319 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,319 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,334 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,334 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,348 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,348 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,361 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,361 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,371 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,371 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,378 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,378 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,384 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,384 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,393 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,393 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,403 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,403 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,407 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,407 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,425 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:24:22,425 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:22] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-22 15:24:23,784 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:23] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-22 15:24:23,784 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:23] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-22 15:24:54,370 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:54] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-22 15:24:54,370 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:24:54] "GET /api/notifications HTTP/1.1" 200 -
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 15:25:01,431 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:25:01,431 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:25:01,431 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:25:01,431 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7331, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 15:25:18,598 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:25:18,598 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:25:18,599 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:25:18,599 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:25:23,829 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:23] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-22 15:25:23,829 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:23] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-22 15:25:23,992 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:23] "GET /profile HTTP/1.1" 200 -
+2025-09-22 15:25:23,992 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:23] "GET /profile HTTP/1.1" 200 -
+2025-09-22 15:25:24,641 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:25:24,641 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-22 15:25:24,662 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:25:24,662 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:25:24,682 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:25:24,682 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:25:24,704 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:25:24,704 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-22 15:25:24,716 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:25:24,716 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-22 15:25:24,729 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:25:24,729 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-22 15:25:24,754 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:25:24,754 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-22 15:25:24,770 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:25:24,770 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-22 15:25:24,776 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-22 15:25:24,776 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:24] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-22 15:25:25,869 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:25] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-22 15:25:25,869 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:25] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-22 15:25:56,318 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:56] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-22 15:25:56,318 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:25:56] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-22 15:26:26,365 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:26:26] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-22 15:26:26,365 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:26:26] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-22 15:26:56,355 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:26:56] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-22 15:26:56,355 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:26:56] "GET /api/notifications HTTP/1.1" 200 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7331, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-22 15:27:31,903 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:27:31,903 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-22 15:27:31,903 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:27:31,903 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-22 15:27:41,925 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:27:41] "[33mGET /nortifcation.html HTTP/1.1[0m" 404 -
+2025-09-22 15:27:41,925 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:27:41] "[33mGET /nortifcation.html HTTP/1.1[0m" 404 -
+2025-09-22 15:27:50,900 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:27:50] "[33mGET /nortifcation HTTP/1.1[0m" 404 -
+2025-09-22 15:27:50,900 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:27:50] "[33mGET /nortifcation HTTP/1.1[0m" 404 -
+2025-09-22 15:29:00,303 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:29:00] "[33mGET /nortifcations HTTP/1.1[0m" 404 -
+2025-09-22 15:29:00,303 [INFO] werkzeug: 127.0.0.1 - - [22/Sep/2025 15:29:00] "[33mGET /nortifcations HTTP/1.1[0m" 404 -
