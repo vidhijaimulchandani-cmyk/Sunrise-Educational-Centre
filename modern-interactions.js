@@ -383,6 +383,8 @@ class FormEnhancements {
 // Theme Switcher Enhancement
 class ThemeSwitcher {
     constructor() {
+        // If a dedicated theme manager is active, skip to avoid duplicate bindings
+        try { if (window.__THEME_MANAGER_ACTIVE__) return; } catch (e) {}
         this.init();
     }
 

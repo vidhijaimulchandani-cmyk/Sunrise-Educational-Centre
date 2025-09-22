@@ -625,11 +625,7 @@
                     <span class="notification-badge" id="notificationCount" style="display:none;">0</span>
                 </button>
             </li>
-            <li>
-                <button id="darkModeToggle" class="theme-toggle-btn" title="Toggle Dark Mode">
-                    🌙
-                </button>
-            </li>
+            <!-- Theme toggle removed; use footer slider -->
         </ul>
     </nav>
 
@@ -649,7 +645,7 @@
                 <h1>Student Admission Form</h1>
                 <p>Join Sunrise Educational Centre and start your journey towards academic excellence. Please fill out all required fields accurately.</p>
                 <div style="display:flex; gap:0.6rem; justify-content:center; flex-wrap:wrap; margin-top:1rem;">
-                    <button id="darkModeToggle" class="btn btn-secondary">Toggle Dark Mode</button>
+                    <!-- Theme toggle removed; use footer slider in footer -->
                     <a href="/check-admission" class="btn btn-primary">Check Admission Status</a>
                 </div>
             </div>
@@ -797,9 +793,14 @@
             </div>
             <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
             <div class="footer-theme-toggle">
-                <button id="footerThemeToggle" type="button" aria-pressed="false">
-                    🌙 Dark Mode
-                </button>
+                <div class="uiverse-theme-slider" title="Theme">
+                    <label class="switch">
+                        <input id="footerThemeSlider" type="checkbox" />
+                        <span class="slider-round"></span>
+                    </label>
+                    <span id="footerThemeSliderLabel">Theme</span>
+                </div>
+                <button id="footerThemeToggle" type="button" aria-pressed="false" style="display:none;">🌙 Dark Mode</button>
             </div>
         </div>
     </footer>

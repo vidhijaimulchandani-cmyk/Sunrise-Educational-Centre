@@ -141,10 +141,10 @@
           <img src="footer/instagram-brands-solid-full.svg" alt="Instagram" style="width: 24px; height: 24px; display: inline-block; vertical-align: middle;">
         </a>
         <a href="https://www.youtube.com/@MohitNariyani" target="_blank" class="uiverse-social-btn youtube" title="YouTube">
-          <i class="fab fa-youtube"></i>
+          <img src="footer/youtube-brands-solid-full.svg" alt="YouTube" style="width: 24px; height: 24px; display: inline-block; vertical-align: middle;">
         </a>
         <a href="https://wa.me/917224860881" target="_blank" class="uiverse-social-btn whatsapp" title="WhatsApp">
-          <i class="fab fa-whatsapp"></i>
+          <img src="footer/whatsapp-brands-solid-full.svg" alt="WhatsApp" style="width: 24px; height: 24px; display: inline-block; vertical-align: middle;">
         </a>
       </div>
       <div class="footer-links">
@@ -153,9 +153,14 @@
       </div>
       <div class="footer-copy">&copy; 2024 Sunrise Education Centre</div>
       <div class="footer-theme-toggle">
-        <button id="footerThemeToggle" type="button" aria-pressed="false">
-          🌙 Dark Mode
-        </button>
+        <div class="uiverse-theme-slider" title="Theme">
+          <label class="switch">
+            <input id="footerThemeSlider" type="checkbox" />
+            <span class="slider-round"></span>
+          </label>
+          <span id="footerThemeSliderLabel">Theme</span>
+        </div>
+        <button id="footerThemeToggle" type="button" aria-pressed="false" style="display:none;">🌙 Dark Mode</button>
       </div>
     </div>
   </footer>
