@@ -79,11 +79,16 @@
 
   function updateFooterSliderUI() {
     var slider = document.getElementById('footerThemeSlider');
+    var label = document.getElementById('footerThemeSliderLabel');
     if (!slider) return;
     var isDark = document.body.classList.contains(CLASS_DARK);
     if (slider.checked !== isDark) slider.checked = isDark;
     // Optional: update aria state for accessibility
     slider.setAttribute('aria-pressed', String(isDark));
+    if (label) {
+      label.textContent = isDark ? 'Dark Mode' : 'Light Mode';
+      label.title = isDark ? 'Currently Dark Mode' : 'Currently Light Mode';
+    }
   }
 
   function updateToggleLabel() {
