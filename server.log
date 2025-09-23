@@ -7414,3 +7414,13 @@ Starting Sunrise Educational Centre server on port 10000...
 2025-09-23 06:11:18,215 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 06:11:18] "GET /api/notifications HTTP/1.1" 200 -
 2025-09-23 06:11:48,225 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 06:11:48] "GET /api/notifications HTTP/1.1" 200 -
 2025-09-23 06:11:48,225 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 06:11:48] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 06:17:17,336 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 06:17:17] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 06:17:17,336 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 06:17:17] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 06:17:48,220 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 06:17:48] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 06:17:48,220 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 06:17:48] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 06:18:18,215 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 06:18:18] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 06:18:18,215 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 06:18:18] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 06:19:19,220 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 06:19:19] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 06:19:19,220 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 06:19:19] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 06:19:49,285 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 06:19:49] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 06:19:49,285 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 06:19:49] "GET /api/notifications HTTP/1.1" 200 -

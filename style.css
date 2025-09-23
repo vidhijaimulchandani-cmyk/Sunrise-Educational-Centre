@@ -2845,6 +2845,90 @@ body.dark-mode .fame-card {
   box-shadow: 0 4px 24px rgba(0,0,0,0.35) !important;
 }
 
+/* ===== Global Page Loader (Uiverse-inspired) ===== */
+.global-loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(5, 6, 10, 0.82);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  backdrop-filter: blur(10px) saturate(120%);
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.global-loader-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.uiverse-loader {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.uiverse-loader .ring {
+  box-sizing: border-box;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 6px solid transparent;
+  border-top-color: #6a82fb;
+  border-radius: 50%;
+  animation: uiverseSpin 1s linear infinite;
+  box-shadow: 0 0 24px rgba(106,130,251,0.35);
+}
+
+.uiverse-loader .ring:nth-child(2) {
+  border-top-color: #fc5c7d;
+  border-right-color: transparent;
+  width: 64px;
+  height: 64px;
+  top: 8px;
+  left: 8px;
+  animation-duration: 0.8s;
+  animation-direction: reverse;
+  box-shadow: 0 0 24px rgba(252,92,125,0.35);
+}
+
+.uiverse-loader .ring:nth-child(3) {
+  border-top-color: #ff6b35;
+  width: 48px;
+  height: 48px;
+  top: 16px;
+  left: 16px;
+  animation-duration: 1.2s;
+}
+
+.uiverse-loader .dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  background: linear-gradient(135deg, #6a82fb, #fc5c7d);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(106,130,251,0.6), 0 0 12px rgba(252,92,125,0.5);
+  animation: uiversePulse 1.6s ease-in-out infinite;
+}
+
+@keyframes uiverseSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes uiversePulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.25); opacity: 0.8; }
+}
+
+/* Dark-mode friendly loader colors remain vibrant */
+body.dark-mode .global-loader-overlay { background: rgba(10,12,18,0.86); }
+
 body.dark-mode .outstanding-performers {
   background: rgba(35,41,70,0.9) !important;
   color: #f4f4f4 !important;

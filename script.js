@@ -75,6 +75,23 @@ if (!document.getElementById('ripple-style')) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Inject global loader overlay at the top of <body>
+    try {
+      if (!document.getElementById('globalPageLoader')) {
+        const loader = document.createElement('div');
+        loader.id = 'globalPageLoader';
+        loader.className = 'global-loader-overlay';
+        loader.innerHTML = `
+          <div class="uiverse-loader" aria-label="Loading" role="status">
+            <span class="ring"></span>
+            <span class="ring"></span>
+            <span class="ring"></span>
+            <span class="dot"></span>
+          </div>`;
+        document.body.insertBefore(loader, document.body.firstChild);
+      }
+    } catch (e) {}
+
     // Inject a universal navbar if missing
     try {
       if (!document.querySelector('.floating-navbar')) {
@@ -248,6 +265,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     } catch (e) {}
+});
+
+// Hide loader when the page has fully loaded (including assets)
+window.addEventListener('load', function() {
+  const loader = document.getElementById('globalPageLoader');
+  if (loader) {
+    loader.classList.add('hidden');
+    // Remove from DOM after transition ends
+    setTimeout(() => {
+      if (loader && loader.parentElement) loader.parentElement.removeChild(loader);
+    }, 300);
+  }
 });
 
 // Profile Dropdown Functionality
