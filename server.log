@@ -7424,3 +7424,1436 @@ Starting Sunrise Educational Centre server on port 10000...
 2025-09-23 06:19:19,220 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 06:19:19] "GET /api/notifications HTTP/1.1" 200 -
 2025-09-23 06:19:49,285 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 06:19:49] "GET /api/notifications HTTP/1.1" 200 -
 2025-09-23 06:19:49,285 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 06:19:49] "GET /api/notifications HTTP/1.1" 200 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7331, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-23 09:51:11,571 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 09:51:11,571 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 09:51:11,572 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 09:51:11,572 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 09:51:16,993 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:16] "GET / HTTP/1.1" 200 -
+2025-09-23 09:51:16,993 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:16] "GET / HTTP/1.1" 200 -
+2025-09-23 09:51:17,519 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "GET /style.css HTTP/1.1" 200 -
+2025-09-23 09:51:17,519 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "GET /style.css HTTP/1.1" 200 -
+2025-09-23 09:51:17,558 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,558 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /attached_assets/image_1750584670920.png HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,576 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,576 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,604 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "GET /script.js HTTP/1.1" 200 -
+2025-09-23 09:51:17,604 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "GET /script.js HTTP/1.1" 200 -
+2025-09-23 09:51:17,615 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "GET /floating-navbar.css HTTP/1.1" 200 -
+2025-09-23 09:51:17,615 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "GET /floating-navbar.css HTTP/1.1" 200 -
+2025-09-23 09:51:17,628 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,628 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,643 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,646 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,643 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,646 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,649 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,649 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,677 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,677 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,681 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,681 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,700 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,700 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,708 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:51:17,708 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:17] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:51:18,532 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:18] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 09:51:18,532 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:18] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 09:51:26,185 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "GET /batch HTTP/1.1" 200 -
+2025-09-23 09:51:26,185 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "GET /batch HTTP/1.1" 200 -
+2025-09-23 09:51:26,264 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:26,264 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:26,295 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:26,295 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:26,299 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:26,299 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:26,305 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:26,305 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:26,309 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:51:26,309 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:51:26,315 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:51:26,315 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:51:26,322 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:26,322 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:26,333 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:26,333 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:26,346 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 09:51:26,346 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 09:51:26,413 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 09:51:26,413 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:26] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 09:51:42,859 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:42] "GET /batch HTTP/1.1" 200 -
+2025-09-23 09:51:42,859 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:42] "GET /batch HTTP/1.1" 200 -
+2025-09-23 09:51:42,936 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:42] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:42,936 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:42] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:42,948 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:42] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:42,948 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:42] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:42,954 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:42] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:51:42,954 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:42] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:51:42,966 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:42] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:42,966 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:42] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 09:51:42,972 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:42] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:51:42,972 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:42] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:51:42,979 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:42] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:42,979 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:42] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:43,000 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:43] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:43,000 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:43] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:43,016 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:43] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:43,016 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:43] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 09:51:43,026 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:43] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 09:51:43,026 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:43] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 09:51:43,406 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:43] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 09:51:43,406 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:43] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 09:51:43,422 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:43] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 09:51:43,422 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:51:43] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7331, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-23 09:52:02,254 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 09:52:02,254 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 09:52:02,254 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 09:52:02,254 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 09:52:03,545 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:03] "GET /batch HTTP/1.1" 200 -
+2025-09-23 09:52:03,545 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:03] "GET /batch HTTP/1.1" 200 -
+2025-09-23 09:52:03,952 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:03] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 09:52:03,952 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:03] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 09:52:03,984 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:03] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:52:03,984 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:03] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:52:03,995 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:03] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 09:52:03,995 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:03] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 09:52:04,011 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:04] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 09:52:04,011 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:04] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 09:52:04,022 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:04] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:52:04,022 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:04] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:52:04,024 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:04] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 09:52:04,024 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:04] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 09:52:04,039 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:04] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 09:52:04,039 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:04] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 09:52:04,058 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:04] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 09:52:04,058 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:04] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 09:52:04,064 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:04] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 09:52:04,064 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:04] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 09:52:04,679 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:04] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 09:52:04,679 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:04] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 09:52:04,700 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:04] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 09:52:04,700 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:04] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 09:52:34,680 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:34] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 09:52:34,680 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:34] "GET /api/notifications HTTP/1.1" 200 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7331, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-23 09:52:58,495 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 09:52:58,495 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 09:52:58,496 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 09:52:58,496 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 09:52:59,745 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:59] "GET /batch HTTP/1.1" 200 -
+2025-09-23 09:52:59,745 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:52:59] "GET /batch HTTP/1.1" 200 -
+2025-09-23 09:53:00,124 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 09:53:00,124 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 09:53:00,152 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:53:00,152 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:53:00,161 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:53:00,161 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:53:00,177 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 09:53:00,177 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 09:53:00,183 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 09:53:00,183 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 09:53:00,190 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 09:53:00,190 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 09:53:00,207 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 09:53:00,207 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 09:53:00,223 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 09:53:00,226 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 09:53:00,223 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 09:53:00,226 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 09:53:00,824 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 09:53:00,824 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 09:53:00,853 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 09:53:00,853 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:00] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 09:53:31,166 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:31] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 09:53:31,166 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:53:31] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 09:54:01,165 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:54:01] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 09:54:01,165 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:54:01] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 09:54:31,161 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:54:31] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 09:54:31,161 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:54:31] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 09:55:01,162 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:55:01] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 09:55:01,162 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:55:01] "GET /api/notifications HTTP/1.1" 200 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7331, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-23 09:57:40,338 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 09:57:40,338 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 09:57:40,338 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 09:57:40,338 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 09:57:41,409 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:41] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 09:57:41,409 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:41] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 09:57:43,426 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "GET /batch HTTP/1.1" 200 -
+2025-09-23 09:57:43,426 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "GET /batch HTTP/1.1" 200 -
+2025-09-23 09:57:43,796 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 09:57:43,796 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 09:57:43,801 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 09:57:43,801 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 09:57:43,826 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 09:57:43,826 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 09:57:43,834 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:57:43,834 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:57:43,847 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 09:57:43,847 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 09:57:43,855 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 09:57:43,855 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 09:57:43,862 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 09:57:43,862 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 09:57:43,876 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:57:43,876 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 09:57:43,886 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 09:57:43,886 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:43] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 09:57:44,503 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:44] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 09:57:44,503 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:44] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 09:57:44,573 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:44] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 09:57:44,573 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:57:44] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 09:58:15,161 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:58:15] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 09:58:15,161 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:58:15] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 09:58:45,152 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:58:45] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 09:58:45,152 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:58:45] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 09:59:15,168 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:59:15] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 09:59:15,168 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:59:15] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 09:59:45,165 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:59:45] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 09:59:45,165 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 09:59:45] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:04:06,092 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:04:06] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:04:06,092 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:04:06] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:04:14,506 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:04:14] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:04:14,506 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:04:14] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:04:44,518 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:04:44] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:04:44,518 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:04:44] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:05:14,509 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:05:14] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:05:14,509 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:05:14] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:05:44,508 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:05:44] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:05:44,508 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:05:44] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:06:14,514 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:06:14] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:06:14,514 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:06:14] "GET /api/notifications HTTP/1.1" 200 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7331, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-23 10:06:58,194 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:06:58,194 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:06:58,195 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:06:58,195 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:07:00,264 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:07:00,264 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:07:00,610 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:07:00,610 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:07:00,643 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:07:00,643 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:07:00,669 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:07:00,669 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:07:00,691 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:07:00,691 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:07:00,693 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:07:00,693 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:07:00,699 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:07:00,699 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:07:00,715 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:07:00,715 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:07:00,722 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:07:00,722 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:07:00,727 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:07:00,727 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:00] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:07:01,367 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:01] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:07:01,367 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:01] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:07:01,441 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:01] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:07:01,441 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:01] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:07:31,380 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:31] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:07:31,380 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:07:31] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:08:01,372 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:08:01] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:08:01,372 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:08:01] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:08:32,171 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:08:32] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:08:32,171 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:08:32] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:09:02,166 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:09:02] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:09:02,166 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:09:02] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:09:32,174 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:09:32] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:09:32,174 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:09:32] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:10:02,173 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:10:02] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:10:02,173 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:10:02] "GET /api/notifications HTTP/1.1" 200 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7331, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-23 10:12:52,510 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:12:52,510 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:12:52,510 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:12:52,510 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:12:56,688 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:12:56] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:12:56,688 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:12:56] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:13:01,375 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:01] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:13:01,375 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:01] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:13:13,523 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:13] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:13:13,523 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:13] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:13:13,886 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:13] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:13,886 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:13] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:13,925 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:13] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:13:13,925 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:13] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:13:13,930 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:13] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:13,930 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:13] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:13,956 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:13] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:13:13,956 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:13] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:13:13,960 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:13] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:13,960 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:13] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:13,963 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:13] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:13,963 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:13] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:14,018 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:14] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:13:14,018 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:14] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:13:14,033 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:14] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:14,033 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:14] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:14,036 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:14] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:14,036 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:14] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:14,640 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:14] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:13:14,640 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:14] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:13:14,711 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:14] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:13:14,711 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:14] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:13:25,992 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:25] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:13:25,992 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:25] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:13:26,063 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:26,063 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:26,086 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:26,086 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:26,089 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:26,089 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:26,095 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:13:26,095 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:13:26,099 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:26,099 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:26,107 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:13:26,107 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:13:26,118 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:26,118 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:26,125 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:13:26,125 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:13:26,141 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:26,141 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:26,460 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:13:26,460 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:13:26,490 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:13:26,490 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:26] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:13:28,813 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:13:28,813 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:13:28,880 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:28,880 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:28,897 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:28,897 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:28,904 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:28,904 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:13:28,911 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:28,911 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:28,914 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:28,914 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:28,927 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:13:28,927 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:13:28,932 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:28,932 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:13:28,939 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:13:28,939 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:13:28,964 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:13:28,964 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:28] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:13:29,245 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:29] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:13:29,245 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:29] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:13:29,302 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:29] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:13:29,302 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:29] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:13:59,260 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:59] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:13:59,260 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:13:59] "GET /api/notifications HTTP/1.1" 200 -
+User: yash, Role: admin, Paid: paid
+All topics: [(19, 'Class 12 Core Math Help', 'Mathematics help for Class 12 Core students', '2025-08-02 09:04:49', 'unpaid'), (18, 'Class 12 Applied Advanced Math', 'Advanced mathematics discussions for Class 12 Applied students', '2025-08-02 09:04:11', 'paid'), (17, 'Class 12 Applied Math Help', 'Mathematics help for Class 12 Applied students', '2025-08-02 09:03:52', 'unpaid'), (16, 'Class 11 Core Advanced Math', 'Advanced mathematics discussions for Class 11 Core students', '2025-08-02 09:03:43', 'paid'), (15, 'Class 11 Core Math Help', 'Mathematics help for Class 11 Core students', '2025-08-02 09:03:13', 'unpaid'), (14, 'Class 11 Applied Advanced Math', 'Advanced mathematics discussions for Class 11 Applied students', '2025-08-02 09:03:00', 'paid'), (13, 'Class 11 Applied Math Help', 'Mathematics help for Class 11 Applied students', '2025-08-02 09:02:51', 'unpaid'), (12, 'Class 10 Advanced Math', 'Advanced mathematics discussions for Class 10 students', '2025-08-02 09:02:43', 'paid'), (11, 'Class 9 Advanced Math', 'Advanced mathematics discussions for Class 9 students', '2025-08-02 09:02:34', 'paid'), (8, 'Class 12 Core Advanced Math', 'Advanced mathematics for Class 12 Core students', '2025-06-29 08:49:11', 'paid'), (9, 'Class 11 Applied Science', 'Science for Class 11 Applied', '2025-06-29 08:49:11', 'unpaid'), (5, 'General Discussion', 'General topics for all students', '2025-06-29 08:49:10', 'unpaid'), (6, 'Class 9 Math Help', 'Mathematics help for Class 9 students', '2025-06-29 08:49:10', 'unpaid'), (7, 'Class 10 Standard Math', 'Mathematics for Class 10 Standard', '2025-06-29 08:49:10', 'unpaid')]
+Paid topics: [(18, 'Class 12 Applied Advanced Math', 'Advanced mathematics discussions for Class 12 Applied students', '2025-08-02 09:04:11', 'paid'), (16, 'Class 11 Core Advanced Math', 'Advanced mathematics discussions for Class 11 Core students', '2025-08-02 09:03:43', 'paid'), (14, 'Class 11 Applied Advanced Math', 'Advanced mathematics discussions for Class 11 Applied students', '2025-08-02 09:03:00', 'paid'), (12, 'Class 10 Advanced Math', 'Advanced mathematics discussions for Class 10 students', '2025-08-02 09:02:43', 'paid'), (11, 'Class 9 Advanced Math', 'Advanced mathematics discussions for Class 9 students', '2025-08-02 09:02:34', 'paid'), (8, 'Class 12 Core Advanced Math', 'Advanced mathematics for Class 12 Core students', '2025-06-29 08:49:11', 'paid')]
+Unpaid topics: [(19, 'Class 12 Core Math Help', 'Mathematics help for Class 12 Core students', '2025-08-02 09:04:49', 'unpaid'), (17, 'Class 12 Applied Math Help', 'Mathematics help for Class 12 Applied students', '2025-08-02 09:03:52', 'unpaid'), (15, 'Class 11 Core Math Help', 'Mathematics help for Class 11 Core students', '2025-08-02 09:03:13', 'unpaid'), (13, 'Class 11 Applied Math Help', 'Mathematics help for Class 11 Applied students', '2025-08-02 09:02:51', 'unpaid'), (9, 'Class 11 Applied Science', 'Science for Class 11 Applied', '2025-06-29 08:49:11', 'unpaid'), (5, 'General Discussion', 'General topics for all students', '2025-06-29 08:49:10', 'unpaid'), (6, 'Class 9 Math Help', 'Mathematics help for Class 9 students', '2025-06-29 08:49:10', 'unpaid'), (7, 'Class 10 Standard Math', 'Mathematics for Class 10 Standard', '2025-06-29 08:49:10', 'unpaid')]
+2025-09-23 10:14:24,878 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:24] "GET /forum HTTP/1.1" 200 -
+2025-09-23 10:14:24,878 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:24] "GET /forum HTTP/1.1" 200 -
+2025-09-23 10:14:24,986 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:24] "GET /forum.css HTTP/1.1" 200 -
+2025-09-23 10:14:24,986 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:24] "GET /forum.css HTTP/1.1" 200 -
+2025-09-23 10:14:24,995 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:24] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:24,995 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:24] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:24,997 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:24] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:24,997 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:24] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,008 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,008 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,021 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,021 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,039 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,039 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,046 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,046 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,054 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,054 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,063 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,063 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,070 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,070 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,077 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "GET /forum.js HTTP/1.1" 200 -
+2025-09-23 10:14:25,077 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "GET /forum.js HTTP/1.1" 200 -
+2025-09-23 10:14:25,094 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,094 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,107 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,107 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,112 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:14:25,112 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:25] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:14:26,686 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:26] "GET /api/forum/messages?topic_id=18 HTTP/1.1" 200 -
+2025-09-23 10:14:26,686 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:26] "GET /api/forum/messages?topic_id=18 HTTP/1.1" 200 -
+2025-09-23 10:14:40,277 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "GET /online-class HTTP/1.1" 200 -
+2025-09-23 10:14:40,277 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "GET /online-class HTTP/1.1" 200 -
+2025-09-23 10:14:40,393 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,393 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,399 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,399 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,408 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,408 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /modern-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,414 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,414 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /modern-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,434 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,434 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,441 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,441 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,459 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,459 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,462 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,462 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,469 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,472 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,469 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /modern-navbar.js HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,472 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /modern-interactions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,486 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,486 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,494 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:40,494 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:40] "[36mGET /enhanced-aesthetic.css HTTP/1.1[0m" 304 -
+2025-09-23 10:14:47,215 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:47] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-23 10:14:47,215 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:47] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-23 10:14:48,175 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:48] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-23 10:14:48,175 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:48] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-23 10:14:50,247 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:50] "[33mGET /v1.mp4 HTTP/1.1[0m" 404 -
+2025-09-23 10:14:50,247 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:50] "[33mGET /v1.mp4 HTTP/1.1[0m" 404 -
+2025-09-23 10:14:55,032 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:55] "[33mGET /test-video.mp4 HTTP/1.1[0m" 404 -
+2025-09-23 10:14:55,032 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:14:55] "[33mGET /test-video.mp4 HTTP/1.1[0m" 404 -
+2025-09-23 10:15:01,229 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:01] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-23 10:15:01,229 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:01] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-23 10:15:03,364 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:03] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-23 10:15:03,364 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:03] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-23 10:15:10,573 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:10] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-23 10:15:10,573 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:10] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-23 10:15:10,610 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:10] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-23 10:15:10,610 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:10] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-23 10:15:22,821 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:22] "[33mGET /BATCHES HTTP/1.1[0m" 404 -
+2025-09-23 10:15:22,821 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:22] "[33mGET /BATCHES HTTP/1.1[0m" 404 -
+2025-09-23 10:15:31,364 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:31] "[33mGET /batches HTTP/1.1[0m" 404 -
+2025-09-23 10:15:31,364 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:31] "[33mGET /batches HTTP/1.1[0m" 404 -
+2025-09-23 10:15:40,954 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:40] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-23 10:15:40,954 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:40] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-23 10:15:40,986 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:40] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-23 10:15:40,986 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:40] "GET /api/live-classes/status HTTP/1.1" 200 -
+2025-09-23 10:15:41,933 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:41] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:15:41,933 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:41] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:15:42,123 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:15:42,123 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:15:42,126 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:15:42,126 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:15:42,132 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:15:42,132 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:15:42,144 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:15:42,144 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:15:42,147 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:15:42,147 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:15:42,163 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:15:42,163 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:15:42,171 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:15:42,171 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:15:42,177 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:15:42,177 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:15:42,200 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:15:42,200 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:15:42,639 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:15:42,639 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:15:42] "GET /api/site-last-updated HTTP/1.1" 200 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7331, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-23 10:16:13,287 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:16:13,287 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:16:13,288 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:16:13,288 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:16:13,443 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:13] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:16:13,443 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:13] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:16:13,929 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:13] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:16:13,929 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:13] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:16:14,283 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:16:14,283 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:16:14,322 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:16:14,322 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:16:14,340 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:16:14,340 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:16:14,346 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:16:14,346 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:16:14,348 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:16:14,349 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:16:14,348 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:16:14,349 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:16:14,368 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:16:14,369 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:16:14,368 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:16:14,369 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:16:14,376 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:16:14,376 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:16:14,966 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:16:14,966 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:14] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:16:15,006 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:15] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:16:15,006 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:15] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:16:44,976 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:44] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:16:44,976 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:16:44] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:17:14,971 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:17:14] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:17:14,971 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:17:14] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:17:44,977 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:17:44] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:17:44,977 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:17:44] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:18:15,172 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:18:15] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:18:15,172 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:18:15] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:18:45,170 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:18:45] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:18:45,170 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:18:45] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:19:15,169 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:15] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:19:15,169 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:15] "GET /api/notifications HTTP/1.1" 200 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7331, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-23 10:19:26,912 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:19:26,912 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:19:26,913 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:19:26,913 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:19:30,863 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:30] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:19:30,863 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:30] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:19:31,387 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:19:31,387 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:19:31,413 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:19:31,413 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:19:31,464 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:19:31,464 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:19:31,480 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:19:31,480 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:19:31,491 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:19:31,491 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:19:31,495 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:19:31,495 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:19:31,499 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:19:31,499 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:19:31,503 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:19:31,503 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:19:31,506 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:19:31,506 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:31] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:19:32,029 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:32] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:19:32,029 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:32] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:19:32,114 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:32] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:19:32,114 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:19:32] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:20:02,079 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:20:02] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:20:02,079 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:20:02] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:20:32,041 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:20:32] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:20:32,041 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:20:32] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:21:02,038 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:21:02] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:21:02,038 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:21:02] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:21:32,045 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:21:32] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:21:32,045 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:21:32] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:22:02,043 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:22:02] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:22:02,043 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:22:02] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:22:32,037 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:22:32] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:22:32,037 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:22:32] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:23:02,085 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:23:02] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:23:02,085 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:23:02] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:23:32,088 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:23:32] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:23:32,088 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:23:32] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:24:02,090 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:24:02] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:24:02,090 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:24:02] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:24:32,036 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:24:32] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:24:32,036 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:24:32] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:25:02,167 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:25:02] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:25:02,167 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:25:02] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:25:32,207 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:25:32] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:25:32,207 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:25:32] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:26:26,170 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:26:26] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:26:26,170 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:26:26] "GET /api/notifications HTTP/1.1" 200 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7367, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-23 10:35:28,036 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:35:28,036 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:35:28,036 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:35:28,036 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:35:29,525 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:29] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:35:29,525 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:29] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:35:31,853 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:31] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:35:31,853 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:31] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:35:31,938 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:31] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:35:31,938 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:31] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:35:31,963 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:31] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:35:31,963 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:31] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:35:31,965 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:31] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:35:31,965 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:31] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:35:31,978 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:31] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:35:31,978 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:31] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:35:31,985 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:31] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:35:31,985 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:31] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:35:31,994 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:31] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:35:31,994 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:31] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:35:32,016 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:32] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:35:32,016 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:32] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:35:32,033 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:32] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:35:32,033 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:32] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:35:32,042 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:32] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:35:32,042 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:32] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:35:32,958 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:32] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:35:32,958 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:32] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:35:33,036 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:33] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:35:33,036 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:35:33] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:36:03,003 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:36:03] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:36:03,003 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:36:03] "GET /api/notifications HTTP/1.1" 200 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7367, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-23 10:43:26,300 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:43:26,300 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:43:26,301 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:43:26,301 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:44:10,173 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:44:10,173 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:44:10,282 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[33mGET /img/default-batch.jpg HTTP/1.1[0m" 404 -
+2025-09-23 10:44:10,282 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[33mGET /img/default-batch.jpg HTTP/1.1[0m" 404 -
+2025-09-23 10:44:10,726 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "GET /floating-navbar.css HTTP/1.1" 200 -
+2025-09-23 10:44:10,726 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "GET /floating-navbar.css HTTP/1.1" 200 -
+2025-09-23 10:44:10,770 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:44:10,772 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:44:10,770 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:44:10,772 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:44:10,794 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:44:10,794 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:44:10,808 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:44:10,808 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:44:10,812 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:44:10,812 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:44:10,816 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:44:10,816 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:44:10,823 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:44:10,823 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:44:10,825 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:44:10,825 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:10] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:44:11,686 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:11] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:44:11,686 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:11] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:44:42,169 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:42] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:44:42,169 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:44:42] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:45:12,225 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:45:12] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:45:12,225 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:45:12] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:45:41,750 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:45:41] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:45:41,750 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:45:41] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:46:11,696 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:46:11] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:46:11,696 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:46:11] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:46:42,209 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:46:42] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:46:42,209 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:46:42] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:47:12,170 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:47:12] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:47:12,170 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:47:12] "GET /api/notifications HTTP/1.1" 200 -
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-23 10:48:30,902 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:48:30,902 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:48:30,903 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:48:30,903 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7367, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-23 10:48:40,992 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:48:40,992 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:48:40,993 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:48:40,993 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:48:45,175 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:45] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:48:45,175 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:45] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:48:47,012 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:48:47,012 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:48:47,167 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[33mGET /img/default-batch.jpg HTTP/1.1[0m" 404 -
+2025-09-23 10:48:47,167 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[33mGET /img/default-batch.jpg HTTP/1.1[0m" 404 -
+2025-09-23 10:48:47,474 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:48:47,474 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:48:47,554 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:48:47,554 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:48:47,581 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:48:47,581 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:48:47,606 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:48:47,606 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:48:47,614 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:48:47,614 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:48:47,633 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:48:47,633 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:48:47,635 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:48:47,635 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:48:47,658 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:48:47,658 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:48:47,664 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:48:47,664 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:47] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:48:48,177 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:48] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:48:48,177 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:48] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:48:48,295 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:48] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:48:48,295 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:48:48] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:49:19,168 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:49:19] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:49:19,168 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:49:19] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:49:49,216 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:49:49] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:49:49,216 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:49:49] "GET /api/notifications HTTP/1.1" 200 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7367, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-23 10:51:00,444 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:51:00,444 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:51:00,445 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:51:00,445 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:51:06,614 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:06] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:51:06,614 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:06] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:51:08,833 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:08] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:51:08,833 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:08] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:51:08,983 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:08] "[33mGET /img/default-batch.jpg HTTP/1.1[0m" 404 -
+2025-09-23 10:51:08,983 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:08] "[33mGET /img/default-batch.jpg HTTP/1.1[0m" 404 -
+2025-09-23 10:51:09,372 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:51:09,372 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:51:09,397 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:51:09,397 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:51:09,427 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:51:09,427 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:51:09,446 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:51:09,446 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:51:09,457 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:51:09,457 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:51:09,464 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:51:09,465 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:51:09,464 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:51:09,469 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:51:09,465 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:51:09,469 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:51:09,477 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:51:09,477 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:09] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:51:10,031 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:10] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:51:10,031 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:10] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:51:10,165 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:10] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:51:10,165 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:10] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:51:40,211 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:40] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:51:40,211 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:51:40] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:52:10,182 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:52:10] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:52:10,182 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:52:10] "GET /api/notifications HTTP/1.1" 200 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7367, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-23 10:53:22,258 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:53:22,258 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:53:22,259 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:53:22,259 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:53:22,423 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:22] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:53:22,423 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:22] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:53:23,755 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:23] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:53:23,755 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:23] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:53:23,879 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:23] "[33mGET /img/default-batch.jpg HTTP/1.1[0m" 404 -
+2025-09-23 10:53:23,879 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:23] "[33mGET /img/default-batch.jpg HTTP/1.1[0m" 404 -
+2025-09-23 10:53:24,091 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:53:24,091 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:53:24,163 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:53:24,163 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:53:24,183 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:53:24,183 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:53:24,205 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:53:24,205 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:53:24,236 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:53:24,236 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:53:24,238 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:53:24,238 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:53:24,276 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:53:24,276 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:53:24,310 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:53:24,310 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:53:24,321 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:53:24,321 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:53:24,962 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:53:24,962 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:24] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:53:25,063 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:25] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:53:25,063 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:25] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:53:55,208 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:55] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:53:55,208 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:53:55] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:54:25,187 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:25] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:54:25,187 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:25] "GET /api/notifications HTTP/1.1" 200 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7367, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-23 10:54:42,337 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:54:42,337 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:54:42,337 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:54:42,337 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:54:52,405 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:52] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:54:52,405 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:52] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:54:52,573 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:52] "[33mGET /img/default-batch.jpg HTTP/1.1[0m" 404 -
+2025-09-23 10:54:52,573 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:52] "[33mGET /img/default-batch.jpg HTTP/1.1[0m" 404 -
+2025-09-23 10:54:52,890 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:52] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:54:52,890 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:52] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:54:52,966 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:52] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:54:52,966 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:52] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:54:52,995 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:52] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:54:52,995 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:52] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:54:53,015 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:53] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:54:53,015 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:53] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:54:53,032 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:53] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:54:53,032 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:53] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:54:53,043 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:53] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:54:53,043 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:53] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:54:53,045 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:53] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:54:53,045 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:53] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:54:53,098 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:53] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:54:53,099 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:53] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:54:53,098 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:53] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:54:53,099 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:53] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:54:53,289 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:53] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:54:53,289 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:53] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:54:53,308 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:53] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:54:53,308 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:54:53] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:55:24,174 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:55:24] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:55:24,174 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:55:24] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:55:54,186 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:55:54] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:55:54,186 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:55:54] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:56:24,171 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:56:24] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:56:24,171 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:56:24] "GET /api/notifications HTTP/1.1" 200 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7367, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-23 10:58:05,146 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:58:05,146 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 10:58:05,147 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:58:05,147 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 10:58:08,254 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:08] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:58:08,254 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:08] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:58:10,100 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:58:10,100 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "GET /batch HTTP/1.1" 200 -
+2025-09-23 10:58:10,682 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:58:10,682 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:58:10,710 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:58:10,710 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 10:58:10,716 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:58:10,716 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 10:58:10,724 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:58:10,724 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 10:58:10,730 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:58:10,730 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 10:58:10,751 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:58:10,751 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 10:58:10,753 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:58:10,754 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:58:10,753 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 10:58:10,754 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 10:58:10,760 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:58:10,760 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:10] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 10:58:11,472 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:11] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:58:11,472 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:11] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 10:58:11,500 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:11] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:58:11,500 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:11] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 10:58:42,212 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:42] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:58:42,212 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:58:42] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:59:12,212 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:59:12] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:59:12,212 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:59:12] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:59:43,489 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:59:43] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 10:59:43,489 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 10:59:43] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 11:00:12,202 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:00:12] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 11:00:12,202 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:00:12] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 11:00:42,212 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:00:42] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 11:00:42,212 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:00:42] "GET /api/notifications HTTP/1.1" 200 -
+--- Logging error ---
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\logging\__init__.py", line 1154, in emit
+    stream.write(msg + self.terminator)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\Python313\Lib\encodings\cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\U0001f4dc' in position 37: character maps to <undefined>
+Call stack:
+  File "C:\Users\YASH\OneDrive\Documents\Sunrise-Educational-Centre\app.py", line 7367, in <module>
+    logging.info('📜 Logging initialized. Writing to %s', log_file_path)
+Message: '📜 Logging initialized. Writing to %s'
+Arguments: ('C:\\Users\\YASH\\OneDrive\\Documents\\Sunrise-Educational-Centre\\server.log',)
+🧹 Session cleanup service started
+Session cleanup service started
+🧹 Session cleanup service started
+✅ Database and services initialized successfully
+============================================================
+SUNRISE EDUCATIONAL CENTRE SERVER
+============================================================
+Server will start on: http://localhost:10000
+External access: http://0.0.0.0:10000
+Mobile access: Use your computer's IP address
+Note: WebRTC features require HTTPS in production
+Session cleanup service: Active (runs every hour)
+Auto-restart: Enabled (server will restart on errors)
+To stop: Press Ctrl+C
+============================================================
+Starting Sunrise Educational Centre server on port 10000...
+ * Serving Flask app 'app'
+ * Debug mode: off
+2025-09-23 11:01:16,648 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 11:01:16,648 [INFO] werkzeug: [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:10000
+ * Running on http://192.168.1.42:10000
+2025-09-23 11:01:16,648 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 11:01:16,648 [INFO] werkzeug: [33mPress CTRL+C to quit[0m
+2025-09-23 11:01:16,803 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:16] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 11:01:16,803 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:16] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 11:01:18,740 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:18] "GET /batch HTTP/1.1" 200 -
+2025-09-23 11:01:18,740 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:18] "GET /batch HTTP/1.1" 200 -
+2025-09-23 11:01:19,137 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 11:01:19,137 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[36mGET /style.css HTTP/1.1[0m" 304 -
+2025-09-23 11:01:19,178 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 11:01:19,178 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[36mGET /footer/youtube-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 11:01:19,223 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 11:01:19,223 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[36mGET /script.js HTTP/1.1[0m" 304 -
+2025-09-23 11:01:19,235 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 11:01:19,235 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[36mGET /uiverse-components.css HTTP/1.1[0m" 304 -
+2025-09-23 11:01:19,238 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 11:01:19,238 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[33mGET /footer/whatsapp-brands-solid-full.svg HTTP/1.1[0m" 404 -
+2025-09-23 11:01:19,244 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 11:01:19,244 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[36mGET /navbar-functions.js HTTP/1.1[0m" 304 -
+2025-09-23 11:01:19,259 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 11:01:19,262 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 11:01:19,259 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[36mGET /footer/instagram-brands-solid-full.svg HTTP/1.1[0m" 304 -
+2025-09-23 11:01:19,262 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[36mGET /floating-navbar.css HTTP/1.1[0m" 304 -
+2025-09-23 11:01:19,281 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 11:01:19,281 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:19] "[36mGET /attached_assets/theme.js HTTP/1.1[0m" 304 -
+2025-09-23 11:01:20,026 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:20] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 11:01:20,026 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:20] "GET /api/site-last-updated HTTP/1.1" 200 -
+2025-09-23 11:01:20,098 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:20] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 11:01:20,098 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:20] "[36mGET /favicon.ico HTTP/1.1[0m" 304 -
+2025-09-23 11:01:50,221 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:50] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 11:01:50,221 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:01:50] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 11:02:20,207 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:02:20] "GET /api/notifications HTTP/1.1" 200 -
+2025-09-23 11:02:20,207 [INFO] werkzeug: 127.0.0.1 - - [23/Sep/2025 11:02:20] "GET /api/notifications HTTP/1.1" 200 -

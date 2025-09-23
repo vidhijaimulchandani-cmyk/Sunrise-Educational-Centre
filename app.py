@@ -931,6 +931,42 @@ init_db()
 # Initialize study resources tables
 ensure_resource_tables()
 
+# --- Batches DB Setup ---
+def init_batches_db():
+    try:
+        conn = sqlite3.connect(DATABASE)
+        c = conn.cursor()
+        c.execute('''CREATE TABLE IF NOT EXISTS batches (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            batch_name TEXT NOT NULL,
+            class_name TEXT NOT NULL,
+            paid_status TEXT NOT NULL CHECK(paid_status IN ('paid','free')),
+            start_on TEXT,
+            end_on TEXT,
+            status TEXT NOT NULL DEFAULT 'active',
+            image TEXT
+        )''')
+        # Ensure 'image' column exists for older tables
+        c.execute("PRAGMA table_info(batches)")
+        existing_cols = {row[1] for row in c.fetchall()}
+        if 'image' not in existing_cols:
+            try:
+                c.execute("ALTER TABLE batches ADD COLUMN image TEXT")
+            except sqlite3.OperationalError:
+                pass
+        # Indexes for faster lookups
+        c.execute("CREATE INDEX IF NOT EXISTS idx_batches_class ON batches(class_name)")
+        c.execute("CREATE INDEX IF NOT EXISTS idx_batches_paid ON batches(paid_status)")
+        c.execute("CREATE INDEX IF NOT EXISTS idx_batches_status ON batches(status)")
+        conn.commit()
+    finally:
+        try:
+            conn.close()
+        except Exception:
+            pass
+
+init_batches_db()
+
 # --- Queries DB Setup ---
 def init_queries_db():
     try:

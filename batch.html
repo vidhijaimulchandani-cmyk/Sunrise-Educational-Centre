@@ -14,34 +14,18 @@
     <style>
       /* Modern Company-Style Glassmorphic Theme */
       body { 
-        background: linear-gradient(135deg, #0f1117 0%, #161a25 50%, #1a1f2e 100%);
+        background: #ffffff !important;
         position: relative;
+        color: #111827;
       }
       
-      body::before {
-        content: '';
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: 
-          radial-gradient(800px 600px at 20% 20%, rgba(106, 130, 251, 0.15) 0%, transparent 50%),
-          radial-gradient(600px 400px at 80% 80%, rgba(252, 92, 125, 0.1) 0%, transparent 50%);
-        pointer-events: none;
-        z-index: -1;
-      }
+      body::before { display:none !important; }
       
       .black-glass { 
-        background: rgba(5, 6, 10, 0.85);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 
-          0 20px 60px rgba(0, 0, 0, 0.8),
-          0 8px 32px rgba(106, 130, 251, 0.1),
-          inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(24px) saturate(120%);
-        -webkit-backdrop-filter: blur(24px) saturate(120%);
-        color: #fff;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+        color: #111827;
         border-radius: 20px;
       }
       
@@ -285,10 +269,33 @@
           padding: 1.5rem;
         }
       }
+
+      /* --- Modern Course Card (Paid/Free) --- */
+      .course-tabs { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+      .course-tab { padding:10px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.08); color:#fff; font-weight:700; cursor:pointer; }
+      .course-tab.active { background: linear-gradient(135deg, #6a82fb 0%, #5a6fd8 100%); border-color:#6a82fb; box-shadow:0 8px 24px rgba(106,130,251,0.3); }
+
+      /* Match Online Class card look */
+      .course-list { display:flex; flex-direction:column; gap:16px; }
+      .class-card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 20px; padding: 1.2rem; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06); }
+      .class-card h3 { font-size: 1.2rem; font-weight: 800; margin: 0 0 0.6rem 0; color:#111827; }
+      .class-info { color: #374151; margin-bottom: 0.6rem; }
+      .class-code { font-size: 0.95rem; font-weight: 600; color: #111827; background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 10px; display: inline-block; padding: 6px 10px; margin: 0.4rem 0; }
+      .class-actions { margin-top: 0.8rem; }
+      .class-btn { display:inline-block; width:100%; text-align:center; background: #111827; color:#fff; padding: 0.8rem 1rem; border-radius: 12px; text-decoration:none; font-weight:700; border:1px solid #111827; }
+      .class-btn:hover { filter:brightness(1.05); }
+
+      /* Theme slider with white background */
+      .footer .uiverse-theme-slider { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 6px 10px; display: inline-flex; align-items: center; gap: 8px; }
+      .footer .uiverse-theme-slider #footerThemeSliderLabel { color: #111827; font-weight: 600; }
+      .footer .uiverse-theme-slider .switch { background: #ffffff; border-radius: 999px; }
+      .footer .uiverse-theme-slider .slider-round { background: #ffffff; }
+      body.dark-mode .footer .uiverse-theme-slider { background: #f8fafc; border-color: #d1d5db; }
     </style>
   </head>
   <body>
     <!-- Floating Navbar -->
+    <div class="floating-navbar-container">
     <nav class="floating-navbar black-glass">
         <button class="hamburger" aria-label="Menu" aria-expanded="false">
             <span class="bar"></span>
@@ -336,6 +343,7 @@
             <!-- Theme toggle removed; use footer slider -->
         </ul>
     </nav>
+    </div>
 
     <main class="container main-content">
       <header class="black-glass" style="position:relative; margin:100px auto 24px; width:min(1100px,92%); padding:18px 20px; border-radius:20px;">
@@ -352,8 +360,13 @@
             <button class="tab-btn" data-filter-class="12">Class 12</button>
           </div>
         </div>
+        <div style="display:flex; gap:8px; align-items:center; margin-top:10px; flex-wrap:wrap;">
+          <button class="tab-btn{% if is_logged_in %} active{% endif %}" id="btnMyBatches" style="white-space:nowrap;">My Batches</button>
+          <button class="tab-btn{% if not is_logged_in %} active{% endif %}" id="btnAllBatches" style="white-space:nowrap;">All Batches</button>
+        </div>
       </header>
       {% if is_logged_in %}
+      <div id="myBatchesContainer" style="{% if is_logged_in %}{% else %}display:none;{% endif %}">
       <section class="card animated-card black-glass" style="padding: 1.2rem 1rem;">
         <div style="display:flex; gap:0.6rem; align-items:center; justify-content:space-between; flex-wrap:wrap;">
           <h2 style="margin:0;">My Batches</h2>
@@ -438,8 +451,85 @@
         </div>
       </section>
       {% else %}
-      <section class="card animated-card black-glass" style="padding: 1.2rem 1rem;">
+      <section class="card animated-card black-glass" style="padding: 1.2rem 1rem;" id="allBatchesSection">
         <h2 style="margin:0 0 0.8rem 0;">All Batches</h2>
+        <div style="display:flex; gap:0.4rem; margin:0.4rem 0 0.8rem 0; flex-wrap:wrap;">
+          <button class="tab-btn active" data-price-filter="all">All</button>
+          <button class="tab-btn" data-price-filter="paid">Paid</button>
+          <button class="tab-btn" data-price-filter="free">Unpaid</button>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:1.2rem;">
+          {% set groups = available_batches|groupby('class_name') if available_batches is defined and available_batches else all_cards|groupby('class_name') %}
+          {% for group in groups %}
+          <section class="black-glass" style="padding:1rem; border-radius:16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:8px;">
+              <h3 style="margin:0; color:#8fa3ff;">{{ group.grouper|title }}</h3>
+              <div class="course-tabs">
+                <button class="course-tab active" data-price-filter="paid">Paid Courses</button>
+                <button class="course-tab" data-price-filter="free">Free Courses</button>
+              </div>
+            </div>
+            <div class="course-list" data-class="{{ group.grouper }}">
+              {% if available_batches is defined and available_batches %}
+              {% set paid = (group.list | selectattr('paid_status','equalto','paid') | list) %}
+              {% set free = (group.list | selectattr('paid_status','equalto','free') | list) %}
+              {% if paid %}
+              {% set pb = paid[0] %}
+              <div class="class-card" data-paid="true">
+                <h3>{{ pb.batch_name }} (Paid)</h3>
+                <div class="class-info">📚 {{ pb.class_name }} • 🔖 {{ pb.status|title }}</div>
+                <div class="class-code">🗓️ {{ pb.start_on or '-' }} → {{ pb.end_on or '-' }}</div>
+                <div class="class-actions">
+                  <a class="class-btn" href="/admission">View Content</a>
+                </div>
+              </div>
+              {% endif %}
+              {% if free %}
+              {% set fb = free[0] %}
+              <div class="class-card" data-paid="false">
+                <h3>{{ fb.batch_name }} (Free)</h3>
+                <div class="class-info">📚 {{ fb.class_name }} • 🔖 {{ fb.status|title }}</div>
+                <div class="class-code">🗓️ {{ fb.start_on or '-' }} → {{ fb.end_on or '-' }}</div>
+                <div class="class-actions">
+                  <a class="class-btn" href="/admission">View Content</a>
+                </div>
+              </div>
+              {% endif %}
+              {% else %}
+              {% set sample = group.list[0] %}
+              <!-- fallback rendering from all_cards (unchanged) -->
+              <div class="class-card" data-paid="true">
+                <h3>{{ sample.batch_name }} (Paid)</h3>
+                <div class="class-info">📚 {{ sample.class_name }}</div>
+                <div class="class-code">🗓️ {{ sample.start_date }} → {{ sample.end_date }}</div>
+                <div class="class-actions">
+                  <a class="class-btn" href="/admission?class_id={{ sample.class_id }}">View Content</a>
+                </div>
+              </div>
+              <div class="class-card" data-paid="false">
+                <h3>{{ sample.batch_name }} (Free)</h3>
+                <div class="class-info">📚 {{ sample.class_name }}</div>
+                <div class="class-code">🗓️ {{ sample.start_date }} → {{ sample.end_date }}</div>
+                <div class="class-actions">
+                  <a class="class-btn" href="/admission?class_id={{ sample.class_id }}">View Content</a>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+          </section>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+      {% if is_logged_in %}
+      <!-- Also show All Batches for logged-in users (toggleable) -->
+      <section class="card animated-card black-glass" style="padding: 1.2rem 1rem;{% if is_logged_in %} display:none;{% endif %}" id="allBatchesSection">
+        <h2 style="margin:0 0 0.8rem 0;">All Batches</h2>
+        <div style="display:flex; gap:0.4rem; margin:0.4rem 0 0.8rem 0; flex-wrap:wrap;">
+          <button class="tab-btn active" data-price-filter="all">All</button>
+          <button class="tab-btn" data-price-filter="paid">Paid</button>
+          <button class="tab-btn" data-price-filter="free">Unpaid</button>
+        </div>
         <div style="display:flex; flex-direction:column; gap:0.8rem;">
           {% for card in all_cards %}
           <div class="batch-card" style="display:flex; gap:0.8rem;" data-class-name="{{ card.class_name }}" data-class-id="{{ card.class_id }}">
@@ -468,6 +558,7 @@
           {% endfor %}
         </div>
       </section>
+      </div>
       {% endif %}
       {% if is_logged_in %}
       <section class="card animated-card black-glass" style="padding: 1.2rem 1rem;">
@@ -476,20 +567,9 @@
       </section>
       {% endif %}
 
-      <section class="card animated-card black-glass" style="padding: 1.2rem 1rem;">
-        <h2 style="margin-top:0;">Batch Links</h2>
-        <ul style="list-style:none; padding:0; margin:0; display:flex; gap:0.6rem; flex-wrap:wrap;">
-          <li><a class="btn btn-primary" href="/online-class">Join Live Class</a></li>
-          <li><a class="btn btn-secondary" href="/study-resources">Study Resources</a></li>
-          <li><a class="btn btn-secondary" href="/forum">Forum</a></li>
-          <li><a class="btn btn-secondary" href="/profile">Profile</a></li>
-        </ul>
-      </section>
+      
 
-      <section class="card animated-card" style="padding: 1.2rem 1rem;">
-        <h2 style="margin-top:0;">Announcements</h2>
-        <div id="batchAnnouncements" style="color:#6b7280;">No announcements yet.</div>
-      </section>
+      
     </main>
 
     <script>
@@ -574,6 +654,74 @@
             this.classList.add('active');
             applyClassFilter(this.getAttribute('data-filter-class'));
           });
+        });
+
+        // Price filter (for non-logged-in All Batches section)
+        const priceFilterButtons = document.querySelectorAll('#allBatchesSection .tab-btn[data-price-filter]');
+        if (priceFilterButtons && priceFilterButtons.length) {
+          priceFilterButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+              priceFilterButtons.forEach(b=>b.classList.remove('active'));
+              this.classList.add('active');
+              const filter = this.getAttribute('data-price-filter');
+              // Determine paid vs free based on data-paid attribute
+              document.querySelectorAll('#allBatchesSection .batch-card').forEach(card => {
+                const isPaid = card.getAttribute('data-paid') === 'true';
+                if (filter === 'all') {
+                  card.style.display = '';
+                } else if (filter === 'paid') {
+                  card.style.display = isPaid ? '' : 'none';
+                } else if (filter === 'free') {
+                  card.style.display = isPaid ? 'none' : '';
+                }
+              });
+            });
+          });
+        }
+
+        // Toggle between My Batches and All Batches on header buttons
+        const btnMy = document.getElementById('btnMyBatches');
+        const btnAll = document.getElementById('btnAllBatches');
+        const myContainer = document.getElementById('myBatchesContainer');
+        const allSection = document.getElementById('allBatchesSection');
+        if (btnMy && btnAll && myContainer && allSection) {
+          btnMy.addEventListener('click', function() {
+            btnAll.classList.remove('active');
+            btnMy.classList.add('active');
+            myContainer.style.display = '';
+            allSection.style.display = 'none';
+          });
+          btnAll.addEventListener('click', function() {
+            btnMy.classList.remove('active');
+            btnAll.classList.add('active');
+            myContainer.style.display = 'none';
+            allSection.style.display = '';
+          });
+        }
+
+        // Paid/Free tab behavior inside each class section
+        document.querySelectorAll('.course-tabs').forEach(tabs => {
+          const section = tabs.closest('section');
+          const list = section.querySelector('.course-list');
+          const buttons = tabs.querySelectorAll('.course-tab');
+          buttons.forEach(btn => {
+            btn.addEventListener('click', function() {
+              buttons.forEach(b=>b.classList.remove('active'));
+              this.classList.add('active');
+              const filter = this.getAttribute('data-price-filter');
+              list.querySelectorAll('.course-card').forEach(card => {
+                const isPaid = card.getAttribute('data-paid') === 'true';
+                if (filter === 'paid') {
+                  card.style.display = isPaid ? '' : 'none';
+                } else if (filter === 'free') {
+                  card.style.display = isPaid ? 'none' : '';
+                }
+              });
+            });
+          });
+          // Initialize to show only paid by default
+          const defaultBtn = tabs.querySelector('.course-tab[data-price-filter="paid"]');
+          if (defaultBtn) defaultBtn.click();
         });
       });
     </script>
