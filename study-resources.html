@@ -34,6 +34,7 @@
     </div>
 
     <!-- Floating Navbar -->
+    <div class="floating-navbar-container">
     <nav class="floating-navbar black-glass">
         <button class="hamburger" aria-label="Menu" aria-expanded="false">
             <span class="bar"></span>
@@ -77,11 +78,11 @@
             <!-- Theme toggle removed; use footer slider -->
         </ul>
     </nav>
+    </div>
 
     <!-- ChatGPT-style Vertical Slider for Class & Status -->
-    <div class="vertical-slider" id="verticalSlider">
+      <div class="vertical-slider" id="verticalSlider">
       <div class="slider-header">
-        <h3>📚 Study Resources</h3>
         <p>Filter and browse your materials</p>
         <button class="slider-toggle" id="sliderToggle">◀</button>
       </div>
@@ -144,15 +145,10 @@
     <!-- Slider Overlay for Mobile -->
     <div id="sliderOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; opacity: 0; visibility: hidden; transition: all 0.3s ease; pointer-events: none;"></div>
 
-    <!-- Enhanced Hero Section -->
-    <section class="hero-section hero-modern" style="min-height: 80vh; position: relative;">
+    <!-- Enhanced Hero Section like home -->
+    <section class="hero-section hero-modern" style="min-height: 80vh; position: relative; background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('attached_assets/image_1750584670920.png') center/cover no-repeat;">
       <div class="hero-content hero-content-modern" style="padding-top: 8rem;">
-        <div class="logo-container">
-          <div style="width: 180px; height: 180px; border-radius: 30px; background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 50%, #ff6b35 100%); display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; font-size: 4rem; animation: logoFloat 3s ease-in-out infinite; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 60px rgba(106,130,251,0.3); border: 3px solid rgba(255, 255, 255, 0.2);">📚</div>
-          <div class="logo-glow"></div>
-        </div>
         
-        <h1 class="hero-title-modern" style="font-size: clamp(2.5rem, 6vw, 4rem); margin-bottom: 1.5rem;">Study Resources</h1>
         <p class="hero-subtitle-modern" style="font-size: clamp(1.1rem, 2.5vw, 1.5rem); margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">Access comprehensive notes, worksheets, practice problems, and solutions designed to help you excel in your studies</p>
         
         <!-- User Status Card -->
@@ -171,14 +167,7 @@
           </div>
         </div>
         
-        <div class="hero-buttons hero-buttons-modern">
-          <button onclick="document.getElementById('manualSliderToggle').click()" class="btn-modern btn-primary-modern" style="font-size: 1.1rem; padding: 1rem 2rem;">
-            📂 Browse Categories
-          </button>
-          <button onclick="document.getElementById('floatingSearchBtn').click()" class="btn-modern btn-glass" style="font-size: 1.1rem; padding: 1rem 2rem;">
-            🔍 Search Resources
-          </button>
-        </div>
+        
       </div>
     </section>
 

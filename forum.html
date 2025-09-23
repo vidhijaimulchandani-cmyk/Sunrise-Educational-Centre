@@ -427,11 +427,37 @@
         <div class="particle"></div>
     </div>
 
+    <!-- Floating Navbar -->
+    <div class="floating-navbar-container">
+      <nav class="floating-navbar black-glass">
+        <button class="hamburger" aria-label="Menu" aria-expanded="false">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/online-class">Live Classes</a></li>
+          <li><a href="/batch">Batches</a></li>
+          <li><a href="/study-resources">Study Resources</a></li>
+          <li><a href="/forum" class="active">Forum</a></li>
+          <li><a href="/admission">Admission</a></li>
+        </ul>
+      </nav>
+    </div>
+
     <!-- Topics Toggle Button -->
     <button class="topics-toggle" id="categoryToggle">
         <span>💬</span>
         <span>Browse Topics</span>
     </button>
+
+    <!-- Hero panel like home -->
+    <section class="hero-section hero-modern" style="padding: 6rem 0 3rem 0; text-align:center; color:#fff; background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('attached_assets/image_1750584670920.png') center/cover no-repeat;">
+      <div class="hero-content hero-content-modern">
+        <p class="hero-subtitle-modern" style="max-width: 800px; margin: 0 auto 1.5rem;">Connect, ask questions, and share knowledge with peers and mentors.</p>
+      </div>
+    </section>
 
     <!-- Debug Test Button (temporary) -->
     <button onclick="testPopup()" style="position: fixed; top: 100px; right: 20px; z-index: 1001; background: #ff6b6b; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; display: none;">
@@ -523,8 +549,6 @@
         <!-- Hero Section -->
         <section class="forum-hero">
             <div class="forum-hero-content">
-                <div class="forum-logo">💬</div>
-                <h1 class="forum-title">Community Forum</h1>
                 <p class="forum-subtitle">Connect, discuss, and learn together in our vibrant educational community</p>
                 
                 <!-- User Info Card -->

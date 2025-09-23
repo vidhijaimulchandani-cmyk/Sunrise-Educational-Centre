@@ -577,77 +577,43 @@
         <div class="particle"></div>
     </div>
 
-    <!-- Modern Floating Navbar -->
-    <nav class="navbar-modern">
-        <div class="navbar-container">
-            <div class="navbar-brand">
-                <a href="/" class="brand-link">
-                    <span class="brand-icon">🌅</span>
-                    <span class="brand-text">Sunrise</span>
-                </a>
-            </div>
-            
-            <button class="navbar-toggle" id="navbarToggle">
-                <span class="toggle-bar"></span>
-                <span class="toggle-bar"></span>
-                <span class="toggle-bar"></span>
-            </button>
-            
-            <div class="navbar-menu" id="navbarMenu">
-                <div class="navbar-nav">
-                    <a href="/" class="nav-link">🏠 Home</a>
-                    <a href="/online-class" class="nav-link active">📹 Live Classes</a>
-                    <a href="/batch" class="nav-link">👥 Batches</a>
-                    <a href="/study-resources" class="nav-link">📚 Resources</a>
-                    <a href="/forum" class="nav-link">💬 Forum</a>
-                    <a href="/admission" class="nav-link">📝 Admission</a>
-                </div>
-                
-                <div class="navbar-actions">
-                    {% if username %}
-                    <div class="user-menu">
-                        <button class="user-button" id="userMenuToggle">
-                            <span class="user-avatar">{{ username[0]|upper }}</span>
-                            <span class="user-name">{{ username }}</span>
-                            <span class="user-arrow">▾</span>
-                        </button>
-                        <div class="user-dropdown" id="userDropdown">
-                            <a href="/profile" class="dropdown-link">👤 Profile</a>
-                            <a href="/notifications" class="dropdown-link">🔔 Notifications</a>
-                            <a href="/logout" class="dropdown-link">🚪 Logout</a>
-                        </div>
-                    </div>
-                    {% else %}
-                    <a href="/auth" class="btn-modern btn-primary-modern">Login</a>
-                    {% endif %}
-                    
-                    <button class="btn-modern btn-glass" onclick="openSearch()" title="Search">🔍</button>
-                    <!-- Theme toggle removed; use footer slider -->
-                </div>
-            </div>
-        </div>
-    </nav>
+    <!-- Floating Navbar like home -->
+    <div class="floating-navbar-container">
+      <nav class="floating-navbar black-glass">
+        <button class="hamburger" aria-label="Menu" aria-expanded="false">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/online-class" class="active">Live Classes</a></li>
+          <li><a href="/batch">Batches</a></li>
+          <li><a href="/study-resources">Study Resources</a></li>
+          <li><a href="/forum">Forum</a></li>
+          <li><a href="/admission">Admission</a></li>
+        </ul>
+      </nav>
+    </div>
 
     <!-- Main Online Class Container -->
     <div class="online-class-container">
         
         <!-- Hero Section -->
-        <section class="online-class-hero">
-            <div class="online-class-hero-content">
-                <div class="online-class-logo">📹</div>
-                <h1 class="online-class-title">Live Classes</h1>
-                <p class="online-class-subtitle">Experience interactive, real-time mathematics coaching from anywhere in the world</p>
-                
-                <!-- Audio/Video Test Section -->
-                <div class="av-test-section">
-                    <h3 style="margin-bottom: 1rem; color: white;">🎥 Audio/Video Test</h3>
-                    <p style="margin-bottom: 1.5rem; color: rgba(255,255,255,0.8);">Test your camera and microphone before joining a class</p>
-                    <button id="previewAVBtn" class="btn-modern btn-primary-modern">
-                        <span style="margin-right: 0.5rem;">🔧</span>
-                        Test Audio/Video
-                    </button>
-                </div>
+        <section class="hero-section hero-modern" style="padding: 6rem 0 3rem 0; text-align:center; color:#fff; background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('attached_assets/image_1750584670920.png') center/cover no-repeat;">
+          <div class="hero-content hero-content-modern">
+            
+            <p class="hero-subtitle-modern" style="max-width: 800px; margin: 0 auto 1.5rem;">Experience interactive, real-time mathematics coaching from anywhere in the world</p>
+            
+            <div class="av-test-section" style="margin-top:1rem;">
+              <h3 style="margin-bottom: 1rem; color: white;">🎥 Audio/Video Test</h3>
+              <p style="margin-bottom: 1.5rem; color: rgba(255,255,255,0.8);">Test your camera and microphone before joining a class</p>
+              <button id="previewAVBtn" class="btn-modern btn-primary-modern">
+                <span style="margin-right: 0.5rem;">🔧</span>
+                Test Audio/Video
+              </button>
             </div>
+          </div>
         </section>
 
         <!-- Main Content -->
@@ -702,7 +668,6 @@
                 <!-- Live Classes Tab -->
                 <div id="live-tab-content" class="tab-content" style="display:block;">
                     <div style="text-align: center; margin-bottom: 2rem;">
-                        <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">🔴 Live Classes</h2>
                         <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">Join ongoing live classes here</p>
                     </div>
                     
@@ -748,7 +713,6 @@
                 <!-- Upcoming Classes Tab -->
                 <div id="upcoming-tab-content" class="tab-content" style="display:none;">
                     <div style="text-align: center; margin-bottom: 2rem;">
-                        <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; background: linear-gradient(135deg, #ffa726 0%, #ff6b35 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">⏰ Upcoming Classes</h2>
                         <p style="color: rgba(255,255,255,0.8); font-size: 1.1rem;">See which classes are scheduled to go live soon</p>
                     </div>
                     

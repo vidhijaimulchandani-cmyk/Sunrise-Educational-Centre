@@ -14,18 +14,34 @@
     <style>
       /* Modern Company-Style Glassmorphic Theme */
       body { 
-        background: #ffffff !important;
+        background: linear-gradient(135deg, #0f1117 0%, #161a25 50%, #1a1f2e 100%);
         position: relative;
-        color: #111827;
       }
       
-      body::before { display:none !important; }
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+          radial-gradient(800px 600px at 20% 20%, rgba(106, 130, 251, 0.15) 0%, transparent 50%),
+          radial-gradient(600px 400px at 80% 80%, rgba(252, 92, 125, 0.1) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: -1;
+      }
       
       .black-glass { 
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 10px 24px rgba(0,0,0,0.06);
-        color: #111827;
+        background: rgba(5, 6, 10, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 
+          0 20px 60px rgba(0, 0, 0, 0.8),
+          0 8px 32px rgba(106, 130, 251, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(24px) saturate(120%);
+        -webkit-backdrop-filter: blur(24px) saturate(120%);
+        color: #fff;
         border-radius: 20px;
       }
       
@@ -277,12 +293,12 @@
 
       /* Match Online Class card look */
       .course-list { display:flex; flex-direction:column; gap:16px; }
-      .class-card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 20px; padding: 1.2rem; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06); }
-      .class-card h3 { font-size: 1.2rem; font-weight: 800; margin: 0 0 0.6rem 0; color:#111827; }
-      .class-info { color: #374151; margin-bottom: 0.6rem; }
-      .class-code { font-size: 0.95rem; font-weight: 600; color: #111827; background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 10px; display: inline-block; padding: 6px 10px; margin: 0.4rem 0; }
+      .class-card { background: rgba(5, 6, 10, 0.72); border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 20px; padding: 1.2rem; box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6); }
+      .class-card h3 { font-size: 1.2rem; font-weight: 700; margin: 0 0 0.6rem 0; background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+      .class-info { color: rgba(255,255,255,0.85); margin-bottom: 0.6rem; }
+      .class-code { font-size: 0.95rem; font-weight: 600; color: #fff; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; display: inline-block; padding: 6px 10px; margin: 0.4rem 0; }
       .class-actions { margin-top: 0.8rem; }
-      .class-btn { display:inline-block; width:100%; text-align:center; background: #111827; color:#fff; padding: 0.8rem 1rem; border-radius: 12px; text-decoration:none; font-weight:700; border:1px solid #111827; }
+      .class-btn { display:inline-block; width:100%; text-align:center; background: linear-gradient(135deg, #6a82fb 0%, #5a6fd8 100%); color:#fff; padding: 0.8rem 1rem; border-radius: 12px; text-decoration:none; font-weight:700; border:1px solid rgba(255,255,255,0.25); }
       .class-btn:hover { filter:brightness(1.05); }
 
       /* Theme slider with white background */
