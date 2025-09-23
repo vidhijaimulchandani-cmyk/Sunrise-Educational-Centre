@@ -35,6 +35,29 @@
     box-sizing: border-box;
     /* Re-enable pointer events for the navbar itself */
     pointer-events: auto;
+    /* Flex layout for logo and nav links */
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Coaching Logo Styles */
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.coaching-logo {
+    height: 40px;
+    width: auto;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.coaching-logo:hover {
+    transform: scale(1.1);
 }
 
 /* Hide hamburger on desktop by default; show via media query */
@@ -53,9 +76,10 @@
     padding: 0 4px;
     /* Prevent flex items from causing layout shifts */
     flex-wrap: nowrap;
-    justify-content: center;
+    justify-content: flex-end;
     width: 100%;
     min-height: 40px; /* Fixed height to prevent vertical shifts */
+    margin-left: auto;
 }
 
 .floating-navbar .nav-links a {
@@ -269,6 +293,14 @@
         width: min(96%, 560px);
         min-width: 320px; /* Ensure minimum width on mobile */
     }
+    
+    .coaching-logo {
+        height: 35px;
+    }
+    
+    .navbar-logo {
+        margin-right: 15px;
+    }
     /* Show hamburger and collapse menu for phones only */
     .floating-navbar .hamburger {
         display: block;
@@ -333,6 +365,14 @@
     .floating-navbar {
         padding: 8px 12px;
         min-width: 280px; /* Smaller minimum width for very small screens */
+    }
+    
+    .coaching-logo {
+        height: 30px;
+    }
+    
+    .navbar-logo {
+        margin-right: 10px;
     }
 
     .floating-navbar .nav-links {
