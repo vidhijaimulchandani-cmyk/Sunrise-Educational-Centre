@@ -3035,6 +3035,31 @@ body.dark-mode div[style*="background: linear-gradient(135deg, #e3f7fc 0%, #e6f9
   border-color: #444a6d !important;
 }
 
+/* ===== Ensure hero CTA buttons are visible on dark hero ===== */
+.hero-buttons .uiverse-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  color: #fff !important;
+}
+.hero-buttons .uiverse-primary {
+  background: linear-gradient(135deg, #6a82fb 0%, #5a6fd8 50%, #6a82fb 100%) !important;
+  border: 1px solid rgba(106,130,251,0.5) !important;
+}
+.hero-buttons .uiverse-outline {
+  background: rgba(255,255,255,0.12) !important;
+  border: 1px solid rgba(255,255,255,0.35) !important;
+}
+.hero-buttons .uiverse-glow {
+  background: linear-gradient(135deg, #ff6b35 0%, #fc5c7d 100%) !important;
+  border: 1px solid rgba(252,92,125,0.45) !important;
+  box-shadow: 0 12px 40px rgba(252,92,125,0.35), 0 8px 24px rgba(255,107,53,0.25) !important;
+}
+.hero-buttons .uiverse-glass {
+  background: rgba(255,255,255,0.12) !important;
+  border: 1px solid rgba(255,255,255,0.35) !important;
+}
+
 /* Subjects We Offer buttons */
 body.dark-mode .subject-btn {
   background: #232946 !important;
