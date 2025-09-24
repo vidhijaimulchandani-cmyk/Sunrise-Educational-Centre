@@ -2943,6 +2943,74 @@ body.dark-mode .fame-card {
 /* Dark-mode friendly loader colors remain vibrant */
 body.dark-mode .global-loader-overlay { background: rgba(10,12,18,0.86); }
 
+/* ===== Uiverse-inspired Hero Buttons ===== */
+.uiverse-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.9rem 1.4rem;
+  border-radius: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform 0.2s ease, box-shadow 0.25s ease, background 0.25s ease;
+  box-shadow: 0 10px 30px rgba(106,130,251,0.25);
+}
+.uiverse-btn .btn-icon { font-size: 1.2rem; line-height: 1; }
+.uiverse-btn .btn-label { letter-spacing: 0.2px; }
+
+.uiverse-primary {
+  color: #fff;
+  background: linear-gradient(135deg, #6a82fb 0%, #5a6fd8 50%, #6a82fb 100%);
+  border: 1px solid rgba(106,130,251,0.5);
+}
+.uiverse-outline {
+  color: #fff;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.25);
+}
+.uiverse-glow {
+  color: #fff;
+  background: linear-gradient(135deg, #ff6b35 0%, #fc5c7d 100%);
+  box-shadow: 0 12px 40px rgba(252,92,125,0.35), 0 8px 24px rgba(255,107,53,0.25);
+  border: 1px solid rgba(252,92,125,0.4);
+}
+.uiverse-glass {
+  color: #fff;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.25);
+}
+
+.uiverse-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.35), rgba(255,255,255,0.08));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.uiverse-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 44px rgba(106,130,251,0.35);
+}
+.uiverse-btn:active { transform: translateY(0); }
+
+/* Light mode variations */
+body:not(.dark-mode) .uiverse-outline {
+  color: #232946;
+  background: rgba(255,255,255,0.8);
+  border-color: rgba(106,130,251,0.35);
+  box-shadow: 0 8px 24px rgba(106,130,251,0.15);
+}
+body:not(.dark-mode) .uiverse-glass { color: #232946; }
+
 body.dark-mode .outstanding-performers {
   background: rgba(35,41,70,0.9) !important;
   color: #f4f4f4 !important;
