@@ -2424,6 +2424,20 @@ body.dark-mode .btn-secondary {
   color: #fff !important;
 }
 
+/* Ensure readable text on dark sections even outside dark-mode */
+.black-section,
+.black-panel,
+.hero-modern,
+.black-glass {
+  color: #fff !important;
+}
+.black-section *,
+.black-panel *,
+.hero-modern *,
+.black-glass * {
+  color: #fff !important;
+}
+
 body.dark-mode .btn-success {
   background: #48bb78 !important;
   color: #fff !important;
