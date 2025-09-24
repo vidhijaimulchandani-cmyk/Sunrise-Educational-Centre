@@ -4,575 +4,86 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Create Forum Topic - Sunrise Education Centre</title>
-  <link rel="icon" type="image/png" href="/favicon.ico">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="admin-modern.css">
-  <link rel="stylesheet" href="uiverse-components.css">
-  <link rel="stylesheet" href="floating-navbar.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #1a202c;
-      line-height: 1.6;
-      min-height: 100vh;
-    }
-
-    body.dark-mode {
-      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
-      background-size: 400% 400%;
-      animation: gradientShift 15s ease infinite;
-    }
-
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-    
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #667eea;
-      text-decoration: none;
-      font-weight: 600;
-      margin-bottom: 2rem;
-      padding: 0.75rem 1.5rem;
-      background: rgba(255,255,255,0.95);
-      backdrop-filter: blur(20px);
-      border-radius: 16px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      transition: all 0.3s ease;
-    }
-
-    body.dark-mode .back-link {
-      background: rgba(35,41,70,0.95);
-      color: #a5b4fc;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-    
-    .back-link:hover {
-      background: #667eea;
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 12px 40px rgba(102,126,234,0.3);
-    }
-
-    body.dark-mode .back-link:hover {
-      background: #a5b4fc;
-      color: #1a202c;
-    }
-    
-    .header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-    
-    .header h1 {
-      font-size: 3rem;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      text-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
-    
-    .header h1 i {
-      color: #a5b4fc;
-    }
-    
-    .header p {
-      font-size: 1.2rem;
-      color: rgba(255,255,255,0.8);
-      font-weight: 400;
-    }
-    
-    .form-container {
-      background: rgba(255,255,255,0.95);
-      backdrop-filter: blur(20px);
-      border-radius: 24px;
-      padding: 3rem;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-
-    body.dark-mode .form-container {
-      background: rgba(35,41,70,0.95);
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-    
-    .form-group {
-      margin-bottom: 2rem;
-    }
-    
-    .form-label {
-      display: block;
-      font-weight: 700;
-      color: #374151;
-      margin-bottom: 0.75rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 1rem;
-    }
-
-    body.dark-mode .form-label {
-      color: #e2e8f0;
-    }
-    
-    .form-label i {
-      color: #667eea;
-      font-size: 1.1rem;
-    }
-    
-    .required {
-      color: #e53e3e;
-      font-weight: 800;
-    }
-    
-    .form-input, .form-select, .form-textarea {
-      width: 100%;
-      padding: 1rem 1.25rem;
-      border: 2px solid #e2e8f0;
-      border-radius: 16px;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-      background: rgba(255,255,255,0.9);
-      backdrop-filter: blur(10px);
-      font-family: inherit;
-      font-weight: 500;
-    }
-
-    body.dark-mode .form-input, 
-    body.dark-mode .form-select, 
-    body.dark-mode .form-textarea {
-      background: rgba(45,55,72,0.9);
-      border: 2px solid #4a5568;
-      color: #e2e8f0;
-    }
-    
-    .form-textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
-    
-    .form-input:focus, .form-select:focus, .form-textarea:focus {
-      outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
-      transform: translateY(-1px);
-    }
-
-    body.dark-mode .form-input:focus, 
-    body.dark-mode .form-select:focus, 
-    body.dark-mode .form-textarea:focus {
-      border-color: #a5b4fc;
-      box-shadow: 0 0 0 4px rgba(165,180,252,0.1);
-    }
-    
-    .radio-group {
-      display: flex;
-      gap: 1.5rem;
-      margin-top: 0.75rem;
-    }
-    
-    .radio-option {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      cursor: pointer;
-      padding: 1rem 1.5rem;
-      border: 2px solid #e2e8f0;
-      border-radius: 16px;
-      transition: all 0.3s ease;
-      flex: 1;
-      justify-content: center;
-      background: rgba(255,255,255,0.5);
-      backdrop-filter: blur(10px);
-      font-weight: 600;
-    }
-
-    body.dark-mode .radio-option {
-      background: rgba(45,55,72,0.5);
-      border: 2px solid #4a5568;
-    }
-    
-    .radio-option:hover {
-      border-color: #cbd5e0;
-      background: rgba(102,126,234,0.1);
-      transform: translateY(-1px);
-    }
-
-    body.dark-mode .radio-option:hover {
-      border-color: #a5b4fc;
-      background: rgba(165,180,252,0.1);
-    }
-    
-    .radio-option input[type="radio"] {
-      margin: 0;
-      width: 18px;
-      height: 18px;
-    }
-    
-    .radio-option input[type="radio"]:checked + .radio-label {
-      color: #667eea;
-      font-weight: 700;
-    }
-
-    body.dark-mode .radio-option input[type="radio"]:checked + .radio-label {
-      color: #a5b4fc;
-    }
-    
-    .radio-option:has(input[type="radio"]:checked) {
-      border-color: #667eea;
-      background: rgba(102,126,234,0.1);
-      box-shadow: 0 4px 15px rgba(102,126,234,0.2);
-    }
-
-    body.dark-mode .radio-option:has(input[type="radio"]:checked) {
-      border-color: #a5b4fc;
-      background: rgba(165,180,252,0.1);
-    }
-    
-    .radio-label {
-      font-weight: 600;
-      color: #4a5568;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    body.dark-mode .radio-label {
-      color: #e2e8f0;
-    }
-    
-    .form-actions {
-      display: flex;
-      gap: 1.5rem;
-      justify-content: center;
-      margin-top: 3rem;
-      padding-top: 2rem;
-      border-top: 2px solid rgba(102,126,234,0.1);
-    }
-    
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 1rem 2rem;
-      border: none;
-      border-radius: 16px;
-      font-weight: 700;
-      text-decoration: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 1rem;
-      font-family: inherit;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    }
-    
-    .btn-primary {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-    }
-    
-    .btn-secondary {
-      background: rgba(255,255,255,0.9);
-      color: #4a5568;
-      border: 2px solid #e2e8f0;
-    }
-
-    body.dark-mode .btn-secondary {
-      background: rgba(45,55,72,0.9);
-      color: #e2e8f0;
-      border: 2px solid #4a5568;
-    }
-    
-    .btn-secondary:hover {
-      background: rgba(102,126,234,0.1);
-      border-color: #667eea;
-    }
-
-    body.dark-mode .btn-secondary:hover {
-      background: rgba(165,180,252,0.1);
-      border-color: #a5b4fc;
-    }
-    
-    .help-text {
-      font-size: 0.9rem;
-      color: #718096;
-      margin-top: 0.5rem;
-      font-weight: 500;
-    }
-
-    body.dark-mode .help-text {
-      color: #a0aec0;
-    }
-    
-    /* Success/Error Messages */
-    .message {
-      padding: 1rem 1.5rem;
-      border-radius: 12px;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 600;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-    
-    .message.success {
-      background: linear-gradient(135deg, #48bb78, #38a169);
-      color: white;
-    }
-    
-    .message.error {
-      background: linear-gradient(135deg, #e53e3e, #c53030);
-      color: white;
-    }
-    
-    /* Loading States */
-    .loading {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #667eea;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    @media (max-width: 768px) {
-      .container {
-        padding: 1rem;
-      }
-      
-      .header h1 {
-        font-size: 2.2rem;
-      }
-      
-      .form-container {
-        padding: 2rem;
-      }
-      
-      .radio-group {
-        flex-direction: column;
-        gap: 1rem;
-      }
-      
-      .form-actions {
-        flex-direction: column;
-      }
-
-      .btn {
-        justify-content: center;
-      }
-    }
+    body { margin: 0; font-family: 'Inter', sans-serif; background: var(--pico-primary-background, #f4f6fb); }
+    .container { max-width: 600px; margin: 2rem auto; padding: 2rem; background: #fff; border-radius: 16px; box-shadow: 0 2px 8px rgba(100,100,255,0.07); }
+    .header { text-align: center; margin-bottom: 2rem; }
+    .header h1 { color: #6a82fb; margin-bottom: 0.5rem; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #232946; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.8rem 1rem; border: 1px solid #e0e7ff; border-radius: 8px; font-size: 1rem; font-family: inherit; }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .form-group select { background: #fff; }
+    .radio-group { display: flex; gap: 1rem; margin-top: 0.5rem; }
+    .radio-group label { display: flex; align-items: center; gap: 0.5rem; font-weight: normal; cursor: pointer; }
+    .radio-group input[type="radio"] { width: auto; margin: 0; }
+    .btn { background: #6a82fb; color: #fff; padding: 0.8rem 2rem; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+    .btn:hover { background: #5a6fd8; }
+    .btn-secondary { background: #888; margin-right: 1rem; }
+    .btn-secondary:hover { background: #777; }
+    .back-link { display: inline-block; margin-bottom: 1rem; color: #6a82fb; text-decoration: none; font-weight: 600; }
+    .back-link:hover { text-decoration: underline; }
+    .dark-mode-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <a href="/admin" class="back-link">
-      <i class="fas fa-arrow-left"></i>
-      Back to Admin Panel
-    </a>
-    
-    <div class="header">
-      <h1>
-        <i class="fas fa-plus-circle"></i>
-        Create Forum Topic
-      </h1>
-      <p>Add a new topic to organize forum discussions and enhance student engagement</p>
-    </div>
-
-    <div class="form-container">
-      <form method="POST" action="/admin/create-topic" id="createTopicForm">
-        <div class="form-group">
-          <label for="name" class="form-label">
-            <i class="fas fa-tag"></i>
-            Topic Name <span class="required">*</span>
-          </label>
-          <input type="text" id="name" name="name" class="form-input" placeholder="e.g., Mathematics Help, Science Discussion, Study Tips" required>
-          <div class="help-text">Choose a clear, descriptive name that students will easily understand</div>
-        </div>
-
-        <div class="form-group">
-          <label for="description" class="form-label">
-            <i class="fas fa-align-left"></i>
-            Topic Description
-          </label>
-          <textarea id="description" name="description" class="form-textarea" placeholder="Brief description of what this topic covers (optional)"></textarea>
-          <div class="help-text">Optional: Provide additional context about what discussions this topic will contain</div>
-        </div>
-
-        <div class="form-group">
-          <label for="class_id" class="form-label">
-            <i class="fas fa-graduation-cap"></i>
-            Class <span class="required">*</span>
-          </label>
-          <select id="class_id" name="class_id" class="form-select" required>
-            <option value="">Select a class</option>
-            {% for class_id, class_name in all_classes %}
-            <option value="{{ class_id }}">{{ class_name|title }}</option>
-            {% endfor %}
-          </select>
-          <div class="help-text">Choose which class this topic belongs to</div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">
-            <i class="fas fa-credit-card"></i>
-            Access Level <span class="required">*</span>
-          </label>
-          <div class="radio-group">
-            <label class="radio-option">
-              <input type="radio" name="paid" value="paid" required>
-              <span class="radio-label">
-                <i class="fas fa-lock"></i>
-                Paid Access
-              </span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="paid" value="unpaid" required>
-              <span class="radio-label">
-                <i class="fas fa-unlock"></i>
-                Free Access
-              </span>
-            </label>
-          </div>
-          <div class="help-text">Determine whether this topic requires paid membership to access</div>
-        </div>
-
-        <div class="form-actions">
-          <a href="/admin" class="btn btn-secondary">
-            <i class="fas fa-times"></i>
-            Cancel
-          </a>
-          <button type="submit" class="btn btn-primary">
-            <i class="fas fa-plus"></i>
-            Create Topic
-          </button>
-        </div>
-      </form>
-    </div>
+  <!-- Dark Mode Toggle Button -->
+  <div class="dark-mode-toggle">
+    <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
   </div>
 
-  <script>
-    // Form submission handling
-    document.getElementById('createTopicForm').addEventListener('submit', function(e) {
-      const submitBtn = this.querySelector('button[type="submit"]');
-      const originalContent = submitBtn.innerHTML;
-      
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
-      submitBtn.disabled = true;
-      
-      // Re-enable button after 5 seconds as fallback
-      setTimeout(() => {
-        submitBtn.innerHTML = originalContent;
-        submitBtn.disabled = false;
-      }, 5000);
-    });
+  <div class="container">
+    <a href="/admin" class="back-link">← Back to Admin Panel</a>
+    
+    <div class="header">
+      <h1>Create Forum Topic</h1>
+      <p>Add a new topic to organize forum discussions</p>
+    </div>
 
-    // Form validation
-    document.getElementById('createTopicForm').addEventListener('submit', function(e) {
-      const name = document.getElementById('name').value.trim();
-      const classId = document.getElementById('class_id').value;
-      const paid = document.querySelector('input[name="paid"]:checked');
-      
-      if (name.length < 3) {
-        e.preventDefault();
-        showMessage('Topic name must be at least 3 characters long', 'error');
-        return;
-      }
-      
-      if (!classId) {
-        e.preventDefault();
-        showMessage('Please select a class', 'error');
-        return;
-      }
-      
-      if (!paid) {
-        e.preventDefault();
-        showMessage('Please select an access level', 'error');
-        return;
-      }
-    });
+    <form method="POST" action="/admin/create-topic">
+      <div class="form-group">
+        <label for="name">Topic Name *</label>
+        <input type="text" id="name" name="name" placeholder="e.g., Mathematics Help, Science Discussion, Study Tips" required>
+      </div>
 
-    // Show message function
-    function showMessage(text, type) {
-      const existingMessage = document.querySelector('.message');
-      if (existingMessage) {
-        existingMessage.remove();
-      }
-      
-      const message = document.createElement('div');
-      message.className = `message ${type}`;
-      message.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-        ${text}
-      `;
-      
-      document.querySelector('.form-container').insertBefore(
-        message, 
-        document.querySelector('form')
-      );
-      
-      setTimeout(() => {
-        message.remove();
-      }, 5000);
-    }
+      <div class="form-group">
+        <label for="description">Topic Description</label>
+        <textarea id="description" name="description" placeholder="Brief description of what this topic covers (optional)"></textarea>
+      </div>
 
-    // Auto-resize textarea
-    document.getElementById('description').addEventListener('input', function() {
-      this.style.height = 'auto';
-      this.style.height = this.scrollHeight + 'px';
-    });
+      <div class="form-group">
+        <label for="class_id">Class *</label>
+        <select id="class_id" name="class_id" required>
+          <option value="">Select a class</option>
+          {% for class_id, class_name in all_classes %}
+          <option value="{{ class_id }}">{{ class_name|title }}</option>
+          {% endfor %}
+        </select>
+      </div>
 
-    // Initialize page
-    document.addEventListener('DOMContentLoaded', function() {
-      // Add smooth animations to form elements
-      const formElements = document.querySelectorAll('.form-input, .form-select, .form-textarea, .radio-option');
-      formElements.forEach((element, index) => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(20px)';
-        element.style.transition = 'all 0.3s ease';
-        
-        setTimeout(() => {
-          element.style.opacity = '1';
-          element.style.transform = 'translateY(0)';
-        }, index * 100);
-      });
-    });
-  </script>
+      <div class="form-group">
+        <label>Paid Status *</label>
+        <div class="radio-group">
+          <label>
+            <input type="radio" name="paid" value="paid" required>
+            Paid
+          </label>
+          <label>
+            <input type="radio" name="paid" value="unpaid" required>
+            Unpaid
+          </label>
+        </div>
+      </div>
+
+      <div style="text-align: center;">
+        <a href="/admin" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn">Create Topic</button>
+      </div>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
 </body>
-</html>
-<script src="/attached_assets/theme.js"></script>
+</html> 

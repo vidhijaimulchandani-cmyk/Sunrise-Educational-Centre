@@ -3,873 +3,1048 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin Dashboard - Sunrise Education Centre</title>
+  <title>Admin Dashboard</title>
   <link rel="icon" type="image/png" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="admin-modern.css">
-  <link rel="stylesheet" href="uiverse-components.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="forum.css" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
+    /* Admin panel - PERMANENT WHITE THEME */
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #f8fafc;
-      color: #1a202c;
-      line-height: 1.6;
+      background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%) !important;
+      color: #232946 !important;
     }
     
-    /* Sidebar */
-    .sidebar {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 280px;
-      height: 100vh;
-      background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      z-index: 1000;
-      transition: transform 0.3s ease;
-      overflow-y: auto;
+    .navbar,
+    .glassmorphic {
+      background: rgba(255,255,255,0.95) !important;
+      border-bottom: 1px solid rgba(106,130,251,0.2) !important;
     }
     
-    .sidebar-header {
-      padding: 2rem 1.5rem;
-      border-bottom: 1px solid rgba(255,255,255,0.1);
+    .nav-links a {
+      color: #232946 !important;
     }
     
-    .sidebar-logo {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: white;
-      text-decoration: none;
+    .nav-links a:hover, 
+    .nav-links .btn-primary {
+      background: linear-gradient(90deg, #6a82fb 0%, #5a6fd8 100%) !important;
+      color: #fff !important;
     }
     
-    .sidebar-logo i {
-      font-size: 2rem;
-      background: rgba(255,255,255,0.2);
-      padding: 0.5rem;
-      border-radius: 12px;
+    .card {
+      background: #fff !important;
+      color: #232946 !important;
+      box-shadow: 0 4px 24px rgba(100,100,255,0.07) !important;
     }
     
-    .sidebar-nav {
-      padding: 1rem 0;
+    .card h3, 
+    .card p {
+      color: #232946 !important;
     }
     
-    .nav-section {
-      margin-bottom: 2rem;
+    .btn,
+    .btn-primary,
+    .btn-cta {
+      background: #6a82fb !important;
+      color: #fff !important;
+      border: 1px solid #6a82fb !important;
     }
     
-    .nav-section-title {
-      padding: 0 1.5rem 0.5rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: rgba(255,255,255,0.6);
+    .btn:hover,
+    .btn-primary:hover,
+    .btn-cta:hover {
+      background: #5a6fd8 !important;
+      color: #fff !important;
     }
     
-    .nav-item {
-      display: block;
-      padding: 0.75rem 1.5rem;
-      color: rgba(255,255,255,0.8);
-      text-decoration: none;
-      transition: all 0.2s ease;
-      border-left: 3px solid transparent;
+    input,
+    select,
+    textarea {
+      background: #fff !important;
+      color: #232946 !important;
+      border: 1px solid #d1d5db !important;
     }
     
-    .nav-item:hover, .nav-item.active {
-      background: rgba(255,255,255,0.1);
-      color: white;
-      border-left-color: white;
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #6a82fb !important;
+      outline: none !important;
+      box-shadow: 0 0 0 2px rgba(106,130,251,0.2) !important;
     }
     
-    .nav-item i {
-      width: 20px;
-      margin-right: 0.75rem;
+    input::placeholder,
+    textarea::placeholder {
+      color: #6b7280 !important;
     }
     
-    /* Main Content */
-    .main-content {
-      margin-left: 280px;
-      min-height: 100vh;
-      background: #f8fafc;
+    /* Admin panel - PERMANENT WHITE THEME specific styles */
+    .admin-layout {
+      background: #f8fafc !important;
     }
     
-    .top-bar {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 100;
+    .admin-sidebar {
+      background: #fff !important;
+      color: #232946 !important;
     }
     
-    .page-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #1a202c;
+    .admin-sidebar .logo {
+      color: #6a82fb !important;
     }
     
-    .user-menu {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+    .admin-sidebar nav a {
+      color: #232946 !important;
     }
     
-    .notification-btn {
-      position: relative;
-      background: none;
-      border: none;
-      font-size: 1.25rem;
-      color: #4a5568;
-      cursor: pointer;
-      padding: 0.5rem;
-      border-radius: 8px;
-      transition: background 0.2s ease;
+    .admin-sidebar nav a:hover {
+      background: #f3f4f6 !important;
+      color: #6a82fb !important;
     }
     
-    .notification-btn:hover {
-      background: #f7fafc;
+    .admin-sidebar nav a.active {
+      background: #6a82fb !important;
+      color: #fff !important;
     }
     
-    .notification-badge {
-      position: absolute;
-      top: 0;
-      right: 0;
-      background: #e53e3e;
-      color: white;
-      font-size: 0.75rem;
-      padding: 0.125rem 0.375rem;
-      border-radius: 10px;
-      min-width: 18px;
-      text-align: center;
+    .admin-main {
+      background: #f8fafc !important;
+      color: #232946 !important;
     }
     
-    .user-info {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
+    .admin-header {
+      background: #fff !important;
+      color: #232946 !important;
     }
     
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 600;
+    .admin-header h1 {
+      color: #232946 !important;
     }
     
-    .user-details {
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .user-name {
-      font-weight: 600;
-      color: #1a202c;
-    }
-    
-    .user-role {
-      font-size: 0.875rem;
-      color: #718096;
-    }
-    
-    /* Dashboard Content */
-    .dashboard-content {
-      padding: 2rem;
+    .admin-content {
+      background: #f8fafc !important;
+      color: #232946 !important;
     }
     
     .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
+      background: #fff !important;
     }
     
     .stat-card {
-      background: white;
-      border-radius: 16px;
-      padding: 1.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      border: 1px solid #e2e8f0;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      background: #fff !important;
+      color: #232946 !important;
+      border-color: #e5e7eb !important;
     }
     
-    .stat-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    .stat-card h3 {
+      color: #232946 !important;
     }
     
-    .stat-header {
+    .stat-card .stat-value {
+      color: #6a82fb !important;
+    }
+    
+    .stat-card .stat-label {
+      color: #6b7280 !important;
+    }
+    
+    .admin-table {
+      background: #fff !important;
+      color: #232946 !important;
+    }
+    
+    .admin-table th {
+      background: #f9fafb !important;
+      color: #232946 !important;
+      border-color: #e5e7eb !important;
+    }
+    
+    .admin-table td {
+      background: #fff !important;
+      color: #232946 !important;
+      border-color: #e5e7eb !important;
+    }
+    
+    .admin-table tr:hover {
+      background: #f9fafb !important;
+    }
+    
+    .admin-form {
+      background: #fff !important;
+      color: #232946 !important;
+    }
+    
+    .admin-form label {
+      color: #232946 !important;
+    }
+    
+    .admin-form input,
+    .admin-form select,
+    .admin-form textarea {
+      background: #fff !important;
+      color: #232946 !important;
+      border-color: #d1d5db !important;
+    }
+    
+    .admin-form input:focus,
+    .admin-form select:focus,
+    .admin-form textarea:focus {
+      border-color: #6a82fb !important;
+      box-shadow: 0 0 0 2px rgba(106,130,251,0.2) !important;
+    }
+    
+    .admin-form input::placeholder,
+    .admin-form textarea::placeholder {
+      color: #6b7280 !important;
+    }
+    
+    .admin-modal {
+      background: #fff !important;
+      color: #232946 !important;
+    }
+    
+    .admin-modal-header {
+      background: #f9fafb !important;
+      color: #232946 !important;
+    }
+    
+    .admin-modal-title {
+      color: #232946 !important;
+    }
+    
+    .admin-modal-body {
+      background: #fff !important;
+      color: #232946 !important;
+    }
+    
+    .admin-modal-footer {
+      background: #f9fafb !important;
+      border-top-color: #e5e7eb !important;
+    }
+    
+    .admin-alert {
+      color: #232946 !important;
+    }
+    
+    .admin-alert-success {
+      background: #48bb78 !important;
+      color: #fff !important;
+    }
+    
+    .admin-alert-error {
+      background: #fc5c7d !important;
+      color: #fff !important;
+    }
+    
+    .admin-alert-warning {
+      background: #ffa726 !important;
+      color: #fff !important;
+    }
+    
+    .admin-alert-info {
+      background: #6a82fb !important;
+      color: #fff !important;
+    }
+    
+    .admin-badge {
+      color: #232946 !important;
+    }
+    
+    .admin-badge-success {
+      background: #48bb78 !important;
+      color: #fff !important;
+    }
+    
+    .admin-badge-error {
+      background: #fc5c7d !important;
+      color: #fff !important;
+    }
+    
+    .admin-badge-warning {
+      background: #ffa726 !important;
+      color: #fff !important;
+    }
+    
+    .admin-badge-info {
+      background: #6a82fb !important;
+      color: #fff !important;
+    }
+    
+    .admin-dropdown {
+      background: #fff !important;
+      color: #232946 !important;
+      border-color: #e5e7eb !important;
+    }
+    
+    .admin-dropdown-item {
+      color: #232946 !important;
+    }
+    
+    .admin-dropdown-item:hover {
+      background: #f9fafb !important;
+    }
+    
+    .admin-tooltip {
+      background: #fff !important;
+      color: #232946 !important;
+      border-color: #e5e7eb !important;
+    }
+    
+    /* Override any inline styles in admin panel */
+    [style*="color: #232946"] {
+      color: #232946 !important;
+    }
+    
+    [style*="color: #666"] {
+      color: #6b7280 !important;
+    }
+    
+    [style*="color: #999"] {
+      color: #6b7280 !important;
+    }
+    
+    [style*="background: #fff"] {
+      background: #fff !important;
+    }
+    
+    [style*="background: #f8f9ff"] {
+      background: #f9fafb !important;
+    }
+    
+    [style*="background: #f8fafc"] {
+      background: #f8fafc !important;
+    }
+    
+    [style*="border-color: #e0e7ff"] {
+      border-color: #e5e7eb !important;
+    }
+    
+    [style*="border-color: #d1d5db"] {
+      border-color: #d1d5db !important;
+    }
+    
+    /* Additional admin panel permanent white styles */
+    h1, h2, h3, h4, h5, h6 {
+      color: #232946 !important;
+    }
+    
+    p, span, div, label {
+      color: #232946 !important;
+    }
+    
+    a {
+      color: #6a82fb !important;
+    }
+    
+    a:hover {
+      color: #5a6fd8 !important;
+    }
+    
+    /* Table styles */
+    table {
+      background: #fff !important;
+      color: #232946 !important;
+    }
+    
+    th {
+      background: #f9fafb !important;
+      color: #232946 !important;
+      border-color: #e5e7eb !important;
+    }
+    
+    td {
+      background: #fff !important;
+      color: #232946 !important;
+      border-color: #e5e7eb !important;
+    }
+    
+    tr:hover {
+      background: #f9fafb !important;
+    }
+    
+    /* Notification dropdown styles */
+    #notifDropdown {
+      background: #fff !important;
+      color: #232946 !important;
+      border: 1px solid #e5e7eb !important;
+    }
+    
+    .notification-item {
+      background: #f9fafb !important;
+      color: #232946 !important;
+      border-color: #e5e7eb !important;
+    }
+    
+    .notification-item:hover {
+      background: #f3f4f6 !important;
+    }
+    
+    /* Override any dark mode styles from global CSS */
+    body.dark-mode {
+      background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%) !important;
+      color: #232946 !important;
+    }
+    
+    body.dark-mode * {
+      color: inherit !important;
+    }
+    
+    body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, 
+    body.dark-mode h4, body.dark-mode h5, body.dark-mode h6 {
+      color: #232946 !important;
+    }
+    
+    body.dark-mode p, body.dark-mode span, body.dark-mode div, 
+    body.dark-mode label, body.dark-mode td, body.dark-mode th {
+      color: #232946 !important;
+    }
+    
+    body.dark-mode .card, body.dark-mode .admin-card {
+      background: #fff !important;
+      color: #232946 !important;
+    }
+    
+    body.dark-mode input, body.dark-mode select, body.dark-mode textarea {
+      background: #fff !important;
+      color: #232946 !important;
+      border-color: #d1d5db !important;
+    }
+    
+    /* Admin panel specific styles */
+    body { margin: 0; font-family: 'Inter', sans-serif; }
+    .admin-layout { display: flex; min-height: 100vh; background: var(--pico-primary-background, #f4f6fb); }
+    .admin-sidebar {
+      width: 240px;
+      background: #232946;
+      color: #fff;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
+      flex-direction: column;
+      padding: 2rem 1rem 1rem 1rem;
+      gap: 1.5rem;
+      min-height: 100vh;
     }
-    
-    .stat-title {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: #718096;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    
-    .stat-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      color: white;
-    }
-    
-    .stat-icon.users { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-    .stat-icon.posts { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-    .stat-icon.resources { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-    .stat-icon.classes { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-    
-    .stat-value {
-      font-size: 2rem;
+    .admin-sidebar .logo {
+      font-size: 1.4rem;
       font-weight: 700;
-      color: #1a202c;
-      margin-bottom: 0.25rem;
-    }
-    
-    .stat-change {
-      font-size: 0.875rem;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
-    
-    .stat-change.positive { color: #38a169; }
-    .stat-change.negative { color: #e53e3e; }
-    
-    /* Quick Actions */
-    .quick-actions {
-      background: white;
-      border-radius: 16px;
-      padding: 1.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      border: 1px solid #e2e8f0;
+      color: #6a82fb;
       margin-bottom: 2rem;
-    }
-    
-    .section-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #1a202c;
-      margin-bottom: 1rem;
-    }
-    
-    .actions-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-    
-    .action-btn {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      padding: 1rem;
-      background: #f7fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
+      gap: 0.7rem;
+    }
+    .admin-sidebar nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+    .admin-sidebar nav a {
+      color: #fff;
       text-decoration: none;
-      color: #4a5568;
-      transition: all 0.2s ease;
-      font-weight: 500;
+      font-size: 1.08rem;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
     }
-    
-    .action-btn:hover {
-      background: #edf2f7;
-      border-color: #cbd5e0;
-      transform: translateY(-1px);
+    .admin-sidebar nav a.active, .admin-sidebar nav a:hover {
+      background: #6a82fb;
+      color: #fff;
     }
-    
-    .action-btn i {
-      font-size: 1.25rem;
-      color: #667eea;
+    .admin-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #f4f6fb;
+      min-height: 100vh;
     }
-    
-    /* Recent Activity */
-    .recent-activity {
-      background: white;
-      border-radius: 16px;
-      padding: 1.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      border: 1px solid #e2e8f0;
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2.5rem 1.2rem 2rem;
+      background: #fff;
+      border-bottom: 1px solid #e0e7ff;
+      min-height: 64px;
     }
-    
-    .activity-item {
+    .admin-header .admin-user {
       display: flex;
       align-items: center;
       gap: 1rem;
-      padding: 1rem 0;
-      border-bottom: 1px solid #f7fafc;
     }
-    
-    .activity-item:last-child {
-      border-bottom: none;
-    }
-    
-    .activity-icon {
-      width: 40px;
-      height: 40px;
+    .admin-header .admin-avatar {
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
+      background: #6a82fb;
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1rem;
-      color: white;
-      flex-shrink: 0;
-    }
-    
-    .activity-icon.user { background: #667eea; }
-    .activity-icon.post { background: #f093fb; }
-    .activity-icon.resource { background: #4facfe; }
-    
-    .activity-content {
-      flex: 1;
-    }
-    
-    .activity-title {
-      font-weight: 500;
-      color: #1a202c;
-      margin-bottom: 0.25rem;
-    }
-    
-    .activity-time {
-      font-size: 0.875rem;
-      color: #718096;
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 1024px) {
-      .sidebar {
-        transform: translateX(-100%);
-      }
-      
-      .sidebar.open {
-        transform: translateX(0);
-      }
-      
-      .main-content {
-        margin-left: 0;
-      }
-      
-      .mobile-menu-btn {
-        display: block;
-      }
-    }
-    
-    @media (max-width: 768px) {
-      .dashboard-content {
-        padding: 1rem;
-      }
-      
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .actions-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .top-bar {
-        padding: 1rem;
-      }
-    }
-    
-    .mobile-menu-btn {
-      display: none;
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      color: #4a5568;
-      cursor: pointer;
-    }
-    
-    /* Loading Animation */
-    .loading {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #667eea;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    /* Traffic Metrics */
-    .traffic-metrics {
-      background: white;
-      border-radius: 16px;
-      padding: 1.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      border: 1px solid #e2e8f0;
-      margin-bottom: 2rem;
-    }
-    
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-    
-    .metric-item {
-      text-align: center;
-      padding: 1rem;
-      background: #f7fafc;
-      border-radius: 12px;
-    }
-    
-    .metric-value {
-      font-size: 1.5rem;
       font-weight: 700;
-      color: #667eea;
-      margin-bottom: 0.25rem;
+      font-size: 1.2rem;
     }
-    
-    .metric-label {
-      font-size: 0.875rem;
-      color: #718096;
+    .admin-dashboard-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin: 2.5rem 2rem 1.5rem 2rem;
+    }
+    .admin-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(100,100,255,0.07);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.7rem;
+      min-height: 120px;
+    }
+    .admin-card .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #6a82fb;
+    }
+    .admin-card .card-value {
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: #232946;
+    }
+    .admin-section {
+      margin: 2rem 2rem 2.5rem 2rem;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(100,100,255,0.07);
+      padding: 2rem 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    @media (max-width: 900px) {
+      .admin-layout { flex-direction: column; }
+      .admin-sidebar { width: 100%; flex-direction: row; gap: 0.5rem; min-height: unset; padding: 1rem; }
+      .admin-sidebar nav { flex-direction: row; gap: 0.5rem; }
+      .admin-main { padding: 0; }
+      .admin-header { padding: 1rem; }
+      .admin-dashboard-cards, .admin-section { margin: 1rem; }
+    }
+    @media (max-width: 600px) {
+      .admin-dashboard-cards { grid-template-columns: 1fr; }
+      .admin-section { padding: 1rem; }
+
     }
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <a href="/" class="sidebar-logo">
-        <i class="fas fa-graduation-cap"></i>
-        <span>Sunrise Admin</span>
-      </a>
-    </div>
-    
-    <nav class="sidebar-nav">
-      <div class="nav-section">
-        <div class="nav-section-title">Main</div>
-        <a href="#dashboard" class="nav-item active" onclick="showSection('dashboard')">
-          <i class="fas fa-chart-line"></i>
-          Dashboard
-        </a>
-        <a href="#analytics" class="nav-item" onclick="showSection('analytics')">
-          <i class="fas fa-chart-bar"></i>
-          Analytics
-        </a>
+  <nav class="navbar glassmorphic">
+    <div class="container nav-content">
+      <div class="nav-logo">
+        <img src="attached_assets/image_1750584670920.png" alt="Logo">
+        <span>Admin Panel</span>
       </div>
-      
-      <div class="nav-section">
-        <div class="nav-section-title">Management</div>
-        <a href="/admin/create-user" class="nav-item">
-          <i class="fas fa-users"></i>
-          User Management
-        </a>
-        <a href="/content-management" class="nav-item">
-          <i class="fas fa-edit"></i>
-          Content Management
-        </a>
-        <a href="/admin/batch-management" class="nav-item">
-          <i class="fas fa-tags"></i>
-          Batch Management
-        </a>
-        <a href="/admin/status-management" class="nav-item">
-          <i class="fas fa-toggle-on"></i>
-          Status Management
-        </a>
-      </div>
-      
-      <div class="nav-section">
-        <div class="nav-section-title">Tools</div>
-        <a href="/admin/countdown" class="nav-item">
-          <i class="fas fa-clock"></i>
-          Countdown Manager
-        </a>
-        <a href="/admin/home-editor" class="nav-item">
-          <i class="fas fa-home"></i>
-          Home Page Editor
-        </a>
-        <a href="/send-notification" class="nav-item">
-          <i class="fas fa-bell"></i>
-          Send Notifications
-        </a>
-      </div>
-      
-      <div class="nav-section">
-        <div class="nav-section-title">Data</div>
-        <a href="/admin/download/users" class="nav-item">
-          <i class="fas fa-download"></i>
-          Export Users
-        </a>
-        <a href="/admin/download/forum" class="nav-item">
-          <i class="fas fa-download"></i>
-          Export Forum Data
-        </a>
-        <a href="/admin/download/resources" class="nav-item">
-          <i class="fas fa-download"></i>
-          Export Resources
-        </a>
-      </div>
-    </nav>
-  </div>
-  
-  <!-- Main Content -->
-  <div class="main-content">
-    <!-- Top Bar -->
-    <div class="top-bar">
-      <div style="display: flex; align-items: center; gap: 1rem;">
-        <button class="mobile-menu-btn" onclick="toggleSidebar()">
-          <i class="fas fa-bars"></i>
-        </button>
-        <h1 class="page-title">Admin Dashboard</h1>
-      </div>
-      
-      <div class="user-menu">
-        <button class="notification-btn" onclick="toggleNotifications()">
-          <i class="fas fa-bell"></i>
-          {% if user_notifications and user_notifications|length > 0 %}
-          <span class="notification-badge">{{ user_notifications|length }}</span>
-          {% endif %}
-        </button>
+      <ul class="nav-links">
         
-        <div class="user-info">
-          <div class="user-avatar">
-            {{ (username or 'Admin')[0]|upper }}
+        <li><a href="#about-us">About</a></li>
+        <li><a href="/online-class">Live Class</a></li>
+        <li><a href="/study-resources">Study Resources</a></li>
+        <li><a href="/forum">Forum</a></li>
+        <li><a href="/admin/status-management">Status Management</a></li>
+        <!-- Notification Bell (rebuilt, now before login/logout) -->
+        <li id="notifBellContainer" style="position:relative; z-index:9999;">
+          <button id="notifBell" style="background:none; border:none; cursor:pointer; position:relative; z-index:10000; padding:0;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;"><path d="M12 22c1.1 0 2-.9 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-5-6.32V4a1 1 0 1 0-2 0v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29A1 1 0 0 0 6 19h12a1 1 0 0 0 .71-1.71L18 16z" fill="#6a82fb"/></svg>
+            {% if user_notifications and user_notifications|length > 0 %}
+            <span style="position:absolute;top:0;right:0;width:10px;height:10px;background:#fc5c7d;border-radius:50%;"></span>
+            {% endif %}
+          </button>
+          <div id="notifDropdown" style="display:none; position:absolute; right:0; top:36px; background:#fff; min-width:320px; box-shadow:0 4px 24px rgba(100,100,255,0.13); border-radius:12px; z-index:10001; padding:1rem;">
+            <strong style="color:#6a82fb; font-size:1.15rem;">Notifications</strong>
+            <ul style="list-style:none; padding:0; margin:0; max-height:320px; overflow-y:auto;">
+              {% if user_notifications and user_notifications|length > 0 %}
+                {% for notification in user_notifications %}
+                  {% if notification|length >= 7 %}
+                    {% set id, message, created_at, status, notification_type, scheduled_time, item_type = notification %}
+                    {% if item_type == 'personal_chat' %}
+                      {% set sender_name = notification[7] if notification|length > 7 else 'User' %}
+                      <li class="notification-item personal-chat-item" data-notification-id="{{ id }}" data-type="personal_chat" style="padding:0.9rem 1.2rem; border-bottom:1px solid #eee; font-size:1.05rem; color:#232946; background:#fff3e0; border-radius:10px; margin-bottom:0.7rem; cursor:pointer; transition:all 0.2s ease; border-left:4px solid #fc5c7d;" onmouseover="this.style.background='#ffe6cc'" onmouseout="this.style.background='#fff3e0'">
+                        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
+                          <span style="background:#fc5c7d; color:white; padding:0.2rem 0.5rem; border-radius:12px; font-size:0.8rem; font-weight:600;">💬 Personal</span>
+                          <span style="color:#fc5c7d; font-size:0.9rem; font-weight:600;">@{{ sender_name }}</span>
+                        </div>
+                        <strong>{{ message }}</strong><br>
+                        <span style="font-size:0.92rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                      </li>
+                    {% else %}
+                      <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.9rem 1.2rem; border-bottom:1px solid #eee; font-size:1.05rem; color:#232946; background:#f8fafc; border-radius:10px; margin-bottom:0.7rem; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='#f8fafc'">
+                        <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
+                          <span style="background:#6a82fb; color:white; padding:0.2rem 0.5rem; border-radius:12px; font-size:0.8rem; font-weight:600;">📢 Notification</span>
+                        </div>
+                        <strong>{{ message }}</strong><br>
+                        <span style="font-size:0.92rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                      </li>
+                    {% endif %}
+                  {% else %}
+                    <!-- Fallback for old notification format -->
+                    {% set id, message, created_at, status, notification_type, scheduled_time = notification %}
+                    <li class="notification-item" data-notification-id="{{ id }}" data-type="notification" style="padding:0.9rem 1.2rem; border-bottom:1px solid #eee; font-size:1.05rem; color:#232946; background:#f8fafc; border-radius:10px; margin-bottom:0.7rem; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#f0f4ff'" onmouseout="this.style.background='#f8fafc'">
+                      <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.3rem;">
+                        <span style="background:#6a82fb; color:white; padding:0.2rem 0.5rem; border-radius:12px; font-size:0.8rem; font-weight:600;">📢 Notification</span>
+                      </div>
+                      <strong>{{ message }}</strong><br>
+                      <span style="font-size:0.92rem; color:#888;">{{ format_datetime_for_display(created_at) }}</span>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              {% else %}
+                <li style="padding:1.1rem 1.2rem; color:#888; text-align:center; background:#f8fafc; border-radius:10px;">No new notifications.</li>
+              {% endif %}
+            </ul>
           </div>
-          <div class="user-details">
-            <div class="user-name">{{ username or 'Admin' }}</div>
-            <div class="user-role">Administrator</div>
-          </div>
-        </div>
-        
-        <a href="/logout" style="margin-left: 1rem; padding: 0.5rem 1rem; background: #e53e3e; color: white; text-decoration: none; border-radius: 8px; font-weight: 500;">
-          <i class="fas fa-sign-out-alt"></i> Logout
-        </a>
-      </div>
-    </div>
-    
-    <!-- Dashboard Content -->
-    <div class="dashboard-content">
-      <!-- Traffic Metrics -->
-      <div class="traffic-metrics">
-        <h2 class="section-title">
-          <i class="fas fa-chart-line" style="color: #667eea; margin-right: 0.5rem;"></i>
-          Real-time Traffic Metrics
-        </h2>
-        <div class="metrics-grid">
-          <div class="metric-item">
-            <div class="metric-value" id="metricActiveIps">--</div>
-            <div class="metric-label">Active IPs (10m)</div>
-          </div>
-          <div class="metric-item">
-            <div class="metric-value" id="metricActiveUsers">--</div>
-            <div class="metric-label">Active Users (10m)</div>
-          </div>
-          <div class="metric-item">
-            <div class="metric-value" id="metricIpsToday">--</div>
-            <div class="metric-label">Unique IPs Today</div>
-          </div>
-          <div class="metric-item">
-            <div class="metric-value" id="metricIpsAll">--</div>
-            <div class="metric-label">Total Unique IPs</div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Stats Grid -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-header">
-            <div>
-              <div class="stat-title">Total Users</div>
-              <div class="stat-value">{{ total_users }}</div>
-              <div class="stat-change positive">
-                <i class="fas fa-arrow-up"></i>
-                +12% from last month
-              </div>
-            </div>
-            <div class="stat-icon users">
-              <i class="fas fa-users"></i>
-            </div>
-          </div>
-        </div>
-        
-        <div class="stat-card">
-          <div class="stat-header">
-            <div>
-              <div class="stat-title">Forum Posts</div>
-              <div class="stat-value">{{ total_forum_posts }}</div>
-              <div class="stat-change positive">
-                <i class="fas fa-arrow-up"></i>
-                +8% from last month
-              </div>
-            </div>
-            <div class="stat-icon posts">
-              <i class="fas fa-comments"></i>
-            </div>
-          </div>
-        </div>
-        
-        <div class="stat-card">
-          <div class="stat-header">
-            <div>
-              <div class="stat-title">Resources</div>
-              <div class="stat-value">{{ total_resources }}</div>
-              <div class="stat-change positive">
-                <i class="fas fa-arrow-up"></i>
-                +15% from last month
-              </div>
-            </div>
-            <div class="stat-icon resources">
-              <i class="fas fa-book"></i>
-            </div>
-          </div>
-        </div>
-        
-        <div class="stat-card">
-          <div class="stat-header">
-            <div>
-              <div class="stat-title">Classes</div>
-              <div class="stat-value">{{ total_classes }}</div>
-              <div class="stat-change positive">
-                <i class="fas fa-arrow-up"></i>
-                +5% from last month
-              </div>
-            </div>
-            <div class="stat-icon classes">
-              <i class="fas fa-chalkboard-teacher"></i>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Quick Actions -->
-      <div class="quick-actions">
-        <h2 class="section-title">
-          <i class="fas fa-bolt" style="color: #667eea; margin-right: 0.5rem;"></i>
-          Quick Actions
-        </h2>
-        <div class="actions-grid">
-          <a href="/admin/create-user" class="action-btn">
-            <i class="fas fa-user-plus"></i>
-            Create New User
-          </a>
-          <a href="/content-management" class="action-btn">
-            <i class="fas fa-edit"></i>
-            Manage Content
-          </a>
-          <a href="/send-notification" class="action-btn">
-            <i class="fas fa-bell"></i>
-            Send Notification
-          </a>
-          <a href="/admin/countdown" class="action-btn">
-            <i class="fas fa-clock"></i>
-            Countdown Settings
-          </a>
-          <a href="/admin/batch-management" class="action-btn">
-            <i class="fas fa-tags"></i>
-            Batch Management
-          </a>
-          <a href="/admin/status-management" class="action-btn">
-            <i class="fas fa-toggle-on"></i>
-            Status Management
-          </a>
-        </div>
-      </div>
-      
-      <!-- Recent Activity -->
-      <div class="recent-activity">
-        <h2 class="section-title">
-          <i class="fas fa-history" style="color: #667eea; margin-right: 0.5rem;"></i>
-          Recent Activity
-        </h2>
-        
-        <div class="activity-item">
-          <div class="activity-icon user">
-            <i class="fas fa-user-plus"></i>
-          </div>
-          <div class="activity-content">
-            <div class="activity-title">New user registered</div>
-            <div class="activity-time">2 minutes ago</div>
-          </div>
-        </div>
-        
-        <div class="activity-item">
-          <div class="activity-icon post">
-            <i class="fas fa-comment"></i>
-          </div>
-          <div class="activity-content">
-            <div class="activity-title">New forum post created</div>
-            <div class="activity-time">15 minutes ago</div>
-          </div>
-        </div>
-        
-        <div class="activity-item">
-          <div class="activity-icon resource">
-            <i class="fas fa-upload"></i>
-          </div>
-          <div class="activity-content">
-            <div class="activity-title">Resource uploaded</div>
-            <div class="activity-time">1 hour ago</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Notification Dropdown -->
-  <div id="notifDropdown" style="display:none; position:fixed; top:70px; right:20px; background:white; min-width:350px; max-width:90vw; box-shadow:0 10px 40px rgba(0,0,0,0.15); border-radius:16px; z-index:10001; padding:1.5rem; border:1px solid #e2e8f0;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; padding-bottom:1rem; border-bottom:1px solid #f7fafc;">
-      <h3 style="color:#1a202c; font-size:1.25rem; font-weight:600; margin:0;">
-        <i class="fas fa-bell" style="color:#667eea; margin-right:0.5rem;"></i>
-        Notifications
-      </h3>
-      <button onclick="toggleNotifications()" style="background:none; border:none; color:#718096; font-size:1.5rem; cursor:pointer; padding:0.25rem;">
-        <i class="fas fa-times"></i>
+        </li>
+        <li style="font-weight:600; color:#6a82fb; padding:0.4rem 1rem;">{{ username or 'Admin' }}</li>
+        <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+      </ul>
+      <button class="hamburger">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
       </button>
     </div>
+  </nav>
+  <main class="container main-content">
+    <!-- Admin Navigation -->
+    <section class="admin-section" style="margin-top:1rem; padding:1rem 1.2rem; background:#fff; border:1px solid #e5e7eb; border-radius:8px;">
+      <h3 style="margin:0 0 1rem 0; color:#6a82fb;">Quick Navigation</h3>
+      <div style="display:flex; flex-wrap:wrap; gap:0.5rem;">
+        <a href="#analytics" class="btn btn-secondary" style="font-size:0.9em; padding:0.5rem 1rem;">📊 Analytics</a>
+        <a href="#users" class="btn btn-secondary" style="font-size:0.9em; padding:0.5rem 1rem;">👥 Users</a>
+        <a href="#forum" class="btn btn-secondary" style="font-size:0.9em; padding:0.5rem 1rem;">📝 Content</a>
+        <a href="#resources" class="btn btn-secondary" style="font-size:0.9em; padding:0.5rem 1rem;">📚 Resources</a>
+        <a href="#notifications" class="btn btn-secondary" style="font-size:0.9em; padding:0.5rem 1rem;">🔔 Notifications</a>
+        <a href="#queries" class="btn btn-secondary" style="font-size:0.9em; padding:0.5rem 1rem;">❓ Queries</a>
+        <a href="#live-classes" class="btn btn-secondary" style="font-size:0.9em; padding:0.5rem 1rem;">🎥 Live Classes</a>
+        <a href="#sessions" class="btn btn-primary" style="font-size:0.9em; padding:0.5rem 1rem;">🔄 Sessions</a>
+      </div>
+    </section>
     
-    <div style="max-height:400px; overflow-y:auto;">
-      {% if user_notifications and user_notifications|length > 0 %}
-        {% for notification in user_notifications %}
-          {% if notification|length >= 7 %}
-            {% set id, message, created_at, status, notification_type, scheduled_time, item_type = notification %}
-            {% if item_type == 'personal_chat' %}
-              {% set sender_name = notification[7] if notification|length > 7 else 'User' %}
-              <div class="notification-item" style="padding:1rem; border-radius:12px; margin-bottom:0.75rem; background:#fef5e7; border-left:4px solid #f6ad55; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#fed7aa'" onmouseout="this.style.background='#fef5e7'">
-                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
-                  <span style="background:#f6ad55; color:white; padding:0.25rem 0.75rem; border-radius:20px; font-size:0.75rem; font-weight:600;">
-                    <i class="fas fa-comment"></i> Personal Chat
-                  </span>
-                  <span style="color:#f6ad55; font-weight:600;">@{{ sender_name }}</span>
-                </div>
-                <div style="color:#1a202c; font-weight:500; margin-bottom:0.25rem;">{{ message }}</div>
-                <div style="color:#718096; font-size:0.875rem;">{{ format_datetime_for_display(created_at) }}</div>
-              </div>
-            {% else %}
-              <div class="notification-item" style="padding:1rem; border-radius:12px; margin-bottom:0.75rem; background:#f0f9ff; border-left:4px solid #667eea; cursor:pointer; transition:all 0.2s ease;" onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='#f0f9ff'">
-                <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
-                  <span style="background:#667eea; color:white; padding:0.25rem 0.75rem; border-radius:20px; font-size:0.75rem; font-weight:600;">
-                    <i class="fas fa-bell"></i> Notification
-                  </span>
-                </div>
-                <div style="color:#1a202c; font-weight:500; margin-bottom:0.25rem;">{{ message }}</div>
-                <div style="color:#718096; font-size:0.875rem;">{{ format_datetime_for_display(created_at) }}</div>
-              </div>
-            {% endif %}
-          {% endif %}
-        {% endfor %}
-      {% else %}
-        <div style="text-align:center; padding:2rem; color:#718096;">
-          <i class="fas fa-bell-slash" style="font-size:3rem; margin-bottom:1rem; opacity:0.5;"></i>
-          <div>No new notifications</div>
+    <!-- Traffic & Active Users Tracker -->
+    <section class="admin-section" style="margin-top:1rem; padding:1rem 1.2rem; display:flex; gap:0.8rem; align-items:center; justify-content:flex-start; background:#fff; border:1px solid #e5e7eb;">
+      <div style="font-weight:700; color:#6a82fb;">Traffic</div>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+        <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+          <span style="color:#6b7280;">Active IPs (10m):</span>
+          <strong id="metricActiveIps">--</strong>
         </div>
-      {% endif %}
-    </div>
-  </div>
-  
-  <script>
-    // Toggle sidebar on mobile
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('open');
-    }
-    
-    // Toggle notifications
-    function toggleNotifications() {
-      const dropdown = document.getElementById('notifDropdown');
-      dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-    }
-    
-    // Close notifications when clicking outside
-    document.addEventListener('click', function(event) {
-      const dropdown = document.getElementById('notifDropdown');
-      const notifBtn = document.querySelector('.notification-btn');
+        <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+          <span style="color:#6b7280;">Active logins (10m):</span>
+          <strong id="metricActiveUsers">--</strong>
+        </div>
+        <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+          <span style="color:#6b7280;">Unique IPs (today):</span>
+          <strong id="metricIpsToday">--</strong>
+        </div>
+        <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+          <span style="color:#6b7280;">Unique IPs (all):</span>
+          <strong id="metricIpsAll">--</strong>
+        </div>
+      </div>
+    </section>
+    <section id="analytics" class="admin-section" aria-label="Analytics">
+      <h2>Analytics & Reports</h2>
+      <div class="admin-dashboard-cards" style="margin:0 0 2rem 0;">
+        <div class="admin-card"><div class="card-title">Total Users</div><div class="card-value">{{ total_users }}</div></div>
+        <div class="admin-card"><div class="card-title">Forum Posts</div><div class="card-value">{{ total_forum_posts }}</div></div>
+        <div class="admin-card"><div class="card-title">Resources</div><div class="card-value">{{ total_resources }}</div></div>
+        <div class="admin-card"><div class="card-title">Classes</div><div class="card-value">{{ total_classes }}</div></div>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:2rem; margin-bottom:2rem;">
+        <div style="flex:1; min-width:260px;">
+          <h3 style="margin-bottom:0.7rem;">Most Active Users (Forum)</h3>
+          <table style="width:100%; border-collapse:collapse;">
+            <thead><tr style="background:#f3f6fa;"><th style="padding:0.5rem 1rem; text-align:left;">Username</th><th style="padding:0.5rem 1rem; text-align:left;">Posts</th></tr></thead>
+            <tbody>
+              {% for username, count in most_active_users %}
+              <tr><td style="padding:0.5rem 1rem;">{{ username }}</td><td style="padding:0.5rem 1rem;">{{ count }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div style="flex:1; min-width:260px;">
+          <h3 style="margin-bottom:0.7rem;">Most Resources by Class</h3>
+          <table style="width:100%; border-collapse:collapse;">
+            <thead><tr style="background:#f3f6fa;"><th style="padding:0.5rem 1rem; text-align:left;">Class</th><th style="padding:0.5rem 1rem; text-align:left;">Resources</th></tr></thead>
+            <tbody>
+              {% for cid, count in most_resource_classes %}
+              <tr><td style="padding:0.5rem 1rem;">{% for id, name in all_classes %}{% if id == cid %}{{ name|title }}{% endif %}{% endfor %}</td><td style="padding:0.5rem 1rem;">{{ count }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div style="margin-bottom:1.5rem;">
+        <a href="/admin/download/users" class="btn btn-primary" style="margin-right:0.7rem;">Download Users CSV</a>
+        <a href="/admin/download/forum" class="btn btn-primary" style="margin-right:0.7rem;">Download Forum CSV</a>
+        <a href="/admin/download/resources" class="btn btn-primary">Download Resources CSV</a>
+      </div>
+    </section>
+    <section id="dashboard" class="admin-dashboard-cards" aria-label="Quick stats">
+      <div class="admin-card"><div class="card-title">Users</div><div class="card-value" id="adminUsersCount">--</div></div>
+      <div class="admin-card"><div class="card-title">Forum Posts</div><div class="card-value" id="adminForumCount">--</div></div>
+      <div class="admin-card"><div class="card-title">Classes</div><div class="card-value" id="adminClassesCount">--</div></div>
+      <div class="admin-card"><div class="card-title">Resources</div><div class="card-value" id="adminResourcesCount">--</div></div>
+      <div class="admin-card"><div class="card-title">Notifications</div><div class="card-value" id="adminNotifCount">--</div></div>
+    </section>
+    <section id="users" class="admin-section" aria-label="User management">
+      <h2>User Management</h2>
+      <p style="color: #666; margin-bottom: 1.5rem;">Create and manage user accounts with comprehensive tools and statistics.</p>
+      <a href="/admin/create-user" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">👥 User Management Dashboard</a>
+      <p style="color: #666; margin-bottom: 1rem;">Access the comprehensive user management interface with advanced search, filtering, and user statistics.</p>
       
-      if (!dropdown.contains(event.target) && !notifBtn.contains(event.target)) {
-        dropdown.style.display = 'none';
+      <!-- Quick User Stats -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Total Users</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ users|length }}</p>
+        </div>
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Paid Users</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ paid_users|default(0) }}</p>
+        </div>
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Admin Users</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ admin_users|default(0) }}</p>
+        </div>
+      </div>
+    </section>
+    <section id="forum" class="admin-section" aria-label="Forum moderation">
+      <h2>Content Management</h2>
+      <p style="color: #666; margin-bottom: 1.5rem;">Comprehensive management of forum topics, discussions, and content moderation.</p>
+      <a href="/content-management" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">📝 Content Management Dashboard</a>
+      <a href="/admin/home-editor" class="btn btn-secondary" style="margin-left:0.5rem; margin-bottom:1.2rem; display:inline-block;">🏠 Home Page Editor</a>
+      <p style="color: #666; margin-bottom: 1rem;">Access the new comprehensive content management interface with advanced filtering, analytics, and moderation tools.</p>
+      
+      <!-- Quick Overview -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Forum Topics</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ all_topics|length }}</p>
+        </div>
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Forum Messages</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ forum_messages|length }}</p>
+        </div>
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Active Classes</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ all_classes|length }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Countdown Page Management Section -->
+    <section id="countdown" class="admin-section" aria-label="Countdown page management">
+      <h2>🎯 Countdown Page Management</h2>
+      <p style="color: #666; margin-bottom: 1.5rem;">Customize your website launch countdown page and gate animation settings.</p>
+      <a href="/admin/countdown" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">⚙️ Manage Countdown</a>
+      <p style="color: #666; margin-bottom: 1rem;">Set launch date, customize messages, background colors, and enable/disable the gate opening animation.</p>
+      
+      <!-- Quick Countdown Stats -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Countdown Status</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;" id="countdownStatus">Loading...</p>
+        </div>
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Launch Date</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;" id="launchDate">Loading...</p>
+        </div>
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Gate Animation</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;" id="gateStatus">Loading...</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="resources" class="admin-section" aria-label="Resource management">
+      <h2>Resource Management</h2>
+      <a href="/upload-resource" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">📁 Resource Management</a>
+      <p style="color: #666; margin-bottom: 1rem;">Use Resource Management to upload individually or use the Bulk Upload tab for Excel-based uploads.</p>
+    </section>
+    <section id="notifications" class="admin-section" aria-label="Notifications">
+      <h2>Notifications & Announcements</h2>
+      <a href="/send-notification" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">+ Send Notification</a>
+      <!-- Notification history table removed; now on send notification page -->
+    </section>
+    <!-- Query Management Section -->
+    <section id="queries" class="admin-section" aria-label="Query management">
+      <h2>Query Management</h2>
+      <p style="color: #666; margin-bottom: 1.5rem;">View and respond to user queries, support requests, and feedback submissions.</p>
+      <a href="/query-management" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">📋 Query Management Dashboard</a>
+      <p style="color: #666; margin-bottom: 1rem;">Access the comprehensive query management interface to view, filter, and respond to user queries with advanced tools.</p>
+      
+      <!-- Quick Query Stats -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Total Queries</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ total_queries|default(0) }}</p>
+        </div>
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Pending Queries</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ pending_queries|default(0) }}</p>
+        </div>
+        <div style="background: #f8f9ff; padding: 1rem; border-radius: 8px; border: 1px solid #e0e7ff;">
+          <h4 style="margin: 0 0 0.5rem 0; color: #6a82fb;">Resolved Queries</h4>
+          <p style="margin: 0; font-size: 1.5rem; font-weight: 600; color: #232946;">{{ resolved_queries|default(0) }}</p>
+        </div>
+      </div>
+    </section>
+    <!-- Live Class Management Section -->
+    <section id="live-classes" class="admin-section" aria-label="Live class management">
+      <h2>Live Class Management</h2>
+      <a href="/live-class-management" class="btn btn-primary" style="margin-bottom:1.2rem; display:inline-block;">🎥 Manage Live Classes</a>
+      
+      <p style="color:#666; margin-bottom:2rem;">Create, schedule, and manage all live classes. Use the dashboard for real-time status monitoring and automatic class transitions.</p>
+      <!-- No table here, only link and description -->
+    </section>
+    
+    <!-- Session Management Section -->
+    <section id="sessions" class="admin-section" aria-label="Session management">
+      <h2>🔄 Active Sessions</h2>
+      <p style="color:#666; margin-bottom:2rem;">Monitor and manage active user sessions. Only one session per user is allowed.</p>
+      
+      <div style="margin-bottom: 1rem;">
+        <button onclick="refreshSessions()" class="btn btn-primary">🔄 Refresh Sessions</button>
+        <span id="sessionsCount" style="margin-left: 1rem; font-weight: 600; color: #6a82fb;">Loading...</span>
+      </div>
+      
+      <div id="sessionsTable" style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <thead>
+            <tr style="background: #6a82fb; color: #fff;">
+              <th style="padding: 12px; text-align: left; border: none;">User</th>
+              <th style="padding: 12px; text-align: left; border: none;">IP Address</th>
+              <th style="padding: 12px; text-align: left; border: none;">User Agent</th>
+              <th style="padding: 12px; text-align: left; border: none;">Created</th>
+              <th style="padding: 12px; text-align: left; border: none;">Last Activity</th>
+              <th style="padding: 12px; text-align: center; border: none;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="sessionsTableBody">
+            <tr>
+              <td colspan="6" style="padding: 20px; text-align: center; color: #666;">Loading sessions...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+  <script>
+    // Admin traffic metrics fetcher
+    async function refreshTrafficMetrics(){
+      try {
+        const res = await fetch('/api/admin/metrics/traffic');
+        const json = await res.json();
+        if(json && json.success){
+          const d = json.data || {};
+          document.getElementById('metricActiveIps').textContent = d.active_ips_now ?? '--';
+          document.getElementById('metricActiveUsers').textContent = d.active_logged_in_users ?? '--';
+          document.getElementById('metricIpsToday').textContent = d.unique_ips_today ?? '--';
+          document.getElementById('metricIpsAll').textContent = d.total_unique_ips ?? '--';
+        }
+      } catch(e){ console.error('Traffic metrics error', e); }
+    }
+    
+    // Session management functions
+    async function refreshSessions() {
+      try {
+        const res = await fetch('/api/admin/sessions');
+        const json = await res.json();
+        
+        if (json && json.success) {
+          const sessions = json.data || [];
+          displaySessions(sessions);
+          document.getElementById('sessionsCount').textContent = `${sessions.length} Active Sessions`;
+        } else {
+          console.error('Failed to fetch sessions:', json.error);
+          document.getElementById('sessionsTableBody').innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center; color: #ff4444;">Error loading sessions</td></tr>';
+        }
+      } catch (e) {
+        console.error('Sessions fetch error:', e);
+        document.getElementById('sessionsTableBody').innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center; color: #ff4444;">Network error</td></tr>';
       }
+    }
+    
+    function displaySessions(sessions) {
+      const tbody = document.getElementById('sessionsTableBody');
+      
+      if (sessions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="padding: 20px; text-align: center; color: #666;">No active sessions</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = sessions.map(session => `
+        <tr style="border-bottom: 1px solid #e5e7eb;">
+          <td style="padding: 12px; border: none;">
+            <strong>${session.username}</strong><br>
+            <small style="color: #666;">ID: ${session.user_id}</small>
+          </td>
+          <td style="padding: 12px; border: none;">
+            <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-size: 0.9em;">${session.ip_address}</code>
+          </td>
+          <td style="padding: 12px; border: none;">
+            <div style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${session.user_agent}">
+              ${session.user_agent || 'Unknown'}
+            </div>
+          </td>
+          <td style="padding: 12px; border: none;">
+            <small>${formatDateTime(session.created_at)}</small>
+          </td>
+          <td style="padding: 12px; border: none;">
+            <small>${formatDateTime(session.last_activity)}</small>
+          </td>
+          <td style="padding: 12px; border: none; text-align: center;">
+            <button onclick="forceLogout(${session.user_id}, '${session.username}')" 
+                    class="btn" 
+                    style="background: #ef4444; color: #fff; padding: 6px 12px; font-size: 0.9em; border: none; border-radius: 4px; cursor: pointer;">
+              🚪 Force Logout
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+    
+    async function forceLogout(userId, username) {
+      if (!confirm(`Are you sure you want to force logout ${username}?`)) {
+        return;
+      }
+      
+      try {
+        const res = await fetch(`/api/admin/sessions/force-logout/${userId}`, {
+          method: 'POST'
+        });
+        const json = await res.json();
+        
+        if (json && json.success) {
+          alert(`Successfully force logged out ${username}`);
+          refreshSessions(); // Refresh the table
+        } else {
+          alert(`Failed to force logout: ${json.error || 'Unknown error'}`);
+        }
+      } catch (e) {
+        console.error('Force logout error:', e);
+        alert('Network error while force logging out user');
+      }
+    }
+    
+    function formatDateTime(dateTimeStr) {
+      if (!dateTimeStr) return 'Unknown';
+      try {
+        const dt = new Date(dateTimeStr);
+        return dt.toLocaleString();
+      } catch {
+        return dateTimeStr;
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function(){
+      refreshTrafficMetrics();
+      setInterval(refreshTrafficMetrics, 30000); // refresh every 30s
+      
+      // Load sessions on page load
+      refreshSessions();
+      
+      // Load countdown stats
+      loadCountdownStats();
     });
     
-    // Load traffic metrics
-    async function loadTrafficMetrics() {
+    // Load countdown statistics
+    async function loadCountdownStats() {
       try {
-        const response = await fetch('/api/admin/metrics/traffic');
+        const response = await fetch('/admin/countdown/settings');
         if (response.ok) {
-          const data = await response.json();
-          document.getElementById('metricActiveIps').textContent = data.active_ips_10m || '0';
-          document.getElementById('metricActiveUsers').textContent = data.active_logins_10m || '0';
-          document.getElementById('metricIpsToday').textContent = data.unique_ips_today || '0';
-          document.getElementById('metricIpsAll').textContent = data.unique_ips_all || '0';
+          const settings = await response.json();
+          
+          // Update countdown status
+          const statusElement = document.getElementById('countdownStatus');
+          if (statusElement) {
+            const status = settings.is_active ? 'Active' : 'Inactive';
+            statusElement.textContent = status;
+            statusElement.style.color = settings.is_active ? '#059669' : '#dc2626';
+          }
+          
+          // Update launch date
+          const dateElement = document.getElementById('launchDate');
+          if (dateElement && settings.launch_date) {
+            const date = new Date(settings.launch_date);
+            dateElement.textContent = date.toLocaleDateString();
+          }
+          
+          // Update gate animation status
+          const gateElement = document.getElementById('gateStatus');
+          if (gateElement) {
+            const gateStatus = settings.gate_animation_enabled ? 'Enabled' : 'Disabled';
+            gateElement.textContent = gateStatus;
+            gateElement.style.color = settings.gate_animation_enabled ? '#059669' : '#dc2626';
+          }
         }
       } catch (error) {
-        console.error('Error loading traffic metrics:', error);
+        console.error('Error loading countdown stats:', error);
       }
     }
     
-    // Load metrics on page load and refresh every 30 seconds
+    // Force light mode for admin panel - aggressive prevention
+    function forceLightMode() {
+      // Remove any dark mode class
+      document.body.classList.remove('dark-mode');
+      // Clear any dark mode preference
+      localStorage.removeItem('darkMode');
+      localStorage.removeItem('adminDarkMode');
+      // Ensure light mode is set
+      document.body.classList.add('light-mode');
+    }
+    
+    // Run immediately
+    forceLightMode();
+    
+    // Run on DOM content loaded
     document.addEventListener('DOMContentLoaded', function() {
-      loadTrafficMetrics();
-      setInterval(loadTrafficMetrics, 30000);
+      forceLightMode();
     });
     
-    // Show/hide sections
-    function showSection(sectionId) {
-      // Update active nav item
-      document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-      });
-      event.target.classList.add('active');
-      
-      // Here you can add logic to show/hide different sections
-      // For now, we'll just update the page title
-      const titles = {
-        'dashboard': 'Admin Dashboard',
-        'analytics': 'Analytics & Reports'
-      };
-      
-      document.querySelector('.page-title').textContent = titles[sectionId] || 'Admin Dashboard';
-    }
+    // Run periodically to prevent dark mode from being applied
+    setInterval(forceLightMode, 1000);
     
-    // Close sidebar when clicking outside on mobile
-    document.addEventListener('click', function(event) {
-      const sidebar = document.getElementById('sidebar');
-      const menuBtn = document.querySelector('.mobile-menu-btn');
-      
-      if (window.innerWidth <= 1024 && 
-          !sidebar.contains(event.target) && 
-          !menuBtn.contains(event.target) && 
-          sidebar.classList.contains('open')) {
-        sidebar.classList.remove('open');
+    // Override any dark mode toggle attempts
+    document.addEventListener('click', function(e) {
+      if (e.target.id === 'darkModeToggle' || e.target.closest('#darkModeToggle')) {
+        e.preventDefault();
+        e.stopPropagation();
+        forceLightMode();
+        return false;
       }
     });
+    
+    // Mega dropdown functionality (copied from homepage)
+
+    
+    // Notification bell dropdown (copied from homepage)
+    const notifBell = document.getElementById('notifBell');
+    const notifDropdown = document.getElementById('notifDropdown');
+    if (notifBell && notifDropdown) {
+      // Handled globally in script.js
+    }
+    
+    // Hamburger menu (copied from homepage)
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    if (hamburger && navLinks) {
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('active');
+      });
+    }
+    
+ 
   </script>
 </body>
-</html>
-<script src="/attached_assets/theme.js"></script>
+</html> 

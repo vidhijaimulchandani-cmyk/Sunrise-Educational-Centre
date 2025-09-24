@@ -6,25 +6,100 @@
   <title>Content Management - Admin</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="floating-navbar.css">
-  <link rel="stylesheet" href="admin-modern.css">
-    <link rel="stylesheet" href="uiverse-components.css">
+  <style>
+    .content-container { max-width: 1400px; margin: 2rem auto; padding: 0 1rem; }
+    .header-section { text-align: center; margin-bottom: 3rem; }
+    .header-section h1 { color: #232946; font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .header-section p { color: #666; font-size: 1.1rem; }
+    
+    .tab-container { display: flex; background: #f8f9ff; border-radius: 12px; padding: 0.5rem; margin-bottom: 2rem; }
+    .tab-btn { flex: 1; padding: 1rem; background: none; border: none; cursor: pointer; font-weight: 500; color: #666; border-radius: 8px; transition: all 0.3s; }
+    .tab-btn.active { background: #6a82fb; color: #fff; }
+    .tab-btn:hover:not(.active) { background: rgba(106,130,251,0.1); }
+    
+    .tab-content { display: none; background: #fff; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 24px rgba(100,100,255,0.08); }
+    .tab-content.active { display: block; }
+    
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .section-title { font-size: 1.5rem; font-weight: 600; color: #232946; margin: 0; }
+    .section-actions { display: flex; gap: 1rem; }
+    
+    .btn-primary { background: linear-gradient(135deg, #6a82fb 0%, #5a6fd8 100%); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(106,130,251,0.3); }
+    .btn-secondary { background: linear-gradient(135deg, #fc5c7d 0%, #e74c3c 100%); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-secondary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(252,92,125,0.3); }
+    .btn-success { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-success:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(72,187,120,0.3); }
+    .btn-warning { background: linear-gradient(135deg, #ffa726 0%, #ff9800 100%); color: #fff; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .btn-warning:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,167,38,0.3); }
+    
+    .content-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .content-card { background: #fff; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(100,100,255,0.08); border: 1px solid #e0e7ff; transition: all 0.2s; }
+    .content-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(100,100,255,0.12); }
+    
+    .status-badge { display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 500; margin-bottom: 1rem; }
+    .status-active { background: #d4edda; color: #155724; }
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-deleted { background: #f8d7da; color: #721c24; }
+    .status-pinned { background: #d1ecf1; color: #0c5460; }
+    
+    .search-bar { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center; }
+    .search-input { flex: 1; padding: 0.8rem 1rem; border: 1px solid #e0e7ff; border-radius: 8px; font-size: 1rem; }
+    .search-input:focus { outline: none; border-color: #6a82fb; box-shadow: 0 0 0 3px rgba(106,130,251,0.1); }
+    
+    .table-container { overflow-x: auto; }
+    .content-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    .content-table th { background: #f8f9ff; padding: 1rem; text-align: left; font-weight: 600; color: #232946; border-bottom: 2px solid #e0e7ff; }
+    .content-table td { padding: 1rem; border-bottom: 1px solid #e0e7ff; }
+    .content-table tr:hover { background: #f8f9ff; }
+    
+    .action-buttons { display: flex; gap: 0.5rem; }
+    .btn-small { padding: 0.4rem 0.8rem; font-size: 0.85rem; }
+    
+    .back-link { display: inline-block; margin-bottom: 2rem; color: #6a82fb; text-decoration: none; font-weight: 500; }
+    .back-link:hover { text-decoration: underline; }
+    
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+    .stat-card { background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%); border-radius: 12px; padding: 1.5rem; text-align: center; border: 1px solid #e0e7ff; }
+    .stat-value { font-size: 2rem; font-weight: 700; color: #6a82fb; margin-bottom: 0.5rem; }
+    .stat-label { color: #666; font-size: 0.9rem; }
+    
+    .filter-controls { display: flex; gap: 1rem; margin-bottom: 1.5rem; align-items: center; flex-wrap: wrap; }
+    .filter-select { padding: 0.8rem 1rem; border: 1px solid #e0e7ff; border-radius: 8px; font-size: 1rem; background: #fff; }
+    
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+    .modal-content { background-color: #fff; margin: 5% auto; padding: 2rem; border-radius: 12px; width: 90%; max-width: 600px; box-shadow: 0 4px 24px rgba(100,100,255,0.15); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .modal-title { font-size: 1.5rem; font-weight: 600; color: #232946; margin: 0; }
+    .close { color: #aaa; font-size: 2rem; font-weight: bold; cursor: pointer; }
+    .close:hover { color: #232946; }
+    
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #232946; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem 1rem; border: 1px solid #e0e7ff; border-radius: 8px; font-size: 1rem; transition: all 0.2s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #6a82fb; box-shadow: 0 0 0 3px rgba(106,130,251,0.1); }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    
+    @media (max-width: 768px) {
+      .tab-container { flex-direction: column; }
+      .section-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+      .search-bar { flex-direction: column; }
+      .filter-controls { flex-direction: column; }
+      .action-buttons { flex-direction: column; }
+    }
+  </style>
 </head>
 <body>
-  <!-- Floating Navbar -->
-  <nav class="floating-navbar">
-    <ul class="nav-links">
-      <li><a href="/">Home</a></li>
-      <li class="dropdown">
-        <a href="#" class="dropdown-toggle">Admin</a>
-        <ul class="dropdown-menu">
-          <li><a href="/admin">Admin Panel</a></li>
-          <li><a href="/content-management">Content Management</a></li>
-          <li><a href="/live-class-management">Live Class Management</a></li>
-        </ul>
-      </li>
-      <li><a href="/logout" class="btn-primary">Logout</a></li>
-    </ul>
+  <nav class="navbar glassmorphic">
+    <div class="container nav-content">
+      <div class="nav-logo">
+        <img src="attached_assets/image_1750584670920.png" alt="Logo">
+      </div>
+      <ul class="nav-links">
+        <li><a href="/admin">Admin Panel</a></li>
+        <li><a href="/logout" class="btn btn-primary">Logout</a></li>
+      </ul>
+    </div>
   </nav>
 
   <main class="container main-content">
@@ -594,34 +669,5 @@
       });
     }
   </script>
-
-    <!-- Search Modal -->
-    <div id="searchModal" class="modal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
-        <div class="modal-content black-glass" style="margin: 10% auto; padding: 2rem; border-radius: 20px; width: 90%; max-width: 600px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h2 style="color: white; margin: 0;">🔍 Search</h2>
-                <button onclick="closeSearch()" style="background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;">✕</button>
-            </div>
-            <input type="text" id="searchInput" placeholder="Search courses, resources, or topics..." style="width: 100%; padding: 15px; border: none; border-radius: 10px; background: rgba(255,255,255,0.1); color: white; font-size: 1rem; margin-bottom: 1rem;">
-            <div id="searchResults" style="max-height: 300px; overflow-y: auto;"></div>
-        </div>
-    </div>
-
-    <!-- Notification Panel -->
-    <div id="notification-panel" class="notification-panel black-glass" style="display: none; position: fixed; top: 100px; right: 20px; width: 350px; max-height: 500px; overflow-y: auto; z-index: 999; border-radius: 16px; padding: 1rem; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.2);">
-            <h3 style="margin: 0; font-size: 1.2rem; color: white;">🔔 Notifications</h3>
-            <button onclick="toggleNotifications()" style="background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; padding: 0.2rem;">✕</button>
-        </div>
-        <div class="notification-list">
-            <div class="notification-item" style="padding: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 0.5rem;">
-                <div style="font-weight: 600; margin-bottom: 0.3rem; color: white;">📚 Latest Updates</div>
-                <div style="font-size: 0.9rem; opacity: 0.8; color: rgba(255,255,255,0.8);">Check out new features and content</div>
-            </div>
-        </div>
-    </div>
-
-    <script src="navbar-functions.js"></script>
 </body>
-<script src="/attached_assets/theme.js"></script>
 </html> 

@@ -3,666 +3,648 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>User Management - Sunrise Education Centre</title>
+  <title>User Management - Admin</title>
   <link rel="icon" type="image/png" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="admin-modern.css">
-  <link rel="stylesheet" href="uiverse-components.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+  <link rel="stylesheet" href="style.css" />
   <style>
-    /* Additional styles for user management */
-    .user-management-container {
-      max-width: 1600px;
-      margin: 0 auto;
-      padding: 2rem;
+    body {
+      background: #f4f6fb;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      min-height: 100vh;
     }
-    
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #667eea;
-      text-decoration: none;
-      font-weight: 500;
-      margin-bottom: 2rem;
-      padding: 0.75rem 1rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      transition: all 0.2s ease;
+    .dark-mode-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+    .dark-mode-toggle { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+    .admin-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
     }
-    
-    .back-link:hover {
-      background: #667eea;
-      color: white;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(102,126,234,0.3);
-    }
-    
     .page-header {
       text-align: center;
-      margin-bottom: 3rem;
+      margin-bottom: 2rem;
     }
-    
     .page-header h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #1a202c;
+      color: #232946;
+      font-size: 2rem;
       margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
     }
-    
-    .page-header h1 i {
-      color: #667eea;
-    }
-    
     .page-header p {
+      color: #666;
       font-size: 1.1rem;
-      color: #718096;
     }
-    
-    .stats-overview {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 3rem;
-    }
-    
-    .overview-card {
-      background: white;
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      border: 1px solid #e2e8f0;
-      text-align: center;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .overview-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-    }
-    
-    .overview-card.users::before { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-    .overview-card.paid::before { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); }
-    .overview-card.unpaid::before { background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%); }
-    .overview-card.admissions::before { background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%); }
-    
-    .overview-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-    
-    .overview-icon {
-      width: 60px;
-      height: 60px;
-      margin: 0 auto 1rem;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      color: white;
-    }
-    
-    .overview-icon.users { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-    .overview-icon.paid { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); }
-    .overview-icon.unpaid { background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%); }
-    .overview-icon.admissions { background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%); }
-    
-    .overview-value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #1a202c;
-      margin-bottom: 0.5rem;
-    }
-    
-    .overview-label {
-      color: #718096;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-size: 0.875rem;
-    }
-    
-    .main-content-grid {
+    .content-grid {
       display: grid;
       grid-template-columns: 1fr 2fr;
       gap: 2rem;
       margin-bottom: 2rem;
     }
-    
-    .create-user-card {
-      background: white;
+    .create-user-section {
+      background: #fff;
       border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(100,100,255,0.07);
       padding: 2rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      border: 1px solid #e2e8f0;
       height: fit-content;
     }
-    
-    .users-list-card {
-      background: white;
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      border: 1px solid #e2e8f0;
-    }
-    
-    .card-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #1a202c;
+    .create-user-section h2 {
       margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #232946;
     }
-    
-    .card-title i {
-      color: #667eea;
+    .create-user-section label {
+      font-weight: 600;
+      color: #232946;
+      display: block;
+      margin-bottom: 0.5rem;
     }
-    
-    .search-filters {
+    .create-user-section input[type="text"],
+    .create-user-section input[type="password"],
+    .create-user-section select {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 1.2rem;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      background: #f9faff;
+      color: #232946;
+      box-sizing: border-box;
+    }
+    .create-user-section input:focus,
+    .create-user-section select:focus {
+      outline: none;
+      border-color: #6a82fb;
+      box-shadow: 0 0 0 3px rgba(106,130,251,0.1);
+    }
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #6a82fb 0%, #5a6fd8 100%);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(106,130,251,0.3);
+    }
+    .btn-secondary {
+      background: #eee;
+      color: #232946;
+    }
+    .btn-secondary:hover {
+      background: #e0e7ff;
+    }
+    .btn-danger {
+      background: linear-gradient(135deg, #fc5c7d 0%, #e74c3c 100%);
+      color: #fff;
+    }
+    .btn-danger:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(252,92,125,0.3);
+    }
+    .btn-warning {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: #fff;
+    }
+    .btn-warning:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(245,158,11,0.3);
+    }
+    .users-section {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(100,100,255,0.07);
+      padding: 2rem;
+    }
+    .users-section h2 {
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #232946;
+    }
+    .search-bar {
       display: flex;
       gap: 1rem;
       margin-bottom: 1.5rem;
-      flex-wrap: wrap;
+      align-items: center;
     }
-    
-    .search-input, .filter-select {
-      padding: 0.75rem 1rem;
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 0.875rem;
-      transition: all 0.2s ease;
-      background: white;
-    }
-    
     .search-input {
       flex: 1;
-      min-width: 200px;
+      padding: 0.8rem 1rem;
+      border: 1px solid #e0e7ff;
+      border-radius: 8px;
+      font-size: 1rem;
     }
-    
-    .filter-select {
-      min-width: 150px;
-    }
-    
-    .search-input:focus, .filter-select:focus {
+    .search-input:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+      border-color: #6a82fb;
+      box-shadow: 0 0 0 3px rgba(106,130,251,0.1);
     }
-    
-    .users-table-container {
+    .table-container {
       overflow-x: auto;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
     }
-    
     .users-table {
       width: 100%;
       border-collapse: collapse;
-      background: white;
+      margin-top: 1rem;
     }
-    
     .users-table th {
-      background: #f8fafc;
+      background: #f8f9ff;
       padding: 1rem;
       text-align: left;
       font-weight: 600;
-      color: #374151;
-      border-bottom: 1px solid #e2e8f0;
-      font-size: 0.875rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      color: #232946;
+      border-bottom: 2px solid #e0e7ff;
     }
-    
     .users-table td {
       padding: 1rem;
-      border-bottom: 1px solid #f1f5f9;
-      color: #4a5568;
+      border-bottom: 1px solid #e0e7ff;
     }
-    
     .users-table tr:hover {
-      background: #f8fafc;
+      background: #f8f9ff;
     }
-    
-    .users-table tr:last-child td {
-      border-bottom: none;
-    }
-    
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-weight: 600;
-      margin-right: 0.75rem;
-    }
-    
-    .user-info {
-      display: flex;
-      align-items: center;
-    }
-    
-    .user-details h4 {
-      font-weight: 600;
-      color: #1a202c;
-      margin: 0;
-    }
-    
-    .user-details p {
-      color: #718096;
-      font-size: 0.875rem;
-      margin: 0;
-    }
-    
     .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-      padding: 0.25rem 0.75rem;
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
       border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      font-size: 0.85rem;
+      font-weight: 500;
     }
-    
     .status-paid {
-      background: rgba(72,187,120,0.1);
-      color: #38a169;
-      border: 1px solid rgba(72,187,120,0.2);
+      background: #d4edda;
+      color: #155724;
     }
-    
     .status-unpaid {
-      background: rgba(237,137,54,0.1);
-      color: #dd6b20;
-      border: 1px solid rgba(237,137,54,0.2);
+      background: #f8d7da;
+      color: #721c24;
     }
-    
-    .status-admin {
-      background: rgba(102,126,234,0.1);
-      color: #667eea;
-      border: 1px solid rgba(102,126,234,0.2);
-    }
-    
     .action-buttons {
       display: flex;
       gap: 0.5rem;
     }
-    
-    .btn-sm {
-      padding: 0.5rem 0.75rem;
-      font-size: 0.75rem;
-      border-radius: 6px;
+    .btn-small {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
     }
-    
-    .contact-info {
-      font-size: 0.875rem;
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
     }
-    
-    .contact-info div {
-      margin-bottom: 0.25rem;
-    }
-    
-    .contact-info i {
-      width: 16px;
-      color: #718096;
-      margin-right: 0.5rem;
-    }
-    
-    .last-seen {
-      font-size: 0.875rem;
-      color: #718096;
-    }
-    
-    .traffic-metrics {
-      background: white;
+    .stat-card {
+      background: linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%);
       border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid #e0e7ff;
+    }
+    .stat-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #6a82fb;
+      margin-bottom: 0.5rem;
+    }
+    .stat-label {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: #6a82fb;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    
+    /* Tab Styles */
+    .tab-container {
+      display: flex;
+      background: #f8f9ff;
+      border-radius: 12px;
+      padding: 0.5rem;
+      margin-bottom: 2rem;
+    }
+    .tab-btn {
+      flex: 1;
       padding: 1rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      border: 1px solid #e2e8f0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      color: #666;
+      border-radius: 8px;
+      transition: all 0.3s;
+    }
+    .tab-btn.active {
+      background: #6a82fb;
+      color: #fff;
+    }
+    .tab-btn:hover:not(.active) {
+      background: rgba(106,130,251,0.1);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* Admissions Section */
+    .admissions-section {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(100,100,255,0.07);
+      padding: 2rem;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 1.5rem;
     }
-    
-    .metrics-row {
+    .section-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #232946;
+    }
+    .section-actions {
       display: flex;
       gap: 1rem;
-      flex-wrap: wrap;
     }
     
-    .metric-item {
-      background: #f8fafc;
-      padding: 0.5rem 0.75rem;
-      border-radius: 8px;
-      font-size: 0.875rem;
+    /* Status Badges */
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+    .status-approved {
+      background: #d4edda;
+      color: #155724;
+    }
+    .status-rejected {
+      background: #f8d7da;
+      color: #721c24;
     }
     
-    .metric-label {
-      color: #718096;
-      margin-right: 0.5rem;
+    /* Admissions Table Specific Styles */
+    .admissions-table {
+      min-width: 1200px;
     }
-    
-    .metric-value {
-      font-weight: 600;
-      color: #1a202c;
+    .admissions-table th,
+    .admissions-table td {
+      padding: 0.5rem;
+      font-size: 0.9rem;
     }
-    
-    /* Responsive Design */
-    @media (max-width: 1200px) {
-      .main-content-grid {
-        grid-template-columns: 1fr;
-      }
+    .admissions-table th {
+      white-space: nowrap;
+    }
+    .admissions-table td {
+      max-width: 120px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .admissions-table td:nth-child(2) { /* ID */
+      width: 50px;
+    }
+    .admissions-table td:nth-child(3) { /* Student Name */
+      min-width: 120px;
+      white-space: normal;
+    }
+    .admissions-table td:nth-child(14) { /* Photo */
+      width: 60px;
+      text-align: center;
+    }
+    .admissions-table td:nth-child(17) { /* Actions */
+      width: 150px;
+      white-space: nowrap;
     }
     
     @media (max-width: 768px) {
-      .user-management-container {
-        padding: 1rem;
+      .content-grid {
+        grid-template-columns: 1fr;
       }
-      
-      .stats-overview {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      }
-      
-      .search-filters {
+      .search-bar {
         flex-direction: column;
       }
-      
-      .search-input, .filter-select {
-        width: 100%;
-      }
-      
       .action-buttons {
         flex-direction: column;
       }
-      
-      .users-table th,
-      .users-table td {
-        padding: 0.75rem 0.5rem;
-        font-size: 0.875rem;
+      .section-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
       }
-      
-      .metrics-row {
+      .tab-container {
         flex-direction: column;
       }
+      .admissions-table {
+        min-width: 800px;
+      }
     }
-    
-    /* Loading states */
-    .loading-skeleton {
-      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-      background-size: 200% 100%;
-      animation: loading 1.5s infinite;
-    }
-    
-    @keyframes loading {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-    
-    /* Success/Error messages */
-    .message {
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .message.success {
-      background: rgba(72,187,120,0.1);
-      color: #2f855a;
-      border: 1px solid rgba(72,187,120,0.2);
-    }
-    
-    .message.error {
-      background: rgba(245,101,101,0.1);
-      color: #c53030;
-      border: 1px solid rgba(245,101,101,0.2);
-    }
+
   </style>
 </head>
 <body>
-  <div class="user-management-container">
-    <!-- Back Link -->
-    <a href="/admin" class="back-link">
-      <i class="fas fa-arrow-left"></i>
-      Back to Admin Panel
-    </a>
+  <!-- Dark Mode Toggle Button -->
+  <div class="dark-mode-toggle">
+    <button id="darkModeToggle" class="btn btn-primary" style="min-width:160px;">Toggle Dark Mode</button>
+  </div>
+
+  <div class="admin-container">
+    <a href="/admin" class="back-link">&larr; Back to Admin Panel</a>
     
-    <!-- Page Header -->
     <div class="page-header">
-      <h1>
-        <i class="fas fa-users-cog"></i>
-        User & Admissions Management
-      </h1>
-      <p>Create new users, manage existing accounts, and handle student admissions efficiently</p>
+      <h1>👥 User & Admissions Management</h1>
+      <p>Create new users, manage existing accounts, and handle student admissions</p>
     </div>
     
     <!-- Statistics Overview -->
-    <div class="stats-overview">
-      <div class="overview-card users">
-        <div class="overview-icon users">
-          <i class="fas fa-users"></i>
-        </div>
-        <div class="overview-value">{{ users|length }}</div>
-        <div class="overview-label">Total Users</div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value">{{ users|length }}</div>
+        <div class="stat-label">Total Users</div>
       </div>
-      
-      <div class="overview-card paid">
-        <div class="overview-icon paid">
-          <i class="fas fa-credit-card"></i>
-        </div>
-        <div class="overview-value">{{ paid_users|default(0) }}</div>
-        <div class="overview-label">Paid Users</div>
+      <div class="stat-card">
+        <div class="stat-value">{{ paid_users|default(0) }}</div>
+        <div class="stat-label">Paid Users</div>
       </div>
-      
-      <div class="overview-card unpaid">
-        <div class="overview-icon unpaid">
-          <i class="fas fa-clock"></i>
-        </div>
-        <div class="overview-value">{{ unpaid_users|default(0) }}</div>
-        <div class="overview-label">Unpaid Users</div>
+      <div class="stat-card">
+        <div class="stat-value">{{ admissions|default([])|length }}</div>
+        <div class="stat-label">Admissions</div>
       </div>
-      
-      <div class="overview-card admissions">
-        <div class="overview-icon admissions">
-          <i class="fas fa-graduation-cap"></i>
-        </div>
-        <div class="overview-value">{{ admissions|default([])|length }}</div>
-        <div class="overview-label">Admissions</div>
+      <div class="stat-card">
+        <div class="stat-value">{{ pending_admissions|default(0) }}</div>
+        <div class="stat-label">Pending</div>
       </div>
     </div>
     
-    <!-- Traffic Metrics -->
-    <div class="traffic-metrics">
-      <div class="metrics-row">
-        <div class="metric-item">
-          <span class="metric-label">Active Logins (10m):</span>
-          <span class="metric-value" id="activeLogins">--</span>
-        </div>
-        <div class="metric-item">
-          <span class="metric-label">Active IPs (10m):</span>
-          <span class="metric-value" id="activeIps">--</span>
-        </div>
-        <div class="metric-item">
-          <span class="metric-label">Unique IPs Today:</span>
-          <span class="metric-value" id="ipsToday">--</span>
-        </div>
-        <div class="metric-item">
-          <span class="metric-label">Total Unique IPs:</span>
-          <span class="metric-value" id="ipsTotal">--</span>
-        </div>
-      </div>
+    <!-- Tab Navigation -->
+    <div class="tab-container">
+      <button class="tab-btn active" onclick="showTab('users')">User Management</button>
+      <button class="tab-btn" onclick="showTab('admissions')">Admissions</button>
+      <button class="tab-btn" onclick="showTab('blocked')">Blocked Users</button>
+      <button class="tab-btn" onclick="showTab('ip')">IP Tracker</button>
     </div>
     
-    <!-- Main Content Grid -->
-    <div class="main-content-grid">
-      <!-- Create User Section -->
-      <div class="create-user-card">
-        <h2 class="card-title">
-          <i class="fas fa-user-plus"></i>
-          Create New User
-        </h2>
-        
-        <form method="POST" action="/admin/create-user" id="createUserForm">
-          <div class="form-group">
-            <label for="username" class="form-label">
-              <i class="fas fa-user"></i>
-              Username
-            </label>
-            <input type="text" id="username" name="username" class="form-input" placeholder="Enter username" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="password" class="form-label">
-              <i class="fas fa-lock"></i>
-              Password
-            </label>
-            <input type="password" id="password" name="password" class="form-input" placeholder="Enter password" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="class_id" class="form-label">
-              <i class="fas fa-graduation-cap"></i>
-              Class/Role
-            </label>
-            <select id="class_id" name="class_id" class="form-select" required>
-              <option value="">Select a class/role</option>
+    <!-- Users Tab -->
+    <div id="users-tab" class="tab-content active">
+      <div class="content-grid">
+        <!-- Create User Section -->
+        <div class="create-user-section">
+          <h2>➕ Create New User</h2>
+          <form method="POST" action="/admin/create-user">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Enter username" required />
+            
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter password" required />
+            
+            <label for="class_id">Class/Role</label>
+            <select id="class_id" name="class_id" required>
               {% for id, name in all_classes %}
                 <option value="{{ id }}">{{ name|title }}</option>
               {% endfor %}
             </select>
-          </div>
-          
-          <div class="form-group">
-            <label for="paid" class="form-label">
-              <i class="fas fa-credit-card"></i>
-              Payment Status
-            </label>
-            <select id="paid" name="paid" class="form-select" required>
-              <option value="">Select payment status</option>
+            
+            <label for="paid">Paid Status</label>
+            <select id="paid" name="paid" required>
               <option value="paid">Paid</option>
               <option value="not paid">Not Paid</option>
             </select>
+            
+            <div style="margin-top: 1.5rem;">
+              <button type="submit" class="btn btn-primary">Create User</button>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Current Users Section -->
+        <div class="users-section">
+          <h2>👥 Current Users</h2>
+          <!-- Quick Traffic Metrics (helps reviewing activity for admissions decisions) -->
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap; margin:0 0 1rem 0;">
+            <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+              <span style="color:#6b7280;">Active logins (10m):</span>
+              <strong id="umActiveLogins">--</strong>
+            </div>
+            <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+              <span style="color:#6b7280;">Active IPs (10m):</span>
+              <strong id="umActiveIps">--</strong>
+            </div>
           </div>
           
-          <button type="submit" class="btn btn-primary" style="width: 100%;">
-            <i class="fas fa-plus"></i>
-            Create User
-          </button>
-        </form>
+          <!-- User Statistics -->
+          <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+            <div class="stat-card" style="background: #e3f2fd; padding: 1rem; border-radius: 8px; text-align: center;">
+              <div style="font-size: 2rem; font-weight: bold; color: #1976d2;">{{ users|length }}</div>
+              <div style="color: #666;">Total Users</div>
+            </div>
+            <div class="stat-card" style="background: #e8f5e8; padding: 1rem; border-radius: 8px; text-align: center;">
+              <div style="font-size: 2rem; font-weight: bold; color: #388e3c;">{{ paid_users }}</div>
+              <div style="color: #666;">Paid Users</div>
+            </div>
+            <div class="stat-card" style="background: #fff3e0; padding: 1rem; border-radius: 8px; text-align: center;">
+              <div style="font-size: 2rem; font-weight: bold; color: #f57c00;">{{ unpaid_users }}</div>
+              <div style="color: #666;">Unpaid Users</div>
+            </div>
+            <div class="stat-card" style="background: #fce4ec; padding: 1rem; border-radius: 8px; text-align: center;">
+              <div style="font-size: 2rem; font-weight: bold; color: #c2185b;">{{ admin_users }}</div>
+              <div style="color: #666;">Admin/Teachers</div>
+            </div>
+          </div>
+          
+          <div class="search-bar">
+            <input type="text" id="userSearch" placeholder="Search by username..." class="search-input" onkeyup="filterUsers()">
+            <select id="roleFilter" class="search-input" style="width: auto;" onchange="filterUsers()">
+              <option value="">All Roles</option>
+              {% for id, name in all_classes %}
+                <option value="{{ name|lower }}">{{ name|title }}</option>
+              {% endfor %}
+            </select>
+            <select id="statusFilter" class="search-input" style="width: auto;" onchange="filterUsers()">
+              <option value="">All Status</option>
+              <option value="paid">Paid</option>
+              <option value="unpaid">Unpaid</option>
+            </select>
+          </div>
+          
+          <div class="table-container">
+            <table class="users-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Username</th>
+                  <th>Role</th>
+                  <th>Last Online</th>
+                  <th>Paid Status</th>
+                  <th>Contact Info</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                {% for id, username, name, paid, mobile_no, email_address in users %}
+                <tr data-username="{{ username }}" data-role="{{ name|lower }}" data-paid="{{ paid }}" data-userid="{{ id }}">
+                  <td>{{ id }}</td>
+                  <td><strong>{{ username }}</strong></td>
+                  <td>{{ name|title }}</td>
+                  <td id="lastSeen-{{ id }}" style="white-space:nowrap; color:#6b7280;">—</td>
+                  <td>
+                    <span class="status-badge {% if paid == 'paid' %}status-paid{% else %}status-unpaid{% endif %}">
+                      {{ "Paid" if paid == 'paid' else "Unpaid" }}
+                    </span>
+                  </td>
+                  <td>
+                    {% if mobile_no %}
+                      <div style="font-size: 0.9rem;">
+                        <div>📱 {{ mobile_no }}</div>
+                        {% if email_address %}
+                          <div>📧 {{ email_address }}</div>
+                        {% endif %}
+                      </div>
+                    {% else %}
+                      <span style="color: #999;">No contact info</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div class="action-buttons">
+                      <a href="/user-info/{{ id }}" class="btn btn-primary btn-small">Edit</a>
+                      <button class="btn btn-warning btn-small" onclick="blockUser({{ id }}, '{{ username }}')">Block</button>
+                      <button class="btn btn-danger btn-small" onclick="deleteUser({{ id }})">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      
-      <!-- Users List Section -->
-      <div class="users-list-card">
-        <h2 class="card-title">
-          <i class="fas fa-list"></i>
-          Current Users
-        </h2>
+    </div>
+    
+    <!-- Admissions Tab -->
+    <div id="admissions-tab" class="tab-content">
+      <div class="admissions-section">
+        <div class="section-header">
+          <h2>📝 Student Admissions</h2>
+          <div class="section-actions">
+            <button class="btn btn-success" onclick="exportAdmissions()">Export Admissions</button>
+            <button class="btn btn-primary" onclick="bulkApprove()">Bulk Approve</button>
+          </div>
+        </div>
+        <!-- Quick Traffic Metrics for context -->
+        <div style="display:flex; gap:0.8rem; flex-wrap:wrap; margin:0 0 1rem 0;">
+          <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+            <span style="color:#6b7280;">Active logins (10m):</span>
+            <strong id="amActiveLogins">--</strong>
+          </div>
+          <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+            <span style="color:#6b7280;">Active IPs (10m):</span>
+            <strong id="amActiveIps">--</strong>
+          </div>
+        </div>
         
-        <!-- Search and Filters -->
-        <div class="search-filters">
-          <input type="text" id="userSearch" class="search-input" placeholder="Search by username..." onkeyup="filterUsers()">
-          <select id="roleFilter" class="filter-select" onchange="filterUsers()">
-            <option value="">All Roles</option>
+        <div class="search-bar">
+          <input type="text" id="admissionSearch" placeholder="Search by student name..." class="search-input" onkeyup="filterAdmissions()">
+          <select id="admissionStatusFilter" class="search-input" style="width: auto;" onchange="filterAdmissions()">
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+          </select>
+          <select id="admissionClassFilter" class="search-input" style="width: auto;" onchange="filterAdmissions()">
+            <option value="">All Classes</option>
             {% for id, name in all_classes %}
               <option value="{{ name|lower }}">{{ name|title }}</option>
             {% endfor %}
           </select>
-          <select id="statusFilter" class="filter-select" onchange="filterUsers()">
-            <option value="">All Status</option>
-            <option value="paid">Paid</option>
-            <option value="unpaid">Unpaid</option>
-          </select>
         </div>
         
-        <!-- Users Table -->
-        <div class="users-table-container">
-          <table class="users-table">
+        <div class="table-container">
+          <table class="users-table admissions-table">
             <thead>
               <tr>
-                <th>User</th>
-                <th>Role</th>
+                <th><input type="checkbox" id="selectAllAdmissions" onchange="toggleSelectAllAdmissions()"></th>
+                <th>ID</th>
+                <th>Student Name</th>
+                <th>DOB</th>
+                <th>Class</th>
+                <th>School</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Maths Marks (/80)</th>
+                <th>Maths Rating (/10)</th>
+                <th>Last %</th>
+                <th>Parent Name</th>
+                <th>Parent Phone</th>
+                <th>Photo</th>
+                <th>Submit IP</th>
+                <th>Admission Username</th>
+                <th>Admission Password</th>
                 <th>Status</th>
-                <th>Contact</th>
-                <th>Last Seen</th>
+                <th>Applied Date</th>
                 <th>Actions</th>
               </tr>
             </thead>
-            <tbody id="usersTableBody">
-              {% for id, username, name, paid, mobile_no, email_address in users %}
-              <tr data-username="{{ username|lower }}" data-role="{{ name|lower }}" data-paid="{{ paid }}" data-userid="{{ id }}">
+            <tbody id="admissionsTableBody">
+              {% for admission in admissions %}
+              <tr data-student-name="{{ admission[1]|lower }}" data-parent-name="{{ admission[10]|lower }}" data-class="{{ admission[3]|lower }}" data-status="{{ admission[13]|lower }}">
+                <td><input type="checkbox" class="admission-checkbox" value="{{ admission[0] }}"></td>
+                <td>{{ admission[0] }}</td>
+                <td><strong>{{ admission[1] }}</strong></td>
+                <td>{{ admission[2] }}</td>
+                <td>{{ admission[3] }}</td>
+                <td>{{ admission[4] }}</td>
+                <td>{{ admission[5] }}</td>
+                <td>{{ admission[6] }}</td>
+                <td>{{ admission[7] }}</td>
+                <td>{{ admission[8] }}</td>
+                <td>{{ admission[9] }}</td>
+                <td>{{ admission[10] }}</td>
+                <td>{{ admission[11] }}</td>
                 <td>
-                  <div class="user-info">
-                    <div class="user-avatar">
-                      {{ username[0]|upper }}
-                    </div>
-                    <div class="user-details">
-                      <h4>{{ username }}</h4>
-                      <p>ID: {{ id }}</p>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <span class="status-badge {% if name|lower in ['admin', 'teacher'] %}status-admin{% else %}status-secondary{% endif %}">
-                    <i class="fas fa-{% if name|lower == 'admin' %}crown{% elif name|lower == 'teacher' %}chalkboard-teacher{% else %}user{% endif %}"></i>
-                    {{ name|title }}
-                  </span>
-                </td>
-                <td>
-                  <span class="status-badge {% if paid == 'paid' %}status-paid{% else %}status-unpaid{% endif %}">
-                    <i class="fas fa-{% if paid == 'paid' %}check-circle{% else %}clock{% endif %}"></i>
-                    {{ "Paid" if paid == 'paid' else "Unpaid" }}
-                  </span>
-                </td>
-                <td>
-                  {% if mobile_no or email_address %}
-                    <div class="contact-info">
-                      {% if mobile_no %}
-                        <div><i class="fas fa-phone"></i>{{ mobile_no }}</div>
-                      {% endif %}
-                      {% if email_address %}
-                        <div><i class="fas fa-envelope"></i>{{ email_address }}</div>
-                      {% endif %}
-                    </div>
+                  {% if admission[12] %}
+                    <img src="/uploads/admission_photos/{{ admission[12] }}" alt="Photo" style="width:48px; height:48px; object-fit:cover; border-radius:8px;">
                   {% else %}
-                    <span style="color: #a0aec0; font-style: italic;">No contact info</span>
+                    <span style="color: #999;">No photo</span>
                   {% endif %}
                 </td>
+                <td>{{ admission[15] or '-' }}</td>
+                <td>{{ (admission_access_map.get(admission[0]) or ['', ''])[0] }}</td>
+                <td>{{ (admission_access_map.get(admission[0]) or ['', ''])[1] }}</td>
                 <td>
-                  <div class="last-seen" id="lastSeen-{{ id }}">
-                    <i class="fas fa-circle" style="color: #a0aec0; font-size: 0.5rem;"></i>
-                    Loading...
-                  </div>
+                  <span class="status-badge 
+                    {% if admission[13] == 'pending' %}status-pending
+                    {% elif admission[13] == 'approved' %}status-approved
+                    {% else %}status-rejected{% endif %}">
+                    {{ admission[13]|title }}
+                  </span>
                 </td>
+                <td>{{ admission[14][:19].replace('T', ' ') if admission[14] else 'N/A' }}</td>
                 <td>
                   <div class="action-buttons">
-                    <a href="/user-info/{{ id }}" class="btn btn-primary btn-sm" title="Edit User">
-                      <i class="fas fa-edit"></i>
-                    </a>
-                    <button class="btn btn-warning btn-sm" onclick="blockUser({{ id }}, '{{ username }}')" title="Block User">
-                      <i class="fas fa-ban"></i>
-                    </button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteUser({{ id }})" title="Delete User">
-                      <i class="fas fa-trash"></i>
-                    </button>
+                    <button class="btn btn-success btn-small" onclick="approveAdmission({{ admission[0] }})">Approve</button>
+                    <button class="btn btn-danger btn-small" onclick="rejectAdmission({{ admission[0] }})">Reject</button>
+                    <button class="btn btn-primary btn-small" onclick="viewAdmission({{ admission[0] }})">View</button>
                   </div>
                 </td>
               </tr>
@@ -670,191 +652,880 @@
             </tbody>
           </table>
         </div>
+        
+        <!-- Approved Admissions Section -->
+        <div style="margin-top: 3rem;">
+          <h3 style="color: #232946; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span style="background: #d1fae5; color: #065f46; padding: 0.3rem 0.8rem; border-radius: 6px; font-size: 0.9rem; font-weight: 600;">✅</span>
+            Approved Admissions
+          </h3>
+          <div class="table-container">
+            <table class="users-table admissions-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Student Name</th>
+                  <th>DOB</th>
+                  <th>Class</th>
+                  <th>School</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+                  <th>Maths Marks (/80)</th>
+                  <th>Maths Rating (/10)</th>
+                  <th>Last %</th>
+                  <th>Parent Name</th>
+                  <th>Parent Phone</th>
+                  <th>Photo</th>
+                  <th>Approved By</th>
+                  <th>Actions</th>
+                  <th>Approved At</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for adm in approved_admissions %}
+                <tr>
+                  <td>{{ adm[0] }}</td>
+                  <td><strong>{{ adm[1] }}</strong></td>
+                  <td>{{ adm[2] }}</td>
+                  <td>{{ adm[3] }}</td>
+                  <td>{{ adm[4] }}</td>
+                  <td>{{ adm[5] }}</td>
+                  <td>{{ adm[6] }}</td>
+                  <td>{{ adm[7] }}</td>
+                  <td>{{ adm[8] }}</td>
+                  <td>{{ adm[9] }}</td>
+                  <td>{{ adm[10] }}</td>
+                  <td>{{ adm[11] }}</td>
+                  <td>
+                    {% if adm[12] %}
+                      <img src="/uploads/admission_photos/{{ adm[12] }}" alt="Photo" style="width:48px; height:48px; object-fit:cover; border-radius:8px;">
+                    {% else %}
+                      <span style="color: #999;">No photo</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ adm[13] }}</td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="btn btn-primary btn-small" onclick="restoreApprovedAdmission({{ adm[0] }})">Restore to Pending</button>
+                      <button class="btn btn-danger btn-small" onclick="deleteApprovedAdmission({{ adm[0] }})">Delete</button>
+                    </div>
+                  </td>
+                  <td>{{ adm[14][:19].replace('T', ' ') if adm[14] else 'N/A' }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- Disapproved Admissions Section -->
+        <div style="margin-top: 3rem;">
+          <h3 style="color: #232946; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span style="background: #fee2e2; color: #991b1b; padding: 0.3rem 0.8rem; border-radius: 6px; font-size: 0.9rem; font-weight: 600;">❌</span>
+            Disapproved Admissions
+          </h3>
+          <div class="table-container">
+            <table class="users-table admissions-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Student Name</th>
+                  <th>DOB</th>
+                  <th>Class</th>
+                  <th>School</th>
+                  <th>Phone</th>
+                  <th>Email</th>
+                  <th>Maths Marks (/80)</th>
+                  <th>Maths Rating (/10)</th>
+                  <th>Last %</th>
+                  <th>Parent Name</th>
+                  <th>Parent Phone</th>
+                  <th>Photo</th>
+                  <th>Disapproved By</th>
+                  <th>Actions</th>
+                  <th>Disapproved At</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for adm in disapproved_admissions %}
+                <tr>
+                  <td>{{ adm[0] }}</td>
+                  <td><strong>{{ adm[1] }}</strong></td>
+                  <td>{{ adm[2] }}</td>
+                  <td>{{ adm[3] }}</td>
+                  <td>{{ adm[4] }}</td>
+                  <td>{{ adm[5] }}</td>
+                  <td>{{ adm[6] }}</td>
+                  <td>{{ adm[7] }}</td>
+                  <td>{{ adm[8] }}</td>
+                  <td>{{ adm[9] }}</td>
+                  <td>{{ adm[10] }}</td>
+                  <td>{{ adm[11] }}</td>
+                  <td>
+                    {% if adm[12] %}
+                      <img src="/uploads/admission_photos/{{ adm[12] }}" alt="Photo" style="width:48px; height:48px; object-fit:cover; border-radius:8px;">
+                    {% else %}
+                      <span style="color: #999;">No photo</span>
+                    {% endif %}
+                  </td>
+                  <td>{{ adm[13] }}</td>
+                  <td>
+                    <div class="action-buttons">
+                      <button class="btn btn-primary btn-small" onclick="restoreDisapprovedAdmission({{ adm[0] }})">Restore to Pending</button>
+                      <button class="btn btn-danger btn-small" onclick="deleteDisapprovedAdmission({{ adm[0] }})">Delete</button>
+                    </div>
+                  </td>
+                  <td>{{ adm[15][:19].replace('T', ' ') if adm[15] else 'N/A' }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Blocked Users Tab -->
+    <div id="blocked-tab" class="tab-content">
+      <div class="users-section">
+        <div class="section-header">
+          <h2>🚫 Blocked Users Management</h2>
+          <div class="section-actions">
+            <button class="btn btn-primary" onclick="refreshBlockedUsers()">Refresh</button>
+            <button class="btn btn-success" onclick="unblockSelectedUsers()">Unblock Selected</button>
+          </div>
+        </div>
+        
+        <!-- Blocked Users Statistics -->
+        <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+          <div class="stat-card" style="background: #fff3cd; padding: 1rem; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold; color: #f57c00;">{{ blocked_users|default([])|length }}</div>
+            <div style="color: #666;">Total Blocked</div>
+          </div>
+          <div class="stat-card" style="background: #ffe6cc; padding: 1rem; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold; color: #e67e22;">{{ warning_users|default([])|length }}</div>
+            <div style="color: #666;">Warning Period</div>
+          </div>
+          <div class="stat-card" style="background: #fce4ec; padding: 1rem; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold; color: #c2185b;">{{ banned_users|default([])|length }}</div>
+            <div style="color: #666;">Banned (24h+)</div>
+          </div>
+        </div>
+        
+        <!-- Blocked Users Table -->
+        <div class="table-container">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAllBlocked" onchange="toggleSelectAllBlocked()"></th>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Block Reason</th>
+                <th>Block Status</th>
+                <th>Blocked At</th>
+                <th>Time Remaining</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="blockedUsersTableBody">
+              {% for blocked_user in blocked_users %}
+              <tr data-userid="{{ blocked_user[0] }}" data-status="{{ blocked_user[6] }}">
+                <td><input type="checkbox" class="blocked-checkbox" value="{{ blocked_user[0] }}"></td>
+                <td>{{ blocked_user[0] }}</td>
+                <td><strong>{{ blocked_user[1] }}</strong></td>
+                <td>{{ blocked_user[2] }}</td>
+                <td>{{ blocked_user[3] }}</td>
+                <td>
+                  <span class="status-badge 
+                    {% if blocked_user[6] == 'warning' %}status-pending
+                    {% else %}status-rejected{% endif %}">
+                    {{ "Warning Period" if blocked_user[6] == 'warning' else "Banned" }}
+                  </span>
+                </td>
+                <td>{{ blocked_user[4] }}</td>
+                <td id="timeRemaining-{{ blocked_user[0] }}">
+                  {% if blocked_user[6] == 'warning' %}
+                    <span style="color: #f57c00;">Calculating...</span>
+                  {% else %}
+                    <span style="color: #c2185b;">Permanently Banned</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="btn btn-success btn-small" onclick="unblockUser({{ blocked_user[0] }})">Unblock</button>
+                    <button class="btn btn-primary btn-small" onclick="viewBlockDetails({{ blocked_user[0] }})">Details</button>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Block User Section -->
+        <div style="margin-top: 3rem; background: #fff; border-radius: 16px; box-shadow: 0 2px 8px rgba(100,100,255,0.07); padding: 2rem;">
+          <h3 style="color: #232946; margin-bottom: 1.5rem;">🔒 Block New User</h3>
+          <form id="blockUserForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <label for="blockUsername">Username to Block</label>
+              <input type="text" id="blockUsername" placeholder="Enter username" required style="width: 100%; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; box-sizing: border-box;">
+            </div>
+            <div>
+              <label for="blockReason">Block Reason</label>
+              <select id="blockReason" required style="width: 100%; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; box-sizing: border-box;">
+                <option value="">Select reason</option>
+                <option value="Inappropriate behavior">Inappropriate behavior</option>
+                <option value="Violation of rules">Violation of rules</option>
+                <option value="Spam/Abuse">Spam/Abuse</option>
+                <option value="Security concern">Security concern</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <label for="customBlockReason">Custom Reason (Optional)</label>
+              <textarea id="customBlockReason" placeholder="Provide additional details..." rows="3" style="width: 100%; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; box-sizing: border-box; resize: vertical;"></textarea>
+            </div>
+            <div style="grid-column: 1 / -1;">
+              <button type="submit" class="btn btn-danger">Block User</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- IP Tracker Tab -->
+    <div id="ip-tab" class="tab-content">
+      <div class="users-section">
+        <div class="section-header" style="margin-bottom:1rem;">
+          <h2>🌐 IP Tracker</h2>
+          <div class="section-actions">
+            <button class="btn btn-primary" onclick="refreshIpTracker()">Refresh</button>
+          </div>
+        </div>
+        <!-- Summary -->
+        <div style="display:flex; gap:0.8rem; flex-wrap:wrap; margin:0 0 1rem 0;">
+          <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+            <span style="color:#6b7280;">Active logins (10m):</span>
+            <strong id="ipActiveLogins">--</strong>
+          </div>
+          <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+            <span style="color:#6b7280;">Active IPs (10m):</span>
+            <strong id="ipActiveIps">--</strong>
+          </div>
+          <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+            <span style="color:#6b7280;">Unique IPs (today):</span>
+            <strong id="ipUniqueToday">--</strong>
+          </div>
+          <div style="background:#f3f6fa; padding:0.5rem 0.8rem; border-radius:10px;">
+            <span style="color:#6b7280;">Unique IPs (all):</span>
+            <strong id="ipUniqueAll">--</strong>
+          </div>
+        </div>
+        
+        <!-- Active Logged-in Users -->
+        <h3 style="margin-top:0.5rem; color:#232946;">Active Logged-in Users (last 10m)</h3>
+        <div class="table-container">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>IP</th>
+                <th>Last Seen</th>
+              </tr>
+            </thead>
+            <tbody id="activeUsersTbody"></tbody>
+          </table>
+        </div>
+        
+        <!-- Recent IP Logs -->
+        <h3 style="margin-top:2rem; color:#232946;">Recent IP Logs</h3>
+        <div class="table-container">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>IP</th>
+                <th>Username</th>
+                <th>Path</th>
+                <th>User-Agent</th>
+              </tr>
+            </thead>
+            <tbody id="ipLogsTbody"></tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
-  
+
   <script>
-    // Load traffic metrics
-    async function loadTrafficMetrics() {
-      try {
-        const response = await fetch('/api/admin/metrics/traffic');
-        if (response.ok) {
-          const data = await response.json();
-          document.getElementById('activeLogins').textContent = data.active_logins_10m || '0';
-          document.getElementById('activeIps').textContent = data.active_ips_10m || '0';
-          document.getElementById('ipsToday').textContent = data.unique_ips_today || '0';
-          document.getElementById('ipsTotal').textContent = data.unique_ips_all || '0';
-        }
-      } catch (error) {
-        console.error('Error loading traffic metrics:', error);
+    // Tab switching
+    function showTab(tabName) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      
+      // Show selected tab
+      document.getElementById(tabName + '-tab').classList.add('active');
+      event.target.classList.add('active');
+      // When opening IP tab, refresh data
+      if (tabName === 'ip') {
+        refreshIpTracker();
       }
     }
     
-    // Filter users function
+    // User Management Functions
     function filterUsers() {
       const searchTerm = document.getElementById('userSearch').value.toLowerCase();
       const roleFilter = document.getElementById('roleFilter').value.toLowerCase();
-      const statusFilter = document.getElementById('statusFilter').value.toLowerCase();
-      
+      const statusFilter = document.getElementById('statusFilter').value;
       const rows = document.querySelectorAll('#usersTableBody tr');
       
       rows.forEach(row => {
-        const username = row.dataset.username;
+        const username = row.dataset.username.toLowerCase();
         const role = row.dataset.role;
         const paid = row.dataset.paid;
+        let shouldShow = true;
         
-        const matchesSearch = username.includes(searchTerm);
-        const matchesRole = !roleFilter || role === roleFilter;
-        const matchesStatus = !statusFilter || 
-          (statusFilter === 'paid' && paid === 'paid') ||
-          (statusFilter === 'unpaid' && paid !== 'paid');
+        // Search filter
+        if (searchTerm && !username.includes(searchTerm)) {
+          shouldShow = false;
+        }
         
-        if (matchesSearch && matchesRole && matchesStatus) {
-          row.style.display = '';
-        } else {
-          row.style.display = 'none';
+        // Role filter
+        if (roleFilter && role !== roleFilter) {
+          shouldShow = false;
+        }
+        
+        // Status filter
+        if (statusFilter === 'paid' && paid !== 'paid') {
+          shouldShow = false;
+        } else if (statusFilter === 'unpaid' && paid !== 'not paid') {
+          shouldShow = false;
+        }
+        
+        row.style.display = shouldShow ? 'table-row' : 'none';
+      });
+    }
+    
+    // Traffic metrics and IP tracker
+    async function fetchTrafficSummary(){
+      try {
+        const res = await fetch('/api/admin/metrics/traffic');
+        const json = await res.json();
+        if(json && json.success){
+          const d = json.data || {};
+          // Users section
+          const umLogins = document.getElementById('umActiveLogins');
+          const umIps = document.getElementById('umActiveIps');
+          if (umLogins) umLogins.textContent = d.active_logged_in_users ?? '--';
+          if (umIps) umIps.textContent = d.active_ips_now ?? '--';
+          // Admissions section
+          const amLogins = document.getElementById('amActiveLogins');
+          const amIps = document.getElementById('amActiveIps');
+          if (amLogins) amLogins.textContent = d.active_logged_in_users ?? '--';
+          if (amIps) amIps.textContent = d.active_ips_now ?? '--';
+          // IP tab summary
+          const ipLogins = document.getElementById('ipActiveLogins');
+          const ipIps = document.getElementById('ipActiveIps');
+          const ipToday = document.getElementById('ipUniqueToday');
+          const ipAll = document.getElementById('ipUniqueAll');
+          if (ipLogins) ipLogins.textContent = d.active_logged_in_users ?? '--';
+          if (ipIps) ipIps.textContent = d.active_ips_now ?? '--';
+          if (ipToday) ipToday.textContent = d.unique_ips_today ?? '--';
+          if (ipAll) ipAll.textContent = d.total_unique_ips ?? '--';
+        }
+      } catch(e){ console.error('Traffic summary error', e); }
+    }
+    async function fetchActiveUsers(){
+      try {
+        const res = await fetch('/api/admin/metrics/traffic/active');
+        const json = await res.json();
+        if(json && json.success){
+          const tbody = document.getElementById('activeUsersTbody');
+          if (!tbody) return;
+          tbody.innerHTML = '';
+          (json.data || []).forEach(r => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${r.user_id ?? ''}</td><td><strong>${r.username || ''}</strong></td><td>${r.ip || ''}</td><td>${r.last_seen || ''}</td>`;
+            tbody.appendChild(tr);
+          });
+        }
+      } catch(e){ console.error('Active users fetch error', e); }
+    }
+    async function fetchIpLogs(){
+      try {
+        const res = await fetch('/api/admin/metrics/traffic/logs?limit=300');
+        const json = await res.json();
+        if(json && json.success){
+          const tbody = document.getElementById('ipLogsTbody');
+          if (!tbody) return;
+          tbody.innerHTML = '';
+          (json.data || []).forEach(r => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${r.visited_at || ''}</td><td>${r.ip || ''}</td><td>${r.username || ''}</td><td>${r.path || ''}</td><td style="max-width:480px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${r.user_agent || ''}</td>`;
+            tbody.appendChild(tr);
+          });
+        }
+      } catch(e){ console.error('IP logs fetch error', e); }
+    }
+    function refreshIpTracker(){
+      fetchTrafficSummary();
+      fetchActiveUsers();
+      fetchIpLogs();
+    }
+
+    // Last online column
+    function timeAgo(ts){
+      if(!ts) return '—';
+      // ts expected in '%Y-%m-%d %H:%M:%S'
+      const parsed = new Date(ts.replace(' ', 'T'));
+      if(isNaN(parsed)) return ts;
+      const diffMs = Date.now() - parsed.getTime();
+      const min = Math.floor(diffMs/60000);
+      if(min < 10) return 'Online';
+      if(min < 60) return `${min} min ago`;
+      const hr = Math.floor(min/60);
+      if(hr < 24) return `${hr} hr ago`;
+      const day = Math.floor(hr/24);
+      return `${day} d ago`;
+    }
+    async function refreshLastOnline(){
+      const rows = Array.from(document.querySelectorAll('#usersTableBody tr'));
+      if(rows.length === 0) return;
+      const ids = rows.map(r => r.getAttribute('data-userid')).filter(Boolean);
+      try {
+        const res = await fetch(`/api/admin/metrics/traffic/last_seen?user_ids=${encodeURIComponent(ids.join(','))}`);
+        const json = await res.json();
+        if(json && json.success){
+          const map = json.data || {};
+          ids.forEach(id => {
+            const cell = document.getElementById(`lastSeen-${id}`);
+            if(!cell) return;
+            const ts = map[id] || null;
+            cell.textContent = timeAgo(ts);
+            cell.style.color = ts && timeAgo(ts)==='Online' ? '#10b981' : '#6b7280';
+          });
+        }
+      } catch(e){ console.error('Last online fetch error', e); }
+    }
+    
+    function deleteUser(userId) {
+      if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+        fetch(`/admin/delete-user/${userId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error deleting user: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error deleting user: ' + error.message);
+        });
+      }
+    }
+    
+    // Admissions Management Functions
+    function filterAdmissions() {
+      const searchTerm = document.getElementById('admissionSearch').value.toLowerCase();
+      const statusFilter = document.getElementById('admissionStatusFilter').value.toLowerCase();
+      const classFilter = document.getElementById('admissionClassFilter').value.toLowerCase();
+      const rows = document.querySelectorAll('#admissionsTableBody tr');
+      
+      rows.forEach(row => {
+        const studentName = row.dataset.studentName;
+        const parentName = row.dataset.parentName;
+        const className = row.dataset.class;
+        const status = row.dataset.status;
+        let shouldShow = true;
+        
+        // Search filter
+        if (searchTerm && !studentName.includes(searchTerm) && !parentName.includes(searchTerm)) {
+          shouldShow = false;
+        }
+        
+        // Status filter
+        if (statusFilter && status !== statusFilter) {
+          shouldShow = false;
+        }
+        
+        // Class filter
+        if (classFilter && className !== classFilter) {
+          shouldShow = false;
+        }
+        
+        row.style.display = shouldShow ? 'table-row' : 'none';
+      });
+    }
+    
+    function toggleSelectAllAdmissions() {
+      const selectAll = document.getElementById('selectAllAdmissions');
+      const checkboxes = document.querySelectorAll('.admission-checkbox');
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+      });
+    }
+    
+    function approveAdmission(admissionId) {
+      if (confirm('Are you sure you want to approve this admission?')) {
+        fetch(`/admin/admissions/approve/${admissionId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error approving admission: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error approving admission: ' + error.message);
+        });
+      }
+    }
+    
+    function rejectAdmission(admissionId) {
+      if (confirm('Are you sure you want to reject this admission?')) {
+        fetch(`/admin/admissions/disapprove/${admissionId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error rejecting admission: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error rejecting admission: ' + error.message);
+        });
+      }
+    }
+    
+    function viewAdmission(admissionId) {
+      // Implementation for viewing admission details
+      alert('View admission details functionality will be implemented soon.');
+    }
+    
+    function bulkApprove() {
+      const selectedAdmissions = document.querySelectorAll('.admission-checkbox:checked');
+      if (selectedAdmissions.length === 0) {
+        alert('Please select admissions to approve.');
+        return;
+      }
+      
+      if (confirm(`Are you sure you want to approve ${selectedAdmissions.length} selected admissions?`)) {
+        // Implementation for bulk approval
+        alert('Bulk approval functionality will be implemented soon.');
+      }
+    }
+    
+    function exportAdmissions() {
+      // Implementation for exporting admissions
+      alert('Export admissions functionality will be implemented soon.');
+    }
+    
+    function restoreApprovedAdmission(admissionId) {
+      if (confirm('Are you sure you want to restore this approved admission to pending?')) {
+        fetch(`/admin/admissions/restore-approved/${admissionId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error restoring admission: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error restoring admission: ' + error.message);
+        });
+      }
+    }
+    
+    function restoreDisapprovedAdmission(admissionId) {
+      if (confirm('Are you sure you want to restore this disapproved admission to pending?')) {
+        fetch(`/admin/admissions/restore-disapproved/${admissionId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error restoring admission: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error restoring admission: ' + error.message);
+        });
+      }
+    }
+    
+    function deleteApprovedAdmission(admissionId) {
+      if (confirm('Are you sure you want to delete this approved admission permanently?')) {
+        fetch(`/admin/admissions/delete-approved/${admissionId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error deleting admission: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error deleting admission: ' + error.message);
+        });
+      }
+    }
+    
+    function deleteDisapprovedAdmission(admissionId) {
+      if (confirm('Are you sure you want to delete this disapproved admission permanently?')) {
+        fetch(`/admin/admissions/delete-disapproved/${admissionId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert('Error deleting admission: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error deleting admission: ' + error.message);
+        });
+      }
+    }
+    
+    // Blocked Users Management Functions
+    function blockUser(userId, username) {
+      const reason = prompt(`Enter reason for blocking ${username}:`);
+      if (!reason) return;
+      
+      if (confirm(`Are you sure you want to block ${username}? This will put them in a 24-hour warning period.`)) {
+        fetch('/admin/block-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            reason: reason
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert(`User ${username} has been blocked successfully.`);
+            location.reload();
+          } else {
+            alert('Error blocking user: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error blocking user: ' + error.message);
+        });
+      }
+    }
+    
+    function unblockUser(userId) {
+      if (confirm('Are you sure you want to unblock this user?')) {
+        fetch('/admin/unblock-user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user_id: userId
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('User has been unblocked successfully.');
+            location.reload();
+          } else {
+            alert('Error unblocking user: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error unblocking user: ' + error.message);
+        });
+      }
+    }
+    
+    function unblockSelectedUsers() {
+      const selectedUsers = document.querySelectorAll('.blocked-checkbox:checked');
+      if (selectedUsers.length === 0) {
+        alert('Please select users to unblock.');
+        return;
+      }
+      
+      if (confirm(`Are you sure you want to unblock ${selectedUsers.length} selected users?`)) {
+        const userIds = Array.from(selectedUsers).map(cb => cb.value);
+        
+        fetch('/admin/unblock-users-bulk', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            user_ids: userIds
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert(`${selectedUsers.length} users have been unblocked successfully.`);
+            location.reload();
+          } else {
+            alert('Error unblocking users: ' + data.message);
+          }
+        })
+        .catch(error => {
+          alert('Error unblocking users: ' + error.message);
+        });
+      }
+    }
+    
+    function toggleSelectAllBlocked() {
+      const selectAll = document.getElementById('selectAllBlocked');
+      const checkboxes = document.querySelectorAll('.blocked-checkbox');
+      checkboxes.forEach(checkbox => {
+        checkbox.checked = selectAll.checked;
+      });
+    }
+    
+    function refreshBlockedUsers() {
+      location.reload();
+    }
+    
+    function viewBlockDetails(userId) {
+      // Implementation for viewing block details
+      alert('Block details functionality will be implemented soon.');
+    }
+    
+    // Block User Form Handler
+    document.addEventListener('DOMContentLoaded', function() {
+      const blockUserForm = document.getElementById('blockUserForm');
+      if (blockUserForm) {
+        blockUserForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const username = document.getElementById('blockUsername').value;
+          const reason = document.getElementById('blockReason').value;
+          const customReason = document.getElementById('customBlockReason').value;
+          
+          if (!username || !reason) {
+            alert('Please fill in all required fields.');
+            return;
+          }
+          
+          const finalReason = customReason ? `${reason}: ${customReason}` : reason;
+          
+          if (confirm(`Are you sure you want to block user "${username}"?`)) {
+            fetch('/admin/block-user-by-username', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                username: username,
+                reason: finalReason
+              })
+            })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                alert(`User ${username} has been blocked successfully.`);
+                blockUserForm.reset();
+                location.reload();
+              } else {
+                alert('Error blocking user: ' + data.message);
+              }
+            })
+            .catch(error => {
+              alert('Error blocking user: ' + error.message);
+            });
+          }
+        });
+      }
+    });
+    
+    // Time remaining calculation for warning period
+    function updateTimeRemaining() {
+      const warningRows = document.querySelectorAll('[data-status="warning"]');
+      warningRows.forEach(row => {
+        const userId = row.getAttribute('data-userid');
+        const blockedAt = row.querySelector('td:nth-child(7)').textContent;
+        const timeRemainingCell = document.getElementById(`timeRemaining-${userId}`);
+        
+        if (timeRemainingCell && blockedAt) {
+          try {
+            const blockedTime = new Date(blockedAt);
+            const now = new Date();
+            const timeDiff = blockedTime.getTime() + (24 * 60 * 60 * 1000) - now.getTime();
+            
+            if (timeDiff > 0) {
+              const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+              const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+              timeRemainingCell.innerHTML = `<span style="color: #f57c00;">${hours}h ${minutes}m remaining</span>`;
+            } else {
+              timeRemainingCell.innerHTML = '<span style="color: #c2185b;">Time expired - Banned</span>';
+              // Auto-refresh to update status
+              setTimeout(() => location.reload(), 5000);
+            }
+          } catch (e) {
+            timeRemainingCell.innerHTML = '<span style="color: #999;">Invalid date</span>';
+          }
         }
       });
     }
     
-    // Block user function
-    async function blockUser(userId, username) {
-      if (!confirm(`Are you sure you want to block user "${username}"?`)) {
-        return;
-      }
+    // Initial refresh + interval updates for metrics
+    document.addEventListener('DOMContentLoaded', function(){
+      fetchTrafficSummary();
+      setInterval(fetchTrafficSummary, 30000);
+      refreshLastOnline();
+      setInterval(refreshLastOnline, 60000);
       
-      try {
-        const response = await fetch('/admin/block-user', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            user_id: userId,
-            reason: 'Blocked by admin',
-            duration: 24
-          })
-        });
-        
-        if (response.ok) {
-          showMessage('User blocked successfully', 'success');
-          setTimeout(() => location.reload(), 1500);
-        } else {
-          showMessage('Error blocking user', 'error');
-        }
-      } catch (error) {
-        console.error('Error blocking user:', error);
-        showMessage('Error blocking user', 'error');
-      }
-    }
-    
-    // Delete user function
-    async function deleteUser(userId) {
-      if (!confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
-        return;
-      }
-      
-      try {
-        const response = await fetch(`/admin/delete-user/${userId}`, {
-          method: 'POST'
-        });
-        
-        if (response.ok) {
-          showMessage('User deleted successfully', 'success');
-          setTimeout(() => location.reload(), 1500);
-        } else {
-          showMessage('Error deleting user', 'error');
-        }
-      } catch (error) {
-        console.error('Error deleting user:', error);
-        showMessage('Error deleting user', 'error');
-      }
-    }
-    
-    // Show message function
-    function showMessage(text, type) {
-      const existingMessage = document.querySelector('.message');
-      if (existingMessage) {
-        existingMessage.remove();
-      }
-      
-      const message = document.createElement('div');
-      message.className = `message ${type}`;
-      message.innerHTML = `
-        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
-        ${text}
-      `;
-      
-      document.querySelector('.user-management-container').insertBefore(
-        message, 
-        document.querySelector('.page-header')
-      );
-      
-      setTimeout(() => {
-        message.remove();
-      }, 5000);
-    }
-    
-    // Load last seen data
-    async function loadLastSeenData() {
-      try {
-        const response = await fetch('/api/admin/users/last-seen');
-        if (response.ok) {
-          const data = await response.json();
-          Object.entries(data).forEach(([userId, lastSeen]) => {
-            const element = document.getElementById(`lastSeen-${userId}`);
-            if (element) {
-              const date = new Date(lastSeen);
-              const now = new Date();
-              const diffMinutes = Math.floor((now - date) / (1000 * 60));
-              
-              let status, color, text;
-              if (diffMinutes < 5) {
-                status = 'online';
-                color = '#48bb78';
-                text = 'Online';
-              } else if (diffMinutes < 30) {
-                status = 'recent';
-                color = '#ed8936';
-                text = `${diffMinutes}m ago`;
-              } else {
-                status = 'offline';
-                color = '#a0aec0';
-                text = date.toLocaleDateString();
-              }
-              
-              element.innerHTML = `
-                <i class="fas fa-circle" style="color: ${color}; font-size: 0.5rem;"></i>
-                ${text}
-              `;
-            }
-          });
-        }
-      } catch (error) {
-        console.error('Error loading last seen data:', error);
-      }
-    }
-    
-    // Form submission handling
-    document.getElementById('createUserForm').addEventListener('submit', function(e) {
-      const submitBtn = this.querySelector('button[type="submit"]');
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
-      submitBtn.disabled = true;
-    });
-    
-    // Initialize page
-    document.addEventListener('DOMContentLoaded', function() {
-      loadTrafficMetrics();
-      loadLastSeenData();
-      
-      // Refresh metrics every 30 seconds
-      setInterval(loadTrafficMetrics, 30000);
-      
-      // Refresh last seen every 60 seconds
-      setInterval(loadLastSeenData, 60000);
+      // Update time remaining for blocked users
+      updateTimeRemaining();
+      setInterval(updateTimeRemaining, 60000); // Update every minute
     });
   </script>
+  <script src="script.js"></script>
 </body>
-</html>
-<script src="/attached_assets/theme.js"></script>
+</html> 
