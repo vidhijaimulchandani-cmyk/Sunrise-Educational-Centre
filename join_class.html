@@ -153,6 +153,11 @@
     .tab-content.active { display: block; }
     .live-watch-container { width: 100%; max-width: 680px; background: #fff; border: 1px solid #e0e7ff; border-radius: 12px; box-shadow: 0 6px 24px rgba(100,100,255,0.12); padding: 0.8rem; margin-bottom: 1.5rem; }
     body.dark-mode .live-watch-container { background: #232946; border-color: #3a3a4a; box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
+    /* Simple player controls */
+    .player-controls { display: flex; align-items: center; gap: 0.6rem; justify-content: center; margin: 0.6rem 0 0.2rem; }
+    .player-controls .volume-slider { width: 140px; }
+    .player-controls .speed-select { padding: 0.3rem 0.5rem; border: 1px solid #e0e7ff; border-radius: 6px; background: #fff; color: #232946; }
+    body.dark-mode .player-controls .speed-select { background: #232946; border-color: #3a3a4a; color: #fff; }
     
     /* Device Selection Styles for Student View */
     .device-selection { margin-top: 1rem; padding: 1rem; background: rgba(106,130,251,0.03); border-radius: 12px; border: 1px solid #e0e7ff; }
@@ -438,6 +443,21 @@
               Your browser does not support the video tag.
             </video>
           {% endif %}
+        </div>
+        <!-- Custom playback controls for content video (non-YouTube) -->
+        <div id="contentControls" class="player-controls" style="display:none;">
+          <button id="playPauseBtn" class="chat-send-btn" style="background:#e8eefc; color:#6a82fb; border:1px solid #e0e7ff;">⏯ Play</button>
+          <span style="color:#666;">Volume</span>
+          <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.01" value="1">
+          <span style="color:#666;">Speed</span>
+          <select id="speedSelect" class="speed-select">
+            <option value="0.5">0.5×</option>
+            <option value="0.75">0.75×</option>
+            <option value="1" selected>1×</option>
+            <option value="1.25">1.25×</option>
+            <option value="1.5">1.5×</option>
+            <option value="2">2×</option>
+          </select>
         </div>
         
         <!-- Live Class Status -->
@@ -1472,7 +1492,7 @@ function renderPolls(polls) {
         const btn = row.querySelector('.poll-vote-btn');
         btn.addEventListener('click', () => {
           const optionId = row.getAttribute('data-option-id');
-          votePoll(${`poll.id`}, optionId, pollDiv);
+          votePoll(poll.id, optionId, pollDiv);
         });
       });
     }
@@ -1867,6 +1887,9 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Check if host is already streaming
   socket.emit('request_host_stream', { class_id: classId });
+
+  // Setup custom content video controls if applicable
+  setupStudentContentControls();
 });
 
 // Enhanced camera switching functions
@@ -1906,6 +1929,13 @@ function switchToContent() {
   
   hostCameraContainer.style.display = 'none';
   contentVideo.style.display = 'block';
+  // Show content controls when content video is visible
+  const contentControls = document.getElementById('contentControls');
+  if (document.querySelector('#contentVideo video')) {
+    contentControls.style.display = 'flex';
+  } else {
+    contentControls.style.display = 'none';
+  }
   
   if (isHostStreamConnected) {
     switchToCameraBtn.style.display = 'inline-block';
@@ -1999,6 +2029,34 @@ function setupVideoQualityMonitoring() {
       }
     }, 5000);
   }
+}
+
+// Setup custom controls for the content video (non-YouTube embeds)
+function setupStudentContentControls() {
+  const videoEl = document.querySelector('#contentVideo video');
+  const controls = document.getElementById('contentControls');
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const volumeSlider = document.getElementById('volumeSlider');
+  const speedSelect = document.getElementById('speedSelect');
+  if (!videoEl) {
+    if (controls) controls.style.display = 'none';
+    return;
+  }
+  controls.style.display = 'flex';
+  // Sync initial states
+  volumeSlider.value = typeof videoEl.volume === 'number' ? videoEl.volume : 1;
+  speedSelect.value = String(videoEl.playbackRate || 1);
+  playPauseBtn.textContent = videoEl.paused ? '⏯ Play' : '⏸ Pause';
+  // Handlers
+  playPauseBtn.onclick = () => {
+    if (videoEl.paused) { videoEl.play(); playPauseBtn.textContent = '⏸ Pause'; }
+    else { videoEl.pause(); playPauseBtn.textContent = '⏯ Play'; }
+  };
+  volumeSlider.oninput = (e) => { videoEl.volume = parseFloat(e.target.value); };
+  speedSelect.onchange = (e) => { videoEl.playbackRate = parseFloat(e.target.value); };
+  // Update button text on native play/pause
+  videoEl.addEventListener('play', () => playPauseBtn.textContent = '⏸ Pause');
+  videoEl.addEventListener('pause', () => playPauseBtn.textContent = '⏯ Play');
 }
 
 // Fullscreen functionality
