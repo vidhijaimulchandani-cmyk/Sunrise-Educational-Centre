@@ -248,6 +248,11 @@
     
     body.dark-mode .video-controls { background: rgba(35,41,70,0.3); }
     body.dark-mode .icon-btn::after { background: #1a1a2e; }
+    /* Simple player controls for host content video */
+    .player-controls { display: flex; align-items: center; gap: 0.6rem; justify-content: center; margin: 0.6rem 0 0.2rem; }
+    .player-controls .volume-slider { width: 140px; }
+    .player-controls .speed-select { padding: 0.3rem 0.5rem; border: 1px solid #e0e7ff; border-radius: 6px; background: #fff; color: #232946; }
+    body.dark-mode .player-controls .speed-select { background: #232946; border-color: #3a3a4a; color: #fff; }
     
     /* Device Selection Styles */
     .device-selection { margin-top: 1rem; padding: 1rem; background: rgba(106,130,251,0.03); border-radius: 12px; border: 1px solid #e0e7ff; }
@@ -382,6 +387,21 @@
               Your browser does not support the video tag.
             </video>
           {% endif %}
+        </div>
+        <!-- Custom playback controls for content video (non-YouTube) -->
+        <div id="hostContentControls" class="player-controls" style="display:none;">
+          <button id="hostPlayPauseBtn" class="chat-send-btn" style="background:#e8eefc; color:#6a82fb; border:1px solid #e0e7ff;">⏯ Play</button>
+          <span style="color:#666;">Volume</span>
+          <input type="range" id="hostVolumeSlider" class="volume-slider" min="0" max="1" step="0.01" value="1">
+          <span style="color:#666;">Speed</span>
+          <select id="hostSpeedSelect" class="speed-select">
+            <option value="0.5">0.5×</option>
+            <option value="0.75">0.75×</option>
+            <option value="1" selected>1×</option>
+            <option value="1.25">1.25×</option>
+            <option value="1.5">1.5×</option>
+            <option value="2">2×</option>
+          </select>
         </div>
         
         <!-- Icon-Only Video Controls -->
@@ -883,6 +903,8 @@
       if (isStreaming) {
         hostCamera.style.display = 'block';
         contentVideo.style.display = 'none';
+        const hostControls = document.getElementById('hostContentControls');
+        if (hostControls) hostControls.style.display = 'none';
         currentVideoMode = 'camera';
         
         // Update icon button states
@@ -910,6 +932,12 @@
     function showContentVideo() {
       hostCamera.style.display = 'none';
       contentVideo.style.display = 'block';
+      const hostControls = document.getElementById('hostContentControls');
+      if (document.querySelector('#contentVideo video')) {
+        hostControls.style.display = 'flex';
+      } else {
+        hostControls.style.display = 'none';
+      }
       currentVideoMode = 'content';
       
       // Update icon button states
@@ -1544,6 +1572,8 @@
     document.addEventListener('DOMContentLoaded', function() {
       // Chat is now handled by socket.io events
       console.log('Host page loaded, chat functionality ready');
+      // Setup host controls for content video if applicable
+      setupHostContentControls();
     });
 
     // Mute all students function
@@ -1861,8 +1891,7 @@
     let autoRecordingEnabled = false;
     let voiceEnabled = false;
     let playbackEnabled = false;
-    let mediaRecorder = null;
-    let recordedChunks = [];
+    // reuse the declared mediaRecorder/recordedChunks above
 
     // Auto-recording functionality
     function toggleAutoRecording() {
@@ -1940,6 +1969,31 @@
           enabled: false
         });
       }
+    }
+
+    // Setup custom controls for host content video (non-YouTube embeds)
+    function setupHostContentControls() {
+      const videoEl = document.querySelector('#contentVideo video');
+      const controls = document.getElementById('hostContentControls');
+      const playPauseBtn = document.getElementById('hostPlayPauseBtn');
+      const volumeSlider = document.getElementById('hostVolumeSlider');
+      const speedSelect = document.getElementById('hostSpeedSelect');
+      if (!videoEl) {
+        if (controls) controls.style.display = 'none';
+        return;
+      }
+      controls.style.display = 'flex';
+      volumeSlider.value = typeof videoEl.volume === 'number' ? videoEl.volume : 1;
+      speedSelect.value = String(videoEl.playbackRate || 1);
+      playPauseBtn.textContent = videoEl.paused ? '⏯ Play' : '⏸ Pause';
+      playPauseBtn.onclick = () => {
+        if (videoEl.paused) { videoEl.play(); playPauseBtn.textContent = '⏸ Pause'; }
+        else { videoEl.pause(); playPauseBtn.textContent = '⏯ Play'; }
+      };
+      volumeSlider.oninput = (e) => { videoEl.volume = parseFloat(e.target.value); };
+      speedSelect.onchange = (e) => { videoEl.playbackRate = parseFloat(e.target.value); };
+      videoEl.addEventListener('play', () => playPauseBtn.textContent = '⏸ Pause');
+      videoEl.addEventListener('pause', () => playPauseBtn.textContent = '⏯ Play');
     }
 
     // Enhanced start recording function

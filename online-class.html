@@ -426,16 +426,16 @@
 
         .class-cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1.5rem;
             margin-top: 2rem;
         }
 
         .class-card {
             background: rgba(5, 6, 10, 0.72);
             border: 1px solid rgba(255, 255, 255, 0.22);
-            border-radius: 20px;
-            padding: 2rem;
+            border-radius: 16px;
+            padding: 1.25rem;
             backdrop-filter: blur(18px) saturate(110%);
             box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
             transition: all 0.3s ease;
@@ -535,6 +535,14 @@
             50% { background-position: 100% 50%; }
         }
 
+        @media (max-width: 1200px) {
+            .class-cards-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 992px) {
+            .class-cards-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
         @media (max-width: 768px) {
             .online-class-hero {
                 padding: 6rem 0 3rem 0;
@@ -556,10 +564,7 @@
                 max-width: 300px;
             }
             
-            .class-cards-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
+            .class-cards-grid { grid-template-columns: 1fr; gap: 1.5rem; }
         }
     </style>
   </head>
@@ -1189,7 +1194,7 @@
         
         .class-card {
           padding: 1.5rem;
-        };
+        }
       }
       body.dark-mode .live-class-cards .card-section::before {
         background: linear-gradient(135deg, rgba(106,130,251,0.5), rgba(252,92,125,0.35));
@@ -1291,13 +1296,19 @@
           padding: 0 0.3rem;
         }
         
-        h2 {
+        h2 {}
       }
     </style>
 
     <!-- Scripts -->
+    <script type="application/json" id="usernameJson">{{ username|tojson if username else 'null' }}</script>
     <script>
-        window.currentUsername = {{ username|tojson if username else 'null' }};
+        (function(){
+          try {
+            const node = document.getElementById('usernameJson');
+            window.currentUsername = node ? JSON.parse(node.textContent || 'null') : null;
+          } catch(e) { window.currentUsername = null; }
+        })();
     </script>
     <script src="/attached_assets/theme.js"></script>
     <script src="modern-interactions.js"></script>
