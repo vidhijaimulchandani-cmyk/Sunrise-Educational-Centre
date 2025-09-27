@@ -148,6 +148,9 @@
     body.dark-mode .tab-container {
       border-bottom-color: #3a3a4a;
     }
+    /* Tab content visibility */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
     .live-watch-container { width: 100%; max-width: 680px; background: #fff; border: 1px solid #e0e7ff; border-radius: 12px; box-shadow: 0 6px 24px rgba(100,100,255,0.12); padding: 0.8rem; margin-bottom: 1.5rem; }
     body.dark-mode .live-watch-container { background: #232946; border-color: #3a3a4a; box-shadow: 0 6px 24px rgba(0,0,0,0.3); }
     
@@ -526,10 +529,10 @@
     </div>
     <div class="info-section">
       <div class="tab-container" style="display:flex; justify-content:flex-end; gap:0.5rem; margin-bottom: 1rem; border-bottom: 2px solid #e0e7ff;">
-        <button class="tab-btn active" onclick="showTab('chat')">Chat</button>
-        <button class="tab-btn" onclick="showTab('polls')">Polls</button>
-        <button class="tab-btn" onclick="showTab('doubts')">Doubts</button>
-        <button class="tab-btn" onclick="showTab('benchmark')" id="benchmarkTab" style="display: none;">Benchmark</button>
+        <button class="tab-btn active" onclick="showTab('chat', this)">💬 Chat <span id="chatCount" style="color:#6a82fb; font-weight:600;">0</span></button>
+        <button class="tab-btn" onclick="showTab('polls', this)">📊 Polls <span id="pollsCount" style="color:#fc5c7d; font-weight:600;">0</span></button>
+        <button class="tab-btn" onclick="showTab('doubts', this)">❓ Doubts <span id="doubtsCount" style="color:#48bb78; font-weight:600;">0</span></button>
+        <button class="tab-btn" onclick="showTab('benchmark', this)" id="benchmarkTab" style="display: none;">Benchmark</button>
         
       </div>
       <!-- Chat Tab -->
@@ -544,10 +547,18 @@
           <div id="chatMessages" class="chat-messages">
             <!-- Chat messages will appear here -->
           </div>
-          <form id="chatForm" style="display:flex; gap:0.5rem;">
-            <input type="text" id="chatInput" placeholder="Type a message..." class="chat-input" autocomplete="off" />
-            <button type="submit" class="chat-send-btn">Send</button>
-          </form>
+      <form id="chatForm" style="display:flex; gap:0.5rem; align-items:center;">
+        <button type="button" id="attachBtn" title="Attach" style="background:#e8eefc; border:1px solid #e0e7ff; color:#6a82fb; padding:0.5rem; border-radius:8px; cursor:pointer;">
+          📎
+        </button>
+        <input type="text" id="chatInput" placeholder="Type a message..." class="chat-input" autocomplete="off" />
+        <button type="submit" class="chat-send-btn">Send</button>
+      </form>
+      <div id="quickReplies" style="margin-top:0.5rem; display:flex; flex-wrap:wrap; gap:0.4rem;">
+        <button type="button" class="chat-send-btn" style="background:#e8eefc; color:#6a82fb; border:1px solid #e0e7ff;" onclick="insertQuick('👍')">👍</button>
+        <button type="button" class="chat-send-btn" style="background:#e8eefc; color:#6a82fb; border:1px solid #e0e7ff;" onclick="insertQuick('✅ Done')">✅ Done</button>
+        <button type="button" class="chat-send-btn" style="background:#e8eefc; color:#6a82fb; border:1px solid #e0e7ff;" onclick="insertQuick('❓ Please repeat')">❓ Please repeat</button>
+      </div>
         </div>
       </div>
       <!-- Polls Tab -->
@@ -555,6 +566,10 @@
         <div class="poll-section">
           <h3 style="margin-bottom: 1rem; color: #fc5c7d;">Active Polls</h3>
           <div id="activePolls"></div>
+      <div style="margin-top:0.75rem; display:flex; gap:0.5rem;">
+        <button class="poll-btn" onclick="refreshPolls()" style="background:#6a82fb; color:#fff; border:none;">Refresh</button>
+        <button class="poll-btn" onclick="subscribePollResults()" style="background:#e2e8f0; color:#4a5568; border:none;">Live Results</button>
+      </div>
         </div>
       </div>
       <!-- Doubts Tab -->
@@ -563,7 +578,10 @@
           <h3 style="margin-bottom: 1rem; color: #48bb78;">Ask a Doubt</h3>
           <form id="doubtForm" style="margin-bottom:1rem;">
             <input type="text" id="doubtInput" placeholder="Type your doubt..." class="poll-input" required style="width:100%; margin-bottom:0.5rem;" />
-            <button type="submit" class="poll-btn">Submit Doubt</button>
+        <div style="display:flex; gap:0.5rem;">
+          <button type="submit" class="poll-btn">Submit Doubt</button>
+          <button type="button" class="poll-btn" style="background:#e2e8f0; color:#4a5568;" onclick="markDoubtPrivate()">Private</button>
+        </div>
           </form>
           <div id="doubtsList">
             <!-- Doubts will appear here -->
@@ -1830,8 +1848,14 @@ function getUsername() {
 function showTab(tabName) {
   document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-  document.getElementById(tabName + '-tab').classList.add('active');
-  event.target.classList.add('active');
+  var target = document.getElementById(tabName + '-tab');
+  if (target) target.classList.add('active');
+  // If a second argument is provided (button element), use it; else fall back to event.target
+  if (arguments.length > 1 && arguments[1]) {
+    arguments[1].classList.add('active');
+  } else if (typeof event !== 'undefined' && event.target) {
+    event.target.classList.add('active');
+  }
 }
 
 // Auto-initialize WebRTC when page loads
